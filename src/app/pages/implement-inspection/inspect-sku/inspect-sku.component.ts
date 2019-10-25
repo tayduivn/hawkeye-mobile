@@ -1,4 +1,4 @@
-import { FormBuilder, FormGroup } from "@angular/forms";
+import { FormBuilder, FormGroup, FormArray, FormControl } from "@angular/forms";
 import { ScanComponent } from "./../../../widget/scan/scan.component";
 import { PageEffectService } from "src/app/services/page-effect.service";
 import { Component, OnInit } from "@angular/core";
@@ -86,112 +86,108 @@ export class InspectSkuComponent implements OnInit {
   barCode: string = null;
   rateStatus: "out" | "inner" = this.data.rate_container > 1 ? "out" : "inner";
 
-  constructor(private es: PageEffectService, private fb: FormBuilder) {}
+  constructor(private es: PageEffectService, private fb: FormBuilder) { }
 
   SkuInspectModel: FormGroup = this.fb.group({
-      inner_box_data:this.fb.group({
-        spotCheckNum: this.fb.control(""),
-        poNo: this.fb.control(""),
-        shippingMarks: this.fb.group({
-          photo: this.fb.array([])
-        }),
-        size: this.fb.group({
-          photo: this.fb.array([]),
-          length: this.fb.control(""),
-          width: this.fb.control(""),
-          height: this.fb.control("")
-        }),
-        barCode: this.fb.control(""),
-        grossWeight: this.fb.group({
-          text: this.fb.control(""),
-          photo: this.fb.array([])
-        }),
-        throwBox: this.fb.group({
-          photo: this.fb.array([]),
-          video: this.fb.array([]),
-          isPass: this.fb.control(""),
-          desc: this.fb.array([])
-        }),
-        packing: this.fb.group({
-          photo: this.fb.array([]),
-          isTrue: this.fb.control(""),
-          desc: this.fb.array([])
-        }),
-        layout: this.fb.array([]),
-        instructions: this.fb.array([]),
-        whole: this.fb.array([]),
-        productSize: this.fb.group({
-          photo: this.fb.array([]),
-          length: this.fb.control(""),
-          width: this.fb.control(""),
-          height: this.fb.control("")
-        }),
-        netWeight: this.fb.group({
-          text: this.fb.control(""),
-          photo: this.fb.array([])
-        }),
-        function: this.fb.group({
-          text: this.fb.control(""),
-          photo: this.fb.array([]),
-          video: this.fb.array([]),
-          desc: this.fb.array([])
-        }),
-        bearing: this.fb.group({
-          text: this.fb.control(""),
-          photo: this.fb.array([]),
-          video: this.fb.array([]),
-          desc: this.fb.array([])
-        }),
-        waterContent: this.fb.group({
-          //含水量测试
-          text: this.fb.control(""),
-          photo: this.fb.array([]),
-          video: this.fb.array([]),
-          desc: this.fb.array([])
-        })
+    spotCheckNum: this.fb.control(""),
+    poNo: this.fb.control(""),
+    inner_box_data: this.fb.group({
+      shippingMarks: this.fb.array([]),
+      size: this.fb.group({
+        photo: this.fb.array([]),
+        length: this.fb.control(""),
+        width: this.fb.control(""),
+        height: this.fb.control("")
       }),
-      outer_box_data:this.fb.group({
-        spotCheckNum: this.fb.control(""),
-        poNo: this.fb.control(""),
-        shippingMarks: this.fb.group({
-          photo: this.fb.array([])
-        }),
-        barCode: this.fb.control(""),
-        grossWeight: this.fb.group({
-          text: this.fb.control(""),
-          photo: this.fb.array([])
-        }),
-        packing: this.fb.group({
-          photo: this.fb.array([]),
-          isTrue: this.fb.control(""),
-          desc: this.fb.array([])
-        }),
-        netWeight: this.fb.group({
-          text: this.fb.control(""),
-          photo: this.fb.array([])
-        }),
-        function: this.fb.group({
-          text: this.fb.control(""),
-          photo: this.fb.array([]),
-          video: this.fb.array([]),
-          desc: this.fb.array([])
-        }),
-        bearing: this.fb.group({
-          text: this.fb.control(""),
-          photo: this.fb.array([]),
-          video: this.fb.array([]),
-          desc: this.fb.array([])
-        }),
-        waterContent: this.fb.group({
-          text: this.fb.control(""),
-          photo: this.fb.array([]),
-          video: this.fb.array([]),
-          desc: this.fb.array([])
-        })
+      barCode: this.fb.control(""),
+      grossWeight: this.fb.group({
+        text: this.fb.control(""),
+        photo: this.fb.array([])
+      }),
+      throwBox: this.fb.group({
+        photo: this.fb.array([]),
+        video: this.fb.array([]),
+        isPass: this.fb.control(""),
+        desc: this.fb.array([])
+      }),
+      packing: this.fb.group({
+        photo: this.fb.array([]),
+        isTrue: this.fb.control(""),
+        desc: this.fb.array([])
+      }),
+      layout: this.fb.array([]),
+      instructions: this.fb.array([]),
+      whole: this.fb.array([]),
+      productSize: this.fb.group({
+        photo: this.fb.array([]),
+        length: this.fb.control(""),
+        width: this.fb.control(""),
+        height: this.fb.control("")
+      }),
+      netWeight: this.fb.group({
+        text: this.fb.control(""),
+        photo: this.fb.array([])
+      }),
+      function: this.fb.group({
+        text: this.fb.control(""),
+        photo: this.fb.array([]),
+        video: this.fb.array([]),
+        desc: this.fb.array([])
+      }),
+      bearing: this.fb.group({
+        text: this.fb.control(""),
+        photo: this.fb.array([]),
+        video: this.fb.array([]),
+        desc: this.fb.array([])
+      }),
+      waterContent: this.fb.group({
+        //含水量测试
+        text: this.fb.control(""),
+        photo: this.fb.array([]),
+        video: this.fb.array([]),
+        desc: this.fb.array([])
       })
+    }),
+    outer_box_data: this.fb.group({
+      shippingMarks: this.fb.group({
+        photo: this.fb.array([])
+      }),
+      barCode: this.fb.control(""),
+      grossWeight: this.fb.group({
+        text: this.fb.control(""),
+        photo: this.fb.array([])
+      }),
+      packing: this.fb.group({
+        photo: this.fb.array([]),
+        isTrue: this.fb.control(""),
+        desc: this.fb.array([])
+      }),
+      netWeight: this.fb.group({
+        text: this.fb.control(""),
+        photo: this.fb.array([])
+      }),
+      function: this.fb.group({
+        text: this.fb.control(""),
+        photo: this.fb.array([]),
+        video: this.fb.array([]),
+        desc: this.fb.array([])
+      }),
+      bearing: this.fb.group({
+        text: this.fb.control(""),
+        photo: this.fb.array([]),
+        video: this.fb.array([]),
+        desc: this.fb.array([])
+      }),
+      waterContent: this.fb.group({
+        text: this.fb.control(""),
+        photo: this.fb.array([]),
+        video: this.fb.array([]),
+        desc: this.fb.array([])
+      })
+    })
   });
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   scan() {
     let modal = this.es.showModal(
@@ -209,7 +205,19 @@ export class InspectSkuComponent implements OnInit {
     console.log(e, type);
   }
 
-  toggleBoxRate() {}
+  toggleBoxRate() { }
 
-  save() {}
+  save() { }
+
+  setPhoto(e: any[], type:string) {
+    if (e && e.length) {
+      (this.SkuInspectModel.get(type) as FormArray).clear();
+      for (let i = 0; i < e.length; i++) {
+        (this.SkuInspectModel.get(type) as FormArray).push(new FormControl(""));
+      }
+    } else {
+      (this.SkuInspectModel.get(type) as FormArray).clear();
+    }
+    (this.SkuInspectModel.get(type) as FormArray).setValue(e);
+  }
 }

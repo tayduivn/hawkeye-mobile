@@ -340,6 +340,13 @@
   dependencies:
     "@types/cordova" latest
 
+"@ionic-native/file-transfer@^5.15.1":
+  version "5.15.1"
+  resolved "https://registry.yarnpkg.com/@ionic-native/file-transfer/-/file-transfer-5.15.1.tgz#43ccbd06be77ec376e6cdee71f38719852bf194f"
+  integrity sha512-LPvEu+gHxn+cXkx8OWJX2A/bR97X0z39nR+X+gcpBkTm1T0CA4e41X8cXcF6fcyLriKNIxIlF1+vUGOQP03mvQ==
+  dependencies:
+    "@types/cordova" latest
+
 "@ionic-native/file@^5.15.0":
   version "5.15.0"
   resolved "https://registry.npm.taobao.org/@ionic-native/file/download/@ionic-native/file-5.15.0.tgz#f88eaaca70c30f91dfae75404247f9f6ca521408"
@@ -351,6 +358,13 @@
   version "5.15.0"
   resolved "https://registry.npm.taobao.org/@ionic-native/media-capture/download/@ionic-native/media-capture-5.15.0.tgz#1a3a16d22f265ded155fb7bae7b5f26fb54fb188"
   integrity sha1-GjoW0i8mXe0VX7e657Xyb7VPsYg=
+  dependencies:
+    "@types/cordova" latest
+
+"@ionic-native/media@^5.15.0":
+  version "5.15.1"
+  resolved "https://registry.yarnpkg.com/@ionic-native/media/-/media-5.15.1.tgz#44d51c0ab5acafcab09edf4de7a2bbcc91984fcb"
+  integrity sha512-ltfVv6vSd+DwFBT+KtYbnmtlhEIWwiL551ih3xxiQcKZ3hpBmBKEkcwWaPYrOT2LxgyOtaovyW0mzullB6hJ6g==
   dependencies:
     "@types/cordova" latest
 
@@ -372,6 +386,13 @@
   version "5.15.0"
   resolved "https://registry.npm.taobao.org/@ionic-native/status-bar/download/@ionic-native/status-bar-5.15.0.tgz#3ba29fb549886f797aee0eefcffc4be00b5c7a2d"
   integrity sha1-O6KftUmIb3l67g7vz/xL4Atcei0=
+  dependencies:
+    "@types/cordova" latest
+
+"@ionic-native/video-player@^5.15.1":
+  version "5.15.1"
+  resolved "https://registry.yarnpkg.com/@ionic-native/video-player/-/video-player-5.15.1.tgz#3cee52e8d705369c4e040df31eb9b80d1b06600f"
+  integrity sha512-EXtwaPMGUkT5ldwbr5kviu6fMA0KD71SsnArNAm4tGoO/QEPVRPy8UFs2zdTrYu2Iplbnf9inJMRH4JL9UHG+A==
   dependencies:
     "@types/cordova" latest
 
@@ -2032,6 +2053,11 @@ cordova-plugin-media-capture@3.0.3:
   resolved "https://registry.npm.taobao.org/cordova-plugin-media-capture/download/cordova-plugin-media-capture-3.0.3.tgz#9e04494245ad620f27fef49850fce2bfb342426e"
   integrity sha1-ngRJQkWtYg8n/vSYUPziv7NCQm4=
 
+cordova-plugin-media@5.0.3:
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-media/-/cordova-plugin-media-5.0.3.tgz#366188bd4f8472651c1e8304be649af6333b0e36"
+  integrity sha512-UQPFlpk1zL4BY44zGi8RVmYCvcKBCN4Dyf8ovxqGYCC8zR1yhbTRWYDdO9vJdERwbfgWV7+z7FMWiSUfqWm9bQ==
+
 cordova-plugin-qrscanner@^3.0.1:
   version "3.0.1"
   resolved "https://registry.npm.taobao.org/cordova-plugin-qrscanner/download/cordova-plugin-qrscanner-3.0.1.tgz#34af2ede5ce857ee9b4d75936e2916fead238545"
@@ -2049,6 +2075,10 @@ cordova-plugin-statusbar@^2.4.2:
   version "2.4.3"
   resolved "https://registry.npm.taobao.org/cordova-plugin-statusbar/download/cordova-plugin-statusbar-2.4.3.tgz#cc557aef66c27484e0f7f045004040d03321f82d"
   integrity sha1-zFV672bCdITg9/BFAEBA0DMh+C0=
+
+"cordova-plugin-video-player@git+https://github.com/moust/cordova-plugin-videoplayer.git":
+  version "1.0.1"
+  resolved "git+https://github.com/moust/cordova-plugin-videoplayer.git#5c83c858ed159d68cce1bf54e31d6caf7e145fbf"
 
 cordova-plugin-whitelist@^1.3.3:
   version "1.3.4"
