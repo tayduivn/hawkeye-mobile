@@ -1,0 +1,117 @@
+ion-content {
+  --background: #f2f2f2;
+  font-size: 14px;
+  .po-list {
+    padding: 15px;
+    .po {
+      h4,
+      label {
+        font-weight: bold;
+        font-size: 14px;
+      
+      }
+    }
+  }
+  .wd-100 {
+    width: 100%;
+  }
+
+  ion-list {
+    background: transparent;
+    ion-item {
+      margin-bottom: 15px;
+      border-radius: 10px;
+    }
+  }
+  .sku-list {
+    color: #333333;
+    padding: 10px;
+    font-size: 14px;
+    h4 {
+      font-size: 14px;
+    }
+    > li {
+      padding-bottom: 15px;
+      img.head {
+        width: 50px;
+        box-sizing: border-box;
+        border-radius: 5px;
+        border: 2px solid #ccc;
+        height: 50px;
+        display: block;
+      }
+    }
+    > li {
+      margin-bottom: 15px;
+      border-bottom: 1px solid #e6e6e6;
+    }
+    >li:last-child{
+      margin-bottom: 0;
+      border-bottom: 0;
+    }
+    .span-box {
+      margin-left: 15px;
+      margin-top: 5px;
+      span:first-child {
+        margin-bottom: 5px;
+      }
+    }
+  }
+  .input-item {
+    margin-left: 50px;
+    > div {
+      margin-left: 15px;
+    }
+  }
+}
+
+.label{
+  color: #848484;
+}
+
+ion-input {
+  border: 1px solid #e3e3e3;
+  width: 60px;
+  text-align: center;
+  border-radius: 5px;
+  --padding-top: 5px;
+  --padding-bottom: 5px;
+  margin: 0 10px;
+}
+
+.add-img {
+  margin-left: 65px;
+  margin-top: 10px;
+}
+
+.lh-10 {
+  line-height: 0px;
+}
+
+.add-img {
+  >li {
+    float: left;
+    margin-right: 10px;
+
+  }
+    
+  .image {
+    width: 50px;
+    height: 50px;
+    img {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+  }
+}
+.add-img::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+ion-item{
+  --border-width:0;
+  --inner-border-width:0; 
+}

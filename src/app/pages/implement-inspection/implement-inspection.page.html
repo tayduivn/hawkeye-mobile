@@ -1,0 +1,79 @@
+<ion-header mode="ios">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>执行验货</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content> 
+  <ul class="inspect-list pos-r">
+    <li class="pos-a" [@openClose]="active == 'factory' ? 'open' : 'closed'">
+      <div class="inspect-item first pos-a">
+        <ion-card mode="ios">
+          <ion-card-header class="activated">
+            <ion-icon name="wifi" slot="start"></ion-icon>
+            <ion-label>选择工厂</ion-label>
+          </ion-card-header>
+
+          <ion-item class="activated">
+            <select class="form-control" [(ngModel)]="factory">
+              <option value="">选择工厂</option>
+              <option
+                [value]="item.factory_code"
+                *ngFor="let item of inspectTask | async"
+              >
+                {{ item.factory_name }}
+              </option>
+            </select>
+          </ion-item>
+          <div
+            class="next"
+            fxLayout="row"
+            fxLayoutAlign="center center"
+            fxLayoutGap="gappx"
+          >
+          </div>
+        </ion-card>
+      </div>
+
+      <div class="inspect-item last pos-a">
+        <ion-card mode="ios">
+          <ion-card-header class="activated">
+            <ion-icon name="wifi" slot="start"></ion-icon>
+            <ion-label>选择验货编号</ion-label>
+          </ion-card-header>
+
+          <ion-item class="activated">
+            <select class="form-control" [(ngModel)]="contract">
+              <option value="">选择验货编号</option>
+              <option
+                [value]="item.apply_inspection_no"
+                *ngFor="let item of (inspectTask | async) | contract:factory"
+              >
+                {{ item.apply_inspection_no }}  
+              </option>
+            </select>
+          </ion-item>
+
+          <div
+            class="next"
+            fxLayout="row"
+            fxLayoutAlign="center center"
+            fxLayoutGap="gappx"
+          >
+            <button
+              class="next-btn"
+              [disabled]='!contract'
+              (click)="toInspect()" 
+            >
+              <ion-icon name="arrow-dropright" mode="ios"></ion-icon>
+            </button>
+          </div>
+        </ion-card>
+      </div>
+    </li>
+ 
+  </ul>
+</ion-content>

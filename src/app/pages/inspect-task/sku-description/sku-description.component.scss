@@ -1,0 +1,44 @@
+
+.list{
+    color: rgb(102,102,102);
+    padding: 0 15px 15px 15px;
+    ion-row:first-child{
+        border-top: 1px solid #f3f3f3;
+      
+    }
+    ion-row{
+        border-left: 1px solid #f3f3f3;
+         border-bottom: 1px solid #f3f3f3;
+    }
+    ion-col{
+        // border-bottom: 1px solid #f3f3f3;
+        border-right: 1px solid #f3f3f3;
+        ion-button{
+            --padding-start:5px;
+            margin: 0 !important
+        }
+    }
+}
+
+.ion-col-no-pad {
+    padding: 0 !important;
+    padding-right: 0 !important;
+  }
+  
+.factory,
+.contract {
+  ion-card-header {
+    background: #fafafa;
+    ion-card-title {
+      font-weight: bold;
+    }
+  }
+  ion-grid{
+    padding-bottom: 10px;
+  }
+}
+
+.thumbnail{
+  width: 30px;
+  height: 30px
+}

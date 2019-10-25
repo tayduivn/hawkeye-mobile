@@ -1,0 +1,13 @@
+{
+  "name": "hawkeye-mobile",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular",
+  "proxies": [
+    {
+      "path": "/api/v1",
+      "proxyUrl": "http://test.laravel55.cc"
+    }
+  ]
+}

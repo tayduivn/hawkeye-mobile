@@ -1,0 +1,14 @@
+div{
+    width: 100%;
+    ion-textarea{
+        border: 1px solid #e3e3e3;
+        flex-grow: 1;
+        font-size: 12px;
+        color: #777777;
+        border-radius: 5px;
+        --padding-top: 5px;
+        --padding-bottom: 5px;
+        --padding-start: 5px;
+        --padding-end: 5px;
+    }
+}

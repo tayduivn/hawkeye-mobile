@@ -1,0 +1,12 @@
+<ion-content no-scroll [ngClass]="{ qrscanner: isShow }">
+    <div [ngClass]="{ 'qrscanner-area': isShow }"></div>
+    <div [ngClass]="{ 'through-line': isShow }"></div>
+    <div class="button-bottom" fxLayout="row" fxLayoutAlign="space-around center">
+        <!-- <ion-fab-button (click)="toggleLight()" class="icon-camera">
+            <ion-icon name="flash"></ion-icon>
+        </ion-fab-button> -->
+        <ion-fab-button (click)="toggleCamera()" color="secondary" class="icon-camera">
+            <ion-icon name="reverse-camera"></ion-icon>
+        </ion-fab-button>
+    </div>
+</ion-content>

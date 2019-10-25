@@ -1,0 +1,63 @@
+{
+  "CityName": "菏泽市",
+  "ProviceName": "山东省",
+  "apply_inspection_no": "YH-19080004-2",
+  "apply_name": "任林云",
+  "apply_user": 97,
+  "buyer_user": "周芳艳",
+  "contract_desc": "",
+  "contract_id": 33,
+  "contract_no": "YG-201904100230",
+  "created_at": "2019-08-26 14:08:53",
+  "estimated_loading_time": "2019-08-28 00:00:00",
+  "factory_address": "曹县青河办事处常寨66号",
+  "factory_contacts": "张荣华",
+  "factory_email": "952715292@qq.com",
+  "factory_name": "曹县尚艺环球工艺品有限公司",
+  "factory_simple_address": "山东省菏泽市",
+  "id": 216,
+  "inspection_date": "2019-08-26 00:00:00",
+  "inspection_group_id": 251,
+  "is_bought_ticket": 1,
+  "is_contacked_factory": 0,
+  "is_inspected_factory": 0,
+  "is_inspected_product": 1,
+  "is_know_demand": 0,
+  "is_new_factory": null,
+  "is_plan_date": 1,
+  "is_pre_handle_over": 0,
+  "is_reset": 0,
+  "mobil_phone": null,
+  "new_quantity": 0,
+  "probable_inspection_date_end": null,
+  "probable_inspection_date_start": null,
+  "quantity": 1,
+  "schedule_name": {
+    "id": 207,
+    "user_id": 78,
+    "user": { "id": 78, "name": "TOBBI" }
+  },
+  "sku_desc": [
+    {
+      "sku": "HG61Y0126",
+      "complete": "产品生产完成，包装完成80%以上",
+      "quantity": 100,
+      "isNew": null,
+      "description": null
+    }
+  ],
+  "sku_num": [
+    {
+      "complete": "产品生产完成，包装完成80%以上",
+      "quantity": 100,
+      "sku": "HG61Y0126",
+      "isNew": null,
+      "description": null
+    }
+  ],
+  "sort": 0,
+  "status": 3,
+  "status_desc": "已确认任务",
+  "total_quantity": 1,
+  "updated_at": "2019-09-05 16:38:56"
+}

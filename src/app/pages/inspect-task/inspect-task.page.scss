@@ -1,0 +1,42 @@
+ion-col{
+    height: 100%;
+    // border: 1px solid #ebebeb
+}
+
+.ion-col-no-pad{
+    padding: 0 !important;
+    padding-right: 0 !important;
+    
+}
+
+ion-row.title{
+    background: #f7f7f7
+}
+
+ion-card{
+    background: #f5f6f9;
+    >ion-item{
+        --background:#ebecee
+    }
+    .card-content-md{
+        padding-right:0 !important;
+        padding-left:0 !important
+    }
+    ion-grid{
+        padding: 0 !important
+    }
+}
+
+.text-r{
+    text-align: right !important
+}
+
+.text-c{
+    text-align: center !important
+}
+
+ion-button{
+    margin: 0 !important;
+        --padding-start:5px;
+        --padding-end: 5px;
+}

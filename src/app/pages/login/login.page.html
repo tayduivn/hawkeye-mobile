@@ -1,0 +1,59 @@
+<ion-content>
+  <div class="back"></div>
+
+  <div class="content_box pos-r">
+    <ion-card mode='ios'>
+        <div class="logo-box">
+            <img src="../../assets/img/logo.png" alt="" class="logo" />
+          </div>
+    
+          <form [formGroup]="registerForm">
+            <ion-list vertical-center>
+              <ion-item>
+                <ion-label position="floating">工号</ion-label>
+                <ion-input
+                  type="text"
+                  [(ngModel)]="loginInfo.company_no"
+                  formControlName="company_no"
+                  clearInput="true"
+                ></ion-input>
+              </ion-item>
+              <span *ngIf="formErrors.company_no" class="showerr alert-danger">{{
+                formErrors.company_no
+              }}</span>
+    
+              <ion-item>
+                <ion-label position="floating">密码</ion-label>
+                <ion-input
+                  type="password"
+                  [(ngModel)]="loginInfo.password"
+                  formControlName="password"
+                  clearInput="true"
+                ></ion-input>
+              </ion-item>
+              <span *ngIf="formErrors.password" class="showerr alert-danger">{{
+                formErrors.password
+              }}</span>
+            </ion-list>
+    
+            <div class="mt-30">
+              <ion-button
+                events="ionBur"
+                type="submit"
+                color="secondary"
+                [disabled]="
+                  !registerForm.value.company_no ||
+                  formErrors.company_no ||
+                  !registerForm.value.password
+                "
+                expand="block"
+                *ngIf="status == 'login'"
+                (click)="doLogin()"
+                >登录
+              </ion-button>
+            </div>
+          </form>
+    </ion-card>
+     
+  </div>
+</ion-content>

@@ -1,0 +1,317 @@
+<ion-header mode="ios">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>{{ data.factory_name }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-back-button
+        defaultHref="/implement-inspection"
+        text="返回"
+        color="white"
+        mode="md"
+      ></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="factoryModel">
+    <ion-list>
+      <ion-item>
+        <div
+          fxLayout="col"
+          fxLayoutAlign="space-between center"
+          class="item-inner"
+        >
+          <div
+            fxLayout="col"
+            fxLayoutAlign="start center"
+            formArrayName="environments"
+          >
+            <label>工厂环境照片：</label>
+            <div class="label-right">
+              <app-photograph
+                [photos]="factoryModel.get('environments').value"
+                (onPhotograph)="setPhoto($event, 'environments')"
+              ></app-photograph>
+            </div>
+          </div>
+          <div class="form-valid" *ngIf="!environments.controls.length">
+            *请上传工厂环境照片
+          </div>
+        </div>
+      </ion-item>
+
+      <ion-item>
+        <div
+          fxLayout="col"
+          fxLayoutAlign="space-between center"
+          class="item-inner"
+        >
+          <div fxLayout="col" fxLayoutAlign="start center">
+            <label>样 品 间 照 片：</label>
+            <div class="label-right">
+              <app-photograph
+                (onPhotograph)="setPhoto($event, 'sampleRoom')"
+              ></app-photograph>
+            </div>
+          </div>
+          <div class="form-valid" *ngIf="!environments.controls.length">
+            *请上传样品间照片
+          </div>
+        </div>
+      </ion-item>
+
+      <ion-item>
+        <div
+          fxLayout="col"
+          fxLayoutAlign="space-between center"
+          class="item-inner"
+        >
+          <div fxLayout="col" fxLayoutAlign="start center">
+            <label>工厂其他照片：</label>
+            <div class="label-right">
+              <app-photograph
+                (onPhotograph)="setPhoto($event, 'factoryOther')"
+              ></app-photograph>
+            </div>
+          </div>
+          <div class="form-valid" *ngIf="!environments.controls.length">
+            *请上传工厂其他照片
+          </div>
+        </div>
+      </ion-item>
+    </ion-list>
+
+    <ion-list>
+      <ion-item formGroupName="factoryAddress">
+        <div
+          fxLayout="col"
+          fxLayoutAlign="space-between start"
+          class="item-inner text"
+        >
+          <div fxLayout="col" fxLayoutAlign="start start">
+            <label class="mr-0"
+              >工&nbsp;&nbsp;&nbsp;厂&nbsp;&nbsp;地&nbsp;&nbsp;&nbsp;址：</label
+            >
+            <div>
+              <div
+                class="pos-r ques"
+                fxLayout="row"
+                fxLayoutAlign="start center"
+              >
+                <label>是否是实际地址</label>
+                <ion-select
+                  interface="popover"
+                  formControlName="isTrue"
+                  color="success"
+                >
+                  <ion-select-option value="1">是</ion-select-option>
+                  <ion-select-option value="0">否</ion-select-option>
+                </ion-select>
+              </div>
+              <ion-input
+                type="text"
+                [readonly]="
+                  factoryModel.controls['factoryAddress'].value.isTrue == 1
+                "
+                formControlName="text"
+                [placeholder]="
+                  factoryModel.controls['factoryAddress'].value.isTrue == 0
+                    ? '请输入实际地址'
+                    : ''
+                "
+              >
+              </ion-input>
+            </div>
+          </div>
+          <div
+            class="form-valid"
+            *ngIf="
+              factoryModel.controls['factoryAddress'].value.isTrue == 0 &&
+              !factoryModel.controls['factoryAddress'].value.text
+            "
+          >
+            *请输入工厂地址
+          </div>
+        </div>
+      </ion-item>
+
+      <ion-item formGroupName="receptionist" class="no-border">
+        <div
+          fxLayout="col"
+          fxLayoutAlign="space-between start"
+          class="item-inner text"
+        >
+          <div fxLayout="col" fxLayoutAlign="start start">
+            <label class="mr-0"
+              >工&nbsp;厂&nbsp;&nbsp;接&nbsp;待&nbsp;人：</label
+            >
+            <div>
+              <div
+                class="pos-r ques"
+                fxLayout="row"
+                fxLayoutAlign="start center"
+              >
+                <label>是否是实际接待人</label>
+                <ion-select
+                  interface="popover"
+                  formControlName="isTrue"
+                  color="success"
+                >
+                  <ion-select-option value="1">是</ion-select-option>
+                  <ion-select-option value="0">否</ion-select-option>
+                </ion-select>
+              </div>
+              <div>
+                <div fxLayout="row" fxLayoutAlign="start center" class="small">
+                  <label>姓名:</label>
+                  <ion-input
+                    type="text"
+                    [(ngModel)]="data.factory_contacts"
+                    [readonly]="
+                      factoryModel.controls['receptionist'].value.isTrue == 1
+                    "
+                    formControlName="name"
+                    [placeholder]="
+                      factoryModel.controls['receptionist'].value.isTrue == 0
+                        ? '请输入实际接待人'
+                        : ''
+                    "
+                  ></ion-input>
+                </div>
+
+                <div fxLayout="row" fxLayoutAlign="start center" class="small">
+                  <label>职位:</label>
+                  <ion-input
+                    type="text"
+                    [readonly]="
+                      factoryModel.controls['receptionist'].value.isTrue == 1
+                    "
+                    formControlName="post"
+                    [placeholder]="
+                      factoryModel.controls['receptionist'].value.isTrue == 0
+                        ? '请输入实际接待人职位'
+                        : ''
+                    "
+                  >
+                  </ion-input>
+                </div>
+
+                <div fxLayout="row" fxLayoutAlign="start center" class="small">
+                  <label>电话:</label>
+                  <ion-input
+                    type="text"
+                    [readonly]="
+                      factoryModel.controls['receptionist'].value.isTrue == 1
+                    "
+                    formControlName="tel"
+                    [placeholder]="
+                      factoryModel.controls['receptionist'].value.isTrue == 0
+                        ? '请输入实际接待人电话'
+                        : ''
+                    "
+                  >
+                  </ion-input>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="form-valid"
+            *ngIf="
+              factoryModel.controls['receptionist'].value.isTrue == 0 &&
+              !factoryModel.controls['receptionist'].value.name
+            "
+          >
+            *请完善接待人信息
+          </div>
+        </div>
+      </ion-item>
+    </ion-list>
+
+    <ion-list>
+      <ion-item>
+        <div
+          fxLayout="col"
+          fxLayoutAlign="space-between center"
+          class="item-inner"
+        >
+          <div fxLayout="col" fxLayoutAlign="start center">
+            <label class="mr-0"
+              >工&nbsp;&nbsp;厂&nbsp;&nbsp;工&nbsp;&nbsp;人&nbsp;数：</label
+            >
+            <ion-input
+              placeholder="请输入工厂工人数"
+              formControlName="worksNum"
+              type='number'
+            ></ion-input>
+          </div>
+          <div
+            class="form-valid"
+            *ngIf="
+              !factoryModel.get('worksNum').valid &&
+              factoryModel.get('worksNum').touched
+            "
+          >
+            *请输入工厂工人数
+          </div>
+        </div>
+      </ion-item>
+
+      <ion-item>
+        <div
+          fxLayout="col"
+          fxLayoutAlign="space-between center"
+          class="item-inner"
+        >
+          <div fxLayout="col" fxLayoutAlign="start center">
+            <label class="mr-0"
+              >工&nbsp;&nbsp;&nbsp;&nbsp;厂&nbsp;&nbsp;&nbsp;设&nbsp;&nbsp;&nbsp;&nbsp;备：</label
+            >
+            <ion-input
+              placeholder="请输入工厂设备"
+              formControlName="equipment"
+            ></ion-input>
+          </div>
+          <div
+            class="form-valid"
+            *ngIf="
+              !factoryModel.get('equipment').valid &&
+              factoryModel.get('equipment').touched
+            "
+          >
+            *请输入设备
+          </div>
+        </div>
+      </ion-item>
+    </ion-list>
+
+    <ion-list>
+      <ion-list-header>逐&nbsp;条&nbsp;增&nbsp;加备注：</ion-list-header>
+
+      <ion-item class="pb-10">
+        <app-item-by-item-desc
+          class="w100"
+          (onComplete)="descEnter($event)"
+        ></app-item-by-item-desc>
+      </ion-item>
+    </ion-list>
+
+    <div
+      class="next"
+      fxLayout="row"
+      fxLayoutAlign="center center"
+      fxLayoutGap="gappx"
+    >
+      <button
+        class="next-btn"
+        (click)="toInspectPo()"
+        [disabled]="!factoryModel.valid"
+      >
+        <ion-icon name="arrow-dropright" mode="ios"></ion-icon>
+      </button>
+    </div>
+  </form>
+</ion-content>

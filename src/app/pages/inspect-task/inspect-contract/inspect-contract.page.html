@@ -1,0 +1,110 @@
+<ion-header mode="ios">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <!-- <ion-buttons slot="end">
+      <ion-button color="light" fill="clear" (click)="inspectOp()" size="small"
+        >验货员操作</ion-button
+      >
+    </ion-buttons> -->
+    <ion-buttons slot="end">
+      <ion-back-button
+        defaultHref="/inspect-task"
+        text="返回"
+        color="white"
+        mode="md"
+      ></ion-back-button>
+    </ion-buttons>
+    <ion-title>验货任务</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card mode="ios" class="factory">
+    <ion-card-header>
+      <ion-card-title color="primary">工厂信息</ion-card-title>
+    </ion-card-header>
+    <ion-item class="activated">
+      <ion-icon name="bookmark" slot="start" mode="ios"></ion-icon>
+      <ion-label>工厂名</ion-label>
+      <ion-text>{{ data.factory_name }}</ion-text>
+    </ion-item>
+
+    <ion-item class="activated">
+      <ion-icon name="pin" slot="start" mode="ios"></ion-icon>
+      <ion-label>工厂地址</ion-label>
+      <ion-text>{{ data.factory_address }}</ion-text>
+    </ion-item>
+
+    <ion-item class="activated">
+      <ion-icon name="information-circle" slot="start" mode="ios"></ion-icon>
+      <ion-label>工厂备注</ion-label>
+      <ion-text>{{
+        data.factory_desc ? data.factory_desc : "暂无"
+      }}</ion-text>
+    </ion-item>
+
+    <ion-item
+      class="activated"
+    >
+      <ion-item class="inner">
+        <ion-icon name="contact" slot="start" mode="ios"></ion-icon>
+        <ion-label>联系人</ion-label>
+        <ion-text>{{ data.factory_contacts }}</ion-text>
+      </ion-item>
+      <ion-item class="inner">
+        <ion-icon name="call" slot="start" mode="ios"></ion-icon>
+        <ion-label>联系方式</ion-label>
+        <ion-text>{{
+          data.mobil_phone ? data.mobil_phone : "暂无"
+        }}</ion-text>
+      </ion-item>
+    </ion-item>
+
+    <ion-item
+      class="activated"
+    >
+      <ion-item class="inner">
+        <ion-icon name="menu" slot="start" mode="ios"></ion-icon>
+        <ion-label>验货SKU数</ion-label>
+        <ion-text>{{ data.quantity }}</ion-text>
+      </ion-item>
+      <ion-item class="inner">
+        <ion-icon name="hammer" slot="start" mode="ios"></ion-icon>
+        <ion-label>操作</ion-label>
+        <ion-button
+        fill="clear"
+        size="small"
+        [routerLink]="['/inspector-setting', data.id]"
+        >验货员操作</ion-button
+      >
+      </ion-item>
+    </ion-item>
+
+    
+  </ion-card>
+
+  <ion-card class="contract" mode="ios">
+    <ion-card-header>
+      <ion-card-title color="primary">任务</ion-card-title>
+    </ion-card-header>
+    <ion-grid>
+      <ion-row>
+        <ion-col align-self-center>合同号</ion-col>
+        <ion-col align-self-center>合同SKU数</ion-col>
+        <ion-col align-self-center>合同详情</ion-col>
+      </ion-row>
+
+      <ion-row *ngFor="let item of data.contract_info_arr">
+        <ion-col align-self-center>{{ item.contract_no_all }}</ion-col>
+        <ion-col align-self-center>{{ item.total_quantity }}</ion-col>
+        <ion-col align-self-center>
+          <ion-button fill="clear" size="small" (click)="toSkuDesc(item)"
+            >详情</ion-button
+          >
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-card>
+</ion-content>

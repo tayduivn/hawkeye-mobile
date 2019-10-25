@@ -1,0 +1,82 @@
+<ion-header mode="ios">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-back-button
+        defaultHref="/inspect-task"
+        text="返回"
+        color="white"
+        mode="md"
+      ></ion-back-button>
+    </ion-buttons>
+    <ion-title>SKU描述</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-card mode="ios" class="factory">
+        <ion-card-header>
+            <ion-card-title color='primary'>任务信息</ion-card-title>
+        </ion-card-header>
+        <ion-item class="activated">
+          <ion-icon name="contract" slot="start" mode='ios'></ion-icon>
+          <ion-label>采购合同号</ion-label>
+          <ion-text>{{ data.contract_no }}</ion-text>
+        </ion-item>
+    </ion-card>    
+
+
+  <ion-card class="contract" mode="ios">
+    <ion-card-header>
+      <ion-card-title color="primary">SKU列表</ion-card-title>
+    </ion-card-header>
+
+    <ion-grid class="list">
+        <ion-row>
+          <ion-col align-self-center size='1.5'>货号</ion-col>
+          <ion-col size='1'>缩略图</ion-col>
+          <ion-col align-self-center size='2.5'>中文名称</ion-col>
+          <ion-col align-self-center size='1.4'>验货数</ion-col>
+          <ion-col align-self-center size='1.4'>必验数</ion-col>
+          <ion-col align-self-center size='1.4'>箱数</ion-col>
+          <ion-col align-self-center size='1.4'>箱率</ion-col>
+          <ion-col align-self-center size='1.4'>操作</ion-col>
+        </ion-row>
+    
+        <ion-row *ngFor="let item of data.sku_desc;let i = index">
+          <ion-col align-self-center size='1.5'>{{ item.sku }}</ion-col>
+          <ion-col imgGallery align-self-center size='1'>
+            <img class="thumbnail" [src]="imgOrigin + item.pic[0]" alt="">
+          </ion-col>
+          <ion-col  align-self-center size='2.5'>{{ item.sku_chinese_name }}</ion-col>
+          <ion-col align-self-center size='1.4'>{{ item.quantity }}</ion-col>
+          <ion-col align-self-center size='1.4'>{{ item.must_quantity?item.must_quantity:'暂无' }}</ion-col>
+          <ion-col align-self-center size='1.4'>{{ item.container_num }}</ion-col>
+          <ion-col align-self-center size='1.4'>{{ item.rate_container }}</ion-col>
+          <!-- <ion-col size="2.5" align-self-center>{{
+            item.description ? item.description : "暂无"
+          }}</ion-col> -->
+          <ion-col align-self-center class="ion-col-no-pad" size='1.4'>
+            <ion-button
+              color="primary"
+              fill="clear"
+              size="small"
+              (click)="toSkuDetail(item)"
+              >详情</ion-button
+            >
+            <ion-button
+            color="primary"
+            fill="clear"
+            size="small"
+            (click)="inspectOp(item,i)"
+            >验货员</ion-button
+          >
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+  </ion-card>
+
+ 
+</ion-content>

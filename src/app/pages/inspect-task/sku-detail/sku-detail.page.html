@@ -1,0 +1,51 @@
+<ion-header mode="ios">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+     
+      <ion-button color="light" fill="clear" (click)="inspectOp()" size="small">
+          验货员操作
+        </ion-button>
+        <ion-back-button
+        defaultHref="/inspect-task"
+        text="返回"
+        color="white"
+        mode="md"
+      ></ion-back-button>
+    </ion-buttons>
+  
+    <ion-title>SKU:{{ data.sku }}</ion-title>
+  </ion-toolbar>
+ 
+</ion-header>
+
+<ion-content>
+  <app-sku-info [sku]="data">
+    <ion-grid class="inspect-description">
+      <ion-row *ngFor="let item of data.inspection_task_desc;let i =index" >
+        <ion-col size="1.8" align-self-center>
+            {{ '质检备注.' + (i + 1) }}
+        </ion-col>
+        <ion-col size="8.72" align-self-left [ngClass]="{'no-border-right':i != data.inspection_task_desc.length}" >
+          <input
+            type="text"
+            [value]='item'
+            placeholder="请输入质检备注"
+          />
+          <!-- [(ngModel)]="item"    TODO-->
+
+        </ion-col>
+        <ion-col size="1.46" align-self-center>
+          <ion-button *ngIf="(i+1) == data.inspection_task_desc.length" color='primary' size='small' (click)="data.inspection_task_desc.push('')" >
+              <ion-icon name="add-circle-outline" *ngIf="(i+1) == data.inspection_task_desc.length"  mode="ios" (click)="data.inspection_task_desc.push('')"></ion-icon>
+          </ion-button>
+          <ion-button *ngIf="(i+1) == data.inspection_task_desc.length"  color='primary' size='small' (click)="addInspectDesc()" >提交</ion-button>
+        </ion-col>
+      </ion-row>
+
+    </ion-grid>
+    
+  </app-sku-info>
+</ion-content>

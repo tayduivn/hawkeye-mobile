@@ -1,0 +1,73 @@
+<ion-header mode="ios">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button color="light" fill="clear" (click)="inspectOp()" size="small"
+        >验货员操作</ion-button
+      >
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-back-button
+        defaultHref="home"
+        text="返回"
+        color="white"
+        mode="md"
+      ></ion-back-button>
+    </ion-buttons>
+    <ion-title>验货员操作</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card mode="ios">
+    <ion-item class="activated">
+      <ion-icon name="contract" slot="start" mode="ios"></ion-icon>
+      <ion-label>采购合同号</ion-label>
+      <ion-text>{{ data.contract_no }}</ion-text>
+    </ion-item>
+
+    <ion-item>
+      <ion-icon name="list" slot="start" mode="ios"></ion-icon>
+      <ion-label>验货SKU数</ion-label>
+      <ion-text>{{ data.quantity }}</ion-text>
+    </ion-item>
+
+    <ion-item class="activated">
+      <ion-icon name="at" slot="start" mode="ios"></ion-icon>
+      <ion-label>是否与工厂联系</ion-label>
+      <ion-text>{{ data.is_contacked_factory ? "是" : "否" }}</ion-text>
+    </ion-item>
+
+    <ion-item>
+      <ion-icon name="radio-button-off" slot="start" mode="ios"></ion-icon>
+      <ion-label>是否购买车票</ion-label>
+      <ion-text>{{ data.is_bought_ticket ? "是" : "否" }}</ion-text>
+    </ion-item>
+
+    <ion-item>
+      <ion-icon name="map" slot="start" mode="ios"></ion-icon>
+      <ion-label>验货工厂是否曾经验过 </ion-label>
+      <ion-text>{{ data.is_inspected_factory ? "是" : "否" }}</ion-text>
+    </ion-item>
+
+    <!-- <ion-item>
+      <ion-icon name="paper-plane" slot="start" mode="ios"></ion-icon>
+      <ion-label>验货产品是否曾经验过 </ion-label>
+      <ion-text>{{ data.is_inspected_product ? "是" : "否" }}</ion-text>
+    </ion-item> -->
+
+    <ion-item>
+      <ion-icon name="pin" slot="start" mode="ios"></ion-icon>
+      <ion-label>是否规范好时间路线 </ion-label>
+      <ion-text>{{ data.is_plan_date ? "是" : "否" }}</ion-text>
+    </ion-item>
+
+    <!-- <ion-item>
+      <ion-icon name="trending-down" slot="start" mode="ios"></ion-icon>
+      <ion-label>是否熟悉要求 </ion-label>
+      <ion-text>{{ data.is_know_demand ? "是" : "否" }}</ion-text>
+    </ion-item> -->
+  </ion-card>
+</ion-content>

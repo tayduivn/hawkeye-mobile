@@ -1,0 +1,105 @@
+ion-content {
+  position: relative;
+  --background: #f2f2f2;
+}
+.sku-info {
+  background: #f2f2f2;
+  padding: 0 2vh 2vh 2vh;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 200px;
+  left: 0;
+  height: 100%;
+  overflow-x: hidden;
+}
+.ml-1 {
+  margin-left: 0.5%;
+}
+.mr-1 {
+  margin-right: 0.5%;
+}
+
+.title-panel {
+  ion-card {
+    background: #fff;
+    text-align: center;
+    ion-card-title {
+      font-size: 18px;
+    }
+  }
+}
+.title {
+  padding: 15px;
+  width: 100%;
+  background: #fff;
+  color: rgb(102, 102, 102);
+}
+
+ion-grid {
+  background: #fff;
+  font-size: 14px;
+}
+
+.ion-col-no-pad {
+  padding: 0 !important;
+  padding-right: 0 !important;
+}
+
+ion-row {
+  border-top: 1px solid #f0f0f0;
+  border-left: 1px solid #f0f0f0;
+}
+ion-row:last-child {
+  border-bottom: 1px solid #f0f0f0;
+}
+ion-col {
+  border-right: 1px solid #f0f0f0;
+}
+ion-row {
+  ion-button {
+    margin: 0 !important;
+    --padding-start: 0;
+    --padding-end: 5px;
+  }
+}
+
+.factory,
+.contract {
+  ion-card-header {
+    background: #fafafa;
+    ion-card-title {
+      font-weight: bold;
+    }
+  }
+  ion-grid {
+    padding-bottom: 10px;
+  }
+}
+
+.factory {
+  ion-item {
+    --color: #2b2b2b;
+  }
+}
+
+.inner {
+  width: 50%;
+  --inner-padding-end:0;
+  --inner-padding-start:0;
+  --padding-start: 0;
+  --padding-end: 0;
+  --border-color: transparent;
+}
+
+ion-item{
+  .inner:last-child{
+    --padding-start:40px;
+  }
+  .inner:first-child{
+    --padding-end:40px;
+  }
+}
+
+:host ::ng-deep .item-inner {
+  border: 0 !important;
+}
