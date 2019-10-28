@@ -4,11 +4,14 @@
 
 export const environment = {
   production: false,
-  apiUrl:'http://192.168.1.144/api/v1',
+  apiUrl:'http://yy.xdrlgroup.com/api/v1',
   fileUrlPath:'http://114.55.32.144:443',
-  usFileUrl:'http://192.168.1.144/storage/' 
+  usFileUrl:'http://yy.xdrlgroup.com/storage/'  
 };
-
+// production: true,
+// apiUrl:location.origin+'/api/v1',
+// fileUrlPath:'http://114.55.32.144:443',
+// usFileUrl:location.origin + '/storage/'  
 /*
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.

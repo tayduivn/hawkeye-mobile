@@ -146,7 +146,8 @@ export class InspectSkuComponent implements OnInit {
         photo: this.fb.array([]),
         video: this.fb.array([]),
         desc: this.fb.array([])
-      })
+      }),
+      desc:this.fb.array([])
     }),
     outer_box_data: this.fb.group({
       shippingMarks: this.fb.group({
@@ -183,7 +184,8 @@ export class InspectSkuComponent implements OnInit {
         photo: this.fb.array([]),
         video: this.fb.array([]),
         desc: this.fb.array([])
-      })
+      }),
+      desc:this.fb.array([])
     })
   });
 
@@ -201,13 +203,19 @@ export class InspectSkuComponent implements OnInit {
     );
   }
 
-  descEnter(e: string[], type: string) {
-    console.log(e, type);
+  descEnter(e: string[], type: string,box:'inner'|'outer') {
+    // console.log((this.SkuInspectModel.get(box+'_box_data')).get(type));
+    // (((this.SkuInspectModel.get(box+'_box_data') ).get(type) as FormGroup).get('desc') as FormArray)
+    //   .setValue(e)
   }
 
   toggleBoxRate() { }
 
-  save() { }
+  save() { 
+    this.es.showAlert({
+      message:'正在上传……'
+    })
+  }
 
   setPhoto(e: any[], type:string) {
     if (e && e.length) {
@@ -219,5 +227,9 @@ export class InspectSkuComponent implements OnInit {
       (this.SkuInspectModel.get(type) as FormArray).clear();
     }
     (this.SkuInspectModel.get(type) as FormArray).setValue(e);
+  }
+
+  videoOver(e:any,type:string){
+
   }
 }

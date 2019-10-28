@@ -82,9 +82,16 @@
       </ion-item>
     </ion-item>
 
+    <ion-item class="activated">
+        <ion-icon name="menu" slot="start" mode="ios"></ion-icon>
+        <ion-label>合同详情</ion-label>
+        <ion-button fill="clear" size="small" (click)="toSkuDesc(data[0])"
+        >详情</ion-button
+      >
+    </ion-item>
     
   </ion-card>
-
+ 
   <ion-card class="contract" mode="ios">
     <ion-card-header>
       <ion-card-title color="primary">任务</ion-card-title>
@@ -93,17 +100,13 @@
       <ion-row>
         <ion-col align-self-center>合同号</ion-col>
         <ion-col align-self-center>合同SKU数</ion-col>
-        <ion-col align-self-center>合同详情</ion-col>
+       
       </ion-row>
 
-      <ion-row *ngFor="let item of data.contract_info_arr">
-        <ion-col align-self-center>{{ item.contract_no_all }}</ion-col>
+      <ion-row *ngFor="let item of data[0].contract_info_arr">
+        <ion-col align-self-center>{{ item.contract_no }}</ion-col>
         <ion-col align-self-center>{{ item.total_quantity }}</ion-col>
-        <ion-col align-self-center>
-          <ion-button fill="clear" size="small" (click)="toSkuDesc(item)"
-            >详情</ion-button
-          >
-        </ion-col>
+        
       </ion-row>
     </ion-grid>
   </ion-card>

@@ -7,7 +7,7 @@
 
     <ion-buttons slot="end" class="tops">
       <span>箱率：{{ data.rate_container }}</span>
-      <select (change)="toggleBoxRate()" [(ngModel)]="rateStatus">
+      <select (change)="toggleBoxRate()" [(ngModel)]="rateStatus"[disabled]='data.rate_container==1'>
         <!--  [disabled]='data.rate_container==1' -->
         <option value="inner">内箱</option>
         <option value="out">外箱</option>
@@ -39,7 +39,7 @@
     </div>
 
     <!-- 内箱 -->
-    <div class="out-box" *ngIf="rateStatus == 'inner'" [formGroup]="inner_box_data">
+    <div class="out-box" *ngIf="rateStatus == 'inner'" formGroupName="inner_box_data">
       <ion-list>
         <ion-item >
           <div>
@@ -50,7 +50,7 @@
           </div>
         </ion-item>
 
-        <ion-item [formGroup]="size">
+        <ion-item formGroupName="size">
           <div>
             <div class="global-inspect-title">
               <p>尺寸(单位：CM)</p>
@@ -100,11 +100,11 @@
               <p>摔箱测试</p>
             </div>
             <app-photograph (onPhotograph)='setPhoto($event,"photo","throwBox")'></app-photograph>
-            <app-videotape></app-videotape>
+            <app-videotape (onComplete)='videoOver($event,"throwBox")'></app-videotape>
             <div class="test-feedback">
               <div fxLayout="row" fxLayoutAlign="start center">
                 <p class="global-inspect-title gray-color">是否通过：</p>
-                <select class="select">
+                <select class="select" formControlName="isPass">
                   <option value="1">是</option>
                   <option value="0">否</option>
                 </select>
@@ -114,7 +114,7 @@
                   请输入说明
                 </p>
                 <div>
-                  <app-item-by-item-desc (onComplete)="descEnter($event, 'throwBox')"></app-item-by-item-desc>
+                  <app-item-by-item-desc (onComplete)="descEnter($event, 'throwBox','inner')"></app-item-by-item-desc>
                 </div>
               </div>
             </div>
@@ -124,7 +124,7 @@
 
       <!-- 包装 -->
       <ion-list>
-        <ion-item>
+        <ion-item formGroupName="packing">
           <div class="w100">
             <div class="global-inspect-title">
               <p>包装</p>
@@ -136,14 +136,14 @@
             <p class="global-inspect-title gray-color desc-tips">
               包含纸箱层数特写照片
             </p>
-            <app-photograph></app-photograph>
+            <app-photograph (onPhotograph)='setPhoto($event,"packing")'></app-photograph>
 
             <div class="test-feedback">
               <div fxLayout="row" fxLayoutAlign="start center">
                 <p class="global-inspect-title gray-color">
                   是否与以上信息对应？
                 </p>
-                <select class="select">
+                <select class="select" formControlName="isTrue">
                   <option value="1">是</option>
                   <option value="0">否</option>
                 </select>
@@ -153,7 +153,7 @@
                   请输入备注
                 </p>
                 <div>
-                  <app-item-by-item-desc (onComplete)="descEnter($event, 'throwBox')"></app-item-by-item-desc>
+                  <app-item-by-item-desc (onComplete)="descEnter($event, 'packing','inner')"></app-item-by-item-desc>
                 </div>
               </div>
             </div>
@@ -169,68 +169,68 @@
               <p>SKU中文描述</p>
             </div>
 
-            <div class="packing-info">
+            <div class="packing-info" >
               {{ data.chinese_description }}
             </div>
           </div>
         </ion-item>
-        <ion-item>
+        <ion-item formGroupName="layout">
           <div class="w100">
             <div class="global-inspect-title">
               <p>摆放图</p>
             </div>
-            <app-photograph></app-photograph>
+            <app-photograph (onPhotograph)='setPhoto($event,"layout")'></app-photograph>
           </div>
         </ion-item>
-        <ion-item>
+        <ion-item formGroupName="instructions">
           <div class="w100">
             <div class="global-inspect-title">
               <p>说明书及配件包</p>
             </div>
-            <app-photograph></app-photograph>
+            <app-photograph (onPhotograph)='setPhoto($event,"instructions")'></app-photograph>
           </div>
         </ion-item>
       </ion-list>
 
       <!-- 产品整体图 -->
       <ion-list>
-        <ion-item>
+        <ion-item formGroupName="whole">
           <div class="w100">
             <div class="global-inspect-title">
               <p>产品整体图</p>
             </div>
-            <app-photograph></app-photograph>
+            <app-photograph (onPhotograph)='setPhoto($event,"whole")'></app-photograph>
           </div>
         </ion-item>
       </ion-list>
 
       <!-- 产品尺寸 -->
       <ion-list>
-        <ion-item>
+        <ion-item formGroupName="productSize">
           <div>
             <div class="global-inspect-title">
               <p>产品尺寸(单位：CM)</p>
             </div>
             <div class="size" fxLayout="row" fxLayoutAlign="start center">
-              <ion-input type="number" placeholder="长"></ion-input>
-              <ion-input type="number" placeholder="宽"></ion-input>
-              <ion-input type="number" placeholder="高"></ion-input>
+              <ion-input type="number" placeholder="长" formControlName="length"></ion-input>
+              <ion-input type="number" placeholder="宽" formControlName="width"></ion-input>
+              <ion-input type="number" placeholder="高" formControlName="height"></ion-input>
             </div>
-            <app-photograph></app-photograph>
+            <app-photograph (onPhotograph)='setPhoto($event,"whole")'></app-photograph>
           </div>
         </ion-item>
       </ion-list>
 
       <!-- 净重 -->
       <ion-list>
-        <ion-item>
+        <ion-item formGroupName='netWeight'>
           <div>
             <div class="global-inspect-title">
               <p>净重(单位：KG)</p>
             </div>
             <div class="maozhong">
-              <ion-input placeholder="请输入净重" type="number"></ion-input>
-              <app-photograph></app-photograph>
+              <ion-input placeholder="请输入净重" type="number" formControlName="text"></ion-input>
+              <app-photograph (onPhotograph)='setPhoto($event,"netWeight")'></app-photograph>
             </div>
           </div>
         </ion-item>
@@ -253,60 +253,60 @@
 
       <!-- 测试部分 -->
       <ion-list>
-        <ion-item>
+        <ion-item formGroupName='function'>
           <div class="w100">
             <div class="global-inspect-title">
               <p>功能性测试</p>
             </div>
-            <app-photograph></app-photograph>
-            <app-videotape></app-videotape>
+            <app-photograph (onPhotograph)='setPhoto($event,"function")'></app-photograph>
+            <app-videotape (onComplete)='videoOver($event,"function")'></app-videotape>
             <div class="test-feedback">
               <div>
                 <p class="global-inspect-title  gray-color desc-tips">
                   请输入说明
                 </p>
                 <div>
-                  <app-item-by-item-desc (onComplete)="descEnter($event, 'throwBox')"></app-item-by-item-desc>
+                  <app-item-by-item-desc (onComplete)="descEnter($event, 'throwBox','inner')"></app-item-by-item-desc>
                 </div>
               </div>
             </div>
           </div>
         </ion-item>
 
-        <ion-item>
+        <ion-item formGroupName='bearing'>
           <div class="w100">
             <div class="global-inspect-title">
               <p>承重测试</p>
             </div>
-            <app-photograph></app-photograph>
-            <app-videotape></app-videotape>
+            <app-photograph (onPhotograph)='setPhoto($event,"bearing")'></app-photograph>
+            <app-videotape (onComplete)='videoOver($event,"bearing")'></app-videotape>
             <div class="test-feedback">
               <div>
                 <p class="global-inspect-title  gray-color desc-tips">
                   请输入说明
                 </p>
                 <div>
-                  <app-item-by-item-desc (onComplete)="descEnter($event, 'throwBox')"></app-item-by-item-desc>
+                  <app-item-by-item-desc (onComplete)="descEnter($event, 'bearing')"></app-item-by-item-desc>
                 </div>
               </div>
             </div>
           </div>
         </ion-item>
 
-        <ion-item>
+        <ion-item formGroupName='waterContent'>
           <div class="w100">
             <div class="global-inspect-title">
               <p>含水量检测</p>
             </div>
-            <app-photograph></app-photograph>
-            <app-videotape></app-videotape>
+            <app-photograph (onPhotograph)='setPhoto($event,"waterContent")'></app-photograph>
+            <app-videotape (onComplete)='videoOver($event,"waterContent")'></app-videotape>
             <div class="test-feedback">
               <div>
                 <p class="global-inspect-title  gray-color desc-tips">
                   请输入说明
                 </p>
                 <div>
-                  <app-item-by-item-desc (onComplete)="descEnter($event, 'throwBox')"></app-item-by-item-desc>
+                  <app-item-by-item-desc (onComplete)="descEnter($event, 'waterContent')"></app-item-by-item-desc>
                 </div>
               </div>
             </div>
@@ -317,14 +317,14 @@
       <!-- 配件 -->
 
       <!-- 备注 -->
-      <ion-list>
+      <ion-list formArrayName='desc'>
         <ion-item>
           <div class="w100">
             <div class="global-inspect-title">
               <p>备注</p>
             </div>
             <div class="maozhong">
-              <app-item-by-item-desc (onComplete)="descEnter($event, 'throwBox')"></app-item-by-item-desc>
+              <app-item-by-item-desc (onComplete)="descEnter($event, 'desc','inner')"></app-item-by-item-desc>
             </div>
           </div>
         </ion-item>

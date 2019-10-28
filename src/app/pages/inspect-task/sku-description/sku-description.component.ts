@@ -20,6 +20,8 @@ export class SkuDescriptionComponent implements OnInit {
   imgOrigin: string = environment.fileUrlPath;
   ngOnInit() {
     this.data = this.storage.get('CURRENT_INSPECT_CONTRACT')
+    console.log(this.data,'111111')
+
   }
 
   toSkuDetail(p:Sku){

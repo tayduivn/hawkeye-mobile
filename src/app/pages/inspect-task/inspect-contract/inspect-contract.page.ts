@@ -69,11 +69,12 @@ export class InspectContractPage implements OnInit {
     private router: Router
   ) {
     this.screenAngle = this.screen.screenAngle;
-    this.data = this.storage.get("CURRENT_INSPECT_GROUP");
+  
   }
 
   ngOnInit() {
     this.screen.onResize.subscribe(res => (this.screenAngle = res));
+    this.data = this.storage.get("CURRENT_INSPECT_GROUP");
   }
 
   ionViewWillEnter() {

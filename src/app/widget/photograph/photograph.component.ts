@@ -11,8 +11,8 @@ import { Camera, CameraOptions } from "@ionic-native/camera/ngx";
 export class PhotographComponent implements OnInit {
   imgOrigin: string = environment.fileUrlPath;
   @Input() set photos(input: string[]) {
+    if(!input) return
     input = input.map(res => this.imgOrigin + res);
-
     if (!!input) this._photos = input;
   }
 
