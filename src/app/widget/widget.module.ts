@@ -13,11 +13,12 @@ import { MediaCapture } from '@ionic-native/media-capture/ngx';
 import { Media } from '@ionic-native/media/ngx'
 import { VideoPlayer } from '@ionic-native/video-player/ngx';
 import { VideoPlayerDirective } from './video-player.directive';
+import { ImagePicker } from '@ionic-native/image-picker/ngx';
 
 @NgModule({
   declarations: [SKUInfoComponent,
                  PhotographComponent,
-                 VideotapeComponent, 
+                 VideotapeComponent,
                  VideoPlayerDirective,
                  ItemByItemDescComponent,
                  VideoPlayerDirective],
@@ -29,7 +30,7 @@ import { VideoPlayerDirective } from './video-player.directive';
     FormsModule,
     FlexLayoutModule
   ],
-  exports:[SKUInfoComponent,PhotographComponent,VideotapeComponent,VideoPlayerDirective,ItemByItemDescComponent],
-  providers:[Camera,MediaCapture,Media,VideoPlayer]
+  exports: [SKUInfoComponent, PhotographComponent, VideotapeComponent, VideoPlayerDirective, ItemByItemDescComponent],
+  providers: [Camera, MediaCapture, Media, VideoPlayer, ImagePicker]
 })
 export class WidgetModule { }

@@ -27,6 +27,7 @@
     "@ionic-native/core": "^5.0.0",
     "@ionic-native/file": "^5.15.0",
     "@ionic-native/file-transfer": "^5.15.1",
+    "@ionic-native/image-picker": "^5.15.1",
     "@ionic-native/media": "^5.15.0",
     "@ionic-native/media-capture": "^5.15.0",
     "@ionic-native/qr-scanner": "^5.15.0",
@@ -45,6 +46,7 @@
     "cordova-plugin-media-capture": "3.0.3",
     "cordova-plugin-qrscanner": "^3.0.1",
     "cordova-plugin-statusbar": "^2.4.2",
+    "cordova-plugin-telerik-imagepicker": "git+https://github.com/woodstream/ImagePicker.git",
     "cordova-plugin-video-player": "git+https://github.com/moust/cordova-plugin-videoplayer.git",
     "core-js": "^2.5.4",
     "file-transfer": "0.0.0",
@@ -94,14 +96,17 @@
         "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "27.+"
       },
       "cordova-plugin-ionic-keyboard": {},
-      "cordova-plugin-camera": {},
+      "cordova-plugin-camera": {
+        "ANDROID_SUPPORT_V4_VERSION": "27.+"
+      },
       "cordova-clipboard": {},
       "cordova-plugin-file-transfer": {},
       "cordova-plugin-qrscanner": {},
       "cordova-plugin-media-capture": {},
       "cordova-plugin-file": {},
       "cordova-plugin-media": {},
-      "com.moust.cordova.videoplayer": {}
+      "com.moust.cordova.videoplayer": {},
+      "cordova-plugin-telerik-imagepicker": {}
     },
     "platforms": [
       "android"

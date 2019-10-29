@@ -1,17 +1,17 @@
 import { InspectSkuComponent } from './inspect-sku/inspect-sku.component'
 import { DirectiveModule } from './../../directives/directive.module'
 import { SkuListPipe } from './../../pipe/sku-list.pipe'
-import { WidgetModule } from "./../../widget/widget.module"
-import { FlexLayoutModule } from "@angular/flex-layout"
-import { NgModule } from "@angular/core"
-import { CommonModule } from "@angular/common"
-import { FormsModule, ReactiveFormsModule } from "@angular/forms"
-import { Routes, RouterModule } from "@angular/router"
+import { WidgetModule } from './../../widget/widget.module'
+import { FlexLayoutModule } from '@angular/flex-layout'
+import { NgModule } from '@angular/core'
+import { CommonModule } from '@angular/common'
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'
+import { Routes, RouterModule } from '@angular/router'
 
-import { IonicModule } from "@ionic/angular"
+import { IonicModule } from '@ionic/angular'
 
-import { ImplementInspectionPage } from "./implement-inspection.page"
-import { ContractPipe } from "src/app/pipe/contract.pipe"
+import { ImplementInspectionPage } from './implement-inspection.page'
+import { ContractPipe } from 'src/app/pipe/contract.pipe'
 import { InspectFactoryComponent } from './inspect-factory/inspect-factory.component'
 import { Camera } from '@ionic-native/camera/ngx'
 import { InspectPoComponent } from './inspect-po/inspect-po.component'
@@ -19,7 +19,7 @@ import { TestPipe } from 'src/app/pipe/test.pipe'
 
 const routes: Routes = [
   {
-    path: "implement-inspection",
+    path: 'implement-inspection',
     component: ImplementInspectionPage
   },
   {
@@ -31,7 +31,7 @@ const routes: Routes = [
     component:InspectPoComponent
   },
   {
-    path:'inspect-sku/:sku',
+    path:'inspect-sku',
     component:InspectSkuComponent
   }
 ]

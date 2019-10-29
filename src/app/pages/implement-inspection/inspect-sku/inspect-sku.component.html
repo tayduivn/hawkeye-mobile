@@ -7,7 +7,7 @@
 
     <ion-buttons slot="end" class="tops">
       <span>箱率：{{ data.rate_container }}</span>
-      <select (change)="toggleBoxRate()" [(ngModel)]="rateStatus"[disabled]='data.rate_container==1'>
+      <select (change)="toggleBoxRate()" [(ngModel)]="rateStatus">
         <!--  [disabled]='data.rate_container==1' -->
         <option value="inner">内箱</option>
         <option value="out">外箱</option>
@@ -41,7 +41,7 @@
     <!-- 内箱 -->
     <div class="out-box" *ngIf="rateStatus == 'inner'" formGroupName="inner_box_data">
       <ion-list>
-        <ion-item >
+        <ion-item>
           <div>
             <div class="global-inspect-title">
               <p>唛头(照相需六面)</p>
@@ -72,7 +72,7 @@
               <p>条码</p>
             </div>
             <div class="bar-code" fxLayout="row" fxLayoutAlign="start center">
-              <input class="h-30" placeholder="请输入条码" formControlName="barCode"/>
+              <input class="h-30" placeholder="请输入条码" formControlName="barCode" />
               <ion-button [fill]="'clear'" (click)="scan()" [disabled]="barCode">
                 {{ barCode ? barCode : "扫码" }}
               </ion-button>
@@ -169,7 +169,7 @@
               <p>SKU中文描述</p>
             </div>
 
-            <div class="packing-info" >
+            <div class="packing-info">
               {{ data.chinese_description }}
             </div>
           </div>

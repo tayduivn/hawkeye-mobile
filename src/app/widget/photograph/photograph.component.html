@@ -1,20 +1,22 @@
 <ul class="img-list" imgGallery>
-  <li
-    *ngFor="let item of _photos; index as i"
-    class="image-list pos-r"
-  >
+  <li *ngFor="let item of _photos; index as i" class="image-list pos-r">
     <img [src]="item" alt="" />
     <div class="pos-a">
-      <ion-icon
-        name="close"
-        mode="ios"
-        (click)="remove(i)"
-      ></ion-icon>
+      <ion-icon name="close" mode="ios" (click)="remove(i)"></ion-icon>
     </div>
   </li>
 
   <li>
     <div
+      class="add-image-small"
+      fxLayout="row"
+      (click)="photograph()"
+      fxLayoutAlign="start center"
+    >
+      <ion-icon name="cloud-upload" mode="ios"></ion-icon>
+      <p>上传照片</p>
+    </div>
+    <!-- <div
       class="add-image"
       fxLayout="column"
       (click)="photograph()"
@@ -22,6 +24,6 @@
     >
       <ion-icon name="add" mode="md"></ion-icon>
       <p>上传照片</p>
-    </div>
+    </div> -->
   </li>
 </ul>

@@ -32,7 +32,6 @@
             <label>工厂环境照片：</label>
             <div class="label-right">
               <app-photograph
-                [photos]="factoryModel.get('environments').value"
                 (onPhotograph)="setPhoto($event, 'environments')"
               ></app-photograph>
             </div>
@@ -245,7 +244,7 @@
             <ion-input
               placeholder="请输入工厂工人数"
               formControlName="worksNum"
-              type='number'
+              type="number"
             ></ion-input>
           </div>
           <div
