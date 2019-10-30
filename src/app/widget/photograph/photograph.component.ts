@@ -43,6 +43,7 @@ export class PhotographComponent implements OnInit {
       header: '上传方式',
       buttons: [{
         text: '拍照',
+        role: '',
         icon: 'camera',
         handler: () => {
           this.graph();

@@ -14,6 +14,7 @@ import { Media } from '@ionic-native/media/ngx'
 import { VideoPlayer } from '@ionic-native/video-player/ngx';
 import { VideoPlayerDirective } from './video-player.directive';
 import { ImagePicker } from '@ionic-native/image-picker/ngx';
+import { FileChooser } from '@ionic-native/file-chooser/ngx';
 
 @NgModule({
   declarations: [SKUInfoComponent,
@@ -31,6 +32,6 @@ import { ImagePicker } from '@ionic-native/image-picker/ngx';
     FlexLayoutModule
   ],
   exports: [SKUInfoComponent, PhotographComponent, VideotapeComponent, VideoPlayerDirective, ItemByItemDescComponent],
-  providers: [Camera, MediaCapture, Media, VideoPlayer, ImagePicker]
+  providers: [Camera, MediaCapture, Media, VideoPlayer, ImagePicker, FileChooser]
 })
 export class WidgetModule { }
