@@ -26,6 +26,7 @@ export class VideotapeComponent implements OnInit {
   _videos: MediaFile[][] = [
 
   ];
+  
   ngOnInit() {}
 
   videotape() {
