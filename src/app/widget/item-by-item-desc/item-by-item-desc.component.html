@@ -4,7 +4,7 @@
       fxLayoutAlign="start center"
       *ngFor="let item of data; index as i"
     >
-      <ion-textarea placeholder="请输入" formControlName="{{ i }}" (ionBlur)='formToAry()'></ion-textarea>
+      <ion-textarea [placeholder]="'请输入' + description" formControlName="{{ i }}" (ionBlur)='formToAry()'></ion-textarea>
      
       <ion-button fill='clear'
         *ngIf="i == data.length - 1"

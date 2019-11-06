@@ -136,6 +136,7 @@ export class InspectPoComponent implements OnInit {
         });
         if (res.status) {
           this.storage.set('CURRENT_IMPLEMENT_SKU', this.currentSku);
+          this.storage.set('CURRENT_FACTORY_DATA', this.data)
           setTimeout(() => {
             this.router.navigate(['/inspect-sku']);
           }, 1000);

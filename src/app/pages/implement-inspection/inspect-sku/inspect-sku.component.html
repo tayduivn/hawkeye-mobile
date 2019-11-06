@@ -14,7 +14,12 @@
       </select>
     </ion-buttons>
     <ion-buttons slot="end">
-      <ion-back-button defaultHref="/inspect-po" text="返回" color="white" mode="md"></ion-back-button>
+      <ion-back-button
+        defaultHref=""
+        text="返回"
+        color="white"
+        mode="md"
+      ></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -22,86 +27,265 @@
 <ion-content>
   <app-sku-info [sku]="data" type="implement"></app-sku-info>
 
+  <div class="label-item">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="1.8">工厂备注:</ion-col>
+        <ion-col size="10.2">{{ factory.factory_desc }}</ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+
+  <div class="toggle-box">
+    <!-- Default Segment -->
+    <ion-segment
+      (ionChange)="segmentChanged($event)"
+      mode="ios"
+      [(ngModel)]="currentToggle.key"
+    >
+      <ion-segment-button value="beforeUnpacking" mode="ios">
+        <ion-label>开箱前</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="afterUnpacking" mode="ios">
+        <ion-label>开箱后</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="requirement" mode="ios">
+        <ion-label>验货要求</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+
   <form [formGroup]="SkuInspectModel">
-    <div class="out-box">
+    <div class="out-box" *ngIf="currentToggle.key == 'beforeUnpacking'">
       <ion-list>
         <ion-item fxLayout="row" fxLayoutAlign="start center">
           <div class="header-input" fxLayout="row" fxLayoutAlign="start center">
-            <label class="label">抽检数量</label>
-            <ion-input placeholder="0" type="number" formControlName="spotCheckNum"></ion-input>
+            <label class="label">计划抽检数量</label>
+            <ion-input
+              placeholder="0"
+              type="number"
+              formControlName="spotCheckNum"
+            ></ion-input>
           </div>
           <div class="header-input" fxLayout="row" fxLayoutAlign="start center">
             <label class="label">PO号</label>
-            <ion-input placeholder="请填写PO号" formControlName='poNo' type="text"></ion-input>
+            <ion-input
+              placeholder="请填写PO号"
+              formControlName="poNo"
+              type="text"
+            ></ion-input>
           </div>
         </ion-item>
       </ion-list>
     </div>
 
     <!-- 内箱 -->
-    <div class="out-box" *ngIf="rateStatus == 'inner'" formGroupName="inner_box_data">
-      <ion-list>
+    <div
+      class="out-box"
+      *ngIf="rateStatus == 'inner'"
+      formGroupName="inner_box_data"
+    >
+      <ion-list *ngIf="currentToggle.key == 'beforeUnpacking'">
         <ion-item>
-          <div>
+          <div class="w100">
             <div class="global-inspect-title">
               <p>唛头(照相需六面)</p>
             </div>
-            <app-photograph (onPhotograph)="setPhoto($event, 'shippingMarks')"></app-photograph>
+
+            <app-photograph
+              (onPhotograph)="setPhoto($event, 'shippingMarks')"
+            ></app-photograph>
+
+            <div class="desc-box">
+              <app-item-by-item-desc
+                description="备注"
+                (onComplete)="descEnter($event, 'shippingMarks', 'inner')"
+              ></app-item-by-item-desc>
+            </div>
           </div>
         </ion-item>
 
         <ion-item formGroupName="size">
-          <div>
+          <div class="w100">
             <div class="global-inspect-title">
-              <p>尺寸(单位：CM)</p>
+              <p>尺寸(单位：CM,叠高高度：1-2M）</p>
             </div>
-            <div class="size" fxLayout="row" fxLayoutAlign="start center">
-              <ion-input type="number" placeholder="长" formControlName="length"></ion-input>
-              <ion-input type="number" placeholder="宽" formControlName="width"></ion-input>
-              <ion-input type="number" placeholder="高" formControlName="height"></ion-input>
+
+            <div class="w100">
+              <ion-grid class="size-grid">
+                <ion-row align-items-center>
+                  <ion-col size="2">外箱尺寸</ion-col>
+                  <ion-col size="3">叠高数量</ion-col>
+                  <ion-col size="7">照片上传</ion-col>
+                </ion-row>
+
+                <ion-row align-items-center>
+                  <ion-col size="2">长</ion-col>
+                  <ion-col size="3">
+                    <input
+                      type="number"
+                      placeholder="长"
+                      formControlName="length"
+                    />
+                  </ion-col>
+                  <ion-col size="7">
+                    <app-photograph
+                      (onPhotograph)="setPhoto($event, 'size', 'length')"
+                    ></app-photograph>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row align-items-center>
+                  <ion-col size="2">宽</ion-col>
+                  <ion-col size="3">
+                    <input
+                      type="number"
+                      placeholder="宽"
+                      formControlName="width"
+                    />
+                  </ion-col>
+                  <ion-col size="7">
+                    <app-photograph
+                      (onPhotograph)="setPhoto($event, 'size', 'width')"
+                    ></app-photograph>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row align-items-center>
+                  <ion-col size="2">高</ion-col>
+                  <ion-col size="3">
+                    <input
+                      type="number"
+                      placeholder="高"
+                      formControlName="height"
+                    />
+                  </ion-col>
+                  <ion-col size="7">
+                    <app-photograph
+                      (onPhotograph)="setPhoto($event, 'size', 'height')"
+                    ></app-photograph>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
             </div>
-            <app-photograph (onPhotograph)="setPhoto($event,'photo','size')"></app-photograph>
+
+            <div class="desc-box">
+              <app-item-by-item-desc
+                description="备注"
+                (onComplete)="descEnter($event, 'shippingMarks', 'inner')"
+              ></app-item-by-item-desc>
+            </div>
           </div>
         </ion-item>
       </ion-list>
 
-      <ion-list>
+      <ion-list *ngIf="currentToggle.key == 'beforeUnpacking'">
         <ion-item>
-          <div>
+          <div class="w100">
             <div class="global-inspect-title">
               <p>条码</p>
             </div>
             <div class="bar-code" fxLayout="row" fxLayoutAlign="start center">
-              <input class="h-30" placeholder="请输入条码" formControlName="barCode" />
-              <ion-button [fill]="'clear'" (click)="scan()" [disabled]="barCode">
+              <input
+                class="h-30"
+                placeholder="请输入条码"
+                formControlName="barCode"
+              />
+              <ion-button
+                [fill]="'clear'"
+                (click)="scan()"
+                [disabled]="barCode"
+              >
                 {{ barCode ? barCode : "扫码" }}
               </ion-button>
+            </div>
+            <app-photograph
+              (onPhotograph)="setPhoto($event, 'photo', 'throwBox')"
+            ></app-photograph>
+
+            <div fxLayout="row" fxLayoutAlign="start center">
+              <p class="global-inspect-title gray-color">
+                是否六面条码一致？
+              </p>
+              <select class="select">
+                <option value="1">是</option>
+                <option value="0">否</option>
+              </select>
+            </div>
+            <div class="desc-box">
+              <app-item-by-item-desc
+                description="备注"
+                (onComplete)="descEnter($event, 'shippingMarks', 'inner')"
+              ></app-item-by-item-desc>
             </div>
           </div>
         </ion-item>
         <ion-item formGroupName="grossWeight">
-          <div>
+          <div class="w100">
             <div class="global-inspect-title">
               <p>毛重(单位：KG)</p>
             </div>
             <div class="maozhong">
-              <ion-input placeholder="请输入毛重" type="number" formControlName="text"></ion-input>
-              <app-photograph (onPhotograph)='setPhoto($event,"photo","grossWeight")'></app-photograph>
+              <div fxLayout="row" fxLayoutAlign="start start">
+                <div class="w-100">
+                  <ion-input
+                    placeholder="请输入毛重"
+                    type="number"
+                    class="mr-10"
+                    formControlName="text"
+                  ></ion-input>
+                </div>
+
+                <div class="w-100">
+                  <ion-input
+                    placeholder="请输入毛重"
+                    type="number"
+                    class="mr-10"
+                    formControlName="text"
+                  ></ion-input>
+                </div>
+
+                <div class="w-100">
+                  <ion-input
+                    placeholder="请输入毛重"
+                    type="number"
+                    class="mr-10"
+                    formControlName="text"
+                  ></ion-input>
+                </div>
+              </div>
+
+              <app-photograph
+                (onPhotograph)="setPhoto($event, 'photo', 'grossWeight')"
+              ></app-photograph>
+              <div class="desc-box">
+                <app-item-by-item-desc
+                  description="备注"
+                  (onComplete)="descEnter($event, 'shippingMarks', 'inner')"
+                ></app-item-by-item-desc>
+              </div>
             </div>
           </div>
         </ion-item>
       </ion-list>
 
       <!-- 摔箱视频 -->
-      <ion-list>
+      <ion-list *ngIf="currentToggle.key == 'beforeUnpacking'">
         <ion-item formGroupName="throwBox">
           <div class="w100">
             <div class="global-inspect-title">
               <p>摔箱测试</p>
             </div>
-            <app-photograph (onPhotograph)='setPhoto($event,"photo","throwBox")'></app-photograph>
-            <app-videotape (onComplete)='videoOver($event,"throwBox")'></app-videotape>
-            <div class="test-feedback">
+
+            <div fxLayout="row" fxLayoutAlign="start center">
+              <div
+                class="header-input w180"
+                fxLayout="row"
+                fxLayoutAlign="start center"
+              >
+                <label class="label">计划摔箱数</label>
+                <ion-input placeholder="0" type="number"></ion-input>
+              </div>
               <div fxLayout="row" fxLayoutAlign="start center">
                 <p class="global-inspect-title gray-color">是否通过：</p>
                 <select class="select" formControlName="isPass">
@@ -109,12 +293,23 @@
                   <option value="0">否</option>
                 </select>
               </div>
+            </div>
+
+            <app-photograph
+              (onPhotograph)="setPhoto($event, 'photo', 'throwBox')"
+            ></app-photograph>
+            <app-videotape
+              (onComplete)="videoOver($event, 'throwBox')"
+            ></app-videotape>
+            <div class="test-feedback">
               <div>
                 <p class="global-inspect-title  gray-color desc-tips">
                   请输入说明
                 </p>
                 <div>
-                  <app-item-by-item-desc (onComplete)="descEnter($event, 'throwBox','inner')"></app-item-by-item-desc>
+                  <app-item-by-item-desc
+                    (onComplete)="descEnter($event, 'throwBox', 'inner')"
+                  ></app-item-by-item-desc>
                 </div>
               </div>
             </div>
@@ -123,7 +318,7 @@
       </ion-list>
 
       <!-- 包装 -->
-      <ion-list>
+      <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
         <ion-item formGroupName="packing">
           <div class="w100">
             <div class="global-inspect-title">
@@ -136,24 +331,43 @@
             <p class="global-inspect-title gray-color desc-tips">
               包含纸箱层数特写照片
             </p>
-            <app-photograph (onPhotograph)='setPhoto($event,"packing")'></app-photograph>
+            <app-photograph
+              (onPhotograph)="setPhoto($event, 'packing')"
+            ></app-photograph>
 
             <div class="test-feedback">
               <div fxLayout="row" fxLayoutAlign="start center">
-                <p class="global-inspect-title gray-color">
-                  是否与以上信息对应？
-                </p>
-                <select class="select" formControlName="isTrue">
-                  <option value="1">是</option>
-                  <option value="0">否</option>
-                </select>
+                <div fxLayout="row" fxLayoutAlign="start center">
+                  <p class="global-inspect-title gray-color">
+                    是否与以上信息对应？
+                  </p>
+                  <select class="select" formControlName="isTrue">
+                    <option value="1">是</option>
+                    <option value="0">否</option>
+                  </select>
+                </div>
+
+                <div class="ml-10" fxLayout="row" fxLayoutAlign="start center">
+                  <p class="global-inspect-title gray-color">
+                    请选择纸箱类型
+                  </p>
+                  <select class="select">
+                    <option value="1">三层单瓦楞</option>
+                    <option value="2">五层双瓦楞</option>
+                    <option value="3">七层三瓦楞</option>
+                    <option value="4">双纸箱</option>
+                  </select>
+                </div>
               </div>
+
               <div>
                 <p class="global-inspect-title  gray-color desc-tips">
                   请输入备注
                 </p>
                 <div>
-                  <app-item-by-item-desc (onComplete)="descEnter($event, 'packing','inner')"></app-item-by-item-desc>
+                  <app-item-by-item-desc
+                    (onComplete)="descEnter($event, 'packing', 'inner')"
+                  ></app-item-by-item-desc>
                 </div>
               </div>
             </div>
@@ -162,7 +376,150 @@
       </ion-list>
 
       <!-- 摆放图与说明书及配件包 -->
-      <ion-list>
+      <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
+        <ion-item formGroupName="layout">
+          <div class="w100">
+            <div class="global-inspect-title">
+              <p>摆放图</p>
+            </div>
+            <app-photograph
+              (onPhotograph)="setPhoto($event, 'layout')"
+            ></app-photograph>
+            <div class="pb-10">
+              <p class="global-inspect-title  gray-color desc-tips">
+                请输入备注
+              </p>
+              <div>
+                <app-item-by-item-desc
+                  (onComplete)="descEnter($event, 'layout', 'inner')"
+                ></app-item-by-item-desc>
+              </div>
+            </div>
+          </div>
+        </ion-item>
+      </ion-list>
+      <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
+        <ion-item formGroupName="productDetail">
+          <div class="w100">
+            <div class="global-inspect-title">
+              <p>产品细节图</p>
+            </div>
+
+            <app-photograph
+              (onPhotograph)="setPhoto($event, 'instructions')"
+            ></app-photograph>
+            <div class="pb-10">
+              <p class="global-inspect-title  gray-color desc-tips">
+                请输入备注
+              </p>
+              <div>
+                <app-item-by-item-desc
+                  (onComplete)="descEnter($event, 'instructions', 'inner')"
+                ></app-item-by-item-desc>
+              </div>
+            </div>
+          </div>
+        </ion-item>
+      </ion-list>
+      <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
+        <ion-item formGroupName="instructions">
+          <div class="w100">
+            <div class="global-inspect-title">
+              <p>说明书</p>
+            </div>
+
+            <div class="ask-about" fxLayout="row" fxLayoutAlign="start center">
+              <div class="item" fxLayout="row" fxLayoutAlign="start center">
+                <p class="global-inspect-title gray-color">是否有说明书</p>
+                <select class="select">
+                  <option value="1">是</option>
+                  <option value="0">否</option>
+                </select>
+              </div>
+
+              <div class="item ml-15" fxLayout="row" fxLayoutAlign="start center">
+                <label class="global-inspect-title gray-color">选择说明书类型</label>
+                <select class="select">
+                  <option value="1">中性说明书</option>
+                  <option value="2">我司说明书</option>
+                </select>
+              </div>
+            </div>
+
+            <app-photograph
+              (onPhotograph)="setPhoto($event, 'instructions')"
+            ></app-photograph>
+            <div class="pb-10">
+              <p class="global-inspect-title  gray-color desc-tips">
+                请输入备注
+              </p>
+              <div>
+                <app-item-by-item-desc
+                  (onComplete)="descEnter($event, 'instructions', 'inner')"
+                ></app-item-by-item-desc>
+              </div>
+            </div>
+          </div>
+        </ion-item>
+
+        <ion-item formGroupName="crews">
+          <div class="w100">
+            <div class="global-inspect-title">
+              <p>螺丝包</p>
+            </div>
+
+            <div class="ask-about">
+              <div class="item" fxLayout="row" fxLayoutAlign="start center">
+                <p class="global-inspect-title gray-color">是否有螺丝包</p>
+                <select class="select">
+                  <option value="1">是</option>
+                  <option value="0">否</option>
+                </select>
+              </div>
+            </div>
+
+            <app-photograph
+              (onPhotograph)="setPhoto($event, 'instructions')"
+            ></app-photograph>
+            <div class="pb-10">
+              <p class="global-inspect-title  gray-color desc-tips">
+                请输入备注
+              </p>
+              <div>
+                <app-item-by-item-desc
+                  (onComplete)="descEnter($event, 'instructions', 'inner')"
+                ></app-item-by-item-desc>
+              </div>
+            </div>
+          </div>
+        </ion-item>
+      </ion-list>
+
+      <!-- 产品整体图 -->
+      <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
+        <ion-item formGroupName="whole">
+          <div class="w100">
+            <div class="global-inspect-title">
+              <p>产品整体图</p>
+            </div>
+            <app-photograph
+              (onPhotograph)="setPhoto($event, 'whole')"
+            ></app-photograph>
+            <div class="pb-10">
+              <p class="global-inspect-title  gray-color desc-tips">
+                请输入备注
+              </p>
+              <div>
+                <app-item-by-item-desc
+                  (onComplete)="descEnter($event, 'whole', 'inner')"
+                ></app-item-by-item-desc>
+              </div>
+            </div>
+          </div>
+        </ion-item>
+      </ion-list>
+
+      <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
         <ion-item>
           <div class="w100">
             <div class="global-inspect-title">
@@ -172,141 +529,201 @@
             <div class="packing-info">
               {{ data.chinese_description }}
             </div>
-          </div>
-        </ion-item>
-        <ion-item formGroupName="layout">
-          <div class="w100">
-            <div class="global-inspect-title">
-              <p>摆放图</p>
-            </div>
-            <app-photograph (onPhotograph)='setPhoto($event,"layout")'></app-photograph>
-          </div>
-        </ion-item>
-        <ion-item formGroupName="instructions">
-          <div class="w100">
-            <div class="global-inspect-title">
-              <p>说明书及配件包</p>
-            </div>
-            <app-photograph (onPhotograph)='setPhoto($event,"instructions")'></app-photograph>
-          </div>
-        </ion-item>
-      </ion-list>
 
-      <!-- 产品整体图 -->
-      <ion-list>
-        <ion-item formGroupName="whole">
-          <div class="w100">
-            <div class="global-inspect-title">
-              <p>产品整体图</p>
+            <div class="w100">
+              <div>
+                <ion-textarea placeholder="请输入SKU描述争议"></ion-textarea>
+              </div>
             </div>
-            <app-photograph (onPhotograph)='setPhoto($event,"whole")'></app-photograph>
           </div>
         </ion-item>
       </ion-list>
 
       <!-- 产品尺寸 -->
-      <ion-list>
+      <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
         <ion-item formGroupName="productSize">
-          <div>
+          <div class="w100">
             <div class="global-inspect-title">
               <p>产品尺寸(单位：CM)</p>
             </div>
             <div class="size" fxLayout="row" fxLayoutAlign="start center">
-              <ion-input type="number" placeholder="长" formControlName="length"></ion-input>
-              <ion-input type="number" placeholder="宽" formControlName="width"></ion-input>
-              <ion-input type="number" placeholder="高" formControlName="height"></ion-input>
+              <ion-input
+                type="number"
+                placeholder="长"
+                formControlName="length"
+              ></ion-input>
+              <ion-input
+                type="number"
+                placeholder="宽"
+                formControlName="width"
+              ></ion-input>
+              <ion-input
+                type="number"
+                placeholder="高"
+                formControlName="height"
+              ></ion-input>
             </div>
-            <app-photograph (onPhotograph)='setPhoto($event,"whole")'></app-photograph>
+            <app-photograph
+              (onPhotograph)="setPhoto($event, 'whole')"
+            ></app-photograph>
+            <div class="pb-10">
+              <p class="global-inspect-title  gray-color desc-tips">
+                请输入备注
+              </p>
+              <div>
+                <app-item-by-item-desc
+                  (onComplete)="descEnter($event, 'productSize', 'inner')"
+                ></app-item-by-item-desc>
+              </div>
+            </div>
           </div>
         </ion-item>
       </ion-list>
 
       <!-- 净重 -->
-      <ion-list>
-        <ion-item formGroupName='netWeight'>
-          <div>
+      <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
+        <ion-item formGroupName="netWeight">
+          <div class="w100">
             <div class="global-inspect-title">
               <p>净重(单位：KG)</p>
             </div>
             <div class="maozhong">
-              <ion-input placeholder="请输入净重" type="number" formControlName="text"></ion-input>
-              <app-photograph (onPhotograph)='setPhoto($event,"netWeight")'></app-photograph>
+              <div fxLayout="row" fxLayoutAlign="start center">
+                <ion-input
+                  placeholder="请输入净重"
+                  type="number"
+                  class="mr-10"
+                  formControlName="textOne"
+                ></ion-input>
+
+                <ion-input
+                  placeholder="请输入净重"
+                  type="number"
+                  formControlName="textTwo"
+                ></ion-input>
+              </div>
+              <app-photograph
+                (onPhotograph)="setPhoto($event, 'netWeight')"
+              ></app-photograph>
+              <div class="pb-10">
+                <p class="global-inspect-title  gray-color desc-tips">
+                  请输入备注
+                </p>
+                <div>
+                  <app-item-by-item-desc
+                    (onComplete)="descEnter($event, 'productSize', 'inner')"
+                  ></app-item-by-item-desc>
+                </div>
+              </div>
             </div>
           </div>
         </ion-item>
       </ion-list>
 
       <!-- 外观检测选项 -->
-      <ion-list>
+      <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
         <ion-item>
-          <div>
+          <div class="w100">
             <div class="global-inspect-title">
               <p>外观检测选项</p>
             </div>
             <div class="maozhong">
               <ion-input placeholder="外观检测选项" type="number"></ion-input>
               <app-photograph></app-photograph>
+              <app-videotape
+                (onComplete)="videoOver($event, 'waterContent')"
+              ></app-videotape>
+              <div class="test-feedback">
+                <div>
+                  <p class="global-inspect-title  gray-color desc-tips">
+                    请输入说明
+                  </p>
+                  <div>
+                    <app-item-by-item-desc
+                      (onComplete)="descEnter($event, 'waterContent')"
+                    ></app-item-by-item-desc>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </ion-item>
       </ion-list>
 
       <!-- 测试部分 -->
-      <ion-list>
-        <ion-item formGroupName='function'>
+      <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
+        <ion-item formGroupName="function">
           <div class="w100">
             <div class="global-inspect-title">
               <p>功能性测试</p>
             </div>
-            <app-photograph (onPhotograph)='setPhoto($event,"function")'></app-photograph>
-            <app-videotape (onComplete)='videoOver($event,"function")'></app-videotape>
+            <app-photograph
+              (onPhotograph)="setPhoto($event, 'function')"
+            ></app-photograph>
+            <app-videotape
+              (onComplete)="videoOver($event, 'function')"
+            ></app-videotape>
             <div class="test-feedback">
               <div>
                 <p class="global-inspect-title  gray-color desc-tips">
                   请输入说明
                 </p>
                 <div>
-                  <app-item-by-item-desc (onComplete)="descEnter($event, 'throwBox','inner')"></app-item-by-item-desc>
+                  <app-item-by-item-desc
+                    (onComplete)="descEnter($event, 'throwBox', 'inner')"
+                  ></app-item-by-item-desc>
                 </div>
               </div>
             </div>
           </div>
         </ion-item>
 
-        <ion-item formGroupName='bearing'>
+        <ion-item formGroupName="bearing">
           <div class="w100">
             <div class="global-inspect-title">
               <p>承重测试</p>
             </div>
-            <app-photograph (onPhotograph)='setPhoto($event,"bearing")'></app-photograph>
-            <app-videotape (onComplete)='videoOver($event,"bearing")'></app-videotape>
+            <app-photograph
+              (onPhotograph)="setPhoto($event, 'bearing')"
+            ></app-photograph>
+            <app-videotape
+              (onComplete)="videoOver($event, 'bearing')"
+            ></app-videotape>
             <div class="test-feedback">
               <div>
                 <p class="global-inspect-title  gray-color desc-tips">
                   请输入说明
                 </p>
                 <div>
-                  <app-item-by-item-desc (onComplete)="descEnter($event, 'bearing')"></app-item-by-item-desc>
+                  <app-item-by-item-desc
+                    (onComplete)="descEnter($event, 'bearing')"
+                  ></app-item-by-item-desc>
                 </div>
               </div>
             </div>
           </div>
         </ion-item>
 
-        <ion-item formGroupName='waterContent'>
+        <ion-item formGroupName="waterContent">
           <div class="w100">
             <div class="global-inspect-title">
               <p>含水量检测</p>
             </div>
-            <app-photograph (onPhotograph)='setPhoto($event,"waterContent")'></app-photograph>
-            <app-videotape (onComplete)='videoOver($event,"waterContent")'></app-videotape>
+            <app-photograph
+              (onPhotograph)="setPhoto($event, 'waterContent')"
+            ></app-photograph>
+            <app-videotape
+              (onComplete)="videoOver($event, 'waterContent')"
+            ></app-videotape>
             <div class="test-feedback">
               <div>
                 <p class="global-inspect-title  gray-color desc-tips">
                   请输入说明
                 </p>
                 <div>
-                  <app-item-by-item-desc (onComplete)="descEnter($event, 'waterContent')"></app-item-by-item-desc>
+                  <app-item-by-item-desc
+                    (onComplete)="descEnter($event, 'waterContent')"
+                  ></app-item-by-item-desc>
                 </div>
               </div>
             </div>
@@ -314,26 +731,154 @@
         </ion-item>
       </ion-list>
 
-      <!-- 配件 -->
+      <!-- 总结 -->
+      <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
+        <ion-item formGroupName="sumUp">
+          <div class="w100">
+            <div class="global-inspect-title">
+              <p>总结</p>
+            </div>
+          </div>
+
+          <div class="maozhong">
+            <ion-input
+              placeholder="请输入实际抽检数量"
+              type="number"
+              class="mr-10"
+              formControlName="textOne"
+            ></ion-input>
+
+            <ion-input
+              placeholder="请输入实际摔箱数量"
+              type="number"
+              formControlName="textTwo"
+            ></ion-input>
+          </div>
+        </ion-item>
+      </ion-list>
 
       <!-- 备注 -->
-      <ion-list formArrayName='desc'>
+      <ion-list
+        formArrayName="desc"
+        *ngIf="currentToggle.key == 'afterUnpacking'"
+      >
         <ion-item>
           <div class="w100">
             <div class="global-inspect-title">
               <p>备注</p>
             </div>
             <div class="maozhong">
-              <app-item-by-item-desc (onComplete)="descEnter($event, 'desc','inner')"></app-item-by-item-desc>
+              <app-item-by-item-desc
+                (onComplete)="descEnter($event, 'desc', 'inner')"
+              ></app-item-by-item-desc>
             </div>
           </div>
         </ion-item>
       </ion-list>
+
+      <!-- 验货要求 -->
+      <ion-grid
+        class="inspection_require"
+        *ngIf="currentToggle.key == 'requirement'"
+      >
+        <ion-row>
+          <ion-col [size]="1.8">验货条目</ion-col>
+          <ion-col size=".9">要求图片</ion-col>
+          <ion-col [size]="4.2">验货要求</ion-col>
+          <ion-col [size]="4.1">验货标准</ion-col>
+          <ion-col [size]="1">要求反馈</ion-col>
+        </ion-row>
+        <ng-container
+          *ngIf="data.inspection_require && data.inspection_require.length"
+        >
+          <ion-row *ngFor="let item of data.inspection_require; let i = index">
+            <ion-col [size]="1.8" class="content" Chipboard class="chip-text ">
+              {{ item.theme_name }}
+            </ion-col>
+            <ion-col size=".9">
+              <div
+                class="img-box desc"
+                *ngIf="item.pic && item.pic.length"
+                imgGallery
+              >
+                <ng-container *ngFor="let item of item.pic; let i = index">
+                  <img [src]="imgOrigin + item" alt="" *ngIf="i == 0" />
+                </ng-container>
+              </div>
+              <ion-text class="danger" *ngIf="!item.pic.length">暂无</ion-text>
+            </ion-col>
+            <ion-col
+              [size]="4.2"
+              class="content"
+              Chipboard
+              class="chip-text content"
+            >
+              <div>
+                {{ item.require }}
+              </div>
+              <div class="danger" *ngIf="item.type == 'cannot'">
+                没法执行！
+              </div>
+              <div
+                class="danger"
+                *ngIf="
+                  !item.cannot_inspection_task_advise &&
+                  item.unreasonable_inspection_task_advise &&
+                  item.improve_inspection_task_advise &&
+                  item.type != 'cannot'
+                "
+              >
+                <span>不合理之处: </span>
+                <span>{{ item.unreasonable_inspection_task_advise }}</span>
+              </div>
+              <div
+                class="danger"
+                *ngIf="
+                  !item.cannot_inspection_task_advise &&
+                  item.improve_inspection_task_advise &&
+                  item.type != 'cannot'
+                "
+              >
+                <span>改进建议: </span>
+                <span>{{ item.improve_inspection_task_advise }}</span>
+              </div>
+            </ion-col>
+            <ion-col
+              [size]="4.1"
+              class="content"
+              Chipboard
+              class="chip-text content"
+              >{{ item.standard }}</ion-col
+            >
+            <ion-col [size]="1">
+              <ion-button
+                class="no-margin"
+                color="primary"
+                fill="clear"
+                size="small"
+                (click)="showFeedback(item, i)"
+                >反馈</ion-button
+              >
+            </ion-col>
+          </ion-row>
+        </ng-container>
+        <ion-row
+          *ngIf="data.inspection_require && !data.inspection_require.length"
+        >
+          <ion-col size="12" style="text-align: center" class="danger"
+            >暂无</ion-col
+          >
+        </ion-row>
+      </ion-grid>
     </div>
 
     <!-- 外箱 -->
-    <div class="out-box" *ngIf="rateStatus == 'out'" [formGroup]="outer_box_data">
-      <ion-list>
+    <div
+      class="out-box"
+      *ngIf="rateStatus == 'out'"
+      formGroupName="outer_box_data"
+    >
+      <ion-list *ngIf="currentToggle.key == 'beforeUnpacking'">
         <ion-item>
           <div>
             <div class="global-inspect-title">
@@ -358,15 +903,23 @@
         </ion-item>
       </ion-list>
 
-      <ion-list>
+      <ion-list *ngIf="currentToggle.key == 'beforeUnpacking'">
         <ion-item>
-          <div>
+          <div class="w100">
             <div class="global-inspect-title">
               <p>条码</p>
             </div>
-            <div class="bar-code" fxLayout="row" fxLayoutAlign="start center">
+            <div
+              class="bar-code w100"
+              fxLayout="row"
+              fxLayoutAlign="start center"
+            >
               <input class="h-30" placeholder="请输入条码" />
-              <ion-button [fill]="'clear'" (click)="scan()" [disabled]="barCode">
+              <ion-button
+                [fill]="'clear'"
+                (click)="scan()"
+                [disabled]="barCode"
+              >
                 {{ barCode ? barCode : "扫码" }}
               </ion-button>
             </div>
@@ -385,9 +938,8 @@
         </ion-item>
       </ion-list>
 
-
       <!-- 包装 -->
-      <ion-list>
+      <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
         <ion-item>
           <div class="w100">
             <div class="global-inspect-title">
@@ -417,7 +969,9 @@
                   请输入备注
                 </p>
                 <div>
-                  <app-item-by-item-desc (onComplete)="descEnter($event, 'throwBox')"></app-item-by-item-desc>
+                  <app-item-by-item-desc
+                    (onComplete)="descEnter($event, 'throwBox')"
+                  ></app-item-by-item-desc>
                 </div>
               </div>
             </div>
@@ -426,7 +980,7 @@
       </ion-list>
 
       <!-- 摆放图与说明书及配件包 -->
-      <ion-list>
+      <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
         <ion-item>
           <div class="w100">
             <div class="global-inspect-title">
@@ -455,10 +1009,8 @@
           </div>
         </ion-item>
       </ion-list>
-
     </div>
   </form>
-
 </ion-content>
 
 <ion-fab vertical="bottom" horizontal="end" slot="fixed">

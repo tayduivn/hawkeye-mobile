@@ -13,10 +13,10 @@ export class ItemByItemDescComponent implements OnInit {
     }
   }
 
-  // tslint:disable-next-line: no-output-on-prefix
+  @Input() description?:string = ''
+
   @Output() onComplete: EventEmitter<any[]> = new EventEmitter<any[]>();
 
-  // tslint:disable-next-line: variable-name
   _ary: FormGroup = this.fb.group({
     0: this.fb.control('')
   });
@@ -32,7 +32,6 @@ export class ItemByItemDescComponent implements OnInit {
   formToAry() {
     this.data = [];
     const value = [];
-    // tslint:disable-next-line: forin
     for (const key in this._ary.value) {
       this.data.push({
         key,

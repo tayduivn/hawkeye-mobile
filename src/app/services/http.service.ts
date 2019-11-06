@@ -27,9 +27,9 @@ export class HttpService {
       headers: {
         Authorization: this.userInfo.info
           ? `Bearer ${this.userInfo.info.api_token}`
-          : undefined  
+          : undefined
       },
-      params: params.params 
+      params: params.params
     });
   }
 
@@ -41,7 +41,7 @@ export class HttpService {
         headers: {
           Authorization: this.userInfo.info
             ? `Bearer ${this.userInfo.info.api_token}`
-            : undefined  
+            : undefined
         }
       }
     );
@@ -53,7 +53,7 @@ export class HttpService {
       "Content-Type": "application/json;charset=UTF-8",
       Authorization: this.userInfo.info
         ? `Bearer ${this.userInfo.info.api_token}`
-        : undefined  
+        : undefined
     };
     !this.userInfo.info && delete obj.Authorization;
     return this.http.post(
