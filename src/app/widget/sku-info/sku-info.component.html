@@ -18,7 +18,7 @@
         [hidden]="i > 3"
         [ngClass]="{ thumbnail: i == 0 }"
         [ngStyle]="{ ' margin-top': i == 0 && type == 'task' ? '11px' : '0px' }"
-        *ngFor="let img of sku.photo; let i = index"
+        *ngFor="let img of sku.pic; let i = index"
         [src]="imgOrigin + img"
         alt=""
       />

@@ -16,40 +16,47 @@ import { InspectorSettingComponent } from '../inspector-setting/inspector-settin
 import { SkuDescriptionComponent } from './sku-description/sku-description.component';
 
 const routes: Routes = [
-  {
-    path: 'inspect-task',
-    component: InspectTaskPage
-  },
-  {
-    path: 'inspect-contract',
-    component: InspectContractPage
-  },
-  {
-    path: 'sku-detail',
-    component: SkuDetailPage
-  },
-  {
-    path: 'sku-desc',
-    component: SkuDescriptionComponent
-  },
-  {
-    path: 'inspector-setting/:cid',
-    component: InspectorSettingComponent
-  }
+    {
+        path: 'inspect-task',
+        component: InspectTaskPage,
+    },
+    {
+        path: 'inspect-contract',
+        component: InspectContractPage,
+    },
+    {
+        path: 'sku-detail',
+        component: SkuDetailPage,
+    },
+    {
+        path: 'sku-desc',
+        component: SkuDescriptionComponent,
+    },
+    {
+        path: 'inspector-setting/:cid',
+        component: InspectorSettingComponent,
+    },
 ];
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    FlexLayoutModule,
-    WidgetModule,
-    DirectiveModule,
-    ReactiveFormsModule,
-    RouterModule.forChild(routes)
-  ],
-  declarations: [InspectTaskPage,ShowFactoryPipe,SkuDetailPage,InspectContractPage,InspectorSettingComponent,SkuDescriptionComponent]
+    imports: [
+        CommonModule,
+        FormsModule,
+        IonicModule,
+        FlexLayoutModule,
+        WidgetModule,
+        DirectiveModule,
+        ReactiveFormsModule,
+        RouterModule.forChild(routes),
+    ],
+    declarations: [
+        InspectTaskPage,
+        ShowFactoryPipe,
+        SkuDetailPage,
+        InspectContractPage,
+        InspectorSettingComponent,
+        SkuDescriptionComponent,
+    ],
 })
 export class InspectTaskPageModule {}
 

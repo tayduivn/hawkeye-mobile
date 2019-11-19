@@ -32,7 +32,10 @@
             <label>工厂环境照片：</label>
             <div class="label-right">
               <app-photograph
-                (onPhotograph)="setPhoto($event, 'environments')"
+                moduleType='removeFactoryPic'
+                [photos]="environments.value"
+                [apply_inspection_no]="data.sku_data[0].apply_inspection_no"
+                type="factory_environment_pic"
               ></app-photograph>
             </div>
           </div>
@@ -52,7 +55,10 @@
             <label>样 品 间 照 片：</label>
             <div class="label-right">
               <app-photograph
-                (onPhotograph)="setPhoto($event, 'sampleRoom')"
+                moduleType='removeFactoryPic'
+                [photos]="sampleRoom.value"
+                [apply_inspection_no]="data.sku_data[0].apply_inspection_no"
+                type="factory_sample_room_pic"
               ></app-photograph>
             </div>
           </div>
@@ -72,7 +78,10 @@
             <label>工厂其他照片：</label>
             <div class="label-right">
               <app-photograph
-                (onPhotograph)="setPhoto($event, 'factoryOther')"
+                moduleType='removeFactoryPic'
+                [photos]="factoryOther.value"
+                [apply_inspection_no]="data.sku_data[0].apply_inspection_no"
+                type="factory_other_pic"
               ></app-photograph>
             </div>
           </div>
@@ -101,14 +110,10 @@
                 fxLayoutAlign="start center"
               >
                 <label>是否是实际地址</label>
-                <ion-select
-                  interface="popover"
-                  formControlName="isTrue"
-                  color="success"
-                >
-                  <ion-select-option value="1">是</ion-select-option>
-                  <ion-select-option value="0">否</ion-select-option>
-                </ion-select>
+                <select class="select" formControlName="isTrue">
+                  <option value="1">是</option>
+                  <option value="0">否</option>
+                </select>
               </div>
               <ion-input
                 type="text"
@@ -141,27 +146,23 @@
         <div
           fxLayout="col"
           fxLayoutAlign="space-between start"
-          class="item-inner text"
+          class="item-inner text w100"
         >
-          <div fxLayout="col" fxLayoutAlign="start start">
+          <div fxLayout="col" fxLayoutAlign="start start" class=" w80">
             <label class="mr-0"
               >工&nbsp;厂&nbsp;&nbsp;接&nbsp;待&nbsp;人：</label
             >
-            <div>
+            <div class="w100">
               <div
                 class="pos-r ques"
                 fxLayout="row"
                 fxLayoutAlign="start center"
               >
                 <label>是否是实际接待人</label>
-                <ion-select
-                  interface="popover"
-                  formControlName="isTrue"
-                  color="success"
-                >
-                  <ion-select-option value="1">是</ion-select-option>
-                  <ion-select-option value="0">否</ion-select-option>
-                </ion-select>
+                <select class="select" formControlName="isTrue">
+                  <option value="1">是</option>
+                  <option value="0">否</option>
+                </select>
               </div>
               <div>
                 <div fxLayout="row" fxLayoutAlign="start center" class="small">
@@ -224,7 +225,7 @@
               !factoryModel.controls['receptionist'].value.name
             "
           >
-            *请完善接待人信息
+            <!-- *请完善接待人信息 -->
           </div>
         </div>
       </ion-item>
@@ -292,7 +293,9 @@
 
       <ion-item class="pb-10">
         <app-item-by-item-desc
-          class="w100"
+          class="w100" 
+          description="备注"
+          [ary]="factoryModel.value.remarks"
           (onComplete)="descEnter($event)"
         ></app-item-by-item-desc>
       </ion-item>

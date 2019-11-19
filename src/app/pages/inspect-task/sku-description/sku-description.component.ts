@@ -9,37 +9,36 @@ import { InspectSettingBoxComponent } from 'src/app/widget/inspect-setting-box/i
 import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: 'app-sku-description',
-  templateUrl: './sku-description.component.html',
-  styleUrls: ['./sku-description.component.scss'],
+    selector: 'app-sku-description',
+    templateUrl: './sku-description.component.html',
+    styleUrls: ['./sku-description.component.scss'],
 })
 export class SkuDescriptionComponent implements OnInit {
-  data:InspectTask
+    data: InspectTask;
 
-  constructor(private storage:StorageService,private router:Router,private effectCtrl:PageEffectService) { }
-  imgOrigin: string = environment.fileUrlPath;
-  ngOnInit() {
-    this.data = this.storage.get('CURRENT_INSPECT_CONTRACT')
-    console.log(this.data,'111111')
+    constructor(private storage: StorageService, private router: Router, private effectCtrl: PageEffectService) {}
+    imgOrigin: string = environment.fileUrlPath;
+    ngOnInit() {
+        this.data = this.storage.get('CURRENT_INSPECT_CONTRACT');
+        console.log(this.data, '111111');
+    }
 
-  }
+    toSkuDetail(p: Sku) {
+        this.storage.set('SKU_INFO', p);
+        this.router.navigate(['sku-detail']);
+    }
 
-  toSkuDetail(p:Sku){
-    this.storage.set('SKU_INFO',p)
-    this.router.navigate(['sku-detail'])
-  }
+    inspectOp(p: Sku, i: number) {
+        let option: ModalOptions = {
+            component: InspectSettingBoxComponent,
+            cssClass: 'custom-modal-sku',
+            mode: 'ios',
+            componentProps: { contract: p, type: 'skuList' },
+        };
 
-  inspectOp(p:Sku,i:number) {
-    let option: ModalOptions = {
-      component: InspectSettingBoxComponent,
-      cssClass: "custom-modal-sku",
-      mode: "ios",
-      componentProps: { contract: p,type:'skuList' }
-    };
-
-    this.effectCtrl.showModal(option, (data: any) => {
-      this.data.sku_desc[i] = data
-      console.log(data);
-    });
-  }
+        this.effectCtrl.showModal(option, (data: any) => {
+            this.data.sku_desc[i] = data;
+            console.log(data);
+        });
+    }
 }

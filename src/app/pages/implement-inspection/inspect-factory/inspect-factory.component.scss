@@ -1,8 +1,11 @@
 ion-content {
-  .w100{
+  .w100 {
     width: 100%;
   }
-  .pb-10{
+  .w80 {
+    width: 80%;
+  }
+  .pb-10 {
     padding-bottom: 10px !important;
   }
   --background: #f2f2f2;
@@ -11,7 +14,7 @@ ion-content {
   --padding-bottom: 15px;
   --padding-start: 15px;
   --padding-end: 15px;
-  ion-list:first-child{
+  ion-list:first-child {
     margin-top: 0;
   }
   ion-list {
@@ -28,21 +31,21 @@ ion-content {
           padding: 15px 0;
           width: calc(100% - 120px);
         }
-        >div{
+        > div {
           // width: 100%;
-          >div{
+          > div {
             width: calc(100% - 120px);
           }
         }
       }
-      .item-inner.text{
-          padding: 10px 0;
+      .item-inner.text {
+        padding: 10px 0;
       }
       label {
         line-height: 45px;
-          font-size: 14px;
+        font-size: 14px;
         text-align: justify;
-        color:rgb(43,43,43);
+        color: rgb(43, 43, 43);
         margin-right: 10px;
       }
       .form-valid {
@@ -80,49 +83,45 @@ ion-content {
         clear: both;
       }
     }
-   
   }
 }
-ion-item:last-child{
-  --border-width:0;
-  --inner-border-width:0; 
+ion-item:last-child {
+  --border-width: 0;
+  --inner-border-width: 0;
 }
 
-ion-item.no-border{
-  .item-native{
-    border:0 !important
+ion-item.no-border {
+  .item-native {
+    border: 0 !important;
   }
 }
 
-.readonly{
-    border: 0;
-    background: #f2f2f2;
-    padding: 3px;
-    border-radius: 3px;
+.readonly {
+  border: 0;
+  background: #f2f2f2;
+  padding: 3px;
+  border-radius: 3px;
 }
 
-.ques{
-    label{
-        width: auto !important;
-
-    }
-    margin-right: 15px;;
-    ion-select{
-        width: 50px;
-        --padding-start:0
-    }
-
-    
+.ques {
+  label {
+    width: auto !important;
+  }
+  margin-right: 15px;
+  ion-select {
+    width: 50px;
+    --padding-start: 0;
+  }
 }
 
-ion-input{
-    width: 100%;
-    font-size: 14px;
-    --color: #797979；
+ion-input {
+  width: 100%;
+  font-size: 14px;
+  --color: #797979；;
 }
 
-ion-select{
-    --color:#797979
+ion-select {
+  --color: #797979;
 }
 .next {
   padding: 20px 0;
@@ -139,23 +138,27 @@ ion-select{
   }
 }
 
-.mr-0{
+.mr-0 {
   margin-right: 0 !important;
 }
 
-.small{
+.small {
   border-bottom: 1px solid #dedede;
-  label{
+  label {
     width: auto !important;
-  
   }
 }
 
-.small:last-child{
-  border: 0
+.small:last-child {
+  border: 0;
 }
 
-
-.label-right{
+.label-right {
   width: calc(100% - 120px);
+  padding: 10px 0 !important;
+}
+
+select {
+  border: 0;
+  background: 0;
 }

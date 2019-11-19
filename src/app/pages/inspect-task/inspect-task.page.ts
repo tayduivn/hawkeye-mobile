@@ -10,47 +10,47 @@ import { InspectSettingBoxComponent } from 'src/app/widget/inspect-setting-box/i
 import { InspectTask } from './inspect-contract/inspect-contract.page';
 
 @Component({
-  selector: 'app-inspect-task',
-  templateUrl: './inspect-task.page.html',
-  styleUrls: ['./inspect-task.page.scss'],
+    selector: 'app-inspect-task',
+    templateUrl: './inspect-task.page.html',
+    styleUrls: ['./inspect-task.page.scss'],
 })
 export class InspectTaskPage implements OnInit {
-  screenType:ScreenAngle 
-  inspectGroup:Observable<InspectGroup[]>
-  constructor(private inspectService:InspectionService,
-              private effectCtrl:PageEffectService,
-              private screen:ScreenService,private storage:StorageService,private router:Router) { 
-    this.screenType = this.screen.screenAngle
-    this.screen.onResize
-        .subscribe(res => this.screenType = res) 
-  }
+    screenType: ScreenAngle;
+    inspectGroup: Observable<InspectGroup[]>;
+    constructor(
+        private inspectService: InspectionService,
+        private effectCtrl: PageEffectService,
+        private screen: ScreenService,
+        private storage: StorageService,
+        private router: Router,
+    ) {
+        this.screenType = this.screen.screenAngle;
+        this.screen.onResize.subscribe(res => (this.screenType = res));
+    }
 
-  ngOnInit() {
-    
-  }
+    ngOnInit() {}
 
-  ionViewWillEnter(){
-    this.inspectGroup = this.inspectService.getTaskList()
-    this.storage.remove('CURRENT_INSPECT_GROUP') 
-  }
+    ionViewWillEnter() {
+        this.inspectGroup = this.inspectService.getTaskList();
+        this.storage.remove('CURRENT_INSPECT_GROUP');
+    }
 
-  toContract(p:any){
+    toContract(p: any) {
+        this.storage.set('CURRENT_INSPECT_GROUP', p);
+        this.router.navigate(['inspect-contract']);
+    }
 
-    this.storage.set('CURRENT_INSPECT_GROUP',p)
-    this.router.navigate(['inspect-contract'])
-  }
-  
-  inspectOp(p:any) {
-    let option: ModalOptions = {
-      component: InspectSettingBoxComponent,
-      cssClass: "custom-modal-sku",
-      mode: "ios",
-      componentProps: { contract: p.data[0],type:'group' }
-    };
+    inspectOp(p: any) {
+        let option: ModalOptions = {
+            component: InspectSettingBoxComponent,
+            cssClass: 'custom-modal-sku',
+            mode: 'ios',
+            componentProps: { contract: p.data[0], type: 'group' },
+        };
 
-    this.effectCtrl.showModal(option, (data: any) => {
-      p.data[0] = data
-      console.log(data);
-    });
-  }
+        this.effectCtrl.showModal(option, (data: any) => {
+            p.data[0] = data;
+            console.log(data);
+        });
+    }
 }

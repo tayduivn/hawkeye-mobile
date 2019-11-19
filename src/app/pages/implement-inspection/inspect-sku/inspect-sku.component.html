@@ -1,1020 +1,1338 @@
 <ion-header mode="ios">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title>{{ data.sku }}</ion-title>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>{{ data.sku }}</ion-title>
 
-    <ion-buttons slot="end" class="tops">
-      <span>箱率：{{ data.rate_container }}</span>
-      <select (change)="toggleBoxRate()" [(ngModel)]="rateStatus">
-        <!--  [disabled]='data.rate_container==1' -->
-        <option value="inner">内箱</option>
-        <option value="out">外箱</option>
-      </select>
-    </ion-buttons>
-    <ion-buttons slot="end">
-      <ion-back-button
-        defaultHref=""
-        text="返回"
-        color="white"
-        mode="md"
-      ></ion-back-button>
-    </ion-buttons>
-  </ion-toolbar>
+        <ion-buttons slot="end" class="tops">
+            <span>箱率：{{ data.rate_container }}</span>
+            <select (change)="toggleBoxRate()" [(ngModel)]="rateStatus" [disabled]='data.rate_container==1'>
+                <!--  [disabled]='data.rate_container==1' -->
+                <option value="inner">内箱</option>
+                <option value="outer">外箱</option>
+            </select>
+        </ion-buttons>
+        <ion-buttons slot="end">
+            <ion-back-button defaultHref="" text="返回" color="white" mode="md"></ion-back-button>
+        </ion-buttons>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <app-sku-info [sku]="data" type="implement"></app-sku-info>
+    <app-sku-info [sku]="data" type="implement"></app-sku-info>
 
-  <div class="label-item">
-    <ion-grid>
-      <ion-row>
-        <ion-col size="1.8">工厂备注:</ion-col>
-        <ion-col size="10.2">{{ factory.factory_desc }}</ion-col>
-      </ion-row>
-    </ion-grid>
-  </div>
-
-  <div class="toggle-box">
-    <!-- Default Segment -->
-    <ion-segment
-      (ionChange)="segmentChanged($event)"
-      mode="ios"
-      [(ngModel)]="currentToggle.key"
-    >
-      <ion-segment-button value="beforeUnpacking" mode="ios">
-        <ion-label>开箱前</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="afterUnpacking" mode="ios">
-        <ion-label>开箱后</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="requirement" mode="ios">
-        <ion-label>验货要求</ion-label>
-      </ion-segment-button>
-    </ion-segment>
-  </div>
-
-  <form [formGroup]="SkuInspectModel">
-    <div class="out-box" *ngIf="currentToggle.key == 'beforeUnpacking'">
-      <ion-list>
-        <ion-item fxLayout="row" fxLayoutAlign="start center">
-          <div class="header-input" fxLayout="row" fxLayoutAlign="start center">
-            <label class="label">计划抽检数量</label>
-            <ion-input
-              placeholder="0"
-              type="number"
-              formControlName="spotCheckNum"
-            ></ion-input>
-          </div>
-          <div class="header-input" fxLayout="row" fxLayoutAlign="start center">
-            <label class="label">PO号</label>
-            <ion-input
-              placeholder="请填写PO号"
-              formControlName="poNo"
-              type="text"
-            ></ion-input>
-          </div>
-        </ion-item>
-      </ion-list>
+    <div class="label-item">
+        <ion-grid>
+            <ion-row>
+                <ion-col size="1.8">工厂备注:</ion-col>
+                <ion-col size="10.2">{{ factory.factory_desc }}</ion-col>
+            </ion-row>
+        </ion-grid>
     </div>
 
-    <!-- 内箱 -->
-    <div
-      class="out-box"
-      *ngIf="rateStatus == 'inner'"
-      formGroupName="inner_box_data"
-    >
-      <ion-list *ngIf="currentToggle.key == 'beforeUnpacking'">
-        <ion-item>
-          <div class="w100">
-            <div class="global-inspect-title">
-              <p>唛头(照相需六面)</p>
-            </div>
+    <div class="toggle-box">
+        <!-- Default Segment -->
+        <ion-segment (ionChange)="segmentChanged($event)" mode="ios" [(ngModel)]="currentToggle.key">
+            <ion-segment-button value="beforeUnpacking" mode="ios">
+                <ion-label>开箱前</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="afterUnpacking" mode="ios">
+                <ion-label>开箱后</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="requirement" mode="ios">
+                <ion-label>验货要求</ion-label>
+            </ion-segment-button>
+        </ion-segment>
+    </div>
 
-            <app-photograph
-              (onPhotograph)="setPhoto($event, 'shippingMarks')"
-            ></app-photograph>
+    <form [formGroup]="SkuInspectModel">
+        <div class="out-box" *ngIf="currentToggle.key == 'beforeUnpacking'">
+            <ion-list>
+                <ion-item fxLayout="row" fxLayoutAlign="start center">
+                    <div class="header-input" fxLayout="row" fxLayoutAlign="start center">
+                        <label class="label">计划抽检数量</label>
+                        <ion-input placeholder="0" type="number" formControlName="spotCheckNum"></ion-input>
+                    </div>
+                    <div class="header-input" fxLayout="row" fxLayoutAlign="start center">
+                        <label class="label">PO号</label>
+                        <ion-input placeholder="请填写PO号" formControlName="poNo" type="text"></ion-input>
+                    </div>
+                </ion-item>
+            </ion-list>
+        </div>
 
-            <div class="desc-box">
-              <app-item-by-item-desc
-                description="备注"
-                (onComplete)="descEnter($event, 'shippingMarks', 'inner')"
-              ></app-item-by-item-desc>
-            </div>
-          </div>
-        </ion-item>
+        <!-- 内箱 -->
+        <div class="out-box" *ngIf="rateStatus == 'inner'" formGroupName="inner_box_data">
+            <ion-list *ngIf="currentToggle.key == 'beforeUnpacking'">
+                <ion-item>
+                    <div class="w100">
+                        <div class="global-inspect-title">
+                            <p>唛头(照相需六面)</p>
+                        </div>
+                        <app-photograph
+                            type="outer_box_pic"
+                            moduleType='removeSkuPic'
+                            [photos]="SkuInspectModel.value.inner_box_data.shippingMarks.photos"
+                            [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
+                            [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
+                            [sku]="data.sku"
+                            box_type="inner"
+                        ></app-photograph>
 
-        <ion-item formGroupName="size">
-          <div class="w100">
-            <div class="global-inspect-title">
-              <p>尺寸(单位：CM,叠高高度：1-2M）</p>
-            </div>
+                        <div class="desc-box">
+                            <app-item-by-item-desc
+                                description="备注"
+                                [ary]="SkuInspectModel.value.inner_box_data.shippingMarks.desc"
+                                (onComplete)="descEnter($event, 'shippingMarks', 'inner')"
+                            ></app-item-by-item-desc>
+                        </div>
+                    </div>
+                </ion-item>
 
-            <div class="w100">
-              <ion-grid class="size-grid">
-                <ion-row align-items-center>
-                  <ion-col size="2">外箱尺寸</ion-col>
-                  <ion-col size="3">叠高数量</ion-col>
-                  <ion-col size="7">照片上传</ion-col>
+                <ion-item formGroupName="size">
+                    <div class="w100">
+                        <div class="global-inspect-title">      
+                            <p>尺寸(单位：CM,叠高高度：1-2M）</p>
+                        </div>
+
+                        <div class="w100">
+                            <ion-grid class="size-grid">
+                                <ion-row align-items-center>
+                                    <ion-col size="4">叠高尺寸</ion-col>
+                                    <ion-col size="4">叠高数量</ion-col>
+                                    <ion-col size="4">照片上传</ion-col>
+                                </ion-row>
+
+                                <ion-row align-items-center formGroupName="length">
+                                    <ion-col size="4">
+                                        <input type="number" placeholder="长" formControlName="text" />
+                                    </ion-col>
+                                    <ion-col size="4">
+                                        <input type="number" placeholder="0" formControlName="num" />
+                                    </ion-col>
+                                    <ion-col size="4">
+                                        <app-photograph
+                                            type="size_pic_length"
+                                            moduleType='removeSkuPic'
+                                            [photos]="SkuInspectModel.value.inner_box_data.size.length.photos"
+                                            [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
+                                            [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
+                                            [sku]="data.sku"
+                                            box_type="inner"
+                                        ></app-photograph>
+                                    </ion-col>
+                                </ion-row>
+
+                                <ion-row align-items-center formGroupName="width">
+                                    <ion-col size="4">
+                                        <input type="number" placeholder="宽" formControlName="text" />
+                                    </ion-col>
+                                    <ion-col size="4">
+                                        <input type="number" placeholder="0" formControlName="num" />
+                                    </ion-col>
+                                    <ion-col size="4">
+                                        <app-photograph
+                                            type="size_pic_width"
+                                            moduleType='removeSkuPic'
+                                            [photos]="SkuInspectModel.value.inner_box_data.size.width.photos"
+                                            [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
+                                            [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
+                                            [sku]="data.sku"
+                                            box_type="inner"
+                                        ></app-photograph>
+                                    </ion-col>
+                                </ion-row>
+
+                                <ion-row align-items-center formGroupName="height">
+                                    <ion-col size="4">
+                                        <input type="number" placeholder="高" formControlName="text" />
+                                    </ion-col>
+                                    <ion-col size="4">
+                                        <input type="number" placeholder="0" formControlName="num" />
+                                    </ion-col>
+                                    <ion-col size="4">
+                                        <app-photograph
+                                            type="size_pic_height"
+                                            moduleType='removeSkuPic'
+                                            [photos]="SkuInspectModel.value.inner_box_data.size.height.photos"
+                                            [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
+                                            [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
+                                            [sku]="data.sku"
+                                            box_type="inner"
+                                        ></app-photograph>
+                                    </ion-col>
+                                </ion-row>
+                            </ion-grid>
+                        </div>
+
+                        <div class="desc-box">
+                            <app-item-by-item-desc
+                                description="备注"
+                                [ary]="SkuInspectModel.value.inner_box_data.size.desc"
+                                (onComplete)="descEnter($event, 'size', 'inner')"
+                            ></app-item-by-item-desc>
+                        </div>
+                    </div>
+                </ion-item>
+            </ion-list>
+
+            <ion-list *ngIf="currentToggle.key == 'beforeUnpacking'">
+                <ion-item formGroupName="barCode">
+                    <div class="w100">
+                        <div class="global-inspect-title">
+                            <p>条码</p>
+                        </div>
+                        <div class="bar-code" fxLayout="row" fxLayoutAlign="start center">
+                            <input class="h-30" placeholder="请输入条码" formControlName="text" />
+                            <ion-button [fill]="'clear'" (click)="scan()" [disabled]="barCode">
+                                {{ barCode ? barCode : '扫码' }}
+                            </ion-button>
+                        </div>
+                        <app-photograph
+                            type="bar_code_pic"
+                            moduleType='removeSkuPic'
+                            [photos]="SkuInspectModel.value.inner_box_data.barCode.photos"
+                            [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
+                            [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
+                            [sku]="data.sku"
+                            box_type="inner"
+                        ></app-photograph>
+
+                        <div fxLayout="row" fxLayoutAlign="start center">
+                            <p class="global-inspect-title gray-color">
+                                是否六面条码一致？
+                            </p>
+                            <select class="select" formControlName="isTrue">
+                                <option value="1">是</option>
+                                <option value="0">否</option>
+                            </select>
+                        </div>
+                        <div class="desc-box">
+                            <app-item-by-item-desc
+                                description="备注"
+                                [ary]="SkuInspectModel.value.inner_box_data.barCode.desc"
+                                (onComplete)="descEnter($event, 'barCode', 'inner')"
+                            ></app-item-by-item-desc>
+                        </div>
+                    </div>
+                </ion-item>
+
+                <ion-item formGroupName="grossWeight">
+                    <div class="w100">
+                        <div class="global-inspect-title">
+                            <p>毛重(单位：KG)</p>
+                        </div>
+                        <div class="maozhong">
+                            <div fxLayout="row" fxLayoutAlign="start center" #grossWeight>
+                                <input
+                                    placeholder="请输入毛重"
+                                    type="text"
+                                    (change)="calcGrossWeight()"
+                                    class="mr-10"
+                                    formControlName="text1"
+                                />
+
+                                <input
+                                    placeholder="请输入毛重"
+                                    type="text"
+                                    (change)="calcGrossWeight()"
+                                    class="mr-10"
+                                    formControlName="text2"
+                                />
+
+                                <input
+                                    placeholder="请输入毛重"
+                                    type="text"
+                                    (change)="calcGrossWeight()"
+                                    class="mr-10"
+                                    formControlName="text3"
+                                />
+                            </div>
+
+                            <div fxLayout="row" class="mt-10" fxLayoutAlign="start center" *ngIf="otherGrossWeight">
+                                <input
+                                    placeholder="请输入毛重"
+                                    type="text"
+                                    (change)="calcGrossWeight()"
+                                    class="mr-10"
+                                    formControlName="text4"
+                                />
+                                <input
+                                    placeholder="请输入毛重"
+                                    type="text"
+                                    (change)="calcGrossWeight()"
+                                    class="mr-10"
+                                    formControlName="text5"
+                                />
+                            </div>
+
+                            <app-photograph
+                                type="gross_weight_pic"
+                                moduleType='removeSkuPic'
+                                [photos]="SkuInspectModel.value.inner_box_data.grossWeight.photos"
+                                [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
+                                [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
+                                [sku]="data.sku"
+                                box_type="inner"
+                            ></app-photograph>
+                            <div class="desc-box">
+                                <app-item-by-item-desc
+                                    description="备注"
+                                    [ary]="SkuInspectModel.value.inner_box_data.grossWeight.desc"
+                                    (onComplete)="descEnter($event, 'grossWeight', 'inner')"
+                                ></app-item-by-item-desc>
+                            </div>
+                        </div>
+                    </div>
+                </ion-item>
+            </ion-list>
+
+            <!-- 摔箱测试 -->
+            <ion-list *ngIf="currentToggle.key == 'beforeUnpacking'">
+                <ion-item formGroupName="throwBox">
+                    <div class="w100">
+                        <div class="global-inspect-title">
+                            <p>摔箱测试</p>
+                        </div>
+
+                        <div fxLayout="row" fxLayoutAlign="start center">
+                            <div class="header-input w180" fxLayout="row" fxLayoutAlign="start center">
+                                <label class="label">计划摔箱数</label>
+                                <ion-input placeholder="0" type="number" formControlName="text"></ion-input>
+                            </div>
+                            <div fxLayout="row" fxLayoutAlign="start center">
+                                <p class="global-inspect-title gray-color">是否通过：</p>
+                                <select class="select" formControlName="isPass">
+                                    <option value="1">是</option>
+                                    <option value="0">否</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <app-photograph
+                            type="throw_box_pic"
+                            moduleType='removeSkuPic'
+                            [photos]="SkuInspectModel.value.inner_box_data.throwBox.photos"
+                            [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
+                            [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
+                            [sku]="data.sku"
+                            box_type="inner"
+                        ></app-photograph>
+                        <app-videotape
+                            [videos]='SkuInspectModel.value.inner_box_data.throwBox.videos'
+                            type="throw_box_video"
+                            [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
+                            [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
+                            [sku]="data.sku"
+                            box_type="inner"
+                        ></app-videotape>
+                        <div class="test-feedback">
+                            <div>
+                                <p class="global-inspect-title  gray-color desc-tips">
+                                    请输入说明
+                                </p>
+                                <div>
+                                    <app-item-by-item-desc
+                                        description="备注"
+                                        [ary]="SkuInspectModel.value.inner_box_data.throwBox.desc"
+                                        (onComplete)="descEnter($event, 'throwBox', 'inner')"
+                                    ></app-item-by-item-desc>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ion-item>
+            </ion-list>
+
+            <!-- 包装 -->
+            <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
+                <ion-item formGroupName="packing">
+                    <div class="w100">
+                        <div class="global-inspect-title">
+                            <p>包装</p>
+                        </div>
+
+                        <div class="packing-info">
+                            {{ data.packing_type }}
+                        </div>
+                        <p class="global-inspect-title gray-color desc-tips">
+                            包含纸箱层数特写照片
+                        </p>
+                        <app-photograph
+                            type="packing_pic"
+                            moduleType='removeSkuPic'
+                            [photos]="SkuInspectModel.value.inner_box_data.packing.photos"
+                            [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
+                            [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
+                            [sku]="data.sku"
+                            box_type="inner"
+                        ></app-photograph>
+
+                        <div class="test-feedback">
+                            <div fxLayout="row" fxLayoutAlign="start center">
+                                <div fxLayout="row" fxLayoutAlign="start center">
+                                    <p class="global-inspect-title gray-color">
+                                        是否与以上信息对应？
+                                    </p>
+                                    <select class="select" formControlName="isTrue">
+                                        <option value="1">是</option>
+                                        <option value="0">否</option>
+                                    </select>
+                                </div>
+
+                                <div class="ml-10" fxLayout="row" fxLayoutAlign="start center">
+                                    <p class="global-inspect-title gray-color">
+                                        是否是双纸箱
+                                    </p>
+                                    <select class="select" formControlName="is_double_carton">
+                                        <option value="1">是</option>
+                                        <option value="0">否</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div fxLayout="row" fxLayoutAlign="start center">
+                                <div fxLayout="row" fxLayoutAlign="start center">
+                                    <p class="global-inspect-title gray-color">
+                                        请选择纸箱类型
+                                    </p>
+                                    <select class="select" formControlName="packingType">
+                                        <option value="inner" *ngIf="SkuInspectModel.value.inner_box_data.packing.is_double_carton == 1">内箱纸箱类型</option>
+                                        <option value="outer" *ngIf="SkuInspectModel.value.inner_box_data.packing.is_double_carton == 1">外箱纸箱类型</option>
+                                        <option value="1" *ngIf="SkuInspectModel.value.inner_box_data.packing.is_double_carton == 0">三层单瓦楞</option>
+                                        <option value="2" *ngIf="SkuInspectModel.value.inner_box_data.packing.is_double_carton == 0">五层双瓦楞</option>
+                                        <option value="3" *ngIf="SkuInspectModel.value.inner_box_data.packing.is_double_carton == 0">七层三瓦楞</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+
+                            <div>
+                                <p class="global-inspect-title  gray-color desc-tips">
+                                    请输入备注
+                                </p>
+                                <div>
+                                    <app-item-by-item-desc
+                                        description="备注"
+                                        [ary]="SkuInspectModel.value.inner_box_data.packing.desc"
+                                        (onComplete)="descEnter($event, 'packing', 'inner')"
+                                    ></app-item-by-item-desc>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ion-item>
+            </ion-list>
+
+            <!-- 摆放图与说明书及配件包 -->
+            <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
+                <ion-item formGroupName="layout">
+                    <div class="w100">
+                        <div class="global-inspect-title">
+                            <p>摆放图</p>
+                        </div>
+                        <app-photograph
+                            type="product_place_pic"
+                            moduleType='removeSkuPic'
+                            [photos]="SkuInspectModel.value.inner_box_data.layout.photos"
+                            [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
+                            [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
+                            [sku]="data.sku"
+                            box_type="inner"
+                        ></app-photograph>
+                        <div class="pb-10">
+                            <p class="global-inspect-title  gray-color desc-tips">
+                                请输入备注
+                            </p>
+                            <div>
+                                <app-item-by-item-desc
+                                    description="备注"
+                                    [ary]="SkuInspectModel.value.inner_box_data.layout.desc"
+                                    (onComplete)="descEnter($event, 'layout', 'inner')"
+                                ></app-item-by-item-desc>
+                            </div>
+                        </div>
+                    </div>
+                </ion-item>
+            </ion-list>
+
+            <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
+                <ion-item formGroupName="productDetail">
+                    <div class="w100">
+                        <div class="global-inspect-title">
+                            <p>产品细节图</p>
+                        </div>
+
+                        <app-photograph
+                            type="product_detail_pic"
+                            moduleType='removeSkuPic'
+                            [photos]="SkuInspectModel.value.inner_box_data.productDetail.photos"
+                            [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
+                            [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
+                            [sku]="data.sku"
+                            box_type="inner"
+                        ></app-photograph>
+                        <div class="pb-10">
+                            <p class="global-inspect-title  gray-color desc-tips">
+                                请输入备注
+                            </p>
+                            <div>
+                                <app-item-by-item-desc
+                                    description="备注"
+                                    [ary]="SkuInspectModel.value.inner_box_data.productDetail.desc"
+                                    (onComplete)="descEnter($event, 'productDetail', 'inner')"
+                                ></app-item-by-item-desc>
+                            </div>
+                        </div>
+                    </div>
+                </ion-item>
+            </ion-list>
+
+            <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
+                <ion-item formGroupName="instructions">
+                    <div class="w100">
+                        <div class="global-inspect-title">
+                            <p>说明书</p>
+                        </div>
+
+                        <div class="ask-about" fxLayout="row" fxLayoutAlign="start center">
+                            <div class="item" fxLayout="row" fxLayoutAlign="start center">
+                                <p class="global-inspect-title gray-color">是否有说明书</p>
+                                <select class="select" formControlName="isHas">
+                                    <option value="1">是</option>
+                                    <option value="0">否</option>
+                                </select>
+                            </div>
+
+                            <div class="item ml-15" fxLayout="row" fxLayoutAlign="start center">
+                                <label class="global-inspect-title gray-color">选择说明书类型</label>
+                                <select class="select" formControlName="instructionsType">
+                                    <option value="1">中性说明书</option>
+                                    <option value="2">我司说明书</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <app-photograph
+                            type="instructions_pic"
+                            moduleType='removeSkuPic'
+                            [photos]="SkuInspectModel.value.inner_box_data.instructions.photos"
+                            [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
+                            [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
+                            [sku]="data.sku"
+                            box_type="inner"
+                        ></app-photograph>
+                        <div class="pb-10">
+                            <p class="global-inspect-title  gray-color desc-tips">
+                                请输入备注
+                            </p>
+                            <div>
+                                <app-item-by-item-desc
+                                    description="备注"
+                                    [ary]="SkuInspectModel.value.inner_box_data.instructions.desc"
+                                    (onComplete)="descEnter($event, 'instructions', 'inner')"
+                                ></app-item-by-item-desc>
+                            </div>
+                        </div>
+                    </div>
+                </ion-item>
+
+                <ion-item formGroupName="crews">
+                    <div class="w100">
+                        <div class="global-inspect-title">
+                            <p>螺丝包</p>
+                        </div>
+
+                        <div class="ask-about">
+                            <div class="item" fxLayout="row" fxLayoutAlign="start center">
+                                <p class="global-inspect-title gray-color">是否有螺丝包</p>
+                                <select class="select" formControlName="isTrue">
+                                    <option value="1">是</option>
+                                    <option value="0">否</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <app-photograph
+                            type="screws_pic"
+                            moduleType='removeSkuPic'
+                            [photos]="SkuInspectModel.value.inner_box_data.crews.photos"
+                            [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
+                            [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
+                            [sku]="data.sku"
+                            box_type="inner"
+                        ></app-photograph>
+                        <div class="pb-10">
+                            <p class="global-inspect-title  gray-color desc-tips">
+                                请输入备注
+                            </p>
+                            <div>
+                                <app-item-by-item-desc
+                                    description="备注"
+                                    [ary]="SkuInspectModel.value.inner_box_data.crews.desc"
+                                    (onComplete)="descEnter($event, 'crews', 'inner')"
+                                ></app-item-by-item-desc>
+                            </div>
+                        </div>
+                    </div>
+                </ion-item>
+            </ion-list>
+
+            <!-- 产品整体图 -->
+            <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
+                <ion-item formGroupName="whole">
+                    <div class="w100">
+                        <div class="global-inspect-title">
+                            <p>产品整体图</p>
+                        </div>
+                        <app-photograph
+                            type="product_wholes_pic"
+                            moduleType='removeSkuPic'
+                            [photos]="SkuInspectModel.value.inner_box_data.whole.photos"
+                            [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
+                            [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
+                            [sku]="data.sku"
+                            box_type="inner"
+                        ></app-photograph>
+                        <div class="pb-10">
+                            <p class="global-inspect-title  gray-color desc-tips">
+                                请输入备注
+                            </p>
+                            <div>
+                                <app-item-by-item-desc
+                                    description="备注"
+                                    [ary]="SkuInspectModel.value.inner_box_data.whole.desc"
+                                    (onComplete)="descEnter($event, 'whole', 'inner')"
+                                ></app-item-by-item-desc>
+                            </div>
+                        </div>
+                    </div>
+                </ion-item>
+            </ion-list>
+
+            <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
+                <ion-item formGroupName="disputes">
+                    <div class="w100">
+                        <div class="global-inspect-title">
+                            <p>SKU中文描述</p>
+                        </div>
+
+                        <div class="packing-info">
+                            {{ data.chinese_description }}
+                        </div>
+
+                        <div class="w100">
+                            <div>
+                                <ion-textarea formControlName="text" placeholder="请输入SKU描述争议"></ion-textarea>
+                            </div>
+                        </div>
+                    </div>
+                </ion-item>
+            </ion-list>
+
+            <!-- 产品尺寸 -->
+            <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
+                <ion-item formGroupName="productSize">
+                    <div class="w100">
+                        <div class="global-inspect-title">
+                            <p>产品尺寸(单位：CM)</p>
+                        </div>
+                        <div class="size" fxLayout="row" fxLayoutAlign="start center">
+                            <ion-input type="number" placeholder="长" formControlName="length"></ion-input>
+                            <ion-input type="number" placeholder="宽" formControlName="width"></ion-input>
+                            <ion-input type="number" placeholder="高" formControlName="height"></ion-input>
+                        </div>
+                        <app-photograph
+                            type="product_size_pic"
+                            moduleType='removeSkuPic'
+                            [photos]="SkuInspectModel.value.inner_box_data.productSize.photos"
+                            [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
+                            [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
+                            [sku]="data.sku"
+                            box_type="inner"
+                        ></app-photograph>
+                        <div class="pb-10">
+                            <p class="global-inspect-title  gray-color desc-tips">
+                                请输入备注
+                            </p>
+                            <div>
+                                <app-item-by-item-desc
+                                    description="备注"
+                                    [ary]="SkuInspectModel.value.inner_box_data.productSize.desc"
+                                    (onComplete)="descEnter($event, 'productSize', 'inner')"
+                                ></app-item-by-item-desc>
+                            </div>
+                        </div>
+                    </div>
+                </ion-item>
+            </ion-list>
+
+            <!-- 净重 -->
+            <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
+                <ion-item formGroupName="netWeight">
+                    <div class="w100">
+                        <div class="global-inspect-title">
+                            <p>净重(单位：KG)</p>
+                        </div>
+                        <div class="maozhong">
+                            <div fxLayout="row" fxLayoutAlign="start center">
+                                <ion-input
+                                    placeholder="请输入净重"
+                                    type="number"
+                                    class="mr-10"
+                                    formControlName="textOne"
+                                ></ion-input>
+
+                                <ion-input placeholder="请输入净重" type="number" formControlName="textTwo"></ion-input>
+                            </div>
+                            <app-photograph
+                                type="net_weight_pic"
+                                moduleType='removeSkuPic'
+                                [photos]="SkuInspectModel.value.inner_box_data.netWeight.photos"
+                                [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
+                                [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
+                                [sku]="data.sku"
+                                box_type="inner"
+                            ></app-photograph>
+                            <div class="pb-10">
+                                <p class="global-inspect-title  gray-color desc-tips">
+                                    请输入备注
+                                </p>
+                                <div>
+                                    <app-item-by-item-desc
+                                        description="备注"
+                                        [ary]="SkuInspectModel.value.inner_box_data.netWeight.desc"
+                                        (onComplete)="descEnter($event, 'netWeight', 'inner')"
+                                    ></app-item-by-item-desc>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ion-item>
+            </ion-list>
+
+            <!-- 外观检测选项 -->
+            <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
+                <ion-item formGroupName="appearance">
+                    <div class="w100">
+                        <div class="global-inspect-title">
+                            <p>外观检测选项</p>
+                        </div>
+                        <div class="maozhong">
+                            <ion-input placeholder="外观检测选项" type="number"></ion-input>
+                            <app-photograph
+                                type="appearance_pic"
+                                moduleType='removeSkuPic'
+                                [photos]="SkuInspectModel.value.inner_box_data.appearance.photos"
+                                [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
+                                [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
+                                [sku]="data.sku"
+                                box_type="inner"
+                            >
+                            </app-photograph>
+                            <app-videotape
+                                type="appearance_video"
+                                [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
+                                [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
+                                [sku]="data.sku"
+                                box_type="inner"
+                            ></app-videotape>
+                            <div class="test-feedback">
+                                <div>
+                                    <p class="global-inspect-title  gray-color desc-tips">
+                                        请输入说明
+                                    </p>
+                                    <div>
+                                        <app-item-by-item-desc
+                                            description="备注"
+                                            [ary]="SkuInspectModel.value.inner_box_data.appearance.desc"
+                                            (onComplete)="descEnter($event, 'appearance', 'inner')"
+                                        ></app-item-by-item-desc>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ion-item>
+            </ion-list>
+
+            <!-- 测试部分 -->
+            <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
+                <ion-item formGroupName="function">
+                    <div class="w100">
+                        <div class="global-inspect-title">
+                            <p>功能性测试</p>
+                        </div>
+                        <app-photograph
+                            type="function_pic"
+                            moduleType='removeSkuPic'
+                            [photos]="SkuInspectModel.value.inner_box_data.function.photos"
+                            [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
+                            [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
+                            [sku]="data.sku"
+                            box_type="inner"
+                        ></app-photograph>
+                        <app-videotape
+                            type="function_video"
+                            [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
+                            [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
+                            [sku]="data.sku"
+                            box_type="inner"
+                        ></app-videotape>
+                        <div class="test-feedback">
+                            <div>
+                                <p class="global-inspect-title  gray-color desc-tips">
+                                    请输入说明
+                                </p>
+                                <div>
+                                    <app-item-by-item-desc
+                                        description="备注"
+                                        [ary]="SkuInspectModel.value.inner_box_data.function.desc"
+                                        (onComplete)="descEnter($event, 'function', 'inner')"
+                                    ></app-item-by-item-desc>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ion-item>
+
+                <ion-item formGroupName="bearing">
+                    <div class="w100">
+                        <div class="global-inspect-title">
+                            <p>承重测试</p>
+                        </div>
+                        <app-photograph
+                            type="bearing_test_pic"
+                            moduleType='removeSkuPic'
+                            [photos]="SkuInspectModel.value.inner_box_data.bearing.photos"
+                            [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
+                            [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
+                            [sku]="data.sku"
+                            box_type="inner"
+                        ></app-photograph>
+                        <app-videotape
+                            type="bearing_video"
+                            [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
+                            [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
+                            [sku]="data.sku"
+                            box_type="inner"
+                        ></app-videotape>
+                        <div class="test-feedback">
+                            <div>
+                                <p class="global-inspect-title  gray-color desc-tips">
+                                    请输入说明
+                                </p>
+                                <div>
+                                    <app-item-by-item-desc
+                                        description="备注"
+                                        [ary]="SkuInspectModel.value.inner_box_data.bearing.desc"
+                                        (onComplete)="descEnter($event, 'bearing', 'inner')"
+                                    ></app-item-by-item-desc>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ion-item>
+
+                <ion-item formGroupName="waterContent">
+                    <div class="w100">
+                        <div class="global-inspect-title">
+                            <p>含水量检测</p>
+                        </div>
+                        <app-photograph
+                            type="water_content_test_pic"
+                            moduleType='removeSkuPic'
+                            [photos]="SkuInspectModel.value.inner_box_data.waterContent.photos"
+                            [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
+                            [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
+                            [sku]="data.sku"
+                            box_type="inner"
+                        ></app-photograph>
+                        <app-videotape
+                            type="water_content_video"
+                            [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
+                            [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
+                            [sku]="data.sku"
+                            box_type="inner"
+                        ></app-videotape>
+                        <div class="test-feedback">
+                            <div>
+                                <p class="global-inspect-title  gray-color desc-tips">
+                                    请输入说明
+                                </p>
+                                <div>
+                                    <app-item-by-item-desc
+                                        description="备注"
+                                        [ary]="SkuInspectModel.value.inner_box_data.waterContent.desc"
+                                        (onComplete)="descEnter($event, 'waterContent', 'inner')"
+                                    ></app-item-by-item-desc>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ion-item>
+            </ion-list>
+
+            <!-- 总结 -->
+            <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
+                <ion-item formGroupName="sumUp">
+                    <div class="w100">
+                        <div class="global-inspect-title">
+                            <p>总结</p>
+                        </div>
+
+                        <div class="maozhong pb-10" fxLayout="row" fxLayoutAlign="space-between center">
+                            <ion-input
+                                placeholder="请输入实际抽检数量"
+                                type="number"
+                                class="w150"
+                                class="mr-10"
+                                formControlName="textOne"
+                            ></ion-input>
+
+                            <ion-input
+                                placeholder="请输入实际摔箱数量"
+                                type="number"
+                                class="w150"
+                                formControlName="textTwo"
+                            ></ion-input>
+                        </div>
+                    </div>
+                </ion-item>
+            </ion-list>
+
+            <!-- 备注 -->
+            <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
+                <ion-item formGroupName="desc">
+                    <div class="w100">
+                        <div class="global-inspect-title">
+                            <p>备注</p>
+                        </div>
+                        <div class="maozhong pb-10">
+                            <app-item-by-item-desc
+                                description="备注"
+                                [ary]="SkuInspectModel.value.inner_box_data.desc.desc"
+                                (onComplete)="descEnter($event, 'desc', 'inner')"
+                            ></app-item-by-item-desc>
+                        </div>
+                    </div>
+                </ion-item>
+            </ion-list>
+
+            <!-- 验货要求 -->
+            <ion-grid class="inspection_require" *ngIf="currentToggle.key == 'requirement'">
+                <ion-row>
+                    <ion-col [size]="1.8">验货条目</ion-col>
+                    <ion-col size=".9">要求图片</ion-col>
+                    <ion-col [size]="4.2">验货要求</ion-col>
+                    <ion-col [size]="4.1">验货标准</ion-col>
+                    <ion-col [size]="1">要求反馈</ion-col>
                 </ion-row>
-
-                <ion-row align-items-center>
-                  <ion-col size="2">长</ion-col>
-                  <ion-col size="3">
-                    <input
-                      type="number"
-                      placeholder="长"
-                      formControlName="length"
-                    />
-                  </ion-col>
-                  <ion-col size="7">
-                    <app-photograph
-                      (onPhotograph)="setPhoto($event, 'size', 'length')"
-                    ></app-photograph>
-                  </ion-col>
-                </ion-row>
-
-                <ion-row align-items-center>
-                  <ion-col size="2">宽</ion-col>
-                  <ion-col size="3">
-                    <input
-                      type="number"
-                      placeholder="宽"
-                      formControlName="width"
-                    />
-                  </ion-col>
-                  <ion-col size="7">
-                    <app-photograph
-                      (onPhotograph)="setPhoto($event, 'size', 'width')"
-                    ></app-photograph>
-                  </ion-col>
-                </ion-row>
-
-                <ion-row align-items-center>
-                  <ion-col size="2">高</ion-col>
-                  <ion-col size="3">
-                    <input
-                      type="number"
-                      placeholder="高"
-                      formControlName="height"
-                    />
-                  </ion-col>
-                  <ion-col size="7">
-                    <app-photograph
-                      (onPhotograph)="setPhoto($event, 'size', 'height')"
-                    ></app-photograph>
-                  </ion-col>
-                </ion-row>
-              </ion-grid>
-            </div>
-
-            <div class="desc-box">
-              <app-item-by-item-desc
-                description="备注"
-                (onComplete)="descEnter($event, 'shippingMarks', 'inner')"
-              ></app-item-by-item-desc>
-            </div>
-          </div>
-        </ion-item>
-      </ion-list>
-
-      <ion-list *ngIf="currentToggle.key == 'beforeUnpacking'">
-        <ion-item>
-          <div class="w100">
-            <div class="global-inspect-title">
-              <p>条码</p>
-            </div>
-            <div class="bar-code" fxLayout="row" fxLayoutAlign="start center">
-              <input
-                class="h-30"
-                placeholder="请输入条码"
-                formControlName="barCode"
-              />
-              <ion-button
-                [fill]="'clear'"
-                (click)="scan()"
-                [disabled]="barCode"
-              >
-                {{ barCode ? barCode : "扫码" }}
-              </ion-button>
-            </div>
-            <app-photograph
-              (onPhotograph)="setPhoto($event, 'photo', 'throwBox')"
-            ></app-photograph>
-
-            <div fxLayout="row" fxLayoutAlign="start center">
-              <p class="global-inspect-title gray-color">
-                是否六面条码一致？
-              </p>
-              <select class="select">
-                <option value="1">是</option>
-                <option value="0">否</option>
-              </select>
-            </div>
-            <div class="desc-box">
-              <app-item-by-item-desc
-                description="备注"
-                (onComplete)="descEnter($event, 'shippingMarks', 'inner')"
-              ></app-item-by-item-desc>
-            </div>
-          </div>
-        </ion-item>
-        <ion-item formGroupName="grossWeight">
-          <div class="w100">
-            <div class="global-inspect-title">
-              <p>毛重(单位：KG)</p>
-            </div>
-            <div class="maozhong">
-              <div fxLayout="row" fxLayoutAlign="start start">
-                <div class="w-100">
-                  <ion-input
-                    placeholder="请输入毛重"
-                    type="number"
-                    class="mr-10"
-                    formControlName="text"
-                  ></ion-input>
-                </div>
-
-                <div class="w-100">
-                  <ion-input
-                    placeholder="请输入毛重"
-                    type="number"
-                    class="mr-10"
-                    formControlName="text"
-                  ></ion-input>
-                </div>
-
-                <div class="w-100">
-                  <ion-input
-                    placeholder="请输入毛重"
-                    type="number"
-                    class="mr-10"
-                    formControlName="text"
-                  ></ion-input>
-                </div>
-              </div>
-
-              <app-photograph
-                (onPhotograph)="setPhoto($event, 'photo', 'grossWeight')"
-              ></app-photograph>
-              <div class="desc-box">
-                <app-item-by-item-desc
-                  description="备注"
-                  (onComplete)="descEnter($event, 'shippingMarks', 'inner')"
-                ></app-item-by-item-desc>
-              </div>
-            </div>
-          </div>
-        </ion-item>
-      </ion-list>
-
-      <!-- 摔箱视频 -->
-      <ion-list *ngIf="currentToggle.key == 'beforeUnpacking'">
-        <ion-item formGroupName="throwBox">
-          <div class="w100">
-            <div class="global-inspect-title">
-              <p>摔箱测试</p>
-            </div>
-
-            <div fxLayout="row" fxLayoutAlign="start center">
-              <div
-                class="header-input w180"
-                fxLayout="row"
-                fxLayoutAlign="start center"
-              >
-                <label class="label">计划摔箱数</label>
-                <ion-input placeholder="0" type="number"></ion-input>
-              </div>
-              <div fxLayout="row" fxLayoutAlign="start center">
-                <p class="global-inspect-title gray-color">是否通过：</p>
-                <select class="select" formControlName="isPass">
-                  <option value="1">是</option>
-                  <option value="0">否</option>
-                </select>
-              </div>
-            </div>
-
-            <app-photograph
-              (onPhotograph)="setPhoto($event, 'photo', 'throwBox')"
-            ></app-photograph>
-            <app-videotape
-              (onComplete)="videoOver($event, 'throwBox')"
-            ></app-videotape>
-            <div class="test-feedback">
-              <div>
-                <p class="global-inspect-title  gray-color desc-tips">
-                  请输入说明
-                </p>
-                <div>
-                  <app-item-by-item-desc
-                    (onComplete)="descEnter($event, 'throwBox', 'inner')"
-                  ></app-item-by-item-desc>
-                </div>
-              </div>
-            </div>
-          </div>
-        </ion-item>
-      </ion-list>
-
-      <!-- 包装 -->
-      <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
-        <ion-item formGroupName="packing">
-          <div class="w100">
-            <div class="global-inspect-title">
-              <p>包装</p>
-            </div>
-
-            <div class="packing-info">
-              {{ data.packing_type }}
-            </div>
-            <p class="global-inspect-title gray-color desc-tips">
-              包含纸箱层数特写照片
-            </p>
-            <app-photograph
-              (onPhotograph)="setPhoto($event, 'packing')"
-            ></app-photograph>
-
-            <div class="test-feedback">
-              <div fxLayout="row" fxLayoutAlign="start center">
-                <div fxLayout="row" fxLayoutAlign="start center">
-                  <p class="global-inspect-title gray-color">
-                    是否与以上信息对应？
-                  </p>
-                  <select class="select" formControlName="isTrue">
-                    <option value="1">是</option>
-                    <option value="0">否</option>
-                  </select>
-                </div>
-
-                <div class="ml-10" fxLayout="row" fxLayoutAlign="start center">
-                  <p class="global-inspect-title gray-color">
-                    请选择纸箱类型
-                  </p>
-                  <select class="select">
-                    <option value="1">三层单瓦楞</option>
-                    <option value="2">五层双瓦楞</option>
-                    <option value="3">七层三瓦楞</option>
-                    <option value="4">双纸箱</option>
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <p class="global-inspect-title  gray-color desc-tips">
-                  请输入备注
-                </p>
-                <div>
-                  <app-item-by-item-desc
-                    (onComplete)="descEnter($event, 'packing', 'inner')"
-                  ></app-item-by-item-desc>
-                </div>
-              </div>
-            </div>
-          </div>
-        </ion-item>
-      </ion-list>
-
-      <!-- 摆放图与说明书及配件包 -->
-      <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
-        <ion-item formGroupName="layout">
-          <div class="w100">
-            <div class="global-inspect-title">
-              <p>摆放图</p>
-            </div>
-            <app-photograph
-              (onPhotograph)="setPhoto($event, 'layout')"
-            ></app-photograph>
-            <div class="pb-10">
-              <p class="global-inspect-title  gray-color desc-tips">
-                请输入备注
-              </p>
-              <div>
-                <app-item-by-item-desc
-                  (onComplete)="descEnter($event, 'layout', 'inner')"
-                ></app-item-by-item-desc>
-              </div>
-            </div>
-          </div>
-        </ion-item>
-      </ion-list>
-      <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
-        <ion-item formGroupName="productDetail">
-          <div class="w100">
-            <div class="global-inspect-title">
-              <p>产品细节图</p>
-            </div>
-
-            <app-photograph
-              (onPhotograph)="setPhoto($event, 'instructions')"
-            ></app-photograph>
-            <div class="pb-10">
-              <p class="global-inspect-title  gray-color desc-tips">
-                请输入备注
-              </p>
-              <div>
-                <app-item-by-item-desc
-                  (onComplete)="descEnter($event, 'instructions', 'inner')"
-                ></app-item-by-item-desc>
-              </div>
-            </div>
-          </div>
-        </ion-item>
-      </ion-list>
-      <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
-        <ion-item formGroupName="instructions">
-          <div class="w100">
-            <div class="global-inspect-title">
-              <p>说明书</p>
-            </div>
-
-            <div class="ask-about" fxLayout="row" fxLayoutAlign="start center">
-              <div class="item" fxLayout="row" fxLayoutAlign="start center">
-                <p class="global-inspect-title gray-color">是否有说明书</p>
-                <select class="select">
-                  <option value="1">是</option>
-                  <option value="0">否</option>
-                </select>
-              </div>
-
-              <div class="item ml-15" fxLayout="row" fxLayoutAlign="start center">
-                <label class="global-inspect-title gray-color">选择说明书类型</label>
-                <select class="select">
-                  <option value="1">中性说明书</option>
-                  <option value="2">我司说明书</option>
-                </select>
-              </div>
-            </div>
-
-            <app-photograph
-              (onPhotograph)="setPhoto($event, 'instructions')"
-            ></app-photograph>
-            <div class="pb-10">
-              <p class="global-inspect-title  gray-color desc-tips">
-                请输入备注
-              </p>
-              <div>
-                <app-item-by-item-desc
-                  (onComplete)="descEnter($event, 'instructions', 'inner')"
-                ></app-item-by-item-desc>
-              </div>
-            </div>
-          </div>
-        </ion-item>
-
-        <ion-item formGroupName="crews">
-          <div class="w100">
-            <div class="global-inspect-title">
-              <p>螺丝包</p>
-            </div>
-
-            <div class="ask-about">
-              <div class="item" fxLayout="row" fxLayoutAlign="start center">
-                <p class="global-inspect-title gray-color">是否有螺丝包</p>
-                <select class="select">
-                  <option value="1">是</option>
-                  <option value="0">否</option>
-                </select>
-              </div>
-            </div>
-
-            <app-photograph
-              (onPhotograph)="setPhoto($event, 'instructions')"
-            ></app-photograph>
-            <div class="pb-10">
-              <p class="global-inspect-title  gray-color desc-tips">
-                请输入备注
-              </p>
-              <div>
-                <app-item-by-item-desc
-                  (onComplete)="descEnter($event, 'instructions', 'inner')"
-                ></app-item-by-item-desc>
-              </div>
-            </div>
-          </div>
-        </ion-item>
-      </ion-list>
-
-      <!-- 产品整体图 -->
-      <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
-        <ion-item formGroupName="whole">
-          <div class="w100">
-            <div class="global-inspect-title">
-              <p>产品整体图</p>
-            </div>
-            <app-photograph
-              (onPhotograph)="setPhoto($event, 'whole')"
-            ></app-photograph>
-            <div class="pb-10">
-              <p class="global-inspect-title  gray-color desc-tips">
-                请输入备注
-              </p>
-              <div>
-                <app-item-by-item-desc
-                  (onComplete)="descEnter($event, 'whole', 'inner')"
-                ></app-item-by-item-desc>
-              </div>
-            </div>
-          </div>
-        </ion-item>
-      </ion-list>
-
-      <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
-        <ion-item>
-          <div class="w100">
-            <div class="global-inspect-title">
-              <p>SKU中文描述</p>
-            </div>
-
-            <div class="packing-info">
-              {{ data.chinese_description }}
-            </div>
-
-            <div class="w100">
-              <div>
-                <ion-textarea placeholder="请输入SKU描述争议"></ion-textarea>
-              </div>
-            </div>
-          </div>
-        </ion-item>
-      </ion-list>
-
-      <!-- 产品尺寸 -->
-      <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
-        <ion-item formGroupName="productSize">
-          <div class="w100">
-            <div class="global-inspect-title">
-              <p>产品尺寸(单位：CM)</p>
-            </div>
-            <div class="size" fxLayout="row" fxLayoutAlign="start center">
-              <ion-input
-                type="number"
-                placeholder="长"
-                formControlName="length"
-              ></ion-input>
-              <ion-input
-                type="number"
-                placeholder="宽"
-                formControlName="width"
-              ></ion-input>
-              <ion-input
-                type="number"
-                placeholder="高"
-                formControlName="height"
-              ></ion-input>
-            </div>
-            <app-photograph
-              (onPhotograph)="setPhoto($event, 'whole')"
-            ></app-photograph>
-            <div class="pb-10">
-              <p class="global-inspect-title  gray-color desc-tips">
-                请输入备注
-              </p>
-              <div>
-                <app-item-by-item-desc
-                  (onComplete)="descEnter($event, 'productSize', 'inner')"
-                ></app-item-by-item-desc>
-              </div>
-            </div>
-          </div>
-        </ion-item>
-      </ion-list>
-
-      <!-- 净重 -->
-      <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
-        <ion-item formGroupName="netWeight">
-          <div class="w100">
-            <div class="global-inspect-title">
-              <p>净重(单位：KG)</p>
-            </div>
-            <div class="maozhong">
-              <div fxLayout="row" fxLayoutAlign="start center">
-                <ion-input
-                  placeholder="请输入净重"
-                  type="number"
-                  class="mr-10"
-                  formControlName="textOne"
-                ></ion-input>
-
-                <ion-input
-                  placeholder="请输入净重"
-                  type="number"
-                  formControlName="textTwo"
-                ></ion-input>
-              </div>
-              <app-photograph
-                (onPhotograph)="setPhoto($event, 'netWeight')"
-              ></app-photograph>
-              <div class="pb-10">
-                <p class="global-inspect-title  gray-color desc-tips">
-                  请输入备注
-                </p>
-                <div>
-                  <app-item-by-item-desc
-                    (onComplete)="descEnter($event, 'productSize', 'inner')"
-                  ></app-item-by-item-desc>
-                </div>
-              </div>
-            </div>
-          </div>
-        </ion-item>
-      </ion-list>
-
-      <!-- 外观检测选项 -->
-      <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
-        <ion-item>
-          <div class="w100">
-            <div class="global-inspect-title">
-              <p>外观检测选项</p>
-            </div>
-            <div class="maozhong">
-              <ion-input placeholder="外观检测选项" type="number"></ion-input>
-              <app-photograph></app-photograph>
-              <app-videotape
-                (onComplete)="videoOver($event, 'waterContent')"
-              ></app-videotape>
-              <div class="test-feedback">
-                <div>
-                  <p class="global-inspect-title  gray-color desc-tips">
-                    请输入说明
-                  </p>
-                  <div>
-                    <app-item-by-item-desc
-                      (onComplete)="descEnter($event, 'waterContent')"
-                    ></app-item-by-item-desc>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </ion-item>
-      </ion-list>
-
-      <!-- 测试部分 -->
-      <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
-        <ion-item formGroupName="function">
-          <div class="w100">
-            <div class="global-inspect-title">
-              <p>功能性测试</p>
-            </div>
-            <app-photograph
-              (onPhotograph)="setPhoto($event, 'function')"
-            ></app-photograph>
-            <app-videotape
-              (onComplete)="videoOver($event, 'function')"
-            ></app-videotape>
-            <div class="test-feedback">
-              <div>
-                <p class="global-inspect-title  gray-color desc-tips">
-                  请输入说明
-                </p>
-                <div>
-                  <app-item-by-item-desc
-                    (onComplete)="descEnter($event, 'throwBox', 'inner')"
-                  ></app-item-by-item-desc>
-                </div>
-              </div>
-            </div>
-          </div>
-        </ion-item>
-
-        <ion-item formGroupName="bearing">
-          <div class="w100">
-            <div class="global-inspect-title">
-              <p>承重测试</p>
-            </div>
-            <app-photograph
-              (onPhotograph)="setPhoto($event, 'bearing')"
-            ></app-photograph>
-            <app-videotape
-              (onComplete)="videoOver($event, 'bearing')"
-            ></app-videotape>
-            <div class="test-feedback">
-              <div>
-                <p class="global-inspect-title  gray-color desc-tips">
-                  请输入说明
-                </p>
-                <div>
-                  <app-item-by-item-desc
-                    (onComplete)="descEnter($event, 'bearing')"
-                  ></app-item-by-item-desc>
-                </div>
-              </div>
-            </div>
-          </div>
-        </ion-item>
-
-        <ion-item formGroupName="waterContent">
-          <div class="w100">
-            <div class="global-inspect-title">
-              <p>含水量检测</p>
-            </div>
-            <app-photograph
-              (onPhotograph)="setPhoto($event, 'waterContent')"
-            ></app-photograph>
-            <app-videotape
-              (onComplete)="videoOver($event, 'waterContent')"
-            ></app-videotape>
-            <div class="test-feedback">
-              <div>
-                <p class="global-inspect-title  gray-color desc-tips">
-                  请输入说明
-                </p>
-                <div>
-                  <app-item-by-item-desc
-                    (onComplete)="descEnter($event, 'waterContent')"
-                  ></app-item-by-item-desc>
-                </div>
-              </div>
-            </div>
-          </div>
-        </ion-item>
-      </ion-list>
-
-      <!-- 总结 -->
-      <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
-        <ion-item formGroupName="sumUp">
-          <div class="w100">
-            <div class="global-inspect-title">
-              <p>总结</p>
-            </div>
-          </div>
-
-          <div class="maozhong">
-            <ion-input
-              placeholder="请输入实际抽检数量"
-              type="number"
-              class="mr-10"
-              formControlName="textOne"
-            ></ion-input>
-
-            <ion-input
-              placeholder="请输入实际摔箱数量"
-              type="number"
-              formControlName="textTwo"
-            ></ion-input>
-          </div>
-        </ion-item>
-      </ion-list>
-
-      <!-- 备注 -->
-      <ion-list
-        formArrayName="desc"
-        *ngIf="currentToggle.key == 'afterUnpacking'"
-      >
-        <ion-item>
-          <div class="w100">
-            <div class="global-inspect-title">
-              <p>备注</p>
-            </div>
-            <div class="maozhong">
-              <app-item-by-item-desc
-                (onComplete)="descEnter($event, 'desc', 'inner')"
-              ></app-item-by-item-desc>
-            </div>
-          </div>
-        </ion-item>
-      </ion-list>
-
-      <!-- 验货要求 -->
-      <ion-grid
-        class="inspection_require"
-        *ngIf="currentToggle.key == 'requirement'"
-      >
-        <ion-row>
-          <ion-col [size]="1.8">验货条目</ion-col>
-          <ion-col size=".9">要求图片</ion-col>
-          <ion-col [size]="4.2">验货要求</ion-col>
-          <ion-col [size]="4.1">验货标准</ion-col>
-          <ion-col [size]="1">要求反馈</ion-col>
-        </ion-row>
-        <ng-container
-          *ngIf="data.inspection_require && data.inspection_require.length"
-        >
-          <ion-row *ngFor="let item of data.inspection_require; let i = index">
-            <ion-col [size]="1.8" class="content" Chipboard class="chip-text ">
-              {{ item.theme_name }}
-            </ion-col>
-            <ion-col size=".9">
-              <div
-                class="img-box desc"
-                *ngIf="item.pic && item.pic.length"
-                imgGallery
-              >
-                <ng-container *ngFor="let item of item.pic; let i = index">
-                  <img [src]="imgOrigin + item" alt="" *ngIf="i == 0" />
+                <ng-container *ngIf="data.inspection_require && data.inspection_require.length">
+                    <ion-row *ngFor="let item of data.inspection_require; let i = index">
+                        <ion-col [size]="1.8" class="content" Chipboard class="chip-text ">
+                            {{ item.theme_name }}
+                        </ion-col>
+                        <ion-col size=".9">
+                            <div class="img-box desc" *ngIf="item.pic && item.pic.length" imgGallery>
+                                <ng-container *ngFor="let item of item.pic; let i = index">
+                                    <img [src]="imgOrigin + item" alt="" *ngIf="i == 0" />
+                                </ng-container>
+                            </div>
+                            <ion-text class="danger" *ngIf="!item.pic.length">暂无</ion-text>
+                        </ion-col>
+                        <ion-col [size]="4.2" class="content" Chipboard class="chip-text content">
+                            <div>
+                                {{ item.require }}
+                            </div>
+                            <div class="danger" *ngIf="item.type == 'cannot'">
+                                没法执行！
+                            </div>
+                            <div
+                                class="danger"
+                                *ngIf="
+                                    !item.cannot_inspection_task_advise &&
+                                    item.unreasonable_inspection_task_advise &&
+                                    item.improve_inspection_task_advise &&
+                                    item.type != 'cannot'
+                                "
+                            >
+                                <span>不合理之处: </span>
+                                <span>{{ item.unreasonable_inspection_task_advise }}</span>
+                            </div>
+                            <div
+                                class="danger"
+                                *ngIf="
+                                    !item.cannot_inspection_task_advise &&
+                                    item.improve_inspection_task_advise &&
+                                    item.type != 'cannot'
+                                "
+                            >
+                                <span>改进建议: </span>
+                                <span>{{ item.improve_inspection_task_advise }}</span>
+                            </div>
+                        </ion-col>
+                        <ion-col [size]="4.1" class="content" Chipboard class="chip-text content">{{
+                            item.standard
+                        }}</ion-col>
+                        <ion-col [size]="1">
+                            <ion-button
+                                class="no-margin"
+                                color="primary"
+                                fill="clear"
+                                size="small"
+                                (click)="showFeedback(item, i)"
+                                >反馈</ion-button
+                            >
+                        </ion-col>
+                    </ion-row>
                 </ng-container>
-              </div>
-              <ion-text class="danger" *ngIf="!item.pic.length">暂无</ion-text>
-            </ion-col>
-            <ion-col
-              [size]="4.2"
-              class="content"
-              Chipboard
-              class="chip-text content"
-            >
-              <div>
-                {{ item.require }}
-              </div>
-              <div class="danger" *ngIf="item.type == 'cannot'">
-                没法执行！
-              </div>
-              <div
-                class="danger"
-                *ngIf="
-                  !item.cannot_inspection_task_advise &&
-                  item.unreasonable_inspection_task_advise &&
-                  item.improve_inspection_task_advise &&
-                  item.type != 'cannot'
-                "
-              >
-                <span>不合理之处: </span>
-                <span>{{ item.unreasonable_inspection_task_advise }}</span>
-              </div>
-              <div
-                class="danger"
-                *ngIf="
-                  !item.cannot_inspection_task_advise &&
-                  item.improve_inspection_task_advise &&
-                  item.type != 'cannot'
-                "
-              >
-                <span>改进建议: </span>
-                <span>{{ item.improve_inspection_task_advise }}</span>
-              </div>
-            </ion-col>
-            <ion-col
-              [size]="4.1"
-              class="content"
-              Chipboard
-              class="chip-text content"
-              >{{ item.standard }}</ion-col
-            >
-            <ion-col [size]="1">
-              <ion-button
-                class="no-margin"
-                color="primary"
-                fill="clear"
-                size="small"
-                (click)="showFeedback(item, i)"
-                >反馈</ion-button
-              >
-            </ion-col>
-          </ion-row>
-        </ng-container>
-        <ion-row
-          *ngIf="data.inspection_require && !data.inspection_require.length"
-        >
-          <ion-col size="12" style="text-align: center" class="danger"
-            >暂无</ion-col
-          >
-        </ion-row>
-      </ion-grid>
-    </div>
+                <ion-row *ngIf="data.inspection_require && !data.inspection_require.length">
+                    <ion-col size="12" style="text-align: center" class="danger">暂无</ion-col>
+                </ion-row>
+            </ion-grid>
+        </div>
+        <!-- 外箱 -->
+        <div class="out-box" *ngIf="rateStatus == 'outer'" formGroupName="outer_box_data">
+            <ion-list *ngIf="currentToggle.key == 'beforeUnpacking'">
+                <ion-item>
+                    <div class="w100">
+                        <div class="global-inspect-title">
+                            <p>唛头(照相需六面)</p>
+                        </div>
 
-    <!-- 外箱 -->
-    <div
-      class="out-box"
-      *ngIf="rateStatus == 'out'"
-      formGroupName="outer_box_data"
-    >
-      <ion-list *ngIf="currentToggle.key == 'beforeUnpacking'">
-        <ion-item>
-          <div>
-            <div class="global-inspect-title">
-              <p>唛头(照相需六面)</p>
-            </div>
-            <app-photograph></app-photograph>
-          </div>
-        </ion-item>
+                        <app-photograph
+                            type="outer_box_pic"
+                            moduleType='removeSkuPic'
+                            [photos]="SkuInspectModel.value.outer_box_data.shippingMarks.photos"
+                            [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
+                            [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
+                            [sku]="data.sku"
+                            box_type="outer"
+                        ></app-photograph>
 
-        <ion-item>
-          <div>
-            <div class="global-inspect-title">
-              <p>尺寸(单位：CM)</p>
-            </div>
-            <div class="size" fxLayout="row" fxLayoutAlign="start center">
-              <ion-input type="number" placeholder="长"></ion-input>
-              <ion-input type="number" placeholder="宽"></ion-input>
-              <ion-input type="number" placeholder="高"></ion-input>
-            </div>
-            <app-photograph></app-photograph>
-          </div>
-        </ion-item>
-      </ion-list>
+                        <div class="desc-box">
+                            <app-item-by-item-desc
+                                description="备注"
+                                [ary]="SkuInspectModel.value.outer_box_data.shippingMarks.desc"
+                                (onComplete)="descEnter($event, 'shippingMarks', 'outer')"
+                            ></app-item-by-item-desc>
+                        </div>
+                    </div>
+                </ion-item>
 
-      <ion-list *ngIf="currentToggle.key == 'beforeUnpacking'">
-        <ion-item>
-          <div class="w100">
-            <div class="global-inspect-title">
-              <p>条码</p>
-            </div>
-            <div
-              class="bar-code w100"
-              fxLayout="row"
-              fxLayoutAlign="start center"
-            >
-              <input class="h-30" placeholder="请输入条码" />
-              <ion-button
-                [fill]="'clear'"
-                (click)="scan()"
-                [disabled]="barCode"
-              >
-                {{ barCode ? barCode : "扫码" }}
-              </ion-button>
-            </div>
-          </div>
-        </ion-item>
-        <ion-item>
-          <div>
-            <div class="global-inspect-title">
-              <p>毛重(单位：KG)</p>
-            </div>
-            <div class="maozhong">
-              <ion-input placeholder="请输入毛重" type="number"></ion-input>
-              <app-photograph></app-photograph>
-            </div>
-          </div>
-        </ion-item>
-      </ion-list>
+                <ion-item formGroupName="size">
+                    <div class="w100">
+                        <div class="global-inspect-title">
+                            <p>尺寸(单位：CM,叠高高度：1-2M）</p>
+                        </div>
 
-      <!-- 包装 -->
-      <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
-        <ion-item>
-          <div class="w100">
-            <div class="global-inspect-title">
-              <p>包装</p>
-            </div>
+                        <div class="w100">
+                            <ion-grid class="size-grid">
+                                <ion-row align-items-center>
+                                    <ion-col size="4">叠后尺寸</ion-col>
+                                    <ion-col size="4">叠高数量</ion-col>
+                                    <ion-col size="4">照片上传</ion-col>
+                                </ion-row>
 
-            <div class="packing-info">
-              {{ data.packing_type }}
-            </div>
-            <p class="global-inspect-title gray-color desc-tips">
-              包含纸箱层数特写照片
-            </p>
-            <app-photograph></app-photograph>
+                                <ion-row align-items-center formGroupName="length">
+                                    <ion-col size="4">
+                                        <input type="number" placeholder="长" formControlName="text" />
+                                    </ion-col>
+                                    <ion-col size="4">
+                                        <input type="number" placeholder="0" formControlName="num" />
+                                    </ion-col>
+                                    <ion-col size="4">
+                                        <app-photograph
+                                            type="'size_pic_length"
+                                            moduleType='removeSkuPic'
+                                            [photos]="SkuInspectModel.value.outer_box_data.size.length.photos"
+                                            [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
+                                            [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
+                                            [sku]="data.sku"
+                                            box_type="outer"
+                                        ></app-photograph>
+                                    </ion-col>
+                                </ion-row>
 
-            <div class="test-feedback">
-              <div fxLayout="row" fxLayoutAlign="start center">
-                <p class="global-inspect-title gray-color">
-                  是否与以上信息对应？
-                </p>
-                <select class="select">
-                  <option value="1">是</option>
-                  <option value="0">否</option>
-                </select>
-              </div>
-              <div>
-                <p class="global-inspect-title  gray-color desc-tips">
-                  请输入备注
-                </p>
-                <div>
-                  <app-item-by-item-desc
-                    (onComplete)="descEnter($event, 'throwBox')"
-                  ></app-item-by-item-desc>
-                </div>
-              </div>
-            </div>
-          </div>
-        </ion-item>
-      </ion-list>
+                                <ion-row align-items-center formGroupName="width">
+                                    <ion-col size="4">
+                                        <input type="number" placeholder="宽" formControlName="text" />
+                                    </ion-col>
+                                    <ion-col size="4">
+                                        <input type="number" placeholder="0" formControlName="num" />
+                                    </ion-col>
+                                    <ion-col size="4">
+                                        <app-photograph
+                                            type="'size_pic_width"
+                                            moduleType='removeSkuPic'
+                                            [photos]="SkuInspectModel.value.outer_box_data.size.width.photos"
+                                            [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
+                                            [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
+                                            [sku]="data.sku"
+                                            box_type="outer"
+                                        ></app-photograph>
+                                    </ion-col>
+                                </ion-row>
 
-      <!-- 摆放图与说明书及配件包 -->
-      <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
-        <ion-item>
-          <div class="w100">
-            <div class="global-inspect-title">
-              <p>SKU中文描述</p>
-            </div>
+                                <ion-row align-items-center formGroupName="height">
+                                    <ion-col size="4">
+                                        <input type="number" placeholder="0" formControlName="text" />
+                                    </ion-col>
+                                    <ion-col size="4">
+                                        <input type="number" placeholder="高" formControlName="num" />
+                                    </ion-col>
+                                    <ion-col size="4">
+                                        <app-photograph
+                                            type="'size_pic_height"
+                                            moduleType='removeSkuPic'
+                                            [photos]="SkuInspectModel.value.outer_box_data.size.height.photos"
+                                            [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
+                                            [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
+                                            [sku]="data.sku"
+                                            box_type="outer"
+                                        ></app-photograph>
+                                    </ion-col>
+                                </ion-row>
+                            </ion-grid>
+                        </div>
 
-            <div class="packing-info">
-              {{ data.chinese_description }}
-            </div>
-          </div>
-        </ion-item>
-        <ion-item>
-          <div class="w100">
-            <div class="global-inspect-title">
-              <p>摆放图</p>
-            </div>
-            <app-photograph></app-photograph>
-          </div>
-        </ion-item>
-        <ion-item>
-          <div class="w100">
-            <div class="global-inspect-title">
-              <p>说明书及配件包</p>
-            </div>
-            <app-photograph></app-photograph>
-          </div>
-        </ion-item>
-      </ion-list>
-    </div>
-  </form>
+                        <div class="desc-box">
+                            <app-item-by-item-desc
+                                description="备注"
+                                [ary]="SkuInspectModel.value.outer_box_data.size.desc"
+                                (onComplete)="descEnter($event, 'size', 'outer')"
+                            ></app-item-by-item-desc>
+                        </div>
+                    </div>
+                </ion-item>
+            </ion-list>
+
+            <ion-list *ngIf="currentToggle.key == 'beforeUnpacking'">
+                <ion-item formGroupName="barCode">
+                    <div class="w100">
+                        <div class="global-inspect-title">
+                            <p>条码</p>
+                        </div>
+                        <div class="bar-code" fxLayout="row" fxLayoutAlign="start center">
+                            <input class="h-30" placeholder="请输入条码" formControlName="text" />
+                            <ion-button [fill]="'clear'" (click)="scan()" [disabled]="barCode">
+                                {{ barCode ? barCode : '扫码' }}
+                            </ion-button>
+                        </div>
+                        <app-photograph
+                            type="bar_code_pic"
+                            moduleType='removeSkuPic'
+                            [photos]="SkuInspectModel.value.outer_box_data.barCode.photos"
+                            [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
+                            [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
+                            [sku]="data.sku"
+                            box_type="outer"
+                        ></app-photograph>
+
+                        <div fxLayout="row" fxLayoutAlign="start center">
+                            <p class="global-inspect-title gray-color">
+                                是否六面条码一致？
+                            </p>
+                            <select class="select" formControlName="isTrue">
+                                <option value="1">是</option>
+                                <option value="0">否</option>
+                            </select>
+                        </div>
+                        <div class="desc-box">
+                            <app-item-by-item-desc
+                                description="备注"
+                                [ary]="SkuInspectModel.value.outer_box_data.barCode.desc"
+                                (onComplete)="descEnter($event, 'barCode', 'outer')"
+                            ></app-item-by-item-desc>
+                        </div>
+                    </div>
+                </ion-item>
+                <ion-item formGroupName="grossWeight">
+                    <div class="w100">
+                        <div class="global-inspect-title">
+                            <p>毛重(单位：KG)</p>
+                        </div>
+                        <div class="maozhong">
+                            <div fxLayout="row" fxLayoutAlign="start center" #grossWeight>
+                                <input
+                                    placeholder="请输入毛重"
+                                    type="number"
+                                    (change)="calcGrossWeight()"
+                                    class="mr-10"
+                                    formControlName="text1"
+                                />
+
+                                <input
+                                    placeholder="请输入毛重"
+                                    type="number"
+                                    (change)="calcGrossWeight()"
+                                    class="mr-10"
+                                    formControlName="text2"
+                                />
+
+                                <input
+                                    placeholder="请输入毛重"
+                                    type="number"
+                                    (change)="calcGrossWeight()"
+                                    class="mr-10"
+                                    formControlName="text3"
+                                />
+                            </div>
+
+                            <div fxLayout="row" class="mt-10" fxLayoutAlign="start center" *ngIf="otherGrossWeight">
+                                <input
+                                    placeholder="请输入毛重"
+                                    type="number"
+                                    (change)="calcGrossWeight()"
+                                    class="mr-10"
+                                    formControlName="text4"
+                                />
+                                <input
+                                    placeholder="请输入毛重"
+                                    type="number"
+                                    (change)="calcGrossWeight()"
+                                    class="mr-10"
+                                    formControlName="text5"
+                                />
+                            </div>
+
+                            <app-photograph
+                                type="gross_weight_pic"
+                                moduleType='removeSkuPic'
+                                [photos]="SkuInspectModel.value.outer_box_data.grossWeight.photos"
+                                [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
+                                [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
+                                [sku]="data.sku"
+                                box_type="outer"
+                            ></app-photograph>
+                            <div class="desc-box">
+                                <app-item-by-item-desc
+                                    description="备注"
+                                    (onComplete)="descEnter($event, 'grossWeight', 'outer')"
+                                ></app-item-by-item-desc>
+                            </div>
+                        </div>
+                    </div>
+                </ion-item>
+            </ion-list>
+
+             <!-- 包装 -->
+             <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
+                <ion-item formGroupName="packing">
+                    <div class="w100">
+                        <div class="global-inspect-title">
+                            <p>包装</p>
+                        </div>
+
+                        <div class="packing-info">
+                            {{ data.packing_type }}
+                        </div>
+                        <p class="global-inspect-title gray-color desc-tips">
+                            包含纸箱层数特写照片
+                        </p>
+                        <app-photograph
+                            type="packing_pic"
+                            moduleType='removeSkuPic'
+                            [photos]="SkuInspectModel.value.outer_box_data.packing.photos"
+                            [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
+                            [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
+                            [sku]="data.sku"
+                            box_type="outer"
+                        ></app-photograph>
+
+                        <div class="test-feedback">
+                            <div fxLayout="row" fxLayoutAlign="start center">
+                                <div fxLayout="row" fxLayoutAlign="start center">
+                                    <p class="global-inspect-title gray-color">
+                                        是否与以上信息对应？
+                                    </p>
+                                    <select class="select" formControlName="isTrue">
+                                        <option value="1">是</option>
+                                        <option value="0">否</option>
+                                    </select>
+                                </div>
+
+                                <div class="ml-10" fxLayout="row" fxLayoutAlign="start center">
+                                    <p class="global-inspect-title gray-color">
+                                        是否是双纸箱
+                                    </p>
+                                    <select class="select" formControlName="is_double_carton">
+                                        <option value="1">是</option>
+                                        <option value="0">否</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div fxLayout="row" fxLayoutAlign="start center">
+                                <div fxLayout="row" fxLayoutAlign="start center">
+                                    <p class="global-inspect-title gray-color">
+                                        请选择纸箱类型
+                                    </p>
+                                    <select class="select" formControlName="packingType">
+                                        <option value="inner" *ngIf="SkuInspectModel.value.inner_box_data.packing.is_double_carton == 1">内箱纸箱类型</option>
+                                        <option value="outer" *ngIf="SkuInspectModel.value.inner_box_data.packing.is_double_carton == 1">外箱纸箱类型</option>
+                                        <option value="1" *ngIf="SkuInspectModel.value.inner_box_data.packing.is_double_carton == 0">三层单瓦楞</option>
+                                        <option value="2" *ngIf="SkuInspectModel.value.inner_box_data.packing.is_double_carton == 0">五层双瓦楞</option>
+                                        <option value="3" *ngIf="SkuInspectModel.value.inner_box_data.packing.is_double_carton == 0">七层三瓦楞</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+
+                            <div>
+                                <p class="global-inspect-title  gray-color desc-tips">
+                                    请输入备注
+                                </p>
+                                <div>
+                                    <app-item-by-item-desc
+                                        description="备注"
+                                        [ary]="SkuInspectModel.value.outer_box_data.packing.desc"
+                                        (onComplete)="descEnter($event, 'packing', 'outer')"
+                                    ></app-item-by-item-desc>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ion-item>
+            </ion-list>
+
+            <!-- 摆放图与说明书及配件包 -->
+            <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
+                <ion-item formGroupName="layout">
+                    <div class="w100">
+                        <div class="global-inspect-title">
+                            <p>摆放图</p>
+                        </div>
+                        <app-photograph
+                            type="product_place_pic"
+                            moduleType='removeSkuPic'
+                            [photos]="SkuInspectModel.value.outer_box_data.layout.photos"
+                            [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
+                            [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
+                            [sku]="data.sku"
+                            box_type="outer"
+                        ></app-photograph>
+                        <div class="pb-10">
+                            <p class="global-inspect-title  gray-color desc-tips">
+                                请输入备注
+                            </p>
+                            <div>
+                                <app-item-by-item-desc
+                                    description="备注"
+                                    [ary]="SkuInspectModel.value.outer_box_data.layout.desc"
+                                    (onComplete)="descEnter($event, 'layout', 'outer')"
+                                ></app-item-by-item-desc>
+                            </div>
+                        </div>
+                    </div>
+                </ion-item>
+            </ion-list>
+        </div>
+    </form>
 </ion-content>
 
 <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-  <ion-fab-button color="danger" (click)="save()">
-    <p>保存</p>
-  </ion-fab-button>
+    <ion-fab-button color="danger" (click)="save()">
+        <p>保存</p>
+    </ion-fab-button>
 </ion-fab>

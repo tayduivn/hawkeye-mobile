@@ -3,13 +3,9 @@ import { CommonModule } from '@angular/common';
 import { GalleryDirective } from './gallery.directive';
 import { ChipboardDirective } from './chipboard.directive';
 
-
-
 @NgModule({
-  declarations: [GalleryDirective, ChipboardDirective],
-  imports: [
-    CommonModule
-  ],
-  exports:[GalleryDirective,ChipboardDirective]
+    declarations: [GalleryDirective, ChipboardDirective],
+    imports: [CommonModule],
+    exports: [GalleryDirective, ChipboardDirective],
 })
-export class DirectiveModule { }
+export class DirectiveModule {}

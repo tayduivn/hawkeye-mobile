@@ -84,6 +84,7 @@ ion-item:last-child {
 
 ion-input,
 input {
+  height: 30px;
   margin-right: 20px;
   border: 1px solid #e3e3e3;
   width: 100px;
@@ -211,6 +212,18 @@ p.desc-tips {
   }
 }
 
-.ml-15{
+.ml-15 {
   margin-left: 15px !important;
+}
+
+ion-item:not(:first-child) .global-inspect-title {
+  margin-top: 10px !important;
+}
+
+.w150{
+  width: 150px !important;
+}
+
+.mt-10{
+  margin-top: 10px !important;
 }

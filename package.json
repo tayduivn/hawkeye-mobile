@@ -9,11 +9,12 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "format": "prettier --write \"src/**/*.ts\""
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^8.2.4",
+    "@angular/animations": "^8.2.0",
     "@angular/cdk": "^8.1.2",
     "@angular/common": "~8.1.2",
     "@angular/compiler": "~8.1.2",
@@ -52,6 +53,7 @@
     "cordova-plugin-filepath": "1.5.6",
     "cordova-plugin-media": "5.0.3",
     "cordova-plugin-media-capture": "3.0.3",
+    "cordova-plugin-network-information": "git+https://github.com/apache/cordova-plugin-network-information.git",
     "cordova-plugin-qrscanner": "^3.0.1",
     "cordova-plugin-statusbar": "^2.4.2",
     "cordova-plugin-telerik-imagepicker": "git+https://github.com/Telerik-Verified-Plugins/ImagePicker.git",
@@ -59,6 +61,7 @@
     "cordova-plugin-videoplayer": "0.1.4",
     "core-js": "^2.5.4",
     "file-transfer": "0.0.0",
+    "phonegap-plugin-mobile-accessibility": "^1.0.5",
     "rxjs": "~6.5.1",
     "tslib": "^1.9.0",
     "zone.js": "~0.9.1"
@@ -89,6 +92,7 @@
     "karma-coverage-istanbul-reporter": "~2.0.1",
     "karma-jasmine": "~2.0.1",
     "karma-jasmine-html-reporter": "^1.4.0",
+    "prettier": "1.19.1",
     "protractor": "~5.4.0",
     "ts-node": "~7.0.0",
     "tslint": "~5.15.0",
@@ -118,7 +122,8 @@
       "cordova-plugin-filechooser": {},
       "cordova-plugin-telerik-imagepicker": {},
       "cordova-plugin-chooser": {},
-      "cordova-plugin-filepath": {}
+      "cordova-plugin-filepath": {},
+      "phonegap-plugin-mobile-accessibility": {}
     },
     "platforms": [
       "ios",
