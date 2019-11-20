@@ -1,55 +1,60 @@
 <ion-header>
     <ion-toolbar>
-  
         <ion-buttons slot="secondary">
             <ion-button>
-              <i class="iconfont iconfanhui"></i>
-              <ion-label class="global-back-text">返回</ion-label>
+                <i class="iconfont iconfanhui"></i>
+                <ion-label class="global-back-text">返回</ion-label>
             </ion-button>
-          </ion-buttons>
-      
-          <ion-buttons slot="start">
-        <ion-menu-button></ion-menu-button>
-      </ion-buttons>
-  
-      <ion-title>
-        {{title}}
-      </ion-title>
+        </ion-buttons>
+
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+
+        <ion-title>
+            {{title}}
+        </ion-title>
     </ion-toolbar>
-  </ion-header>
-  
+</ion-header>
+
 <ion-content padding>
-  <form action="">
-    <div *ngFor='let item of accInspArray'>
+    <form action="">
+        <div *ngFor="let item of accInspArray">
+            <div class="inspection-item" *ngFor="let sItem of item.data">
+                <div class="form-group mb-0">
+                    <label class="col-sm-2 control-label">包装类型</label>
+                    <div class="col-sm-8 flex-box clearfix">
+                        <input
+                            name="PackingType"
+                            type="text"
+                            class="form-control"
+                            required
+                            [(ngModel)]="sItem.PackingType"
+                            placeholder="请输入包装类型"
+                        />
+                        <!-- <div [hidden]='name.pristine || name.valid' class="showerr alert-danger">请输入名称</div> -->
+                    </div>
+                </div>
+            </div>
 
-      <div class='inspection-item' *ngFor='let sItem of item.data'>
-        <div class="form-group mb-0">
-          <label class="col-sm-2 control-label">包装类型</label>
-          <div class="col-sm-8 flex-box clearfix">
-            <input name='PackingType' type="text" class="form-control" required
-              [(ngModel)]="sItem.PackingType" 
-              placeholder="请输入包装类型">
-            <!-- <div [hidden]='name.pristine || name.valid' class="showerr alert-danger">请输入名称</div> -->
-          </div>
+            <div class="inspection-item" *ngFor="let sItem of item.data">
+                <div class="form-group mb-0">
+                    <label class="col-sm-2 control-label">条形码</label>
+                    <div class="col-sm-8 flex-box clearfix">
+                        <input
+                            name="BarCode"
+                            type="text"
+                            class="form-control"
+                            required
+                            [(ngModel)]="sItem.BarCode"
+                            placeholder="请输入条形码"
+                        />
+                        <!-- <div [hidden]='name.pristine || name.valid' class="showerr alert-danger">请输入名称</div> -->
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
 
-      <div class='inspection-item' *ngFor='let sItem of item.data'>
-        <div class="form-group mb-0">
-          <label class="col-sm-2 control-label">条形码</label>
-          <div class="col-sm-8 flex-box clearfix">
-            <input name='BarCode' type="text" class="form-control" required
-              [(ngModel)]="sItem.BarCode" 
-              placeholder="请输入条形码">
-            <!-- <div [hidden]='name.pristine || name.valid' class="showerr alert-danger">请输入名称</div> -->
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-
-    <ion-button (click)="submit()" [expand]='"block"' color='dark'>提交</ion-button>
-
-  </form>
+        <ion-button (click)="submit()" [expand]='"block"' color="dark">提交</ion-button>
+    </form>
 </ion-content>

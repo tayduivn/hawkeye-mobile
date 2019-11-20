@@ -1,18 +1,18 @@
 .welcome-card ion-img {
     overflow: hidden;
 }
-ion-title{
-  font-size: 16px;
-  span{
-    display: inline-block;
-    width: 20px
-  }
+ion-title {
+    font-size: 16px;
+    span {
+        display: inline-block;
+        width: 20px;
+    }
 }
-.title{
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  >span:first-child{
-    font-size: .6rem
-  }
+.title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    > span:first-child {
+        font-size: 0.6rem;
+    }
 }

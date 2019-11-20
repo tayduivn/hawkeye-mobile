@@ -46,10 +46,10 @@ export class ImplementInspectService {
         });
     }
 
-    submitSkuData(params: SkuUploadData, sku: string, apply_inspection_no: string,is_inner_box:number) {
+    submitSkuData(params: SkuUploadData, sku: string, apply_inspection_no: string, is_inner_box: number) {
         params.sku = sku;
         params.apply_inspection_no = apply_inspection_no;
-        params.is_inner_box = is_inner_box
+        params.is_inner_box = is_inner_box;
         return this.http.post({
             url: '/task/post_inspection_post_for_product',
             params: params,
@@ -98,6 +98,13 @@ export class ImplementInspectService {
     removeSkuPic(params: RemovePicParams): Observable<any> {
         return this.http.post({
             url: '/task/del_inspection_task_image_for_sku',
+            params: params,
+        });
+    }
+
+    removeSkuVideo(params: RemovePicParams): Observable<any> {
+        return this.http.post({
+            url: '/task/del_inspection_task_video_for_sku',
             params: params,
         });
     }

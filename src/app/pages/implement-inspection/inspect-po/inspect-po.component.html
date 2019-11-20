@@ -1,120 +1,100 @@
 <ion-header mode="ios">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title>{{ data.factoryName }}</ion-title>
-    <ion-buttons slot="end">
-      <ion-back-button text="返回" color="white" mode="md"></ion-back-button>
-    </ion-buttons>
-  </ion-toolbar>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>{{ data.factoryName }}</ion-title>
+        <ion-buttons slot="end">
+            <ion-back-button text="返回" color="white" mode="md"></ion-back-button>
+        </ion-buttons>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-list class="po-list">
-    <ion-item *ngFor="let item of data.sku_data[0].contract_data">
-      <!-- data.sku_data[0].contract_data -->
-      <div class="wd-100">
-        <div
-          class="wd-100 po"
-          fxLayout="row"
-          fxLayoutAlign="space-between center"
-        >
-          <h4>{{ item.contract_no }}</h4>
-          <div fxLayout="row" fxLayoutAlign="start center">
-            <label>合同大货包装完成数量:</label>
-            <ion-input
-              class="complete-num"
-              placeholder="0"
-              [disabled]="true"
-              [(ngModel)]="item.inspection_complete_no"
-              type="number"
-            ></ion-input>
-          </div>
-        </div>
-
-        <ol class="sku-list">
-          <li
-            *ngFor="let sItem of item.data"
-            fxLayout="column"
-            fxLayoutAlign="start start"
-          >
-            <div
-              fxLayout="row"
-              fxLayoutAlign="space-between  center"
-              class="wd-100"
-            >
-              <div fxLayout="row" fxLayoutAlign="start  center">
-                <img
-                  class="head"
-                  [src]="imgOrigin + sItem.pic[0]"
-                  alt=""
-                  imgGallery
-                />
-                <div class="span-box">
-                  <span><span class="label"> SKU: </span>{{ sItem.sku }}</span
-                  ><br />
-                  <p class="lh-10">
-                    <span class="label">中文名： </span>
-                    {{ sItem.sku_chinese_name }}
-                  </p>
-                  <span class="label">申请验货数量：</span>
+    <ion-list class="po-list">
+        <ion-item *ngFor="let item of data.sku_data[0].contract_data">
+            <!-- data.sku_data[0].contract_data -->
+            <div class="wd-100">
+                <div class="wd-100 po" fxLayout="row" fxLayoutAlign="space-between center">
+                    <h4>{{ item.contract_no }}</h4>
+                    <div fxLayout="row" fxLayoutAlign="start center">
+                        <label>合同大货包装完成数量:</label>
+                        <ion-input
+                            class="complete-num"
+                            placeholder="0"
+                            [disabled]="true"
+                            [(ngModel)]="item.inspection_complete_no"
+                            type="number"
+                        ></ion-input>
+                    </div>
                 </div>
-              </div>
 
-              <div>
-                <ion-button
-                  size="small"
-                  expand="clear"
-                  color="primary"
-                  (click)="toInspectSku(item, sItem, 'go')"
-                  >去验货</ion-button
-                >
-                <ion-button
-                  size="small"
-                  color="primary"
-                  (click)="toInspectSku(item, sItem)"
-                  >保存</ion-button
-                >
-              </div>
-            </div>
+                <ol class="sku-list">
+                    <li *ngFor="let sItem of item.data" fxLayout="column" fxLayoutAlign="start start">
+                        <div fxLayout="row" fxLayoutAlign="space-between  center" class="wd-100">
+                            <div fxLayout="row" fxLayoutAlign="start  center">
+                                <img class="head" [src]="imgOrigin + sItem.pic[0]" alt="" imgGallery />
+                                <div class="span-box">
+                                    <span><span class="label"> SKU: </span>{{ sItem.sku }}</span
+                                    ><br />
+                                    <p class="lh-10">
+                                        <span class="label">中文名： </span>
+                                        {{ sItem.sku_chinese_name }}
+                                    </p>
+                                    <span class="label">申请验货数量：</span>
+                                </div>
+                            </div>
 
-            <div fxLayout="row" fxLayoutAlign="start center" class="input-item">
-              <div fxLayout="row" fxLayoutAlign="start center">
-                <label class="label">大货包装完成数量:</label>
-                <ion-input
-                  placeholder="0"
-                  type="number"
-                  (ionBlur)='calcContractNum(item,sItem)'
-                  [(ngModel)]="sItem.sku_package_complete_num"
-                ></ion-input>
-              </div>
-              <div fxLayout="row" fxLayoutAlign="start center">
-                <label class="label">大货生产完成数量:</label>
-                <ion-input
-                  placeholder="0"
-                  type="number"
-                  [(ngModel)]="sItem.sku_production_complete_num"
-                ></ion-input>
-              </div>
+                            <div>
+                                <ion-button
+                                    size="small"
+                                    expand="clear"
+                                    color="primary"
+                                    (click)="toInspectSku(item, sItem, 'go')"
+                                    >去验货</ion-button
+                                >
+                                <ion-button size="small" color="primary" (click)="toInspectSku(item, sItem)"
+                                    >保存</ion-button
+                                >
+                            </div>
+                        </div>
+
+                        <div fxLayout="row" fxLayoutAlign="start center" class="input-item">
+                            <div fxLayout="row" fxLayoutAlign="start center">
+                                <label class="label">大货包装完成数量:</label>
+                                <ion-input
+                                    placeholder="0"
+                                    type="number"
+                                    (ionBlur)="calcContractNum(item, sItem)"
+                                    [(ngModel)]="sItem.sku_package_complete_num"
+                                ></ion-input>
+                            </div>
+                            <div fxLayout="row" fxLayoutAlign="start center">
+                                <label class="label">大货生产完成数量:</label>
+                                <ion-input
+                                    placeholder="0"
+                                    type="number"
+                                    [(ngModel)]="sItem.sku_production_complete_num"
+                                ></ion-input>
+                            </div>
+                        </div>
+                        <app-photograph
+                            moduleType="removeContractPic"
+                            [photos]="sItem.implement_photo"
+                            [contract_no]="item.contract_no"
+                            [apply_inspection_no]="data.sku_data[0].apply_inspection_no"
+                            [sku]="sItem.sku"
+                            type="contract_sku_desc"
+                        ></app-photograph>
+                        <app-item-by-item-desc
+                            class="wd-100"
+                            description="备注"
+                            [ary]="sItem.desc"
+                            (onComplete)="descEnter($event, sItem)"
+                        ></app-item-by-item-desc>
+                    </li>
+                </ol>
             </div>
-            <app-photograph
-              moduleType="removeContractPic"
-              [photos]="sItem.implement_photo"
-              [contract_no]='item.contract_no'
-              [apply_inspection_no]="data.sku_data[0].apply_inspection_no"
-              [sku]='sItem.sku'
-              type="contract_sku_desc"
-            ></app-photograph>
-            <app-item-by-item-desc
-              class="wd-100"
-              description="备注"
-              [ary]="sItem.desc"
-              (onComplete)="descEnter($event, sItem)"
-            ></app-item-by-item-desc>
-          </li>
-        </ol>
-      </div>
-    </ion-item>
-  </ion-list>
+        </ion-item>
+    </ion-list>
 </ion-content>

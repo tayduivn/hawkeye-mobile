@@ -6,6 +6,7 @@ import { MediaCapture, CaptureError, MediaFile } from '@ionic-native/media-captu
 import { ActionSheetOptions } from '@ionic/core';
 import { FilePath } from '@ionic-native/file-path/ngx';
 import { VideoPlayComponent } from '../video-play/video-play.component';
+import { ImplementInspectService } from 'src/app/services/implement-inspect.service';
 
 export type FieldType =
     | 'throw_box_video'
@@ -44,24 +45,26 @@ export class VideotapeComponent implements OnInit {
         }
     }
 
-    @Input() type: string;
+    @Input() type: FieldType;
     @Input() apply_inspection_no: string;
     @Input() contract_no: string;
     @Input() sku: string;
     @Input() box_type: 'outer' | 'inner';
+    @Input() sort_index?: number;
 
     constructor(
         public mediaCapture: MediaCapture,
         private fileChooser: FileChooser,
         private filePath: FilePath,
         private ec: PageEffectService,
+        private implement: ImplementInspectService,
         private uploadService: FileUploadService,
     ) {}
 
     @Output() onComplete: EventEmitter<MediaFile[][]> = new EventEmitter<MediaFile[][]>();
 
     _videos: MediaFile[][] = [];
-    _up_data:string [] = []
+    _up_data: string[] = [];
     ngOnInit() {
         this.uploadService.fileTransfer.onProgress(progressEvent => {
             if (progressEvent.lengthComputable) {
@@ -78,6 +81,7 @@ export class VideotapeComponent implements OnInit {
             contract_no: this.contract_no,
             box_type: this.box_type,
             sku: this.sku,
+            sort_index: this.sort_index,
         };
         this.uploadService.uploadVideo({ fileUrl: obj.filePath, params: params });
     }
@@ -120,7 +124,7 @@ export class VideotapeComponent implements OnInit {
             backdropDismiss: false,
         });
 
-        this.fileChooser.open({mime:'video/mp4'}).then(uri => {
+        this.fileChooser.open({ mime: 'video/mp4' }).then(uri => {
             this.filePath
                 .resolveNativePath(uri)
                 .then(url => {
@@ -152,10 +156,48 @@ export class VideotapeComponent implements OnInit {
         );
     }
 
-    play(p:string){
+    play(p: string) {
         this.ec.showModal({
-            component:VideoPlayComponent,
-            componentProps:{source:p}
-        })
+            component: VideoPlayComponent,
+            componentProps: { source: p },
+        });
+    }
+
+    remove(i: number) {
+        this.ec.showAlert({
+            message: '确定要删除吗？',
+            buttons: [
+                {
+                    text: '取消',
+                },
+                {
+                    text: '确定',
+                    handler: () => {
+                        this.implement
+                            .removeSkuVideo({
+                                apply_inspection_no: this.apply_inspection_no,
+                                type: this.type,
+                                filename: this._up_data[i],
+                                contract_no: this.contract_no,
+                                sku: this.sku,
+                            })
+                            .subscribe(res => {
+                                if (res.status) {
+                                    this._up_data.splice(i, 1);
+                                    this.ec.showToast({
+                                        message: '删除成功！',
+                                        color: 'success',
+                                    });
+                                } else {
+                                    this.ec.showToast({
+                                        message: '删除失败！',
+                                        color: 'danger',
+                                    });
+                                }
+                            });
+                    },
+                },
+            ],
+        });
     }
 }

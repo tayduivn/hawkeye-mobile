@@ -22,8 +22,8 @@ import { ScanComponent } from './widget/scan/scan.component';
 import { FileTransfer } from '@ionic-native/file-transfer/ngx';
 
 @NgModule({
-    declarations: [AppComponent, InspectSettingBoxComponent, ScanComponent, PartsComponent,VideoPlayComponent],
-    entryComponents: [InspectSettingBoxComponent, ScanComponent, PartsComponent,VideoPlayComponent],
+    declarations: [AppComponent, InspectSettingBoxComponent, ScanComponent, PartsComponent, VideoPlayComponent],
+    entryComponents: [InspectSettingBoxComponent, ScanComponent, PartsComponent, VideoPlayComponent],
     imports: [
         BrowserModule,
         IonicModule.forRoot(),

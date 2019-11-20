@@ -3,14 +3,14 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  // production: false,
-  // apiUrl: "http://yy.xdrlgroup.com/api/v1",
-  // fileUrlPath: "http://114.55.32.144:443",
-  // usFileUrl: "http://yy.xdrlgroup.com/storage/"
-  production: false,
-  apiUrl: 'http://192.168.1.144/api/v1',
-  fileUrlPath:'http://114.55.32.144:443',
-  usFileUrl:  'http://192.168.1.144/'
+    // production: false,
+    // apiUrl: "http://yy.xdrlgroup.com/api/v1",
+    // fileUrlPath: "http://114.55.32.144:443",
+    // usFileUrl: "http://yy.xdrlgroup.com/storage/"
+    production: false,
+    apiUrl: 'http://192.168.1.144/api/v1',
+    fileUrlPath: 'http://114.55.32.144:443',
+    usFileUrl: 'http://192.168.1.144/',
 };
 
 /*

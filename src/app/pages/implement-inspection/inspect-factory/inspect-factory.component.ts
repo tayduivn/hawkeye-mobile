@@ -135,8 +135,8 @@ export class InspectFactoryComponent implements OnInit {
                     backdropDismiss: false,
                 });
             }
-            res.factory_data.remarks.forEach((element,i) => {
-                (this.factoryModel.get('remarks') as FormArray).push(this.fb.control(''))
+            res.factory_data.remarks.forEach((element, i) => {
+                (this.factoryModel.get('remarks') as FormArray).push(this.fb.control(''));
             });
             this.factoryModel.patchValue({
                 factoryAddress: {

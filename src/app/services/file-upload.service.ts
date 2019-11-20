@@ -20,6 +20,7 @@ export interface VideoOther {
     contract_no: string;
     sku: string;
     box_type: 'outer' | 'inner';
+    sort_index?: number;
 }
 
 export interface ImageOther {
@@ -29,6 +30,7 @@ export interface ImageOther {
     sku: string;
     box_type: 'outer' | 'inner';
     images: string[];
+    sort_index?: number;
 }
 
 export interface ImageResponse {

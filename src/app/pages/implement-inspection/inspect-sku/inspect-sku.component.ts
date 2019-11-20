@@ -123,7 +123,7 @@ export class InspectSkuComponent implements OnInit {
     toggleItem: any[] = ToggleItem;
     currentToggle: any = ToggleItem[0];
     imgOrigin: string = environment.fileUrlPath;
-
+    inspectionRequire: any = {};
     constructor(
         private es: PageEffectService,
         private fb: FormBuilder,
@@ -317,6 +317,9 @@ export class InspectSkuComponent implements OnInit {
         this.getBeforeBoxData();
     }
 
+    /**
+     * 计算毛重
+     */
     calcGrossWeight() {
         if (this.otherGrossWeight) return;
         let doms = this.grossWeight.nativeElement.querySelectorAll('input'),
@@ -343,6 +346,12 @@ export class InspectSkuComponent implements OnInit {
         );
     }
 
+    /**
+     * app-item-by-item-desc callback
+     * @param e     description array
+     * @param type  formGroup item
+     * @param boxType   'inner' | 'outer'
+     */
     descEnter(e: string[], type: string, boxType: 'inner' | 'outer') {
         ((this.SkuInspectModel.get(boxType + '_box_data').get(type) as FormGroup).get('desc') as FormArray).clear();
         for (let i = 0; i < e.length; i++) {
@@ -359,6 +368,9 @@ export class InspectSkuComponent implements OnInit {
         this.currentToggle.key == 'beforeUnpacking' ? this.getBeforeBoxData() : this.getAfterBoxData();
     }
 
+    /**
+     * 保存
+     */
     save() {
         console.log(JSON.stringify(this.SkuInspectModel.value));
         this.es.showAlert({
@@ -387,6 +399,10 @@ export class InspectSkuComponent implements OnInit {
      */
     videoOver(e: any, type: string) {}
 
+    /**
+     * 切换 开箱前后 验货要求
+     * @param ev  event
+     */
     segmentChanged(ev: any) {
         this.currentToggle = this.toggleItem.find(res => res.key == ev.detail.value);
         switch (ev.detail.value) {
@@ -401,17 +417,17 @@ export class InspectSkuComponent implements OnInit {
 
     /**
      * 动态生成FormControl
-     * @param ary
-     * @param boxType
-     * @param item
-     * @param type
-     * @param sItem
+     * @param ary       desc||videos||photos
+     * @param boxType   inner_box_data | 'outer_box_data
+     * @param item      formGroup item
+     * @param type      'desc' | 'videos' | 'photos'
+     * @param sItem     size
      */
     dynamicBuildFC(
         ary: string[],
         boxType: 'inner_box_data' | 'outer_box_data',
         item: string,
-        type: 'desc' | 'videos' | 'photos',
+        type: string,
         sItem?: string,
     ) {
         if (!ary) return;
@@ -426,6 +442,9 @@ export class InspectSkuComponent implements OnInit {
         });
     }
 
+    /**
+     * 获取开箱前数据
+     */
     getBeforeBoxData() {
         this.implementService
             .getBeforeBoxData({
@@ -434,13 +453,13 @@ export class InspectSkuComponent implements OnInit {
                 is_inner_box: this.rateStatus == 'inner' ? 1 : 2,
             })
             .subscribe(res => {
-                console.log(res);
-
+                this.inspectionRequire = res.inner_box_data.inspection_require;
+                console.log(this.inspectionRequire);
                 //patch value to formGroup
                 if (this.rateStatus == 'inner') {
                     for (const key in res.inner_box_data) {
                         const element = res.inner_box_data[key];
-                        if (res.inner_box_data.hasOwnProperty(key)) {
+                        if (res.inner_box_data.hasOwnProperty(key) && key != 'inspection_require') {
                             if (!!element) {
                                 this.dynamicBuildFC(element.desc, 'inner_box_data', key, 'desc');
                                 this.dynamicBuildFC(element.videos, 'inner_box_data', key, 'videos');
@@ -588,6 +607,9 @@ export class InspectSkuComponent implements OnInit {
             });
     }
 
+    /**
+     * 获取开箱后数据
+     */
     getAfterBoxData(boxType?: 'outer' | 'inner') {
         this.implementService
             .getAfterBoxData({
@@ -597,7 +619,20 @@ export class InspectSkuComponent implements OnInit {
             })
             .subscribe(res => {
                 console.log(res);
+
                 if (this.rateStatus == 'inner') {
+                    for (const key in res.inner_box_data) {
+                        const element = res.inner_box_data[key];
+                        let box: FormGroup = this.SkuInspectModel.get('inner_box_data') as FormGroup;
+
+                        if (res.inner_box_data.hasOwnProperty(key)) {
+                            if (!!element) {
+                                this.dynamicBuildFC(element.desc, 'inner_box_data', key, 'desc');
+                                this.dynamicBuildFC(element.videos, 'inner_box_data', key, 'videos');
+                                this.dynamicBuildFC(element.photos, 'inner_box_data', key, 'photos');
+                            }
+                        }
+                    }
                     this.SkuInspectModel.patchValue({
                         // spotCheckNum: res.inner_box_data.spotCheckNum,
                         // poNo: res.inner_box_data.poNo,
@@ -707,7 +742,7 @@ export class InspectSkuComponent implements OnInit {
                             },
                             desc: {
                                 //整体描述
-                                desc: res.inner_box_data.desc.desc ? res.inner_box_data.desc.desc : [],
+                                desc: res.inner_box_data.desc ? res.inner_box_data.desc.desc : [],
                             },
                         },
                     });
@@ -735,6 +770,4 @@ export class InspectSkuComponent implements OnInit {
                 }
             });
     }
-
-    showFeedback(p: any, i: number) {}
 }

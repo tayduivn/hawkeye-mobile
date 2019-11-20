@@ -1,283 +1,224 @@
-<div
-  mode="ios"
-  class="sku_cabinet"
-  [ngStyle]="{ 'z-index': sku.expand_desc ? 12 : 10 }"
->
-  <div
-    class="top"
-    fxLayout="row"
-    fxLayoutAlign="space-between start"
-    fxLayoutGap="gappx"
-  >
-    <div
-      class="img-box pl-10"
-      imgGallery
-      [ngStyle]="{ width: type == 'task' ? '140px' : '140px' }"
-    >
-      <img
-        [hidden]="i > 3"
-        [ngClass]="{ thumbnail: i == 0 }"
-        [ngStyle]="{ ' margin-top': i == 0 && type == 'task' ? '11px' : '0px' }"
-        *ngFor="let img of sku.pic; let i = index"
-        [src]="imgOrigin + img"
-        alt=""
-      />
-    </div>
-    <div class="content-box">
-      <div
-        class="title"
-        fxLayout="row"
-        fxLayoutAlign="space-between center"
-        fxLayoutGap="gappx"
-      >
-        <span Chipboard class="chip-text"
-          ><span class="label">货号: </span> {{ sku.sku }}</span
-        >
-        <div
-          fxLayout="row"
-          fxLayoutAlign="space-between center"
-          fxLayoutGap="gappx"
-        >
-          <ion-button
-            *ngIf="type == 'task' && false"
-            [fill]="sku.expand_desc ? 'outline' : 'clear'"
-            size="small"
-            (click)="sku.expand_desc = !sku.expand_desc"
-            >概括信息</ion-button
-          >
+<div mode="ios" class="sku_cabinet" [ngStyle]="{ 'z-index': sku.expand_desc ? 12 : 10 }">
+    <div class="top" fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="gappx">
+        <div class="img-box pl-10" imgGallery [ngStyle]="{ width: type == 'task' ? '140px' : '140px' }">
+            <img
+                [hidden]="i > 3"
+                [ngClass]="{ thumbnail: i == 0 }"
+                [ngStyle]="{ ' margin-top': i == 0 && type == 'task' ? '11px' : '0px' }"
+                *ngFor="let img of sku.pic; let i = index"
+                [src]="imgOrigin + img"
+                alt=""
+            />
         </div>
-      </div>
+        <div class="content-box">
+            <div class="title" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="gappx">
+                <span Chipboard class="chip-text"><span class="label">货号: </span> {{ sku.sku }}</span>
+                <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="gappx">
+                    <ion-button
+                        *ngIf="type == 'task' && false"
+                        [fill]="sku.expand_desc ? 'outline' : 'clear'"
+                        size="small"
+                        (click)="sku.expand_desc = !sku.expand_desc"
+                        >概括信息</ion-button
+                    >
+                </div>
+            </div>
 
-      <ion-grid>
-        <ion-row>
-          <ion-col size="8" Chipboard class="chip-text"
-            ><span class="label">中文名: </span>
-            {{ sku.sku_chinese_name }}</ion-col
-          >
-          <ion-col size="4" Chipboard class="chip-text" *ngIf="type == 'task'"
-            ><span class="label">验货产品数: </span>
-            <span class="red">{{ sku.quantity }}</span></ion-col
-          >
-        </ion-row>
+            <ion-grid>
+                <ion-row>
+                    <ion-col size="8" Chipboard class="chip-text"
+                        ><span class="label">中文名: </span> {{ sku.sku_chinese_name }}</ion-col
+                    >
+                    <ion-col size="4" Chipboard class="chip-text" *ngIf="type == 'task'"
+                        ><span class="label">验货产品数: </span> <span class="red">{{ sku.quantity }}</span></ion-col
+                    >
+                </ion-row>
 
-        <ion-row>
-          <ion-col size="4" Chipboard class="chip-text" *ngIf="type == 'task'"
-            ><span class="label">箱率: </span>
-            <span class="red">{{ sku.rate_container }}</span></ion-col
-          >
-          <ion-col size="4" Chipboard class="chip-text" *ngIf="type == 'task'"
-            ><span class="label">客诉率: </span>
-            <span class="red">{{ sku.return_rate + "%" }}</span></ion-col
-          >
-          <ion-col size="4" Chipboard class="chip-text" *ngIf="type == 'task'"
-            ><span class="label">外箱数: </span>
-            <span class="red">{{ sku.container_num }}</span></ion-col
-          >
-        </ion-row>
+                <ion-row>
+                    <ion-col size="4" Chipboard class="chip-text" *ngIf="type == 'task'"
+                        ><span class="label">箱率: </span> <span class="red">{{ sku.rate_container }}</span></ion-col
+                    >
+                    <ion-col size="4" Chipboard class="chip-text" *ngIf="type == 'task'"
+                        ><span class="label">客诉率: </span>
+                        <span class="red">{{ sku.return_rate + '%' }}</span></ion-col
+                    >
+                    <ion-col size="4" Chipboard class="chip-text" *ngIf="type == 'task'"
+                        ><span class="label">外箱数: </span> <span class="red">{{ sku.container_num }}</span></ion-col
+                    >
+                </ion-row>
 
-        <ion-row>
-          <ion-col size="4" Chipboard class="chip-text"
-            ><span class="label">新品/返单: </span>
-            {{
-              sku.news_or_return_product
-                ? sku.news_or_return_product == "news"
-                  ? "新品"
-                  : "返单"
-                : ""
-            }}</ion-col
-          >
-          <ion-col size="4" Chipboard class="chip-text"
-            ><span class="label"> 是否摔箱: </span>
-            {{ sku.is_need_drop_test ? "是" : "否" }}</ion-col
-          >
-          <ion-col size="4" Chipboard class="chip-text"
-            ><span class="label"> 有无打包带: </span>
-            {{ sku.has_strap == 1 ? "是" : "否" }}</ion-col
-          >
-        </ion-row>
+                <ion-row>
+                    <ion-col size="4" Chipboard class="chip-text"
+                        ><span class="label">新品/返单: </span>
+                        {{
+                            sku.news_or_return_product ? (sku.news_or_return_product == 'news' ? '新品' : '返单') : ''
+                        }}</ion-col
+                    >
+                    <ion-col size="4" Chipboard class="chip-text"
+                        ><span class="label"> 是否摔箱: </span> {{ sku.is_need_drop_test ? '是' : '否' }}</ion-col
+                    >
+                    <ion-col size="4" Chipboard class="chip-text"
+                        ><span class="label"> 有无打包带: </span> {{ sku.has_strap == 1 ? '是' : '否' }}</ion-col
+                    >
+                </ion-row>
 
-        <ion-row>
-          <ion-col size="4" Chipboard class="chip-text"
-            ><span class="label">是否寄样: </span>
-            {{ sku.is_need_sample == 1 ? "是" : "否" }}</ion-col
-          >
-          <ion-col size="8" Chipboard class="chip-text"
-            ><span class="label">LOGO: </span> {{ sku.logo_desc }}</ion-col
-          >
-        </ion-row>
+                <ion-row>
+                    <ion-col size="4" Chipboard class="chip-text"
+                        ><span class="label">是否寄样: </span> {{ sku.is_need_sample == 1 ? '是' : '否' }}</ion-col
+                    >
+                    <ion-col size="8" Chipboard class="chip-text"
+                        ><span class="label">LOGO: </span> {{ sku.logo_desc }}</ion-col
+                    >
+                </ion-row>
 
-        <ion-row>
-          <ion-col size="12" *ngIf="type == 'task'" Chipboard class="chip-text">
-            <span class="label">大货进度: </span>
-            {{ sku.complete ? sku.complete : "暂无" }}</ion-col
-          >
-          <ion-col size="12" *ngIf="type == 'task'" Chipboard class="chip-text"
-            ><span class="label">临时备注: </span>
-            {{
-              sku.temporary_description ? sku.temporary_description : "暂无"
-            }}</ion-col
-          >
-        </ion-row>
-      </ion-grid>
+                <ion-row>
+                    <ion-col size="12" *ngIf="type == 'task'" Chipboard class="chip-text">
+                        <span class="label">大货进度: </span>
+                        {{ sku.complete ? sku.complete : '暂无' }}</ion-col
+                    >
+                    <ion-col size="12" *ngIf="type == 'task'" Chipboard class="chip-text"
+                        ><span class="label">临时备注: </span>
+                        {{ sku.temporary_description ? sku.temporary_description : '暂无' }}</ion-col
+                    >
+                </ion-row>
+            </ion-grid>
+        </div>
     </div>
-  </div>
 
-  <div class="desc">
-    <ion-grid class="sku-desc mt-0">
-      <ion-row class="no-border-top">
-        <ion-col size="1.8" class="label">系统LOGO:</ion-col>
-        <ion-col size="10.2">
-          {{ sku.system_logo_desc ? sku.system_logo_desc : "暂无" }}
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  </div>
+    <div class="desc">
+        <ion-grid class="sku-desc mt-0">
+            <ion-row class="no-border-top">
+                <ion-col size="1.8" class="label">系统LOGO:</ion-col>
+                <ion-col size="10.2">
+                    {{ sku.system_logo_desc ? sku.system_logo_desc : '暂无' }}
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+    </div>
 
-  <div class="desc">
-    <ion-grid class="sku-desc mt-0">
-      <ion-row class="no-border-top">
-        <ion-col size="1.8" class="label">货号备注:</ion-col>
-        <ion-col size="10.2">
-          <ng-template *ngIf="sku.description && sku.description.length">
-            <p *ngFor="let item of sku.description" Chipboard class="chip-text">
-              {{ item }}
-            </p>
-          </ng-template>
-          <span *ngIf="!sku.description">暂无</span>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  </div>
+    <div class="desc">
+        <ion-grid class="sku-desc mt-0">
+            <ion-row class="no-border-top">
+                <ion-col size="1.8" class="label">货号备注:</ion-col>
+                <ion-col size="10.2">
+                    <ng-template *ngIf="sku.description && sku.description.length">
+                        <p *ngFor="let item of sku.description" Chipboard class="chip-text">
+                            {{ item }}
+                        </p>
+                    </ng-template>
+                    <span *ngIf="!sku.description">暂无</span>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+    </div>
 
-  <div class="desc" *ngIf="type == 'task'">
-    <ion-grid class="sku-desc mt-0">
-      <ion-row Chipboard class="chip-text no-border-top">
-        <ion-col [size]="1.8" class="label">中文描述</ion-col>
-        <ion-col class="content" [size]="10.2">
-          {{
-            sku.chinese_description ? sku.chinese_description : "暂无"
-          }}</ion-col
-        >
-      </ion-row>
-    </ion-grid>
-  </div>
+    <div class="desc" *ngIf="type == 'task'">
+        <ion-grid class="sku-desc mt-0">
+            <ion-row Chipboard class="chip-text no-border-top">
+                <ion-col [size]="1.8" class="label">中文描述</ion-col>
+                <ion-col class="content" [size]="10.2">
+                    {{ sku.chinese_description ? sku.chinese_description : '暂无' }}</ion-col
+                >
+            </ion-row>
+        </ion-grid>
+    </div>
 
-  <div *ngIf="type == 'task'" class="desc">
-    <ion-grid class="sku-desc">
-      <ion-row Chipboard class="chip-text ">
-        <ion-col [size]="1.8" class="label">描述</ion-col>
-        <ion-col class="content" [size]="10.2">{{ sku.chinese_name }}</ion-col>
-      </ion-row>
-      <ion-row Chipboard class="chip-text ">
-        <ion-col [size]="1.8" class="label">是否含配件</ion-col>
-        <ion-col class="content" [size]="10.2">{{
-          (sku.accessory_info ? "是" : "否") +
-            (sku.accessory_info
-              ? "&nbsp;&nbsp;&nbsp;&nbsp;(配件有：" +
-                sku.accessory_code.join("、") +
-                ")"
-              : "")
-        }}</ion-col>
-      </ion-row>
-      <ion-row Chipboard class="chip-text ">
-        <ion-col [size]="1.8" class="label">材质</ion-col>
-        <ion-col class="content" [size]="10.2">{{ sku.text_ture }}</ion-col>
-      </ion-row>
-      <ion-row Chipboard class="chip-text ">
-        <ion-col [size]="1.8" class="label">包装方式</ion-col>
-        <ion-col class="content" [size]="10.2">{{ sku.packing_type }}</ion-col>
-      </ion-row>
-    </ion-grid>
+    <div *ngIf="type == 'task'" class="desc">
+        <ion-grid class="sku-desc">
+            <ion-row Chipboard class="chip-text ">
+                <ion-col [size]="1.8" class="label">描述</ion-col>
+                <ion-col class="content" [size]="10.2">{{ sku.chinese_name }}</ion-col>
+            </ion-row>
+            <ion-row Chipboard class="chip-text ">
+                <ion-col [size]="1.8" class="label">是否含配件</ion-col>
+                <ion-col class="content" [size]="10.2">{{
+                    (sku.accessory_info ? '是' : '否') +
+                        (sku.accessory_info
+                            ? '&nbsp;&nbsp;&nbsp;&nbsp;(配件有：' + sku.accessory_code.join('、') + ')'
+                            : '')
+                }}</ion-col>
+            </ion-row>
+            <ion-row Chipboard class="chip-text ">
+                <ion-col [size]="1.8" class="label">材质</ion-col>
+                <ion-col class="content" [size]="10.2">{{ sku.text_ture }}</ion-col>
+            </ion-row>
+            <ion-row Chipboard class="chip-text ">
+                <ion-col [size]="1.8" class="label">包装方式</ion-col>
+                <ion-col class="content" [size]="10.2">{{ sku.packing_type }}</ion-col>
+            </ion-row>
+        </ion-grid>
 
-    <ion-grid class="inspection_require">
-      <ion-row>
-        <ion-col [size]="1.8">验货条目</ion-col>
-        <ion-col size=".9">要求图片</ion-col>
-        <ion-col [size]="4.2">验货要求</ion-col>
-        <ion-col [size]="4.1">验货标准</ion-col>
-        <ion-col [size]="1">要求反馈</ion-col>
-      </ion-row>
-      <ng-container
-        *ngIf="sku.inspection_require && sku.inspection_require.length"
-      >
-        <ion-row *ngFor="let item of sku.inspection_require; let i = index">
-          <ion-col [size]="1.8" class="content" Chipboard class="chip-text ">
-            {{ item.theme_name }}
-          </ion-col>
-          <ion-col size=".9">
-            <div
-              class="img-box desc"
-              *ngIf="item.pic && item.pic.length"
-              imgGallery
-            >
-              <ng-container *ngFor="let item of item.pic; let i = index">
-                <img [src]="imgOrigin + item" alt="" *ngIf="i == 0" />
-              </ng-container>
-            </div>
-            <ion-text class="danger" *ngIf="!item.pic.length">暂无</ion-text>
-          </ion-col>
-          <ion-col
-            [size]="4.2"
-            class="content"
-            Chipboard
-            class="chip-text content"
-          >
-            <div>
-              {{ item.require }}
-            </div>
-            <div class="danger" *ngIf="item.type == 'cannot'">
-              没法执行！
-            </div>
-            <div
-              class="danger"
-              *ngIf="
-                !item.cannot_inspection_task_advise &&
-                item.unreasonable_inspection_task_advise &&
-                item.improve_inspection_task_advise &&
-                item.type != 'cannot'
-              "
-            >
-              <span>不合理之处: </span>
-              <span>{{ item.unreasonable_inspection_task_advise }}</span>
-            </div>
-            <div
-              class="danger"
-              *ngIf="
-                !item.cannot_inspection_task_advise &&
-                item.improve_inspection_task_advise &&
-                item.type != 'cannot'
-              "
-            >
-              <span>改进建议: </span>
-              <span>{{ item.improve_inspection_task_advise }}</span>
-            </div>
-          </ion-col>
-          <ion-col
-            [size]="4.1"
-            class="content"
-            Chipboard
-            class="chip-text content"
-            >{{ item.standard }}</ion-col
-          >
-          <ion-col [size]="1">
-            <ion-button
-              class="no-margin"
-              color="primary"
-              fill="clear"
-              size="small"
-              (click)="showFeedback(item, i)"
-              >反馈</ion-button
-            >
-          </ion-col>
-        </ion-row>
-
-      </ng-container>
-      <ion-row *ngIf="sku.inspection_require && !sku.inspection_require.length">
-        <ion-col size="12" style="text-align: center" class="danger"
-          >暂无</ion-col
-        >
-      </ion-row>
-    </ion-grid>
-  </div>
-  <ng-content></ng-content>
+        <ion-grid class="inspection_require">
+            <ion-row>
+                <ion-col [size]="1.8">验货条目</ion-col>
+                <ion-col size=".9">要求图片</ion-col>
+                <ion-col [size]="4.2">验货要求</ion-col>
+                <ion-col [size]="4.1">验货标准</ion-col>
+                <ion-col [size]="1">要求反馈</ion-col>
+            </ion-row>
+            <ng-container *ngIf="sku.inspection_require && sku.inspection_require.length">
+                <ion-row *ngFor="let item of sku.inspection_require; let i = index">
+                    <ion-col [size]="1.8" class="content" Chipboard class="chip-text ">
+                        {{ item.theme_name }}
+                    </ion-col>
+                    <ion-col size=".9">
+                        <div class="img-box desc" *ngIf="item.pic && item.pic.length" imgGallery>
+                            <ng-container *ngFor="let item of item.pic; let i = index">
+                                <img [src]="imgOrigin + item" alt="" *ngIf="i == 0" />
+                            </ng-container>
+                        </div>
+                        <ion-text class="danger" *ngIf="!item.pic.length">暂无</ion-text>
+                    </ion-col>
+                    <ion-col [size]="4.2" class="content" Chipboard class="chip-text content">
+                        <div>
+                            {{ item.require }}
+                        </div>
+                        <div class="danger" *ngIf="item.type == 'cannot'">
+                            没法执行！
+                        </div>
+                        <div
+                            class="danger"
+                            *ngIf="
+                                !item.cannot_inspection_task_advise &&
+                                item.unreasonable_inspection_task_advise &&
+                                item.improve_inspection_task_advise &&
+                                item.type != 'cannot'
+                            "
+                        >
+                            <span>不合理之处: </span>
+                            <span>{{ item.unreasonable_inspection_task_advise }}</span>
+                        </div>
+                        <div
+                            class="danger"
+                            *ngIf="
+                                !item.cannot_inspection_task_advise &&
+                                item.improve_inspection_task_advise &&
+                                item.type != 'cannot'
+                            "
+                        >
+                            <span>改进建议: </span>
+                            <span>{{ item.improve_inspection_task_advise }}</span>
+                        </div>
+                    </ion-col>
+                    <ion-col [size]="4.1" class="content" Chipboard class="chip-text content">{{
+                        item.standard
+                    }}</ion-col>
+                    <ion-col [size]="1">
+                        <ion-button
+                            class="no-margin"
+                            color="primary"
+                            fill="clear"
+                            size="small"
+                            (click)="showFeedback(item, i)"
+                            >反馈</ion-button
+                        >
+                    </ion-col>
+                </ion-row>
+            </ng-container>
+            <ion-row *ngIf="sku.inspection_require && !sku.inspection_require.length">
+                <ion-col size="12" style="text-align: center" class="danger">暂无</ion-col>
+            </ion-row>
+        </ion-grid>
+    </div>
+    <ng-content></ng-content>
 </div>

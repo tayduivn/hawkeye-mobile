@@ -10,146 +10,146 @@
  */
 
 /* Core CSS required for Ionic components to work properly */
-@import "~@ionic/angular/css/core.css";
+@import '~@ionic/angular/css/core.css';
 
 /* Basic CSS for apps built with Ionic */
-@import "~@ionic/angular/css/normalize.css";
-@import "~@ionic/angular/css/structure.css";
-@import "~@ionic/angular/css/typography.css";
-@import "~@ionic/angular/css/display.css";
+@import '~@ionic/angular/css/normalize.css';
+@import '~@ionic/angular/css/structure.css';
+@import '~@ionic/angular/css/typography.css';
+@import '~@ionic/angular/css/display.css';
 
 /* Optional CSS utils that can be commented out */
-@import "~@ionic/angular/css/padding.css";
-@import "~@ionic/angular/css/float-elements.css";
-@import "~@ionic/angular/css/text-alignment.css";
-@import "~@ionic/angular/css/text-transformation.css";
-@import "~@ionic/angular/css/flex-utils.css";
+@import '~@ionic/angular/css/padding.css';
+@import '~@ionic/angular/css/float-elements.css';
+@import '~@ionic/angular/css/text-alignment.css';
+@import '~@ionic/angular/css/text-transformation.css';
+@import '~@ionic/angular/css/flex-utils.css';
 
 .global-back-text {
-  font-size: 0.6rem;
-  margin-left: 0.2rem;
+    font-size: 0.6rem;
+    margin-left: 0.2rem;
 }
 
 * {
-  outline: none;
- 
+    outline: none;
 }
 
-ul,ol,
+ul,
+ol,
 li {
-  margin: 0;
-  padding: 0;
+    margin: 0;
+    padding: 0;
 }
 
 li {
-  list-style: none;
+    list-style: none;
 }
 
 ion-toolbar {
-  --background: rgb(3, 169, 244);
-  color: #fff;
+    --background: rgb(3, 169, 244);
+    color: #fff;
 }
 
 .menu {
-  ion-content {
-    --background: rgba(32, 34, 42, 1);
-  }
-  ion-toolbar {
-    --background: rgba(32, 34, 42, 1);
-    color: rgba(255, 255, 255, 0.8);
-    text-align: center;
-  }
-  ion-header {
-    --background: rgba(32, 34, 42, 1);
-    --color: rgba(255, 255, 255, 0.8);
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.15);
-  }
-  ion-list {
-    padding: 0;
-    margin: 8px 0;
-  }
-  ion-item {
-    border: 0;
-    // font-size: .55rem;
-    --color: rgba(255, 255, 255, 0.8);
-    --background: rgba(32, 34, 42, 1);
-  }
-  ion-icon {
-    color: rgba(255, 255, 255, 0.8);
-  }
+    ion-content {
+        --background: rgba(32, 34, 42, 1);
+    }
+    ion-toolbar {
+        --background: rgba(32, 34, 42, 1);
+        color: rgba(255, 255, 255, 0.8);
+        text-align: center;
+    }
+    ion-header {
+        --background: rgba(32, 34, 42, 1);
+        --color: rgba(255, 255, 255, 0.8);
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.15);
+    }
+    ion-list {
+        padding: 0;
+        margin: 8px 0;
+    }
+    ion-item {
+        border: 0;
+        // font-size: .55rem;
+        --color: rgba(255, 255, 255, 0.8);
+        --background: rgba(32, 34, 42, 1);
+    }
+    ion-icon {
+        color: rgba(255, 255, 255, 0.8);
+    }
 }
 
 .custom-modal-sku {
-  --width: 276px !important;
-  --height: 280px !important;
+    --width: 276px !important;
+    --height: 280px !important;
 }
 
 .pos-r {
-  position: relative !important;
+    position: relative !important;
 }
 
 .pos-a {
-  position: absolute !important;
+    position: absolute !important;
 }
 
 .pos-f {
-  position: fixed !important;
+    position: fixed !important;
 }
 
 .f-r {
-  float: right !important;
+    float: right !important;
 }
 
 .f-l {
-  float: left !important;
+    float: left !important;
 }
 
 .add-image {
-  width: 68px;
-  height: 60px;
-  border-radius: 5px;
-  background: rgb(250, 250, 250);
-  border: 1px solid rgb(214, 214, 214);
-  color: #848484;
-  font-size: 14px;
-  padding: 5px;
-  ion-icon {
+    width: 68px;
+    height: 60px;
+    border-radius: 5px;
+    background: rgb(250, 250, 250);
+    border: 1px solid rgb(214, 214, 214);
     color: #848484;
-    font-size: 34px;
-    margin-bottom: 5px;
-  }
-  p {
-    margin: 0;
-  }
-}
-
-.add-image-small{
-  border: 1px solid rgb(214, 214, 214);
-  color: #848484;
-  font-size: 14px;
-  border-radius: 3px;
-  padding:0 3px;
-  p{
-    line-height: 0;
-  }
-}
-
-.video-list{
-  width: 100%;
-  // padding: 15px !important;
-  >li{
-    margin-bottom: 10px;
-  }
-  .video-name{
-    color: #898989;;
-    border: 1px solid #d6d6d6;
-    padding: 3px;
-    border-radius: 3px;
-    margin-right: 12px;
-    ion-icon{
-      margin-right: 2px;
+    font-size: 14px;
+    padding: 5px;
+    ion-icon {
+        color: #848484;
+        font-size: 34px;
+        margin-bottom: 5px;
     }
-  }
+    p {
+        margin: 0;
+    }
+}
+
+.add-image-small {
+    border: 1px solid rgb(214, 214, 214);
+    color: #848484;
+    font-size: 14px;
+    border-radius: 3px;
+    padding: 0 3px;
+    p {
+        line-height: 0;
+    }
+}
+
+.video-list {
+    width: 100%;
+    // padding: 15px !important;
+    > li {
+        margin-bottom: 10px;
+    }
+    .video-name {
+        color: #898989;
+        border: 1px solid #d6d6d6;
+        padding: 3px;
+        border-radius: 3px;
+        margin-right: 12px;
+        ion-icon {
+            margin-right: 2px;
+        }
+    }
 }
 
 .cameraView,
@@ -161,22 +161,22 @@ ion-toolbar {
 .cameraView .nav-decor {
     background: transparent none !important;
     --background: transparent;
- 
+
     .tabbar.show-tabbar {
         opacity: 0;
     }
 }
 
-.cameraView ion-split-pane{
-  opacity: 0;
+.cameraView ion-split-pane {
+    opacity: 0;
 }
 
-.text-c{
-  text-align: center !important;
+.text-c {
+    text-align: center !important;
 }
-.text-l{
-  text-align: left !important;
+.text-l {
+    text-align: left !important;
 }
-.text-r{
-  text-align: right !important;
+.text-r {
+    text-align: right !important;
 }

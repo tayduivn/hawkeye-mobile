@@ -1,49 +1,32 @@
 <ul class="video-list ">
-  
-  <li *ngFor="let item of _up_data" class="pos-r">
-      <div
-      class="video-name"
-      fxLayout="row"
-      fxLayoutAlign="start center"
-      (click)="play(item)"
-    >
-      <ion-icon name="videocam"></ion-icon>
-      <span>{{
-        item
-      }}</span>
-    </div>
-  </li>
+    <li *ngFor="let item of _up_data; let i = index" class="pos-r video ">
+        <div class="video-name" fxLayout="row" fxLayoutAlign="start center" (click)="play(item)">
+            <ion-icon name="videocam"></ion-icon>
+            <span>{{
+                item.substr(item.lastIndexOf('/') + 1, 6) + '…' + item.substr(item.lastIndexOf('/') + 7, 4) + '.mp4'
+            }}</span>
+        </div>
+        <div class="pos-a">
+            <ion-icon name="close" mode="ios" (click)="remove(i)"></ion-icon>
+        </div>
+    </li>
 
-  <li *ngFor="let item of _videos" class="pos-r">
-    <div
-      class="video-name"
-      appVideoPlayer
-      [source]="item[0].filePath"
-      fxLayout="row"
-      fxLayoutAlign="start center"
-    >
-      <ion-icon name="videocam"></ion-icon>
-      <span>{{
-        item[0].name.length > 14
-          ? item[0].name.substring(0, 10) +
-            "…" +
-            item[0].name.substring(11, 12) +
-            ".mp4"
-          : item[0].name
-      }}</span>
-    </div>
-  </li>
+    <li *ngFor="let item of _videos" class="pos-r">
+        <div class="video-name" appVideoPlayer [source]="item[0].filePath" fxLayout="row" fxLayoutAlign="start center">
+            <ion-icon name="videocam"></ion-icon>
+            <span>{{
+                item[0].name.length > 14
+                    ? item[0].name.substring(0, 10) + '…' + item[0].name.substring(11, 12) + '.mp4'
+                    : item[0].name
+            }}</span>
+        </div>
+    </li>
 
-  <li>
-    <div
-      class="add-image-small"
-      fxLayout="row"
-      (click)="videotape()"
-      fxLayoutAlign="start center"
-    >
-      <ion-icon name="cloud-upload" mode="ios"></ion-icon>
-      <p>上传视频</p>
-    </div>
-  </li>
+    <li>
+        <div class="add-image-small" fxLayout="row" (click)="videotape()" fxLayoutAlign="start center">
+            <ion-icon name="cloud-upload" mode="ios"></ion-icon>
+            <p>上传视频</p>
+        </div>
+    </li>
 </ul>
 <ion-progress-bar [value]="progress" *ngIf="progress"></ion-progress-bar>

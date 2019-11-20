@@ -7,7 +7,7 @@
 
         <ion-buttons slot="end" class="tops">
             <span>箱率：{{ data.rate_container }}</span>
-            <select (change)="toggleBoxRate()" [(ngModel)]="rateStatus" [disabled]='data.rate_container==1'>
+            <select (change)="toggleBoxRate()" [(ngModel)]="rateStatus" [disabled]="data.rate_container == 1">
                 <!--  [disabled]='data.rate_container==1' -->
                 <option value="inner">内箱</option>
                 <option value="outer">外箱</option>
@@ -72,7 +72,7 @@
                         </div>
                         <app-photograph
                             type="outer_box_pic"
-                            moduleType='removeSkuPic'
+                            moduleType="removeSkuPic"
                             [photos]="SkuInspectModel.value.inner_box_data.shippingMarks.photos"
                             [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
                             [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
@@ -92,7 +92,7 @@
 
                 <ion-item formGroupName="size">
                     <div class="w100">
-                        <div class="global-inspect-title">      
+                        <div class="global-inspect-title">
                             <p>尺寸(单位：CM,叠高高度：1-2M）</p>
                         </div>
 
@@ -114,7 +114,7 @@
                                     <ion-col size="4">
                                         <app-photograph
                                             type="size_pic_length"
-                                            moduleType='removeSkuPic'
+                                            moduleType="removeSkuPic"
                                             [photos]="SkuInspectModel.value.inner_box_data.size.length.photos"
                                             [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
                                             [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
@@ -134,7 +134,7 @@
                                     <ion-col size="4">
                                         <app-photograph
                                             type="size_pic_width"
-                                            moduleType='removeSkuPic'
+                                            moduleType="removeSkuPic"
                                             [photos]="SkuInspectModel.value.inner_box_data.size.width.photos"
                                             [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
                                             [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
@@ -154,7 +154,7 @@
                                     <ion-col size="4">
                                         <app-photograph
                                             type="size_pic_height"
-                                            moduleType='removeSkuPic'
+                                            moduleType="removeSkuPic"
                                             [photos]="SkuInspectModel.value.inner_box_data.size.height.photos"
                                             [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
                                             [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
@@ -191,7 +191,7 @@
                         </div>
                         <app-photograph
                             type="bar_code_pic"
-                            moduleType='removeSkuPic'
+                            moduleType="removeSkuPic"
                             [photos]="SkuInspectModel.value.inner_box_data.barCode.photos"
                             [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
                             [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
@@ -269,7 +269,7 @@
 
                             <app-photograph
                                 type="gross_weight_pic"
-                                moduleType='removeSkuPic'
+                                moduleType="removeSkuPic"
                                 [photos]="SkuInspectModel.value.inner_box_data.grossWeight.photos"
                                 [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
                                 [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
@@ -312,7 +312,7 @@
 
                         <app-photograph
                             type="throw_box_pic"
-                            moduleType='removeSkuPic'
+                            moduleType="removeSkuPic"
                             [photos]="SkuInspectModel.value.inner_box_data.throwBox.photos"
                             [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
                             [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
@@ -320,7 +320,7 @@
                             box_type="inner"
                         ></app-photograph>
                         <app-videotape
-                            [videos]='SkuInspectModel.value.inner_box_data.throwBox.videos'
+                            [videos]="SkuInspectModel.value.inner_box_data.throwBox.videos"
                             type="throw_box_video"
                             [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
                             [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
@@ -361,7 +361,7 @@
                         </p>
                         <app-photograph
                             type="packing_pic"
-                            moduleType='removeSkuPic'
+                            moduleType="removeSkuPic"
                             [photos]="SkuInspectModel.value.inner_box_data.packing.photos"
                             [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
                             [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
@@ -397,15 +397,34 @@
                                         请选择纸箱类型
                                     </p>
                                     <select class="select" formControlName="packingType">
-                                        <option value="inner" *ngIf="SkuInspectModel.value.inner_box_data.packing.is_double_carton == 1">内箱纸箱类型</option>
-                                        <option value="outer" *ngIf="SkuInspectModel.value.inner_box_data.packing.is_double_carton == 1">外箱纸箱类型</option>
-                                        <option value="1" *ngIf="SkuInspectModel.value.inner_box_data.packing.is_double_carton == 0">三层单瓦楞</option>
-                                        <option value="2" *ngIf="SkuInspectModel.value.inner_box_data.packing.is_double_carton == 0">五层双瓦楞</option>
-                                        <option value="3" *ngIf="SkuInspectModel.value.inner_box_data.packing.is_double_carton == 0">七层三瓦楞</option>
+                                        <option
+                                            value="inner"
+                                            *ngIf="SkuInspectModel.value.inner_box_data.packing.is_double_carton == 1"
+                                            >内箱纸箱类型</option
+                                        >
+                                        <option
+                                            value="outer"
+                                            *ngIf="SkuInspectModel.value.inner_box_data.packing.is_double_carton == 1"
+                                            >外箱纸箱类型</option
+                                        >
+                                        <option
+                                            value="1"
+                                            *ngIf="SkuInspectModel.value.inner_box_data.packing.is_double_carton == 0"
+                                            >三层单瓦楞</option
+                                        >
+                                        <option
+                                            value="2"
+                                            *ngIf="SkuInspectModel.value.inner_box_data.packing.is_double_carton == 0"
+                                            >五层双瓦楞</option
+                                        >
+                                        <option
+                                            value="3"
+                                            *ngIf="SkuInspectModel.value.inner_box_data.packing.is_double_carton == 0"
+                                            >七层三瓦楞</option
+                                        >
                                     </select>
                                 </div>
                             </div>
-                            
 
                             <div>
                                 <p class="global-inspect-title  gray-color desc-tips">
@@ -433,7 +452,7 @@
                         </div>
                         <app-photograph
                             type="product_place_pic"
-                            moduleType='removeSkuPic'
+                            moduleType="removeSkuPic"
                             [photos]="SkuInspectModel.value.inner_box_data.layout.photos"
                             [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
                             [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
@@ -465,7 +484,7 @@
 
                         <app-photograph
                             type="product_detail_pic"
-                            moduleType='removeSkuPic'
+                            moduleType="removeSkuPic"
                             [photos]="SkuInspectModel.value.inner_box_data.productDetail.photos"
                             [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
                             [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
@@ -515,7 +534,7 @@
 
                         <app-photograph
                             type="instructions_pic"
-                            moduleType='removeSkuPic'
+                            moduleType="removeSkuPic"
                             [photos]="SkuInspectModel.value.inner_box_data.instructions.photos"
                             [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
                             [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
@@ -555,7 +574,7 @@
 
                         <app-photograph
                             type="screws_pic"
-                            moduleType='removeSkuPic'
+                            moduleType="removeSkuPic"
                             [photos]="SkuInspectModel.value.inner_box_data.crews.photos"
                             [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
                             [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
@@ -587,7 +606,7 @@
                         </div>
                         <app-photograph
                             type="product_wholes_pic"
-                            moduleType='removeSkuPic'
+                            moduleType="removeSkuPic"
                             [photos]="SkuInspectModel.value.inner_box_data.whole.photos"
                             [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
                             [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
@@ -644,7 +663,7 @@
                         </div>
                         <app-photograph
                             type="product_size_pic"
-                            moduleType='removeSkuPic'
+                            moduleType="removeSkuPic"
                             [photos]="SkuInspectModel.value.inner_box_data.productSize.photos"
                             [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
                             [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
@@ -687,7 +706,7 @@
                             </div>
                             <app-photograph
                                 type="net_weight_pic"
-                                moduleType='removeSkuPic'
+                                moduleType="removeSkuPic"
                                 [photos]="SkuInspectModel.value.inner_box_data.netWeight.photos"
                                 [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
                                 [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
@@ -722,7 +741,7 @@
                             <ion-input placeholder="外观检测选项" type="number"></ion-input>
                             <app-photograph
                                 type="appearance_pic"
-                                moduleType='removeSkuPic'
+                                moduleType="removeSkuPic"
                                 [photos]="SkuInspectModel.value.inner_box_data.appearance.photos"
                                 [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
                                 [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
@@ -731,6 +750,7 @@
                             >
                             </app-photograph>
                             <app-videotape
+                                [videos]="SkuInspectModel.value.inner_box_data.appearance.videos"
                                 type="appearance_video"
                                 [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
                                 [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
@@ -765,7 +785,7 @@
                         </div>
                         <app-photograph
                             type="function_pic"
-                            moduleType='removeSkuPic'
+                            moduleType="removeSkuPic"
                             [photos]="SkuInspectModel.value.inner_box_data.function.photos"
                             [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
                             [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
@@ -773,6 +793,7 @@
                             box_type="inner"
                         ></app-photograph>
                         <app-videotape
+                            [videos]="SkuInspectModel.value.inner_box_data.function.videos"
                             type="function_video"
                             [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
                             [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
@@ -803,7 +824,7 @@
                         </div>
                         <app-photograph
                             type="bearing_test_pic"
-                            moduleType='removeSkuPic'
+                            moduleType="removeSkuPic"
                             [photos]="SkuInspectModel.value.inner_box_data.bearing.photos"
                             [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
                             [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
@@ -812,6 +833,7 @@
                         ></app-photograph>
                         <app-videotape
                             type="bearing_video"
+                            [videos]="SkuInspectModel.value.inner_box_data.bearing.videos"
                             [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
                             [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
                             [sku]="data.sku"
@@ -841,7 +863,7 @@
                         </div>
                         <app-photograph
                             type="water_content_test_pic"
-                            moduleType='removeSkuPic'
+                            moduleType="removeSkuPic"
                             [photos]="SkuInspectModel.value.inner_box_data.waterContent.photos"
                             [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
                             [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
@@ -850,6 +872,7 @@
                         ></app-photograph>
                         <app-videotape
                             type="water_content_video"
+                            [videos]="SkuInspectModel.value.inner_box_data.waterContent.videos"
                             [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
                             [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
                             [sku]="data.sku"
@@ -922,68 +945,46 @@
             <!-- 验货要求 -->
             <ion-grid class="inspection_require" *ngIf="currentToggle.key == 'requirement'">
                 <ion-row>
-                    <ion-col [size]="1.8">验货条目</ion-col>
-                    <ion-col size=".9">要求图片</ion-col>
-                    <ion-col [size]="4.2">验货要求</ion-col>
-                    <ion-col [size]="4.1">验货标准</ion-col>
-                    <ion-col [size]="1">要求反馈</ion-col>
+                    <ion-col [size]="1.8" align-self-center>验货条目</ion-col>
+                    <ion-col [size]="3.1" align-self-center>验货要求</ion-col>
+                    <ion-col [size]="3.1" align-self-center>验货标准</ion-col>
+                    <ion-col [size]="4" align-self-center>要求反馈</ion-col>
                 </ion-row>
                 <ng-container *ngIf="data.inspection_require && data.inspection_require.length">
                     <ion-row *ngFor="let item of data.inspection_require; let i = index">
-                        <ion-col [size]="1.8" class="content" Chipboard class="chip-text ">
+                        <ion-col align-self-center [size]="1.8" class="content" Chipboard class="chip-text ">
                             {{ item.theme_name }}
                         </ion-col>
-                        <ion-col size=".9">
-                            <div class="img-box desc" *ngIf="item.pic && item.pic.length" imgGallery>
-                                <ng-container *ngFor="let item of item.pic; let i = index">
-                                    <img [src]="imgOrigin + item" alt="" *ngIf="i == 0" />
-                                </ng-container>
-                            </div>
-                            <ion-text class="danger" *ngIf="!item.pic.length">暂无</ion-text>
+                        <ion-col align-self-center [size]="3.1" class="content" Chipboard class="chip-text content">
+                            {{ item.require }}
                         </ion-col>
-                        <ion-col [size]="4.2" class="content" Chipboard class="chip-text content">
+                        <ion-col align-self-center [size]="3.1" class="content" Chipboard class="chip-text content">
+                            {{ item.standard }}
+                        </ion-col>
+                        <ion-col align-self-center [size]="4">
                             <div>
-                                {{ item.require }}
+                                <app-photograph
+                                    type="inspection_require_pic"
+                                    moduleType="removeSkuPic"
+                                    [photos]="inspectionRequire[i + 1].pic"
+                                    [sort_index]="i"
+                                    [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
+                                    [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
+                                    [sku]="data.sku"
+                                    box_type="inner"
+                                ></app-photograph>
                             </div>
-                            <div class="danger" *ngIf="item.type == 'cannot'">
-                                没法执行！
+                            <div>
+                                <app-videotape
+                                    [videos]="inspectionRequire[i + 1].videos"
+                                    type="inspection_require_video"
+                                    [sort_index]="i"
+                                    [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
+                                    [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
+                                    [sku]="data.sku"
+                                    box_type="inner"
+                                ></app-videotape>
                             </div>
-                            <div
-                                class="danger"
-                                *ngIf="
-                                    !item.cannot_inspection_task_advise &&
-                                    item.unreasonable_inspection_task_advise &&
-                                    item.improve_inspection_task_advise &&
-                                    item.type != 'cannot'
-                                "
-                            >
-                                <span>不合理之处: </span>
-                                <span>{{ item.unreasonable_inspection_task_advise }}</span>
-                            </div>
-                            <div
-                                class="danger"
-                                *ngIf="
-                                    !item.cannot_inspection_task_advise &&
-                                    item.improve_inspection_task_advise &&
-                                    item.type != 'cannot'
-                                "
-                            >
-                                <span>改进建议: </span>
-                                <span>{{ item.improve_inspection_task_advise }}</span>
-                            </div>
-                        </ion-col>
-                        <ion-col [size]="4.1" class="content" Chipboard class="chip-text content">{{
-                            item.standard
-                        }}</ion-col>
-                        <ion-col [size]="1">
-                            <ion-button
-                                class="no-margin"
-                                color="primary"
-                                fill="clear"
-                                size="small"
-                                (click)="showFeedback(item, i)"
-                                >反馈</ion-button
-                            >
                         </ion-col>
                     </ion-row>
                 </ng-container>
@@ -1003,7 +1004,7 @@
 
                         <app-photograph
                             type="outer_box_pic"
-                            moduleType='removeSkuPic'
+                            moduleType="removeSkuPic"
                             [photos]="SkuInspectModel.value.outer_box_data.shippingMarks.photos"
                             [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
                             [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
@@ -1045,7 +1046,7 @@
                                     <ion-col size="4">
                                         <app-photograph
                                             type="'size_pic_length"
-                                            moduleType='removeSkuPic'
+                                            moduleType="removeSkuPic"
                                             [photos]="SkuInspectModel.value.outer_box_data.size.length.photos"
                                             [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
                                             [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
@@ -1065,7 +1066,7 @@
                                     <ion-col size="4">
                                         <app-photograph
                                             type="'size_pic_width"
-                                            moduleType='removeSkuPic'
+                                            moduleType="removeSkuPic"
                                             [photos]="SkuInspectModel.value.outer_box_data.size.width.photos"
                                             [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
                                             [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
@@ -1085,7 +1086,7 @@
                                     <ion-col size="4">
                                         <app-photograph
                                             type="'size_pic_height"
-                                            moduleType='removeSkuPic'
+                                            moduleType="removeSkuPic"
                                             [photos]="SkuInspectModel.value.outer_box_data.size.height.photos"
                                             [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
                                             [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
@@ -1122,7 +1123,7 @@
                         </div>
                         <app-photograph
                             type="bar_code_pic"
-                            moduleType='removeSkuPic'
+                            moduleType="removeSkuPic"
                             [photos]="SkuInspectModel.value.outer_box_data.barCode.photos"
                             [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
                             [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
@@ -1199,7 +1200,7 @@
 
                             <app-photograph
                                 type="gross_weight_pic"
-                                moduleType='removeSkuPic'
+                                moduleType="removeSkuPic"
                                 [photos]="SkuInspectModel.value.outer_box_data.grossWeight.photos"
                                 [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
                                 [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
@@ -1217,8 +1218,8 @@
                 </ion-item>
             </ion-list>
 
-             <!-- 包装 -->
-             <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
+            <!-- 包装 -->
+            <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
                 <ion-item formGroupName="packing">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -1233,7 +1234,7 @@
                         </p>
                         <app-photograph
                             type="packing_pic"
-                            moduleType='removeSkuPic'
+                            moduleType="removeSkuPic"
                             [photos]="SkuInspectModel.value.outer_box_data.packing.photos"
                             [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
                             [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
@@ -1269,15 +1270,34 @@
                                         请选择纸箱类型
                                     </p>
                                     <select class="select" formControlName="packingType">
-                                        <option value="inner" *ngIf="SkuInspectModel.value.inner_box_data.packing.is_double_carton == 1">内箱纸箱类型</option>
-                                        <option value="outer" *ngIf="SkuInspectModel.value.inner_box_data.packing.is_double_carton == 1">外箱纸箱类型</option>
-                                        <option value="1" *ngIf="SkuInspectModel.value.inner_box_data.packing.is_double_carton == 0">三层单瓦楞</option>
-                                        <option value="2" *ngIf="SkuInspectModel.value.inner_box_data.packing.is_double_carton == 0">五层双瓦楞</option>
-                                        <option value="3" *ngIf="SkuInspectModel.value.inner_box_data.packing.is_double_carton == 0">七层三瓦楞</option>
+                                        <option
+                                            value="inner"
+                                            *ngIf="SkuInspectModel.value.inner_box_data.packing.is_double_carton == 1"
+                                            >内箱纸箱类型</option
+                                        >
+                                        <option
+                                            value="outer"
+                                            *ngIf="SkuInspectModel.value.inner_box_data.packing.is_double_carton == 1"
+                                            >外箱纸箱类型</option
+                                        >
+                                        <option
+                                            value="1"
+                                            *ngIf="SkuInspectModel.value.inner_box_data.packing.is_double_carton == 0"
+                                            >三层单瓦楞</option
+                                        >
+                                        <option
+                                            value="2"
+                                            *ngIf="SkuInspectModel.value.inner_box_data.packing.is_double_carton == 0"
+                                            >五层双瓦楞</option
+                                        >
+                                        <option
+                                            value="3"
+                                            *ngIf="SkuInspectModel.value.inner_box_data.packing.is_double_carton == 0"
+                                            >七层三瓦楞</option
+                                        >
                                     </select>
                                 </div>
                             </div>
-                            
 
                             <div>
                                 <p class="global-inspect-title  gray-color desc-tips">
@@ -1305,7 +1325,7 @@
                         </div>
                         <app-photograph
                             type="product_place_pic"
-                            moduleType='removeSkuPic'
+                            moduleType="removeSkuPic"
                             [photos]="SkuInspectModel.value.outer_box_data.layout.photos"
                             [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
                             [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"

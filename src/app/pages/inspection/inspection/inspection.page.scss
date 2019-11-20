@@ -1,88 +1,85 @@
-.form-group::after{
+.form-group::after {
     content: '';
     display: block;
     clear: both;
 }
 
-.form-group{
-    .control-label{
+.form-group {
+    .control-label {
         height: 30px;
-        line-height: 30px;;
+        line-height: 30px;
     }
-    .img-box{
+    .img-box {
         width: 100%;
         max-height: 300px;
         overflow: hidden;
-        li{
+        li {
             width: 20%;
             margin-bottom: 20px;
             float: left;
             overflow: hidden;
             padding: 10px;
             box-sizing: border-box;
-            img{
+            img {
                 width: 100%;
                 transform: rotateZ(-90deg);
-                height:auto;
+                height: auto;
                 max-height: 100px;
             }
         }
     }
-    .file-box{
+    .file-box {
         position: relative;
-        input{
+        input {
             opacity: 0;
             font-size: 100px;
             position: absolute;
-            width: 100%;height: 100%;
+            width: 100%;
+            height: 100%;
             top: 0;
             left: 0;
         }
     }
 }
 
-.flex-box{
-    input{
+.flex-box {
+    input {
         margin-right: 20px;
         margin-bottom: 5px;
         width: 120px;
         float: left;
     }
-  
 }
 
-.inspection-item{
-
+.inspection-item {
 }
 
-.inspection-item-img{
-    
+.inspection-item-img {
 }
 
-.ion_select{
-
-    ion-select{
+.ion_select {
+    ion-select {
         margin-bottom: 10px;
-        border: 1px solid #eee
+        border: 1px solid #eee;
     }
 }
 
-.sku_other_imgbox{
+.sku_other_imgbox {
     padding: 0 15px;
     width: 100%;
-    li{
+    li {
         float: left;
         width: 25%;
         height: auto;
         overflow: hidden;
-        img{
+        img {
             width: 100%;
-            height: 100%
+            height: 100%;
         }
     }
 }
-.sku_other_imgbox::after{
+.sku_other_imgbox::after {
     content: '';
     display: block;
-    clear: both
+    clear: both;
 }

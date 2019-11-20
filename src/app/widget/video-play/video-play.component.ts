@@ -1,3 +1,4 @@
+import { ModalController } from '@ionic/angular';
 import { environment } from './../../../environments/environment';
 import { Component, OnInit, Input } from '@angular/core';
 
@@ -8,14 +9,14 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class VideoPlayComponent implements OnInit {
     @Input() set source(input: string) {
-      if(!!input){
-        this._source = this.origin + '/' + input
-      }
+        if (!!input) {
+            this._source = this.origin + '/' + input;
+        }
     }
-    origin = environment.usFileUrl
+    origin = environment.usFileUrl;
 
     _source: string;
-    constructor() {}
+    constructor(public modal: ModalController) {}
 
     ngOnInit() {}
 }

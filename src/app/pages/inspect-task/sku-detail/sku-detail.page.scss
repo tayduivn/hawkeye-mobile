@@ -1,65 +1,62 @@
-ion-content{
-  padding-bottom: 20px;
+ion-content {
+    padding-bottom: 20px;
 }
-.inspect-description{
+.inspect-description {
     background: #fff;
     margin-top: 1vh;
     font-size: 14px;
-    label{
-      margin-left: 5px;
-      margin-right: 10px;
+    label {
+        margin-left: 5px;
+        margin-right: 10px;
     }
-    textarea{
-     flex-grow: 1;
-      border-radius: 5px;
-      padding-left: 3px;
-      border-color: #f3f3f3;
-      height:100px;
-      outline: none;
-      line-height: 16px;
-      color: #5e5e5e;
-      margin-right: 10px;
+    textarea {
+        flex-grow: 1;
+        border-radius: 5px;
+        padding-left: 3px;
+        border-color: #f3f3f3;
+        height: 100px;
+        outline: none;
+        line-height: 16px;
+        color: #5e5e5e;
+        margin-right: 10px;
     }
-   
-  }
+}
 
-   ion-grid{
-     padding: 0;
-     border-bottom: 1px solid #f0f0f0;
-      ion-row{
+ion-grid {
+    padding: 0;
+    border-bottom: 1px solid #f0f0f0;
+    ion-row {
         border-top: 1px solid #f0f0f0;
         border-left: 1px solid #f0f0f0;
-      }
-     
-      ion-col{
+    }
+
+    ion-col {
         color: #323232;
         font-size: 14px;
         border-right: 1px solid #f0f0f0;
-     
-        input{
-          width: 100%;
-          border-radius: 5px;
-          outline: none;
-          line-height: 16px;
-          color: #5e5e5e;
-          padding: 3px;
-          height: 32px;
-          background: #f7f7f7;
-          border: 1px solid #f0f0f0;
-        }
-      }
 
-      ion-icon{
-        padding: 0;
-        font-size: 18px
-      }
-      ion-col.content{
-        color:#5e5e5e;
-      }
+        input {
+            width: 100%;
+            border-radius: 5px;
+            outline: none;
+            line-height: 16px;
+            color: #5e5e5e;
+            padding: 3px;
+            height: 32px;
+            background: #f7f7f7;
+            border: 1px solid #f0f0f0;
+        }
     }
-    
-.no-border-right{
-  border-right: none !important
+
+    ion-icon {
+        padding: 0;
+        font-size: 18px;
+    }
+    ion-col.content {
+        color: #5e5e5e;
+    }
 }
 
- 
+.no-border-right {
+    border-right: none !important;
+}

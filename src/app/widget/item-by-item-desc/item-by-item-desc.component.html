@@ -1,19 +1,13 @@
 <ng-container *ngIf="inner_data && inner_data.length != 0">
-  <div class="item" *ngFor="let item of inner_data" style="color: #333;">{{item}}</div>
+    <div class="item" *ngFor="let item of inner_data" style="color: #333;">{{ item }}</div>
 </ng-container>
-
 <ng-container [formGroup]="_ary">
-    <div
-      fxLayout="row"
-      fxLayoutAlign="start center"
-      *ngFor="let item of data; index as i"
-    >
-      <ion-textarea [placeholder]="'请输入' + description" formControlName="{{ i }}" (ionBlur)='formToAry()'></ion-textarea>
-     
-      <ion-button fill='clear'
-        *ngIf="i == data.length - 1"
-        (click)="addDesc()"
-        >添加</ion-button
-      >
+    <div fxLayout="row" fxLayoutAlign="start center" *ngFor="let item of data; index as i">
+        <ion-textarea
+            [placeholder]="'请输入' + description"
+            formControlName="{{ i }}"
+            (ionBlur)="formToAry()"
+        ></ion-textarea>
+        <ion-button fill="clear" *ngIf="i == data.length - 1" (click)="addDesc()">添加</ion-button>
     </div>
 </ng-container>

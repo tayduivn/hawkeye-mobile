@@ -14,9 +14,15 @@ export class ItemByItemDescComponent implements OnInit {
             this.data = [];
             this._ary.reset();
             for (var i = 0; i < input.length; i++) {
-                this._ary.setControl(i + '', this.fb.control(input[i]));
-                this.data.push(input[i]);
+                if (input[i] != null) {
+                    this.data.push(input[i]);
+                    this._ary.setControl(i + '', this.fb.control(input[i]));
+                }
             }
+        } else {
+            this._ary = this.fb.group({
+                0: this.fb.control(''),
+            });
         }
     }
 
@@ -24,9 +30,7 @@ export class ItemByItemDescComponent implements OnInit {
 
     @Output() onComplete: EventEmitter<any[]> = new EventEmitter<any[]>();
 
-    _ary: FormGroup = this.fb.group({
-        0: this.fb.control(''),
-    });
+    _ary: FormGroup = new FormGroup({});
 
     inner_data: any[] = [];
 

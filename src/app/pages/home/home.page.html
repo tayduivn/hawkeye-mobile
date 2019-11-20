@@ -1,30 +1,26 @@
-<ion-header mode='ios'>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title>
-      首页
-    </ion-title>
-    <ion-title slot="end">
-      姓名：{{user.info.name }}
-      <span>  </span>
-      工号：{{user.info.company_no}}
-    </ion-title>
-  </ion-toolbar>
-  
+<ion-header mode="ios">
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>
+            首页
+        </ion-title>
+        <ion-title slot="end">
+            姓名：{{user.info.name }}
+            <span> </span>
+            工号：{{user.info.company_no}}
+        </ion-title>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-card class="welcome-card">
-    <ion-img [src]='src'></ion-img>
-    <ion-card-header>
-      <ion-card-subtitle>HELLO</ion-card-subtitle>
-      <ion-card-title>欢迎进入鹰眼系统</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-     
-    </ion-card-content>
-  </ion-card>
-  
+    <ion-card class="welcome-card">
+        <ion-img [src]="src"></ion-img>
+        <ion-card-header>
+            <ion-card-subtitle>HELLO</ion-card-subtitle>
+            <ion-card-title>欢迎进入鹰眼系统</ion-card-title>
+        </ion-card-header>
+        <ion-card-content> </ion-card-content>
+    </ion-card>
 </ion-content>

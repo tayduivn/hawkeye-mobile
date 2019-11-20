@@ -31,6 +31,7 @@ export class PhotographComponent implements OnInit {
     @Input() sku?: string;
     @Input() box_type?: 'outer' | 'inner';
     @Input() moduleType: 'removeFactoryPic' | 'removeContractPic' | 'removeSkuPic';
+    @Input() sort_index?: number;
 
     constructor(
         private camera: Camera,
@@ -170,16 +171,17 @@ export class PhotographComponent implements OnInit {
             box_type: this.box_type,
             sku: this.sku,
             images: obj.images,
+            sort_index: this.sort_index,
         };
         this.uploadService.uploadImage(params).subscribe(res => {
-            if(res.status){
+            if (res.status) {
                 this._photos = this._photos.concat(res.data.map(item => this.imgOrigin + item));
                 this.onPhotograph.emit(this._photos);
             }
             this.ec.showToast({
-                message:res.message,
-                color:res.status?'success':'danger'
-            })
+                message: res.message,
+                color: res.status ? 'success' : 'danger',
+            });
         });
     }
 }
