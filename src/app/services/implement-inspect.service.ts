@@ -46,7 +46,14 @@ export class ImplementInspectService {
         });
     }
 
-    submitSkuData(params: SkuUploadData, sku: string, apply_inspection_no: string, is_inner_box: number) {
+    submitSkuData(
+        params: SkuUploadData,
+        sku: string,
+        apply_inspection_no: string,
+        data_type: 'before' | 'after',
+        is_inner_box: number,
+    ) {
+        params.data_type = data_type;
         params.sku = sku;
         params.apply_inspection_no = apply_inspection_no;
         params.is_inner_box = is_inner_box;
@@ -57,12 +64,6 @@ export class ImplementInspectService {
     }
 
     getBeforeBoxData(params: SkuParams) {
-        // params = {
-        //     apply_inspection_no: 'YH-191000101111111112222',
-        //     sku: 'sfaaaaaaaaaaa11112222333311',
-        //     is_inner_box: 1,
-        // };
-
         return this.http.get({
             url: '/task/get_inspection_task_posted_data_for_sku_before_unbox',
             params: params,
@@ -70,11 +71,6 @@ export class ImplementInspectService {
     }
 
     getAfterBoxData(params: SkuParams) {
-        // params = {Electro🐴Electron
-        //     apply_inspection_no: 'YH-191000101111111112222',
-        //     sku: 'sfaaaaaaaaaaa111122223333',
-        //     is_inner_box: 1,
-        // };
         return this.http.get({
             url: '/task/get_inspection_task_posted_data_for_sku_after_unbox',
             params: params,

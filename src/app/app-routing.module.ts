@@ -46,6 +46,16 @@ const routes: Routes = [
         canActivate: [LoginGuard],
     },
     {
+        path: '',
+        loadChildren: () => import('./pages/evaluate/evaluate.module').then(m => m.EvaluatePageModule),
+        canActivate: [LoginGuard],
+    },
+    { 
+        path: '', 
+        loadChildren: () => import('./pages/data-contrast/data-contrast.module').then(m => m.DataContrastPageModule),
+        canActivate: [LoginGuard],
+    },
+    {
         path: '**',
         redirectTo: 'welcome',
         pathMatch: 'full',

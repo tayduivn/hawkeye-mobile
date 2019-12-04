@@ -1,3 +1,4 @@
+import { EvaluationComponent } from './evaluation/evaluation.component';
 import { InspectSkuComponent } from './inspect-sku/inspect-sku.component';
 import { DirectiveModule } from './../../directives/directive.module';
 import { SkuListPipe } from './../../pipe/sku-list.pipe';
@@ -34,6 +35,10 @@ const routes: Routes = [
         path: 'inspect-sku',
         component: InspectSkuComponent,
     },
+    {
+        path: 'inspect-evaluation',
+        component: EvaluationComponent
+    }
 ];
 
 @NgModule({
@@ -55,6 +60,7 @@ const routes: Routes = [
         InspectFactoryComponent,
         InspectPoComponent,
         InspectSkuComponent,
+        EvaluationComponent
     ],
     providers: [Camera],
 })

@@ -1,26 +1,36 @@
 <ul class="video-list ">
-    <li *ngFor="let item of _up_data; let i = index" class="pos-r video ">
-        <div class="video-name" fxLayout="row" fxLayoutAlign="start center" (click)="play(item)">
-            <ion-icon name="videocam"></ion-icon>
-            <span>{{
-                item.substr(item.lastIndexOf('/') + 1, 6) + '…' + item.substr(item.lastIndexOf('/') + 7, 4) + '.mp4'
-            }}</span>
-        </div>
-        <div class="pos-a">
-            <ion-icon name="close" mode="ios" (click)="remove(i)"></ion-icon>
-        </div>
-    </li>
+    <ng-container *ngIf="_up_data && _up_data.length">
+        <li *ngFor="let item of _up_data; let i = index" class="pos-r video ">
+            <div class="video-name" fxLayout="row" fxLayoutAlign="start center" (click)="play(item)">
+                <ion-icon name="videocam"></ion-icon>
+                <span>{{
+                        item && (item.substr(item.lastIndexOf('/') + 1, 6) + '…' + item.substr(item.lastIndexOf('/') + 7, 4) + '.mp4')
+                }}</span>
+            </div>
+            <div class="pos-a">
+                <ion-icon name="close" mode="ios" (click)="remove(i)"></ion-icon>
+            </div>
+        </li>
+    </ng-container>
 
-    <li *ngFor="let item of _videos" class="pos-r">
-        <div class="video-name" appVideoPlayer [source]="item[0].filePath" fxLayout="row" fxLayoutAlign="start center">
-            <ion-icon name="videocam"></ion-icon>
-            <span>{{
-                item[0].name.length > 14
-                    ? item[0].name.substring(0, 10) + '…' + item[0].name.substring(11, 12) + '.mp4'
-                    : item[0].name
-            }}</span>
-        </div>
-    </li>
+    <ng-container *ngIf="_videos && _videos.length">
+        <li *ngFor="let item of _videos" class="pos-r">
+            <div
+                class="video-name"
+                appVideoPlayer
+                [source]="item[0].filePath"
+                fxLayout="row"
+                fxLayoutAlign="start center"
+            >
+                <ion-icon name="videocam"></ion-icon>
+                <span>{{
+                    item && (item[0].name.length > 14
+                        ? item[0].name.substring(0, 10) + '…' + item[0].name.substring(11, 12) + '.mp4'
+                        : item[0].name)
+                }}</span>
+            </div>
+        </li>
+    </ng-container>
 
     <li>
         <div class="add-image-small" fxLayout="row" (click)="videotape()" fxLayoutAlign="start center">

@@ -28,7 +28,8 @@ export interface ImageOther {
     apply_inspection_no: string;
     contract_no: string;
     sku: string;
-    box_type: 'outer' | 'inner';
+    box_type?: 'outer' | 'inner';
+    is_inner_box?: number;
     images: string[];
     sort_index?: number;
 }

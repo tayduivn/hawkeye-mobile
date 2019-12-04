@@ -23,6 +23,22 @@ const appPages: Array<menuItem> = [
         active: false,
     },
     {
+        title: '验货评价',
+        url: '/evaluate',
+        type: 'link',
+        limit: 'evaluate',
+        icon: 'paper',
+        active: false,
+    },
+    {
+        title: '数据对比',
+        url: '/data-contrast',
+        type: 'link',
+        limit: 'data-contrast',
+        icon: 'contrast',
+        active: false,
+    },
+    {
         title: '退出',
         type: 'btn',
         icon: 'exit',

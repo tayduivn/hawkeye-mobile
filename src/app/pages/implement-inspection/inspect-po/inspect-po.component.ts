@@ -8,9 +8,9 @@ import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { ImplementInspectService, InspectFactoryParam } from 'src/app/services/implement-inspect.service';
 
 export interface Factory {
-    name: string;
-    id: number;
-    contracts: Contract[];
+    name?: string;
+    id?: number;
+    contracts?: Contract[];
 }
 
 export interface PoModal {

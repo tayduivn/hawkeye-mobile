@@ -1,21 +1,28 @@
 div {
-    width: 100%;
-    ion-textarea {
-        border: 1px solid #e3e3e3;
-        flex-grow: 1;
-        font-size: 12px;
-        color: #777777;
-        border-radius: 5px;
-        --padding-top: 5px;
-        --padding-bottom: 5px;
-        --padding-start: 5px;
-        --padding-end: 5px;
-    }
+  width: 100%;
+  ion-textarea {
+    border: 1px solid #e3e3e3;
+    flex-grow: 1;
+    font-size: 12px;
+    color: #777777;
+    border-radius: 5px;
+    --padding-top: 5px;
+    --padding-bottom: 5px;
+    --padding-start: 5px;
+    --padding-end: 5px;
+  }
 }
 
 .item {
-    padding: 3px 6px;
-    text-align: justify;
-    color: #777777;
-    background: #f5f5f5;
+  min-height: 30px !important;
+  padding: 3px 6px;
+  text-align: justify;
+  color: #777777;
+  margin-top: 10px;
+  background: #f5f5f5;
+}
+
+label {
+  font-size: 14px;
+  color: #404040;
 }

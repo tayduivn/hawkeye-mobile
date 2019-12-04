@@ -40,7 +40,10 @@ export type FieldType =
 export class VideotapeComponent implements OnInit {
     progress: number = 0;
     @Input() set videos(input: string[]) {
-        if (!!input && input.length != 0) {
+        if (!input) {
+            return;
+        }
+        if (!!input ) {
             this._up_data = input;
         }
     }

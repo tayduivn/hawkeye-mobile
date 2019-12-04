@@ -44,6 +44,7 @@ export interface SkuUploadData {
     inner_box_data?: SkuInspectModel;
     outer_box_data?: SkuInspectModel;
     sku: string;
+    data_type?: 'before' | 'after';
     apply_inspection_no: string;
     is_inner_box: number;
 }
@@ -124,6 +125,7 @@ export class InspectSkuComponent implements OnInit {
     currentToggle: any = ToggleItem[0];
     imgOrigin: string = environment.fileUrlPath;
     inspectionRequire: any = {};
+
     constructor(
         private es: PageEffectService,
         private fb: FormBuilder,
@@ -219,6 +221,7 @@ export class InspectSkuComponent implements OnInit {
                 length: this.fb.control(''),
                 width: this.fb.control(''),
                 height: this.fb.control(''),
+                photos: this.fb.array([]),
             }),
             netWeight: this.fb.group({
                 textOne: this.fb.control(''),
@@ -298,6 +301,7 @@ export class InspectSkuComponent implements OnInit {
                 desc: this.fb.array([]),
                 photos: this.fb.array([]),
                 packingType: this.fb.control('1'),
+                is_double_carton: this.fb.control('1'),
             }),
             layout: this.fb.group({
                 desc: this.fb.array(['']),
@@ -330,7 +334,6 @@ export class InspectSkuComponent implements OnInit {
             ary.push(doms[i].value);
         }
 
-        //value is valid
         compare = ary.sort((a, b) => a - b);
         this.otherGrossWeight = compare[0] * 1.2 > compare[compare.length - 1];
     }
@@ -382,7 +385,8 @@ export class InspectSkuComponent implements OnInit {
                 this.SkuInspectModel.value,
                 this.data.sku,
                 this.factory.sku_data[0].apply_inspection_no,
-                this.data.rate_container,
+                this.currentToggle.key == 'beforeUnpacking' ? 'before' : 'after',
+                this.rateStatus == 'inner' ? 1 : 2,
             )
             .subscribe(res => {
                 this.es.showToast({
@@ -403,14 +407,18 @@ export class InspectSkuComponent implements OnInit {
      * 切换 开箱前后 验货要求
      * @param ev  event
      */
+
     segmentChanged(ev: any) {
         this.currentToggle = this.toggleItem.find(res => res.key == ev.detail.value);
+        console.dir(this.SkuInspectModel);
         switch (ev.detail.value) {
             case 'beforeUnpacking':
                 this.getBeforeBoxData();
+                // this.save()
                 break;
             case 'afterUnpacking':
                 this.getAfterBoxData();
+                // this.save()
                 break;
         }
     }
@@ -425,21 +433,31 @@ export class InspectSkuComponent implements OnInit {
      */
     dynamicBuildFC(
         ary: string[],
-        boxType: 'inner_box_data' | 'outer_box_data',
+        boxType: string,
         item: string,
         type: string,
         sItem?: string,
     ) {
-        if (!ary) return;
-        let box: FormGroup = this.SkuInspectModel.get(boxType) as FormGroup,
-            formAry: FormArray = (box.get(item) as FormGroup).get(type) as FormArray;
-        formAry && formAry.clear();
-        ary.forEach(res => {
-            if (!sItem) {
-                formAry.push(new FormControl(''));
+        if (item != 'spotCheckNum' && item != 'poNo') {
+            let box: FormGroup = this.SkuInspectModel.get(boxType) as FormGroup,
+                formAry: FormArray = (box.get(item) as FormGroup).get(type) as FormArray;
+            //先清空
+            if (item != 'size') {
+                formAry && formAry.clear();
+            } else {
+                formAry = formAry.get('photos') as FormArray;
+                formAry && formAry.clear();
             }
-            box = null;
-        });
+
+            if (!ary || !(ary instanceof Array)) return;
+
+            ary.forEach(res => {
+                // if (!sItem) {
+                formAry.push(new FormControl(''));
+                // }
+                box = null;
+            });
+        }
     }
 
     /**
@@ -453,29 +471,34 @@ export class InspectSkuComponent implements OnInit {
                 is_inner_box: this.rateStatus == 'inner' ? 1 : 2,
             })
             .subscribe(res => {
-                this.inspectionRequire = res.inner_box_data.inspection_require;
+                let box = res[this.rateStatus + '_box_data'];
+                this.SkuInspectModel.reset();
+                this.inspectionRequire = res[this.rateStatus + '_box_data']
+                    ? res[this.rateStatus + '_box_data'].inspection_require
+                    : {};
                 console.log(this.inspectionRequire);
-                //patch value to formGroup
-                if (this.rateStatus == 'inner') {
-                    for (const key in res.inner_box_data) {
-                        const element = res.inner_box_data[key];
-                        if (res.inner_box_data.hasOwnProperty(key) && key != 'inspection_require') {
-                            if (!!element) {
-                                this.dynamicBuildFC(element.desc, 'inner_box_data', key, 'desc');
-                                this.dynamicBuildFC(element.videos, 'inner_box_data', key, 'videos');
-                                this.dynamicBuildFC(element.photos, 'inner_box_data', key, 'photos');
-                            }
-                        }
-                        if (key == 'size') {
-                            if (!!element) {
-                                const element = res.inner_box_data[key];
-                                this.dynamicBuildFC(element['length'].photos, 'inner_box_data', key, 'photos');
-                                this.dynamicBuildFC(element['width'].photos, 'inner_box_data', key, 'videos');
-                                this.dynamicBuildFC(element['height'].photos, 'inner_box_data', key, 'photos');
-                            }
+
+                for (let key in box) {
+                    let element = box[key];
+                    if (box.hasOwnProperty(key) && key != 'inspection_require' && key != 'size') {
+                        if (!!element) {
+                            this.dynamicBuildFC(element.desc, this.rateStatus + '_box_data', key, 'desc');
+                            this.dynamicBuildFC(element.videos, this.rateStatus + '_box_data', key, 'videos');
+                            this.dynamicBuildFC(element.photos, this.rateStatus + '_box_data', key, 'photos');
                         }
                     }
+                    if (key == 'size') {
+                        if (!!element) {
+                            let element = box[key];
+                            this.dynamicBuildFC(element['length'].pic, this.rateStatus + '_box_data', key, 'length', 'pic');
+                            this.dynamicBuildFC(element['width'].pic, this.rateStatus + '_box_data', key, 'width', 'pic');
+                            this.dynamicBuildFC(element['height'].pic, this.rateStatus + '_box_data', key, 'height', 'pic');
+                        }
+                    }
+                }
 
+                //patch value to formGroup
+                if (this.rateStatus == 'inner') {
                     this.SkuInspectModel.patchValue({
                         spotCheckNum: res.inner_box_data.spotCheckNum,
                         poNo: res.inner_box_data.poNo,
@@ -513,23 +536,21 @@ export class InspectSkuComponent implements OnInit {
                                 height: {
                                     text: res.inner_box_data.size.height.text,
                                     num: res.inner_box_data.size.height.num,
-                                    photos: res.inner_box_data.size.width.photos
-                                        ? res.inner_box_data.size.width.photos
+                                    photos: res.inner_box_data.size.height.pic
+                                        ? res.inner_box_data.size.height.pic
                                         : [],
                                 },
                                 length: {
                                     text: res.inner_box_data.size.length.text,
                                     num: res.inner_box_data.size.length.num,
-                                    photos: res.inner_box_data.size.width.photos
-                                        ? res.inner_box_data.size.width.photos
+                                    photos: res.inner_box_data.size.length.pic
+                                        ? res.inner_box_data.size.length.pic
                                         : [],
                                 },
                                 width: {
                                     text: res.inner_box_data.size.width.text,
                                     num: res.inner_box_data.size.width.num,
-                                    photos: res.inner_box_data.size.width.photos
-                                        ? res.inner_box_data.size.width.photos
-                                        : [],
+                                    photos: res.inner_box_data.size.width.pic ? res.inner_box_data.size.width.pic : [],
                                 },
                                 desc: res.inner_box_data.size.desc ? res.inner_box_data.size.desc : [],
                             },
@@ -619,11 +640,11 @@ export class InspectSkuComponent implements OnInit {
             })
             .subscribe(res => {
                 console.log(res);
-
+                this.SkuInspectModel.reset();
                 if (this.rateStatus == 'inner') {
                     for (const key in res.inner_box_data) {
                         const element = res.inner_box_data[key];
-                        let box: FormGroup = this.SkuInspectModel.get('inner_box_data') as FormGroup;
+                        // let box: FormGroup = this.SkuInspectModel.get('inner_box_data') as FormGroup;
 
                         if (res.inner_box_data.hasOwnProperty(key)) {
                             if (!!element) {
@@ -634,8 +655,8 @@ export class InspectSkuComponent implements OnInit {
                         }
                     }
                     this.SkuInspectModel.patchValue({
-                        // spotCheckNum: res.inner_box_data.spotCheckNum,
-                        // poNo: res.inner_box_data.poNo,
+                        spotCheckNum: res.inner_box_data.spotCheckNum,
+                        poNo: res.inner_box_data.poNo,
                         inner_box_data: {
                             packing: {
                                 //包装
@@ -742,7 +763,7 @@ export class InspectSkuComponent implements OnInit {
                             },
                             desc: {
                                 //整体描述
-                                desc: res.inner_box_data.desc ? res.inner_box_data.desc.desc : [],
+                                // desc: res.inner_box_data.desc ? res.inner_box_data.desc.desc : [],
                             },
                         },
                     });

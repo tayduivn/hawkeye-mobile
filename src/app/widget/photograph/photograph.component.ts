@@ -55,7 +55,7 @@ export class PhotographComponent implements OnInit {
     };
 
     pickerOpts: ImagePickerOptions = {
-        maximumImagesCount: 5,
+        maximumImagesCount: 3,
         quality: 100,
         outputType: 1,
     };
@@ -160,6 +160,7 @@ export class PhotographComponent implements OnInit {
     }
 
     upload(obj: any) {
+        console.log(obj);
         this.ec.showLoad({
             message: '正在上传中……',
             backdropDismiss: false,
@@ -168,7 +169,8 @@ export class PhotographComponent implements OnInit {
             type: this.type,
             apply_inspection_no: this.apply_inspection_no,
             contract_no: this.contract_no,
-            box_type: this.box_type,
+            // box_type: this.box_type,
+            is_inner_box: this.box_type == 'inner' ? 0 : 2,
             sku: this.sku,
             images: obj.images,
             sort_index: this.sort_index,

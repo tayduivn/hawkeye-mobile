@@ -39,7 +39,6 @@ export class PageEffectService {
         return toast.onDidDismiss();
     }
 
-    // tslint:disable-next-line: ban-types
     async showModal(option: ModalOptions, callback?: Function) {
         const modal = await this.modalCtrl.create({
             component: option.component,
@@ -62,7 +61,7 @@ export class PageEffectService {
     public clearEffectCtrl() {
         this.toastCtrl.getTop().then((e: any) => {
             if (e && e.id) {
-                this.toastCtrl.dismiss();
+                this.toastCtrl.dismiss(); 
             }
         });
         this.actionSheetController.getTop().then((e: any) => {

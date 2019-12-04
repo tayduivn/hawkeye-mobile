@@ -47,7 +47,8 @@
     </div>
 
     <form [formGroup]="SkuInspectModel">
-        <div class="out-box" *ngIf="currentToggle.key == 'beforeUnpacking'">
+        <!-- [hidden]="currentToggle.key != 'beforeUnpacking'" -->
+        <div class="out-box">
             <ion-list>
                 <ion-item fxLayout="row" fxLayoutAlign="start center">
                     <div class="header-input" fxLayout="row" fxLayoutAlign="start center">
@@ -64,7 +65,7 @@
 
         <!-- 内箱 -->
         <div class="out-box" *ngIf="rateStatus == 'inner'" formGroupName="inner_box_data">
-            <ion-list *ngIf="currentToggle.key == 'beforeUnpacking'">
+            <ion-list [hidden]="currentToggle.key != 'beforeUnpacking'">
                 <ion-item>
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -177,7 +178,7 @@
                 </ion-item>
             </ion-list>
 
-            <ion-list *ngIf="currentToggle.key == 'beforeUnpacking'">
+            <ion-list [hidden]="currentToggle.key != 'beforeUnpacking'">
                 <ion-item formGroupName="barCode">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -289,7 +290,7 @@
             </ion-list>
 
             <!-- 摔箱测试 -->
-            <ion-list *ngIf="currentToggle.key == 'beforeUnpacking'">
+            <ion-list [hidden]="currentToggle.key != 'beforeUnpacking'">
                 <ion-item formGroupName="throwBox">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -346,7 +347,7 @@
             </ion-list>
 
             <!-- 包装 -->
-            <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
+            <ion-list [hidden]="currentToggle.key != 'afterUnpacking'">
                 <ion-item formGroupName="packing">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -444,7 +445,7 @@
             </ion-list>
 
             <!-- 摆放图与说明书及配件包 -->
-            <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
+            <ion-list [hidden]="currentToggle.key != 'afterUnpacking'">
                 <ion-item formGroupName="layout">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -475,7 +476,7 @@
                 </ion-item>
             </ion-list>
 
-            <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
+            <ion-list [hidden]="currentToggle.key != 'afterUnpacking'">
                 <ion-item formGroupName="productDetail">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -507,7 +508,7 @@
                 </ion-item>
             </ion-list>
 
-            <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
+            <ion-list [hidden]="currentToggle.key != 'afterUnpacking'">
                 <ion-item formGroupName="instructions">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -598,7 +599,7 @@
             </ion-list>
 
             <!-- 产品整体图 -->
-            <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
+            <ion-list [hidden]="currentToggle.key != 'afterUnpacking'">
                 <ion-item formGroupName="whole">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -629,7 +630,7 @@
                 </ion-item>
             </ion-list>
 
-            <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
+            <ion-list [hidden]="currentToggle.key != 'afterUnpacking'">
                 <ion-item formGroupName="disputes">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -650,7 +651,7 @@
             </ion-list>
 
             <!-- 产品尺寸 -->
-            <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
+            <ion-list [hidden]="currentToggle.key != 'afterUnpacking'">
                 <ion-item formGroupName="productSize">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -687,7 +688,7 @@
             </ion-list>
 
             <!-- 净重 -->
-            <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
+            <ion-list [hidden]="currentToggle.key != 'afterUnpacking'">
                 <ion-item formGroupName="netWeight">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -731,7 +732,7 @@
             </ion-list>
 
             <!-- 外观检测选项 -->
-            <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
+            <ion-list [hidden]="currentToggle.key != 'afterUnpacking'">
                 <ion-item formGroupName="appearance">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -777,14 +778,14 @@
             </ion-list>
 
             <!-- 测试部分 -->
-            <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
+            <ion-list [hidden]="currentToggle.key != 'afterUnpacking'">
                 <ion-item formGroupName="function">
                     <div class="w100">
                         <div class="global-inspect-title">
                             <p>功能性测试</p>
                         </div>
                         <app-photograph
-                            type="function_pic"
+                            type="functions_pic"
                             moduleType="removeSkuPic"
                             [photos]="SkuInspectModel.value.inner_box_data.function.photos"
                             [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
@@ -794,7 +795,7 @@
                         ></app-photograph>
                         <app-videotape
                             [videos]="SkuInspectModel.value.inner_box_data.function.videos"
-                            type="function_video"
+                            type="functions_video"
                             [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
                             [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
                             [sku]="data.sku"
@@ -897,7 +898,7 @@
             </ion-list>
 
             <!-- 总结 -->
-            <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
+            <ion-list [hidden]="currentToggle.key != 'afterUnpacking'">
                 <ion-item formGroupName="sumUp">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -925,7 +926,7 @@
             </ion-list>
 
             <!-- 备注 -->
-            <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
+            <ion-list [hidden]="currentToggle.key != 'afterUnpacking'">
                 <ion-item formGroupName="desc">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -966,7 +967,7 @@
                                 <app-photograph
                                     type="inspection_require_pic"
                                     moduleType="removeSkuPic"
-                                    [photos]="inspectionRequire[i + 1].pic"
+                                    [photos]="inspectionRequire[i] ? inspectionRequire[i].pic : null"
                                     [sort_index]="i"
                                     [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
                                     [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
@@ -976,7 +977,7 @@
                             </div>
                             <div>
                                 <app-videotape
-                                    [videos]="inspectionRequire[i + 1].videos"
+                                    [videos]="inspectionRequire[i] ? inspectionRequire[i].videos : null"
                                     type="inspection_require_video"
                                     [sort_index]="i"
                                     [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
@@ -995,7 +996,7 @@
         </div>
         <!-- 外箱 -->
         <div class="out-box" *ngIf="rateStatus == 'outer'" formGroupName="outer_box_data">
-            <ion-list *ngIf="currentToggle.key == 'beforeUnpacking'">
+            <ion-list [hidden]="currentToggle.key != 'beforeUnpacking'">
                 <ion-item>
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -1109,7 +1110,7 @@
                 </ion-item>
             </ion-list>
 
-            <ion-list *ngIf="currentToggle.key == 'beforeUnpacking'">
+            <ion-list [hidden]="currentToggle.key != 'beforeUnpacking'">
                 <ion-item formGroupName="barCode">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -1219,7 +1220,7 @@
             </ion-list>
 
             <!-- 包装 -->
-            <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
+            <ion-list [hidden]="currentToggle.key != 'afterUnpacking'">
                 <ion-item formGroupName="packing">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -1317,7 +1318,7 @@
             </ion-list>
 
             <!-- 摆放图与说明书及配件包 -->
-            <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
+            <ion-list [hidden]="currentToggle.key != 'afterUnpacking'">
                 <ion-item formGroupName="layout">
                     <div class="w100">
                         <div class="global-inspect-title">
