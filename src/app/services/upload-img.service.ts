@@ -23,7 +23,7 @@ export class UploadImgService {
                 // success
             },
             err => {
-                // error
+                // error  
             },
         );
     }

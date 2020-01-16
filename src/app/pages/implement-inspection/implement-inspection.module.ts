@@ -37,8 +37,8 @@ const routes: Routes = [
     },
     {
         path: 'inspect-evaluation',
-        component: EvaluationComponent
-    }
+        component: EvaluationComponent,
+    },
 ];
 
 @NgModule({
@@ -60,7 +60,7 @@ const routes: Routes = [
         InspectFactoryComponent,
         InspectPoComponent,
         InspectSkuComponent,
-        EvaluationComponent
+        EvaluationComponent,
     ],
     providers: [Camera],
 })

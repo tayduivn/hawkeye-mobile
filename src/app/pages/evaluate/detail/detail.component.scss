@@ -1,6 +1,36 @@
-.evaluate-detail{
-    // padding: ;
+.evaluate-detail {
+  // padding: ;
 }
-.textarea{
-    padding:0 10px ;
+.textarea {
+  padding: 0 10px;
+}
+
+.mb-10 {
+  margin-bottom: 10px !important;
+}
+
+.storage {
+  > div {
+    margin: 0 auto;
+    width: 80%;
+  }
+}
+
+.mb-20 {
+  margin-bottom: 20px !important;
+}
+
+ion-label {
+  margin-top: 15px !important;
+  color: #000;
+}
+
+ion-item {
+  ion-label {
+    color: #535353;
+    font-size: 14px;
+  }
+  ion-textarea {
+    color: #535353;
+  }
 }

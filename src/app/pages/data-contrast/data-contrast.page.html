@@ -8,5 +8,21 @@
 </ion-header>
 
 <ion-content>
-  
+    <ion-card mode="ios">
+        <ion-card-header>
+            <ion-card-title color="primary">SKU</ion-card-title>
+        </ion-card-header>
+        <ion-item class="high">
+            <ion-label>选择工厂</ion-label>
+            <select class="select" [(ngModel)]="currentFactory">
+                <option value="">全部</option>
+                <option *ngFor="let item of data" [value]="item.apply_inspection_no">{{item.factory_name}}</option>
+            </select>
+        </ion-item>
+        <ion-item *ngFor="let item of (data | dataCompare:currentFactory)" (click)="toDetail(item)">
+            <ion-label>{{item.sku_chinese_name}}</ion-label>
+            <ion-note slot="end">{{item.sku}}</ion-note>
+        </ion-item>
+        <p *ngIf="!data.length" class="text-c ">暂无数据</p>
+    </ion-card>
 </ion-content>

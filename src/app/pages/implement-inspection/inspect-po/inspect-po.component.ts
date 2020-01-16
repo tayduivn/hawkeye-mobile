@@ -59,13 +59,19 @@ export class InspectPoComponent implements OnInit {
     ngOnInit() {
         this.activeRouter.params.subscribe(params => {
             this.apply_inspect_no = params.fid;
-            this.data = this.metaData.find(elem => elem.sku_data[0].apply_inspection_no === params.fid);
-
+            this.metaData.forEach(elem => {
+                elem.sku_data.forEach(element => {
+                    if (element.apply_inspection_no == params.fid) {
+                        this.data = elem;
+                    }
+                });
+            });
             this.implementInspect.getInspectData(this.apply_inspect_no).subscribe(res => {
                 this.data.sku_data[0].contract_data.forEach(item => {
                     if (res.contract_data) {
                         res.contract_data.forEach(sItem => {
                             if (item.contract_no == sItem.contract_no) {
+                                item.inspection_complete_no = sItem.sku_package_complete_num_total;
                                 item.inspection_complete_num = sItem.inspection_complete_num;
                                 item.data.forEach(sku => {
                                     sItem.contract_sku_desc.forEach(element => {
@@ -116,7 +122,7 @@ export class InspectPoComponent implements OnInit {
                         photo: sku.photo, // 照片
                         sku: sku.sku, // sku
                         sku_production_complete_num: sku.sku_production_complete_num, // 大货生产完成数量
-                        desc: sku.descAry,
+                        desc: sku.desc,
                     },
                 },
             };
@@ -140,6 +146,7 @@ export class InspectPoComponent implements OnInit {
     descEnter(e: string[], sku: any) {
         sku.desc = [];
         sku.desc = sku.desc.concat(e);
+        console.log(sku);
     }
 
     verifyIpt(p: any, sku: any): boolean {
@@ -161,7 +168,7 @@ export class InspectPoComponent implements OnInit {
                 message: '至少上传一张照片',
                 color: 'danger',
             });
-            // val = false;    TODO
+           // val = false;    
         }
         return val;
     }

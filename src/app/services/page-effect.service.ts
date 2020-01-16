@@ -61,7 +61,7 @@ export class PageEffectService {
     public clearEffectCtrl() {
         this.toastCtrl.getTop().then((e: any) => {
             if (e && e.id) {
-                this.toastCtrl.dismiss(); 
+                this.toastCtrl.dismiss();
             }
         });
         this.actionSheetController.getTop().then((e: any) => {

@@ -25,7 +25,7 @@
                             </option>
                         </select>
                     </ion-item>
-                    <div class="next" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="gappx"></div>
+                    <div class="next" fxLayout="row" fxLayoutAlign="center center"></div>
                 </ion-card>
             </div>
 
@@ -41,14 +41,14 @@
                             <option value="">选择验货编号</option>
                             <option
                                 [value]="item.apply_inspection_no"
-                                *ngFor="let item of (inspectTask) | contract:factory"
+                                *ngFor="let item of (inspectTask | contract:factory)"
                             >
                                 {{ item.apply_inspection_no }}
                             </option>
                         </select>
                     </ion-item>
 
-                    <div class="next" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="gappx">
+                    <div class="next" fxLayout="row" fxLayoutAlign="center center">
                         <button class="next-btn" [disabled]="!contract" (click)="toInspect()">
                             <ion-icon name="arrow-dropright" mode="ios"></ion-icon>
                         </button>

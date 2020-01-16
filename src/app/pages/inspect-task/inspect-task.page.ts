@@ -17,6 +17,7 @@ import { InspectTask } from './inspect-contract/inspect-contract.page';
 export class InspectTaskPage implements OnInit {
     screenType: ScreenAngle;
     inspectGroup: Observable<InspectGroup[]>;
+    listLength: number
     constructor(
         private inspectService: InspectionService,
         private effectCtrl: PageEffectService,
@@ -33,6 +34,10 @@ export class InspectTaskPage implements OnInit {
     ionViewWillEnter() {
         this.inspectGroup = this.inspectService.getTaskList();
         this.storage.remove('CURRENT_INSPECT_GROUP');
+        this.inspectGroup   
+            .subscribe(res => {
+                this.listLength = res.length
+            })
     }
 
     toContract(p: any) {

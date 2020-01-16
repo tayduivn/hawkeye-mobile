@@ -50,8 +50,8 @@ const routes: Routes = [
         loadChildren: () => import('./pages/evaluate/evaluate.module').then(m => m.EvaluatePageModule),
         canActivate: [LoginGuard],
     },
-    { 
-        path: '', 
+    {
+        path: '',
         loadChildren: () => import('./pages/data-contrast/data-contrast.module').then(m => m.DataContrastPageModule),
         canActivate: [LoginGuard],
     },

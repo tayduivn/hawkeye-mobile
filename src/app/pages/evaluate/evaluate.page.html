@@ -8,10 +8,24 @@
 </ion-header>
 
 <ion-content>
-    <ion-item [routerLink]="['/evaluate/detail','YH-19080010-1']">
-        <div fxLayout="row" fxLayoutAlign="space-between center" class="w100">
-            <div>临沂市金硕家居用品有限公司</div>
-            <div>YH-19080010-1</div>
-        </div>
-    </ion-item>
+    <ion-card mode="ios">
+        <ion-card-header>
+            <ion-card-title color="primary">验货列表</ion-card-title>
+        </ion-card-header>
+
+        <ion-item
+            [routerLink]="['/evaluate/detail', item.inspection_appraisement_id,item.apply_inspection_id]"
+            (click)="toDetail(item)"
+            *ngFor="let item of list | async"
+        >
+            <div fxLayout="row" fxLayoutAlign="space-between center" class="w100">
+                <div>{{item.factory_name}}</div>
+                <ion-badge color="success" *ngIf="item.inspection_appraisement_id">已评价</ion-badge>
+                <ion-badge color="danger" *ngIf="!item.inspection_appraisement_id">未评价</ion-badge>
+
+                <div>{{item.apply_inspection_no}}</div>
+            </div>
+        </ion-item>
+        <p *ngIf="!listLength" class="text-c ">暂无数据</p>
+    </ion-card>
 </ion-content>

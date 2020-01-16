@@ -14,7 +14,7 @@
             </select>
         </ion-buttons>
         <ion-buttons slot="end">
-            <ion-back-button defaultHref="" text="返回" color="white" mode="md"></ion-back-button>
+            <ion-back-button defaultHref="/inspect-po" text="返回" color="white" mode="md"></ion-back-button>
         </ion-buttons>
     </ion-toolbar>
 </ion-header>
@@ -33,7 +33,7 @@
 
     <div class="toggle-box">
         <!-- Default Segment -->
-        <ion-segment (ionChange)="segmentChanged($event)" mode="ios" [(ngModel)]="currentToggle.key">
+        <ion-segment (ionChange)="segmentChanged($event)" mode="ios" value="beforeUnpacking">
             <ion-segment-button value="beforeUnpacking" mode="ios">
                 <ion-label>开箱前</ion-label>
             </ion-segment-button>
@@ -116,7 +116,7 @@
                                         <app-photograph
                                             type="size_pic_length"
                                             moduleType="removeSkuPic"
-                                            [photos]="SkuInspectModel.value.inner_box_data.size.length.photos"
+                                            [photos]="SkuInspectModel.value.inner_box_data.size.length.pic"
                                             [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
                                             [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
                                             [sku]="data.sku"
@@ -136,7 +136,7 @@
                                         <app-photograph
                                             type="size_pic_width"
                                             moduleType="removeSkuPic"
-                                            [photos]="SkuInspectModel.value.inner_box_data.size.width.photos"
+                                            [photos]="SkuInspectModel.value.inner_box_data.size.width.pic"
                                             [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
                                             [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
                                             [sku]="data.sku"
@@ -156,7 +156,7 @@
                                         <app-photograph
                                             type="size_pic_height"
                                             moduleType="removeSkuPic"
-                                            [photos]="SkuInspectModel.value.inner_box_data.size.height.photos"
+                                            [photos]="SkuInspectModel.value.inner_box_data.size.height.pic"
                                             [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
                                             [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
                                             [sku]="data.sku"
@@ -330,9 +330,6 @@
                         ></app-videotape>
                         <div class="test-feedback">
                             <div>
-                                <p class="global-inspect-title  gray-color desc-tips">
-                                    请输入说明
-                                </p>
                                 <div>
                                     <app-item-by-item-desc
                                         description="备注"
@@ -401,36 +398,38 @@
                                         <option
                                             value="inner"
                                             *ngIf="SkuInspectModel.value.inner_box_data.packing.is_double_carton == 1"
-                                            >内箱纸箱类型</option
+                                        >
+                                            内箱纸箱类型</option
                                         >
                                         <option
                                             value="outer"
                                             *ngIf="SkuInspectModel.value.inner_box_data.packing.is_double_carton == 1"
-                                            >外箱纸箱类型</option
+                                        >
+                                            外箱纸箱类型</option
                                         >
                                         <option
                                             value="1"
                                             *ngIf="SkuInspectModel.value.inner_box_data.packing.is_double_carton == 0"
-                                            >三层单瓦楞</option
+                                        >
+                                            三层单瓦楞</option
                                         >
                                         <option
                                             value="2"
                                             *ngIf="SkuInspectModel.value.inner_box_data.packing.is_double_carton == 0"
-                                            >五层双瓦楞</option
+                                        >
+                                            五层双瓦楞</option
                                         >
                                         <option
                                             value="3"
                                             *ngIf="SkuInspectModel.value.inner_box_data.packing.is_double_carton == 0"
-                                            >七层三瓦楞</option
+                                        >
+                                            七层三瓦楞</option
                                         >
                                     </select>
                                 </div>
                             </div>
 
                             <div>
-                                <p class="global-inspect-title  gray-color desc-tips">
-                                    请输入备注
-                                </p>
                                 <div>
                                     <app-item-by-item-desc
                                         description="备注"
@@ -461,9 +460,6 @@
                             box_type="inner"
                         ></app-photograph>
                         <div class="pb-10">
-                            <p class="global-inspect-title  gray-color desc-tips">
-                                请输入备注
-                            </p>
                             <div>
                                 <app-item-by-item-desc
                                     description="备注"
@@ -493,9 +489,6 @@
                             box_type="inner"
                         ></app-photograph>
                         <div class="pb-10">
-                            <p class="global-inspect-title  gray-color desc-tips">
-                                请输入备注
-                            </p>
                             <div>
                                 <app-item-by-item-desc
                                     description="备注"
@@ -543,9 +536,6 @@
                             box_type="inner"
                         ></app-photograph>
                         <div class="pb-10">
-                            <p class="global-inspect-title  gray-color desc-tips">
-                                请输入备注
-                            </p>
                             <div>
                                 <app-item-by-item-desc
                                     description="备注"
@@ -583,9 +573,6 @@
                             box_type="inner"
                         ></app-photograph>
                         <div class="pb-10">
-                            <p class="global-inspect-title  gray-color desc-tips">
-                                请输入备注
-                            </p>
                             <div>
                                 <app-item-by-item-desc
                                     description="备注"
@@ -615,9 +602,6 @@
                             box_type="inner"
                         ></app-photograph>
                         <div class="pb-10">
-                            <p class="global-inspect-title  gray-color desc-tips">
-                                请输入备注
-                            </p>
                             <div>
                                 <app-item-by-item-desc
                                     description="备注"
@@ -652,34 +636,25 @@
 
             <!-- 产品尺寸 -->
             <ion-list [hidden]="currentToggle.key != 'afterUnpacking'">
-                <ion-item formGroupName="productSize">
+                <ion-item>
                     <div class="w100">
                         <div class="global-inspect-title">
                             <p>产品尺寸(单位：CM)</p>
                         </div>
-                        <div class="size" fxLayout="row" fxLayoutAlign="start center">
-                            <ion-input type="number" placeholder="长" formControlName="length"></ion-input>
-                            <ion-input type="number" placeholder="宽" formControlName="width"></ion-input>
-                            <ion-input type="number" placeholder="高" formControlName="height"></ion-input>
-                        </div>
-                        <app-photograph
-                            type="product_size_pic"
-                            moduleType="removeSkuPic"
-                            [photos]="SkuInspectModel.value.inner_box_data.productSize.photos"
+                        <inspect-product-size
                             [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
                             [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
                             [sku]="data.sku"
-                            box_type="inner"
-                        ></app-photograph>
-                        <div class="pb-10">
-                            <p class="global-inspect-title  gray-color desc-tips">
-                                请输入备注
-                            </p>
+                            (onChange)='productSizeChange($event)'
+                            [sizes]='SkuInspectModel.value.inner_box_data.productSize'
+                        ></inspect-product-size
+                            >
+                        <div class="pb-10" formGroupName='productSizeDesc'>
                             <div>
                                 <app-item-by-item-desc
                                     description="备注"
-                                    [ary]="SkuInspectModel.value.inner_box_data.productSize.desc"
-                                    (onComplete)="descEnter($event, 'productSize', 'inner')"
+                                    [ary]="SkuInspectModel.value.inner_box_data.productSizeDesc.desc"
+                                    (onComplete)="descEnter($event, 'productSizeDesc', 'inner')"
                                 ></app-item-by-item-desc>
                             </div>
                         </div>
@@ -701,7 +676,8 @@
                                     type="number"
                                     class="mr-10"
                                     formControlName="textOne"
-                                ></ion-input>
+                                >
+                                </ion-input>
 
                                 <ion-input placeholder="请输入净重" type="number" formControlName="textTwo"></ion-input>
                             </div>
@@ -715,9 +691,6 @@
                                 box_type="inner"
                             ></app-photograph>
                             <div class="pb-10">
-                                <p class="global-inspect-title  gray-color desc-tips">
-                                    请输入备注
-                                </p>
                                 <div>
                                     <app-item-by-item-desc
                                         description="备注"
@@ -768,7 +741,8 @@
                                             description="备注"
                                             [ary]="SkuInspectModel.value.inner_box_data.appearance.desc"
                                             (onComplete)="descEnter($event, 'appearance', 'inner')"
-                                        ></app-item-by-item-desc>
+                                        >
+                                        </app-item-by-item-desc>
                                     </div>
                                 </div>
                             </div>
@@ -803,9 +777,6 @@
                         ></app-videotape>
                         <div class="test-feedback">
                             <div>
-                                <p class="global-inspect-title  gray-color desc-tips">
-                                    请输入说明
-                                </p>
                                 <div>
                                     <app-item-by-item-desc
                                         description="备注"
@@ -833,7 +804,7 @@
                             box_type="inner"
                         ></app-photograph>
                         <app-videotape
-                            type="bearing_video"
+                            type="bearing_test_video"
                             [videos]="SkuInspectModel.value.inner_box_data.bearing.videos"
                             [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
                             [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
@@ -842,9 +813,6 @@
                         ></app-videotape>
                         <div class="test-feedback">
                             <div>
-                                <p class="global-inspect-title  gray-color desc-tips">
-                                    请输入说明
-                                </p>
                                 <div>
                                     <app-item-by-item-desc
                                         description="备注"
@@ -872,7 +840,7 @@
                             box_type="inner"
                         ></app-photograph>
                         <app-videotape
-                            type="water_content_video"
+                            type="water_content_test_video"
                             [videos]="SkuInspectModel.value.inner_box_data.waterContent.videos"
                             [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
                             [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
@@ -881,15 +849,13 @@
                         ></app-videotape>
                         <div class="test-feedback">
                             <div>
-                                <p class="global-inspect-title  gray-color desc-tips">
-                                    请输入说明
-                                </p>
                                 <div>
                                     <app-item-by-item-desc
                                         description="备注"
                                         [ary]="SkuInspectModel.value.inner_box_data.waterContent.desc"
                                         (onComplete)="descEnter($event, 'waterContent', 'inner')"
-                                    ></app-item-by-item-desc>
+                                    >
+                                    </app-item-by-item-desc>
                                 </div>
                             </div>
                         </div>
@@ -906,6 +872,7 @@
                         </div>
 
                         <div class="maozhong pb-10" fxLayout="row" fxLayoutAlign="space-between center">
+                            <label for="" class="label mf">请输入实际抽检数量</label>
                             <ion-input
                                 placeholder="请输入实际抽检数量"
                                 type="number"
@@ -913,13 +880,14 @@
                                 class="mr-10"
                                 formControlName="textOne"
                             ></ion-input>
-
+                            <label for="" class="label mf">请输入实际摔箱数量</label>
                             <ion-input
                                 placeholder="请输入实际摔箱数量"
                                 type="number"
                                 class="w150"
                                 formControlName="textTwo"
-                            ></ion-input>
+                            >
+                            </ion-input>
                         </div>
                     </div>
                 </ion-item>
@@ -944,7 +912,10 @@
             </ion-list>
 
             <!-- 验货要求 -->
-            <ion-grid class="inspection_require" *ngIf="currentToggle.key == 'requirement'">
+            <ion-grid
+                class="inspection_require"
+                *ngIf="currentToggle.key == 'requirement' && data.inspection_require && data.inspection_require.length"
+            >
                 <ion-row>
                     <ion-col [size]="1.8" align-self-center>验货条目</ion-col>
                     <ion-col [size]="3.1" align-self-center>验货要求</ion-col>
@@ -967,7 +938,9 @@
                                 <app-photograph
                                     type="inspection_require_pic"
                                     moduleType="removeSkuPic"
-                                    [photos]="inspectionRequire[i] ? inspectionRequire[i].pic : null"
+                                    [photos]="
+                                        inspectionRequire && inspectionRequire[i] ? inspectionRequire[i].pic : null
+                                    "
                                     [sort_index]="i"
                                     [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
                                     [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
@@ -977,7 +950,9 @@
                             </div>
                             <div>
                                 <app-videotape
-                                    [videos]="inspectionRequire[i] ? inspectionRequire[i].videos : null"
+                                    [videos]="
+                                        inspectionRequire && inspectionRequire[i] ? inspectionRequire[i].videos : null
+                                    "
                                     type="inspection_require_video"
                                     [sort_index]="i"
                                     [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
@@ -1046,9 +1021,9 @@
                                     </ion-col>
                                     <ion-col size="4">
                                         <app-photograph
-                                            type="'size_pic_length"
+                                            type="size_pic_length"
                                             moduleType="removeSkuPic"
-                                            [photos]="SkuInspectModel.value.outer_box_data.size.length.photos"
+                                            [photos]="SkuInspectModel.value.outer_box_data.size.length.pic"
                                             [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
                                             [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
                                             [sku]="data.sku"
@@ -1066,9 +1041,9 @@
                                     </ion-col>
                                     <ion-col size="4">
                                         <app-photograph
-                                            type="'size_pic_width"
+                                            type="size_pic_width"
                                             moduleType="removeSkuPic"
-                                            [photos]="SkuInspectModel.value.outer_box_data.size.width.photos"
+                                            [photos]="SkuInspectModel.value.outer_box_data.size.width.pic"
                                             [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
                                             [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
                                             [sku]="data.sku"
@@ -1079,16 +1054,16 @@
 
                                 <ion-row align-items-center formGroupName="height">
                                     <ion-col size="4">
-                                        <input type="number" placeholder="0" formControlName="text" />
+                                        <input type="number" placeholder="高" formControlName="text" />
                                     </ion-col>
                                     <ion-col size="4">
-                                        <input type="number" placeholder="高" formControlName="num" />
+                                        <input type="number" placeholder="0" formControlName="num" />
                                     </ion-col>
                                     <ion-col size="4">
                                         <app-photograph
-                                            type="'size_pic_height"
+                                            type="size_pic_height"
                                             moduleType="removeSkuPic"
-                                            [photos]="SkuInspectModel.value.outer_box_data.size.height.photos"
+                                            [photos]="SkuInspectModel.value.outer_box_data.size.height.pic"
                                             [contract_no]="factory.sku_data[0].contract_data[0].contract_no"
                                             [apply_inspection_no]="factory.sku_data[0].apply_inspection_no"
                                             [sku]="data.sku"
@@ -1150,6 +1125,7 @@
                         </div>
                     </div>
                 </ion-item>
+
                 <ion-item formGroupName="grossWeight">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -1211,6 +1187,7 @@
                             <div class="desc-box">
                                 <app-item-by-item-desc
                                     description="备注"
+                                    [ary]="SkuInspectModel.value.outer_box_data.grossWeight.desc"
                                     (onComplete)="descEnter($event, 'grossWeight', 'outer')"
                                 ></app-item-by-item-desc>
                             </div>
@@ -1273,37 +1250,39 @@
                                     <select class="select" formControlName="packingType">
                                         <option
                                             value="inner"
-                                            *ngIf="SkuInspectModel.value.inner_box_data.packing.is_double_carton == 1"
-                                            >内箱纸箱类型</option
+                                            *ngIf="SkuInspectModel.value.outer_box_data.packing.is_double_carton == 1"
+                                        >
+                                            内箱纸箱类型</option
                                         >
                                         <option
                                             value="outer"
-                                            *ngIf="SkuInspectModel.value.inner_box_data.packing.is_double_carton == 1"
-                                            >外箱纸箱类型</option
+                                            *ngIf="SkuInspectModel.value.outer_box_data.packing.is_double_carton == 1"
+                                        >
+                                            外箱纸箱类型</option
                                         >
                                         <option
                                             value="1"
-                                            *ngIf="SkuInspectModel.value.inner_box_data.packing.is_double_carton == 0"
-                                            >三层单瓦楞</option
+                                            *ngIf="SkuInspectModel.value.outer_box_data.packing.is_double_carton == 0"
+                                        >
+                                            三层单瓦楞</option
                                         >
                                         <option
                                             value="2"
-                                            *ngIf="SkuInspectModel.value.inner_box_data.packing.is_double_carton == 0"
-                                            >五层双瓦楞</option
+                                            *ngIf="SkuInspectModel.value.outer_box_data.packing.is_double_carton == 0"
+                                        >
+                                            五层双瓦楞</option
                                         >
                                         <option
                                             value="3"
-                                            *ngIf="SkuInspectModel.value.inner_box_data.packing.is_double_carton == 0"
-                                            >七层三瓦楞</option
+                                            *ngIf="SkuInspectModel.value.outer_box_data.packing.is_double_carton == 0"
+                                        >
+                                            七层三瓦楞</option
                                         >
                                     </select>
                                 </div>
                             </div>
 
                             <div>
-                                <p class="global-inspect-title  gray-color desc-tips">
-                                    请输入备注
-                                </p>
                                 <div>
                                     <app-item-by-item-desc
                                         description="备注"
@@ -1334,9 +1313,6 @@
                             box_type="outer"
                         ></app-photograph>
                         <div class="pb-10">
-                            <p class="global-inspect-title  gray-color desc-tips">
-                                请输入备注
-                            </p>
                             <div>
                                 <app-item-by-item-desc
                                     description="备注"
@@ -1353,7 +1329,7 @@
 </ion-content>
 
 <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button color="danger" (click)="save()">
+    <ion-fab-button color="danger" (click)="save().subscribe()">
         <p>保存</p>
     </ion-fab-button>
 </ion-fab>

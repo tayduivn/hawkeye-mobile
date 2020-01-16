@@ -96,8 +96,13 @@ export class InspectFactoryComponent implements OnInit {
         const IMPLEMENT_META_DATA = this.storage.get('IMPLEMENT-INSPECTION-META-DATA');
         this.ac.params.subscribe(res => {
             this.apply_inspect_no = res.fid;
-
-            this.data = IMPLEMENT_META_DATA.find(elem => elem.sku_data[0].apply_inspection_no === res.fid);
+            IMPLEMENT_META_DATA.forEach(elem => {
+                elem.sku_data.forEach(element => {
+                    if(element.apply_inspection_no == res.fid){
+                        this.data = elem
+                    }
+                });
+            });
         });
         this.getData();
     }
@@ -135,20 +140,20 @@ export class InspectFactoryComponent implements OnInit {
                     backdropDismiss: false,
                 });
             }
-            res.factory_data.remarks.forEach((element, i) => {
+            res.factory_data.remarks && res.factory_data.remarks.forEach((element, i) => {
                 (this.factoryModel.get('remarks') as FormArray).push(this.fb.control(''));
             });
             this.factoryModel.patchValue({
                 factoryAddress: {
                     text: res.factory_data.factoryAddress.text,
-                    isTrue: res.factory_data.factoryAddress.isTrue ? res.factory_data.factoryAddress.isTrue : 1,
+                    isTrue: res.factory_data.factoryAddress.isTrue,
                 },
                 worksNum: res.factory_data.worksNum,
                 receptionist: {
                     name: res.factory_data.receptionist.name,
                     post: res.factory_data.receptionist.post,
                     tel: res.factory_data.receptionist.tel,
-                    isTrue: res.factory_data.receptionist.isTrue ? res.factory_data.receptionist.isTrue : 1,
+                    isTrue: res.factory_data.receptionist.isTrue,
                 },
                 equipment: res.factory_data.equipment,
                 remarks: res.factory_data.remarks,

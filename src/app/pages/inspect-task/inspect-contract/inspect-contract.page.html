@@ -60,12 +60,11 @@
             <ion-item class="inner">
                 <ion-icon name="hammer" slot="start" mode="ios"></ion-icon>
                 <ion-label>操作</ion-label>
-                <ion-button fill="clear" size="small" [routerLink]="['/inspector-setting', data.id]"
+                <ion-button fill="clear" size="small" [routerLink]="['/inspector-setting', data[0].id]"
                     >验货员操作</ion-button
                 >
             </ion-item>
         </ion-item>
-
         <ion-item class="activated">
             <ion-icon name="menu" slot="start" mode="ios"></ion-icon>
             <ion-label>合同详情</ion-label>

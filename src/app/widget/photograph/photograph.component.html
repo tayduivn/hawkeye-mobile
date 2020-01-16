@@ -12,4 +12,8 @@
             <p>上传照片</p>
         </div>
     </li>
+
+    <li>
+        <input type='file' *ngIf='!platform.is("hybrid")' (change)="doCheckImg($event)"/>
+    </li>
 </ul>

@@ -1,5 +1,4 @@
 import { PageEffectService } from 'src/app/services/page-effect.service';
-import { FormGroup } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
@@ -39,6 +38,8 @@ export class ItemByItemDescComponent implements OnInit {
                 {
                     type: 'text',
                     name: 'text',
+                    value: type == 'add' ? '' : this.data[i],
+                    placeholder: '请输入内容',
                 },
             ],
             buttons: [
@@ -47,12 +48,12 @@ export class ItemByItemDescComponent implements OnInit {
                     handler: (value: any) => {
                         this.current = value.text;
                         if (type == 'add') {
-                            this.data[i ? i + 1 : 0] = value.text;
-                            this.data.push('');
+                            this.data.push(value.text);
                         } else {
                             this.data[i] = value.text;
                             !i && this.data.push('');
                         }
+                        this.data = this.data.filter(res => res);
                         this.onComplete.emit(this.data);
                     },
                 },

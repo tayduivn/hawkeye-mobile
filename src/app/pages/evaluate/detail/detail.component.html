@@ -17,168 +17,128 @@
                 <ion-card-title color="primary">工厂情况评价</ion-card-title>
             </ion-card-header>
 
-            <ion-radio-group [(ngModel)]="coordination">
+            <ion-radio-group
+                [(ngModel)]="data.inspection_cooperation_level"
+                [value]="data.inspection_cooperation_level"
+            >
                 <ion-list-header>
                     <ion-label>1.验货配合度</ion-label>
                 </ion-list-header>
 
                 <ion-item>
                     <ion-label>高</ion-label>
-                    <ion-radio slot="start" value="height" checked></ion-radio>
+                    <ion-radio slot="end" value="0" [checked]="data.inspection_cooperation_level == 0"></ion-radio>
                 </ion-item>
 
                 <ion-item>
                     <ion-label>一般</ion-label>
-                    <ion-radio slot="start" value="middle"></ion-radio>
+                    <ion-radio slot="end" value="1" [checked]="data.inspection_cooperation_level == 1"></ion-radio>
                 </ion-item>
 
                 <ion-item>
                     <ion-label>低</ion-label>
-                    <ion-radio slot="start" value="low"></ion-radio>
+                    <ion-radio slot="end" value="2" [checked]="data.inspection_cooperation_level == 2"></ion-radio>
                 </ion-item>
 
                 <ion-item>
-                    <ion-textarea *ngIf="coordination != 'middle'" placeholder="请描述具体表现"></ion-textarea>
+                    <ion-textarea
+                        *ngIf="data.inspection_cooperation_level != 1"
+                        [(ngModel)]="data.inspection_cooperation_level_desc"
+                        placeholder="请描述具体表现"
+                    ></ion-textarea>
                 </ion-item>
             </ion-radio-group>
 
-            <ion-radio-group [(ngModel)]="storage">
+            <ion-radio-group>
                 <ion-list-header>
                     <ion-label>2.工厂的仓储条件</ion-label>
                 </ion-list-header>
 
-                <ion-item>
-                    <ion-label>优秀</ion-label>
-                    <ion-radio slot="start" value="excellent"></ion-radio>
-                    <ion-radio-group style="width: 70%;">
-                        <ion-item>
-                            <ion-label>使用托盘</ion-label>
-                            <ion-checkbox [disabled]="storage != 'excellent'" checked></ion-checkbox>
-                        </ion-item>
-
-                        <ion-item>
-                            <ion-label>场地干燥</ion-label>
-                            <ion-checkbox [disabled]="storage != 'excellent'" checked></ion-checkbox>
-                        </ion-item>
-
-                        <ion-item>
-                            <ion-label>堆放整体</ion-label>
-                            <ion-checkbox [disabled]="storage != 'excellent'" checked></ion-checkbox>
-                        </ion-item>
-                        <ion-item>
-                            <ion-label>有管理员</ion-label>
-                            <ion-checkbox [disabled]="storage != 'excellent'" checked></ion-checkbox>
-                        </ion-item>
-                        <ion-item>
-                            <ion-label>其他</ion-label>
-                            <ion-checkbox [(ngModel)]="other" [disabled]="storage != 'excellent'"></ion-checkbox>
-                        </ion-item>
-                    </ion-radio-group>
+                <ion-item *ngFor="let item of storage_condition_ary">
+                    <ion-label>{{ item.key }}</ion-label>
+                    <ion-checkbox [(ngModel)]="item.value"></ion-checkbox>
                 </ion-item>
 
                 <ion-item>
-                    <ion-label>一般（允许1-2项）</ion-label>
-                    <ion-radio slot="start" value="commonly"></ion-radio>
-                    <ion-radio-group style="width: 70%;">
-                        <ion-item>
-                            <ion-label>不使用托盘</ion-label>
-                            <ion-checkbox checked="true" [disabled]="storage != 'commonly'"></ion-checkbox>
-                        </ion-item>
-
-                        <ion-item>
-                            <ion-label>场地潮湿</ion-label>
-                            <ion-checkbox checked="true" [disabled]="storage != 'commonly'"></ion-checkbox>
-                        </ion-item>
-
-                        <ion-item>
-                            <ion-label>堆放不整体</ion-label>
-                            <ion-checkbox checked="true" [disabled]="storage != 'commonly'"></ion-checkbox>
-                        </ion-item>
-                        <ion-item>
-                            <ion-label>无管理员</ion-label>
-                            <ion-checkbox checked="true" [disabled]="storage != 'commonly'"></ion-checkbox>
-                        </ion-item>
-                        <ion-item>
-                            <ion-label>其他</ion-label>
-                            <ion-checkbox [(ngModel)]="other" [disabled]="storage != 'commonly'"></ion-checkbox>
-                        </ion-item>
-                    </ion-radio-group>
+                    <ion-label>其他</ion-label>
+                    <ion-checkbox [(ngModel)]="other"></ion-checkbox>
                 </ion-item>
 
                 <ion-item>
-                    <ion-label>不合格（出现3项以上）</ion-label>
-                    <ion-radio slot="start" value="unqualified"></ion-radio>
-                    <ion-radio-group style="width: 70%;">
-                        <ion-item>
-                            <ion-label>不使用托盘</ion-label>
-                            <ion-checkbox checked="true" [disabled]="storage != 'unqualified'"></ion-checkbox>
-                        </ion-item>
-
-                        <ion-item>
-                            <ion-label>场地潮湿</ion-label>
-                            <ion-checkbox checked="true" [disabled]="storage != 'unqualified'"></ion-checkbox>
-                        </ion-item>
-
-                        <ion-item>
-                            <ion-label>堆放不整体</ion-label>
-                            <ion-checkbox checked="true" [disabled]="storage != 'unqualified'"></ion-checkbox>
-                        </ion-item>
-                        <ion-item>
-                            <ion-label>无管理员</ion-label>
-                            <ion-checkbox checked="true" [disabled]="storage != 'unqualified'"></ion-checkbox>
-                        </ion-item>
-                        <ion-item>
-                            <ion-label>其他</ion-label>
-                            <ion-checkbox [(ngModel)]="other" [disabled]="storage != 'unqualified'"></ion-checkbox>
-                        </ion-item>
-                    </ion-radio-group>
-                </ion-item>
-
-                <ion-item>
-                    <ion-textarea placeholder="请描述具体表现" *ngIf="other"></ion-textarea>
+                    <ion-textarea
+                        placeholder="请描述具体表现"
+                        [(ngModel)]="data.storage_condition_desc"
+                        *ngIf="other"
+                    ></ion-textarea>
                 </ion-item>
             </ion-radio-group>
 
-            <ion-radio-group [(ngModel)]="surplusStorage">
+            <ion-radio-group
+                [(ngModel)]="data.storage_condition_appraisement"
+                [value]="data.storage_condition_appraisement"
+            >
                 <ion-list-header>
-                    <ion-label>3.剩余仓储情况</ion-label>
+                    <ion-label>3.工厂的仓储条件等级</ion-label>
                 </ion-list-header>
-
                 <ion-item>
-                    <ion-label>充足</ion-label>
-                    <ion-radio slot="start" value="height" checked></ion-radio>
+                    <ion-label>优秀</ion-label>
+                    <ion-radio slot="end" value="0" [checked]="data.storage_condition_appraisement == 0"></ion-radio>
                 </ion-item>
 
                 <ion-item>
                     <ion-label>一般</ion-label>
-                    <ion-radio slot="start" value="middle"></ion-radio>
+                    <ion-radio slot="end" value="1" [checked]="data.storage_condition_appraisement == 1"></ion-radio>
+                </ion-item>
+
+                <ion-item>
+                    <ion-label>不合格</ion-label>
+                    <ion-radio slot="end" value="2" [checked]="data.storage_condition_appraisement == 2"></ion-radio>
+                </ion-item>
+            </ion-radio-group>
+
+            <ion-radio-group
+                [(ngModel)]="data.remaining_storage_space_condition"
+                [value]="data.remaining_storage_space_condition"
+            >
+                <ion-list-header>
+                    <ion-label>4.剩余仓储情况</ion-label>
+                </ion-list-header>
+
+                <ion-item>
+                    <ion-label>充足</ion-label>
+                    <ion-radio slot="end" value="0" [checked]="data.remaining_storage_space_condition == 0"></ion-radio>
+                </ion-item>
+
+                <ion-item>
+                    <ion-label>一般</ion-label>
+                    <ion-radio slot="end" value="1" [checked]="data.remaining_storage_space_condition == 1"></ion-radio>
                 </ion-item>
 
                 <ion-item>
                     <ion-label>紧张</ion-label>
-                    <ion-radio slot="start" value="low"></ion-radio>
+                    <ion-radio slot="end" value="2" [checked]="data.remaining_storage_space_condition == 2"></ion-radio>
                 </ion-item>
             </ion-radio-group>
 
             <div>
                 <div>
                     <ion-list-header>
-                        <ion-label>4.工厂生产的主要产品类型</ion-label>
+                        <ion-label>5.工厂生产的主要产品类型</ion-label>
                     </ion-list-header>
                     <ion-textarea
                         class="textarea"
-                        [(ngModel)]="productType"
-                        placeholder="请工厂生产的主要产品类型"
+                        [(ngModel)]="data.production_type"
+                        placeholder="请输入工厂生产的主要产品类型"
                     ></ion-textarea>
                 </div>
                 <div>
                     <ion-list-header>
-                        <ion-label>5.工厂情况</ion-label>
+                        <ion-label>6.工厂情况</ion-label>
                     </ion-list-header>
                     <ion-textarea
                         class="textarea"
-                        [(ngModel)]="factorySituation"
-                        placeholder="请工厂情况"
+                        [(ngModel)]="data.factory_situation"
+                        placeholder="请输入工厂情况"
                     ></ion-textarea>
                 </div>
             </div>
@@ -191,26 +151,30 @@
                 <ion-card-title color="primary">货号</ion-card-title>
             </ion-card-header>
 
-            <ion-radio-group [(ngModel)]="item.inspectResult" *ngFor="let item of skuList;let i = index">
-                <ion-list-header>
-                    <ion-label>{{i + 1 + '.' + item}}</ion-label>
-                </ion-list-header>
+            <ng-container *ngFor="let item of sku_appraisement; let i = index">
+                <ion-radio-group (ionChange)="skuAppraisementChange($event, i)">
+                    <ion-list-header>
+                        <ion-label>{{ i + 1 + '.' + item.sku }}</ion-label>
+                    </ion-list-header>
 
-                <ion-item>
-                    <ion-label>通过</ion-label>
-                    <ion-radio slot="start" value="pass" checked></ion-radio>
-                </ion-item>
+                    <ion-item>
+                        <ion-label>通过</ion-label>
+                        <ion-radio slot="end" value="0" [checked]="item.appraisement == 0"></ion-radio>
+                    </ion-item>
 
-                <ion-item>
-                    <ion-label>待定</ion-label>
-                    <ion-radio slot="start" value="undetermined"></ion-radio>
-                </ion-item>
+                    <ion-item>
+                        <ion-label>待定</ion-label>
+                        <ion-radio slot="end" value="1" [checked]="item.appraisement == 1"></ion-radio>
+                    </ion-item>
 
-                <ion-item>
-                    <ion-label>不通过</ion-label>
-                    <ion-radio slot="start" value="notPass"></ion-radio>
-                </ion-item>
-            </ion-radio-group>
+                    <ion-item>
+                        <ion-label>不通过</ion-label>
+                        <ion-radio slot="end" value="2" [checked]="item.appraisement == 2"></ion-radio>
+                    </ion-item>
+                </ion-radio-group>
+            </ng-container>
         </ion-card>
     </div>
+
+    <ion-button expand="block" (click)="submit()" class="mb-20">提交</ion-button>
 </ion-content>

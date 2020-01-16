@@ -1,0 +1,25 @@
+<div class="size product-size" *ngFor="let item of _sizes; let i = index">
+    <div class="list" fxLayout="row" fxLayoutAlign="space-between center">
+        <div (click)="changeText(i, item.size_length ? 'modify' : 'add', 'size_length')">
+            {{ item.size_length ? item.size_length : '输入长' }}
+        </div>
+        <div (click)="changeText(i, item.size_width ? 'modify' : 'add', 'size_width')">
+            {{ item.size_width ? item.size_width : '输入宽' }}
+        </div>
+        <div (click)="changeText(i, item.size_height ? 'modify' : 'add', 'size_height')">
+            {{ item.size_height ? item.size_height : '输入高' }}
+        </div>
+        <ion-button size="small" (click)="add()" *ngIf="i == _sizes.length - 1">添加</ion-button>
+    </div>
+    <app-photograph
+        type="product_size_pic"
+        moduleType="removeSkuPic"
+        [photos]="item.pic"
+        [contract_no]="contract_no"
+        [apply_inspection_no]="apply_inspection_no"
+        [sku]="sku"
+        [sort_index]='i'
+        box_type="inner"
+    >
+    </app-photograph>
+</div>

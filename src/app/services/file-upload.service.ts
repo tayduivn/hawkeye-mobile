@@ -51,8 +51,8 @@ export class FileUploadService implements OnInit {
         private userInfo: UserInfoService,
         private es: PageEffectService,
         private http: HttpService,
-    ) {}
-
+    ) {} 
+ 
     ngOnInit(): void {
         this.fileTransfer.onProgress = listener => {
             console.log(listener);
@@ -72,20 +72,22 @@ export class FileUploadService implements OnInit {
             headers: {
                 Authorization: this.userInfo.info ? `Bearer ${this.userInfo.info.api_token}` : undefined,
             },
-        };
+        };  
 
         this.fileTransfer
             .upload(params.fileUrl, `${environment.apiUrl}/task/add_inspection_task_video`, options)
             .then(res => {
                 this.es.clearEffectCtrl();
-                this.es.showAlert({
-                    message: '上传成功！',
+                this.es.showToast({
+                    message: JSON.parse(res.response).message,
+                    color: JSON.parse(res.response).status ? 'success' : 'danger',
                 });
                 console.log(res.response);
             });
     }
 
     uploadImage(params: ImageOther): Observable<ImageResponse> {
+        debugger
         return this.http.post({ url: `/task/add_inspection_task_img`, params: params });
     }
 }

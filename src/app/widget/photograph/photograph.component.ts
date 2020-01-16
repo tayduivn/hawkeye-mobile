@@ -1,3 +1,4 @@
+import { Platform } from '@ionic/angular';
 import { FieldType } from './../videotape/videotape.component';
 import { ImplementInspectService } from 'src/app/services/implement-inspect.service';
 import { FileUploadService } from './../../services/file-upload.service';
@@ -39,6 +40,7 @@ export class PhotographComponent implements OnInit {
         private imagePicker: ImagePicker,
         private uploadService: FileUploadService,
         private implement: ImplementInspectService,
+        public platform: Platform,
     ) {}
     imgOrigin: string = environment.usFileUrl;
 
@@ -55,7 +57,7 @@ export class PhotographComponent implements OnInit {
     };
 
     pickerOpts: ImagePickerOptions = {
-        maximumImagesCount: 3,
+        maximumImagesCount: 6,
         quality: 100,
         outputType: 1,
     };
@@ -110,16 +112,18 @@ export class PhotographComponent implements OnInit {
     }
 
     picker() {
-        this.imagePicker.getPictures(this.pickerOpts).then(
-            res => {
-                this.ec.clearEffectCtrl();
-                let ary = res.map(item => 'data:image/jpeg;base64,' + item);
-                this.upload({ images: ary });
-            },
-            err => {
-                console.log(err);
-            },
-        );
+        if (this.platform.is('hybrid')) {
+            this.imagePicker.getPictures(this.pickerOpts).then(
+                res => {
+                    this.ec.clearEffectCtrl();
+                    let ary = res.map(item => 'data:image/jpeg;base64,' + item);
+                    this.upload({ images: ary });
+                },
+                err => {
+                    console.log(err);
+                },
+            );
+        }
     }
 
     remove(i: number) {
@@ -132,13 +136,17 @@ export class PhotographComponent implements OnInit {
                 {
                     text: '确定',
                     handler: () => {
-                        this.implement[this.moduleType]({
+                        let params = {
                             apply_inspection_no: this.apply_inspection_no,
                             type: this.type,
                             filename: this._photos[i].substring(this.imgOrigin.length, this._photos[i].length),
                             contract_no: this.contract_no,
                             sku: this.sku,
-                        }).subscribe(res => {
+                            is_inner_box: this.box_type == 'inner' ? 1 : 2,
+                            sort_index: this.sort_index,
+                        };
+                        !this.sort_index && delete this.sort_index;
+                        this.implement[this.moduleType](params).subscribe(res => {
                             if (res.status) {
                                 this._photos.splice(i, 1);
                                 this.onPhotograph.emit(this._photos);
@@ -165,16 +173,17 @@ export class PhotographComponent implements OnInit {
             message: '正在上传中……',
             backdropDismiss: false,
         });
+        debugger;
         let params: ImageOther = {
             type: this.type,
             apply_inspection_no: this.apply_inspection_no,
             contract_no: this.contract_no,
-            // box_type: this.box_type,
             is_inner_box: this.box_type == 'inner' ? 0 : 2,
             sku: this.sku,
             images: obj.images,
             sort_index: this.sort_index,
         };
+
         this.uploadService.uploadImage(params).subscribe(res => {
             if (res.status) {
                 this._photos = this._photos.concat(res.data.map(item => this.imgOrigin + item));
@@ -185,5 +194,15 @@ export class PhotographComponent implements OnInit {
                 color: res.status ? 'success' : 'danger',
             });
         });
+    }
+
+    doCheckImg(e: any) {
+        // console.log(e);
+        // let render = new FileReader();
+        // render.onload = event => {
+        //     console.log(event.target.result);
+        //     this.upload({ images: [event.target.result] });
+        // };
+        // render.readAsDataURL(e.target.files[0]);
     }
 }

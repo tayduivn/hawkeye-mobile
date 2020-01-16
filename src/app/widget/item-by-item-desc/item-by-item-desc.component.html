@@ -1,7 +1,15 @@
 <ng-container>
     <label>逐个添加备注</label>
-    <div fxLayout="row" fxLayoutAlign="start center" *ngFor="let item of data; let i = index">
-        <div class="item" (click)="addDesc(i,'modify')" *ngIf="item">{{ item}}</div>
-        <ion-button expand='block' size='small' *ngIf="i == data.length - 1" (click)="addDesc(i,'add')">添加</ion-button>
+    <div *ngFor="let item of data; let i = index">
+        <div class="item" (click)="addDesc(i, 'modify')" *ngIf="item">{{ item }}</div>
+        <ion-button
+            expand="block"
+            color="medium"
+            fill="solid"
+            size="small"
+            *ngIf="i == data.length - 1"
+            (click)="addDesc(i, 'add')"
+            >添加备注</ion-button
+        >
     </div>
 </ng-container>

@@ -10,24 +10,24 @@ import { IonicModule } from '@ionic/angular';
 import { EvaluatePage } from './evaluate.page';
 
 const routes: Routes = [
-  {
-    path: 'evaluate',
-    component: EvaluatePage
-  },
-  {
-    path: 'evaluate/detail/:id',
-    component: DetailComponent
-  }
+    {
+        path: 'evaluate',
+        component: EvaluatePage,
+    },
+    {
+        path: 'evaluate/detail/:id/:applyId',
+        component: DetailComponent,
+    },
 ];
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    FlexLayoutModule,
-    RouterModule.forChild(routes)
-  ],
-  declarations: [EvaluatePage,DetailComponent]
+    imports: [
+        CommonModule, 
+        FormsModule, 
+        IonicModule, 
+        FlexLayoutModule, 
+        RouterModule.forChild(routes)
+    ],
+    declarations: [EvaluatePage, DetailComponent],
 })
 export class EvaluatePageModule {}

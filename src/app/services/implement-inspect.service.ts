@@ -24,6 +24,8 @@ export interface RemovePicParams {
     filename: string;
     contract_no?: string;
     sku?: string;
+    is_inner_box?:number
+    sort_index?: number
 }
 
 @Injectable({

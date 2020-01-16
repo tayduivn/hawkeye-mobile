@@ -1,12 +1,15 @@
 import { FileUploadService, VideoOther } from './../../services/file-upload.service';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
 import { PageEffectService } from 'src/app/services/page-effect.service';
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { MediaCapture, CaptureError, MediaFile } from '@ionic-native/media-capture/ngx';
 import { ActionSheetOptions } from '@ionic/core';
 import { FilePath } from '@ionic-native/file-path/ngx';
 import { VideoPlayComponent } from '../video-play/video-play.component';
 import { ImplementInspectService } from 'src/app/services/implement-inspect.service';
+import { FileTransferObject, FileTransfer, FileUploadOptions } from '@ionic-native/file-transfer/ngx';
+import { environment } from 'src/environments/environment';
+import { UserInfoService } from 'src/app/services/user-info.service';
 
 export type FieldType =
     | 'throw_box_video'
@@ -38,12 +41,12 @@ export type FieldType =
     styleUrls: ['./videotape.component.scss'],
 })
 export class VideotapeComponent implements OnInit {
-    progress: number = 0;
+    progress: string;
     @Input() set videos(input: string[]) {
         if (!input) {
             return;
         }
-        if (!!input ) {
+        if (!!input) {
             this._up_data = input;
         }
     }
@@ -62,19 +65,22 @@ export class VideotapeComponent implements OnInit {
         private ec: PageEffectService,
         private implement: ImplementInspectService,
         private uploadService: FileUploadService,
+        private transfer: FileTransfer,
+        private userInfo: UserInfoService,
+        private ChangeDetectorRef: ChangeDetectorRef,
     ) {}
 
     @Output() onComplete: EventEmitter<MediaFile[][]> = new EventEmitter<MediaFile[][]>();
 
-    _videos: MediaFile[][] = [];
+    _videos: any[][] = [];
     _up_data: string[] = [];
     ngOnInit() {
-        this.uploadService.fileTransfer.onProgress(progressEvent => {
-            if (progressEvent.lengthComputable) {
-                this.progress = progressEvent.loaded / progressEvent.total;
-                console.log(progressEvent.loaded / progressEvent.total);
-            }
-        });
+        // this.uploadService.fileTransfer.onProgress(progressEvent => {
+        //     if (progressEvent.lengthComputable) {
+        //         this.progress = progressEvent.loaded / progressEvent.total;
+        //         console.log(progressEvent.loaded / progressEvent.total);
+        //     }
+        // });
     }
 
     upload(obj: any) {
@@ -86,17 +92,50 @@ export class VideotapeComponent implements OnInit {
             sku: this.sku,
             sort_index: this.sort_index,
         };
-        this.uploadService.uploadVideo({ fileUrl: obj.filePath, params: params });
+        let param = {
+            fileUrl: obj.filePath,
+            params: params,
+        };
+        // this.uploadService.uploadVideo({ fileUrl: obj.filePath, params: params });
+        let options: FileUploadOptions = {
+            httpMethod: 'POST',
+            fileKey: 'video',
+            fileName: 'video',
+            params: param.params,
+            headers: {
+                Authorization: this.userInfo.info ? `Bearer ${this.userInfo.info.api_token}` : undefined,
+            },
+        };
+        let fileTransfer: FileTransferObject = this.transfer.create();
+        fileTransfer
+            .upload(param.fileUrl, `${environment.apiUrl}/task/add_inspection_task_video`, options)
+            .then(res => {
+               
+                console.log(res.response);
+            });
+
+        fileTransfer.onProgress(ProgressEvent => {
+            if (ProgressEvent.lengthComputable) {
+                this.progress = (ProgressEvent.loaded / ProgressEvent.total).toFixed(2);
+                this.complate = (ProgressEvent.total == 1)
+                this.ChangeDetectorRef.markForCheck();
+                this.ChangeDetectorRef.detectChanges();
+              
+            }
+        });
+        
     }
 
+    complate: boolean = true
+
     videotape() {
-        // if (this.progress < 1 && this.progress > 0) {
-        //     this.ec.showToast({
-        //         message: '等待当前视频上传',
-        //         color: 'danger',
-        //     });
-        //     return;
-        // }
+        if(!this.complate){
+            this.ec.showToast({
+                message:'请等待上传完毕！',
+                color:'danger'
+            })
+            return
+        }
         const option: ActionSheetOptions = {
             header: '上传方式',
             buttons: [
@@ -176,28 +215,29 @@ export class VideotapeComponent implements OnInit {
                 {
                     text: '确定',
                     handler: () => {
-                        this.implement
-                            .removeSkuVideo({
-                                apply_inspection_no: this.apply_inspection_no,
-                                type: this.type,
-                                filename: this._up_data[i],
-                                contract_no: this.contract_no,
-                                sku: this.sku,
-                            })
-                            .subscribe(res => {
-                                if (res.status) {
-                                    this._up_data.splice(i, 1);
-                                    this.ec.showToast({
-                                        message: '删除成功！',
-                                        color: 'success',
-                                    });
-                                } else {
-                                    this.ec.showToast({
-                                        message: '删除失败！',
-                                        color: 'danger',
-                                    });
-                                }
-                            });
+                        let params = {
+                            apply_inspection_no: this.apply_inspection_no,
+                            type: this.type,
+                            filename: this._up_data[i],
+                            contract_no: this.contract_no,
+                            sku: this.sku,
+                            sort_index: this.sort_index,
+                        };
+                        !this.sort_index && delete params.sort_index;
+                        this.implement.removeSkuVideo(params).subscribe(res => {
+                            if (res.status) {
+                                this._up_data.splice(i, 1);
+                                this.ec.showToast({
+                                    message: '删除成功！',
+                                    color: 'success',
+                                });
+                            } else {
+                                this.ec.showToast({
+                                    message: '删除失败！',
+                                    color: 'danger',
+                                });
+                            }
+                        });
                     },
                 },
             ],

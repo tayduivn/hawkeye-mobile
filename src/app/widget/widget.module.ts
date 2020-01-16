@@ -17,6 +17,8 @@ import { ImagePicker } from '@ionic-native/image-picker/ngx';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
 import { Chooser } from '@ionic-native/chooser/ngx';
 import { FilePath } from '@ionic-native/file-path/ngx';
+import { VideoEditor } from '@ionic-native/video-editor/ngx';
+import { ProductSizeComponent } from './product-size/product-size.component';
 
 @NgModule({
     declarations: [
@@ -26,9 +28,10 @@ import { FilePath } from '@ionic-native/file-path/ngx';
         VideoPlayerDirective,
         ItemByItemDescComponent,
         VideoPlayerDirective,
+        ProductSizeComponent
     ],
     imports: [CommonModule, IonicModule, DirectiveModule, ReactiveFormsModule, FormsModule, FlexLayoutModule],
-    exports: [SKUInfoComponent, PhotographComponent, VideotapeComponent, VideoPlayerDirective, ItemByItemDescComponent],
-    providers: [Camera, MediaCapture, Media, VideoPlayer, ImagePicker, FileChooser, Chooser, FilePath],
+    exports: [SKUInfoComponent, PhotographComponent, VideotapeComponent, VideoPlayerDirective, ItemByItemDescComponent,ProductSizeComponent],
+    providers: [Camera, MediaCapture, Media, VideoPlayer, ImagePicker, FileChooser, Chooser, VideoEditor, FilePath],
 })
 export class WidgetModule {}
