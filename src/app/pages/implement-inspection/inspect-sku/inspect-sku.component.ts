@@ -531,7 +531,7 @@ export class InspectSkuComponent implements OnInit {
                         }
                     }
                 }
-
+                
                 //patch value to formGroup
                 if (this.rateStatus == 'inner') {
                     this.SkuInspectModel.patchValue({
@@ -650,6 +650,10 @@ export class InspectSkuComponent implements OnInit {
                         },
                     });
                 }
+
+                //毛重 显示五个值
+                this.otherGrossWeight = (this.SkuInspectModel.value[this.rateStatus + '_box_data'].grossWeight.text4 &&
+                this.SkuInspectModel.value[this.rateStatus + '_box_data'].grossWeight.text5 )
             });
     }
 
@@ -779,6 +783,7 @@ export class InspectSkuComponent implements OnInit {
                                               size_width: null,
                                               size_height: null,
                                               size_length: null,
+                                              size_type: null,
                                               pic: [],
                                           },
                                       ],

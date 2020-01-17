@@ -19,15 +19,15 @@ export class ProductSizeComponent implements OnInit {
 
     @Output() onChange: EventEmitter<any[]> = new EventEmitter();
 
-    changeText(i: number, type: 'add' | 'modify', item: string) {
+    changeText(i: number, type: 'add' | 'modify', item: string, text:string) {
         this.es.showAlert({
-            header: '请输入内容',
+            header: `请输入${text}`,
             inputs: [
                 {
                     type: 'text',
                     name: 'text',
                     value: type == 'add' ? '' : this._sizes[i][item],
-                    placeholder: '请输入内容',
+                    placeholder: `请输入${text}`,
                 },
             ],
             buttons: [
@@ -35,14 +35,7 @@ export class ProductSizeComponent implements OnInit {
                     text: '确定',
                     handler: (value: any) => {
                         this._sizes[i][item] = value.text;
-                        // this.current = value.text;
-                        // if (type == 'add') {
-                        //     this._sizes.push(value.text);
-                        // } else {
-                        //     this._sizes[i] = value.text;
-                        //     !i && this._sizes.push('');
-                        // }
-                        // this._sizes = this._sizes.filter(res => res);
+                       
                         this.onChange.emit(this._sizes);
                     },
                 },
@@ -54,12 +47,14 @@ export class ProductSizeComponent implements OnInit {
         if (
             this._sizes[this._sizes.length - 1].size_length &&
             this._sizes[this._sizes.length - 1].size_height &&
-            this._sizes[this._sizes.length - 1].size_width
+            this._sizes[this._sizes.length - 1].size_width && 
+            this._sizes[this._sizes.length - 1].size_type
         ) {
             this._sizes.push({
                 size_length: '',
                 size_width: '',
                 size_height: '',
+                size_type: '',
                 pic: [],
             });
         } else {
