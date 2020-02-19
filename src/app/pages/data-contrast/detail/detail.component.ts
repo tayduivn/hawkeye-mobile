@@ -1,6 +1,7 @@
 import { DataCompareService } from './../../../services/data-compare.service';
 import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
+import { environment } from '../../../../environments/environment';
 
 export interface CompareItem {
     name: string;
@@ -19,6 +20,7 @@ export interface CompareItem {
 export class DetailComponent implements OnInit {
     contractId: number;
     applyNo: string;
+    imgOrigin = environment.usFileUrl + 'storage/'
     sku: string;
     compareData: CompareItem[] = []
     constructor(private activeRoute: ActivatedRoute, private dataCompare: DataCompareService) {

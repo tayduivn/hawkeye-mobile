@@ -48,6 +48,7 @@ export class InspectPoComponent implements OnInit {
         encodingType: this.camera.EncodingType.JPEG,
         mediaType: this.camera.MediaType.PICTURE,
     };
+
     constructor(
         private storage: StorageService,
         private activeRouter: ActivatedRoute,
@@ -56,6 +57,7 @@ export class InspectPoComponent implements OnInit {
         private implementInspect: ImplementInspectService,
         private router: Router,
     ) {}
+
     ngOnInit() {
         this.activeRouter.params.subscribe(params => {
             this.apply_inspect_no = params.fid;
@@ -67,25 +69,27 @@ export class InspectPoComponent implements OnInit {
                 });
             });
             this.implementInspect.getInspectData(this.apply_inspect_no).subscribe(res => {
-                this.data.sku_data[0].contract_data.forEach(item => {
-                    if (res.contract_data) {
-                        res.contract_data.forEach(sItem => {
-                            if (item.contract_no == sItem.contract_no) {
-                                item.inspection_complete_no = sItem.sku_package_complete_num_total;
-                                item.inspection_complete_num = sItem.inspection_complete_num;
-                                item.data.forEach(sku => {
-                                    sItem.contract_sku_desc.forEach(element => {
-                                        if (sku.sku === element.sku) {
-                                            sku.sku_package_complete_num = element.sku_package_complete_num;
-                                            sku.sku_production_complete_num = element.sku_production_complete_num;
-                                            sku.implement_photo = element.pic;
-                                            sku.desc = element.desc;
-                                        }
+                this.data.sku_data.forEach(element => {
+                    element.contract_data.forEach(item => {
+                        if (res.contract_data) {
+                            res.contract_data.forEach(sItem => {
+                                if (item.contract_no == sItem.contract_no) {
+                                    item.inspection_complete_no = sItem.sku_package_complete_num_total;
+                                    item.inspection_complete_num = sItem.inspection_complete_num;
+                                    item.data.forEach(sku => {
+                                        sItem.contract_sku_desc.forEach(element => {
+                                            if (sku.sku === element.sku) {
+                                                sku.sku_package_complete_num = element.sku_package_complete_num;
+                                                sku.sku_production_complete_num = element.sku_production_complete_num;
+                                                sku.implement_photo = element.pic;
+                                                sku.desc = element.desc;
+                                            }
+                                        });
                                     });
-                                });
-                            }
-                        });
-                    }
+                                }
+                            });
+                        }
+                    });
                 });
             });
         });
@@ -136,7 +140,7 @@ export class InspectPoComponent implements OnInit {
                     this.storage.set('CURRENT_IMPLEMENT_SKU', this.currentSku);
                     this.storage.set('CURRENT_FACTORY_DATA', this.data);
                     setTimeout(() => {
-                        this.router.navigate(['/inspect-sku']);
+                        this.router.navigate(['/inspect-sku', p.contract_no]);
                     }, 1000);
                 }
             });
@@ -164,11 +168,11 @@ export class InspectPoComponent implements OnInit {
             });
             val = false;
         } else if (!sku.photo) {
-            this.ec.showToast({
-                message: '至少上传一张照片',
-                color: 'danger',
-            });
-           // val = false;    
+            // this.ec.showToast({
+            //     message: '至少上传一张照片',
+            //     color: 'danger',
+            // });
+            // val = false;
         }
         return val;
     }

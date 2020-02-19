@@ -25,7 +25,7 @@ export class EvaluatePage implements OnInit {
     }
 
     toDetail(p: any){
-        this.router.navigate(['/evaluate/detail',p.inspection_appraisement_id,p.apply_inspection_id])
+        this.router.navigate(['/evaluate/detail',p.inspection_appraisement_id?p.inspection_appraisement_id:'000',p.apply_inspection_id])
         this.storage.set('EVALUATE_DETAIL_SKU', p.sku)
     }
 }

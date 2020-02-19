@@ -52,7 +52,7 @@ export class DefaultInterceptor implements HttpInterceptor {
                         }
                         return errCount + 1;
                     }, 0),
-                    delay(7000),
+                    delay(30000),
                     tap(errCount => {
                         if (errCount == 1) {
                             //第一次重试时显示友好信息

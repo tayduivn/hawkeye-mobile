@@ -33,6 +33,7 @@ export class PhotographComponent implements OnInit {
     @Input() box_type?: 'outer' | 'inner';
     @Input() moduleType: 'removeFactoryPic' | 'removeContractPic' | 'removeSkuPic';
     @Input() sort_index?: number;
+    s;
 
     constructor(
         private camera: Camera,

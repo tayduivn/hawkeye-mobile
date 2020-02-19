@@ -1328,7 +1328,7 @@
     </form>
 </ion-content>
 
-<ion-fab vertical="bottom" horizontal="end" slot="fixed">
+<ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="!inspectRequireSegment">
     <ion-fab-button color="danger" (click)="save().subscribe()">
         <p>保存</p>
     </ion-fab-button>

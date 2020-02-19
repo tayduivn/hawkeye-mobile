@@ -61,6 +61,7 @@ export class InspectFactoryComponent implements OnInit {
     }
     metaData: any[];
     apply_inspect_no: string;
+    inspection_group_id: string
     data: any = {
         factory_name: '',
         factory_contacts: '',
@@ -96,10 +97,11 @@ export class InspectFactoryComponent implements OnInit {
         const IMPLEMENT_META_DATA = this.storage.get('IMPLEMENT-INSPECTION-META-DATA');
         this.ac.params.subscribe(res => {
             this.apply_inspect_no = res.fid;
+            this.inspection_group_id = res.apply_group_id
             IMPLEMENT_META_DATA.forEach(elem => {
                 elem.sku_data.forEach(element => {
-                    if(element.apply_inspection_no == res.fid){
-                        this.data = elem
+                    if (element.apply_inspection_no == res.fid) {
+                        this.data = elem;
                     }
                 });
             });
@@ -129,7 +131,7 @@ export class InspectFactoryComponent implements OnInit {
     }
 
     getData() {
-        this.implementInspect.getInspectData(this.apply_inspect_no).subscribe(res => {
+        this.implementInspect.getInspectData(this.apply_inspect_no,this.inspection_group_id).subscribe(res => {
             if (
                 (res.factory_data.environments && res.factory_data.environments.length) ||
                 (res.factory_data.sampleRoom && res.factory_data.sampleRoom.length) ||
@@ -140,9 +142,12 @@ export class InspectFactoryComponent implements OnInit {
                     backdropDismiss: false,
                 });
             }
-            res.factory_data.remarks && res.factory_data.remarks.forEach((element, i) => {
-                (this.factoryModel.get('remarks') as FormArray).push(this.fb.control(''));
-            });
+            if (res.factory_data.remarks) {
+                res.factory_data.remarks.forEach((element, i) => {
+                    element && (this.factoryModel.get('remarks') as FormArray).push(this.fb.control(''));
+                });
+            }
+
             this.factoryModel.patchValue({
                 factoryAddress: {
                     text: res.factory_data.factoryAddress.text,
@@ -211,6 +216,7 @@ export class InspectFactoryComponent implements OnInit {
             .inspectFactory({
                 factory_data: this.factoryModel.value,
                 apply_inspection_no: this.apply_inspect_no,
+                inspection_group_id: this.inspection_group_id
             })
             .subscribe(res => {
                 this.ec.showToast({

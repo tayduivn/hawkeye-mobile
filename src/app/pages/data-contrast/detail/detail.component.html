@@ -25,7 +25,20 @@
             >
                 <ion-col align-self-center size="4">{{ item.chinese_name }}</ion-col>
                 <ion-col align-self-center size="4">{{ item.system ? item.system : '暂无' }}</ion-col>
-                <ion-col align-self-center size="4">{{ item.posted ? item.posted : '暂无' }}</ion-col>
+                <ion-col class="align-self-center" size="4">
+                    <ng-container *ngIf="item.type == 'pic'">
+                        <img *ngFor="let sItem of item.posted" [src]="imgOrigin + sItem" imgGallery />
+                    </ng-container>
+                    <ng-container *ngIf="item.type == 'video'">
+                        <video *ngFor="let sItem of item.posted" [src]="imgOrigin + sItem"></video>
+                    </ng-container>
+                    <div class="remark-box" *ngIf="item.type == 'desc'">
+                        <p *ngFor="let sItem of item.posted">{{ sItem }}</p>
+                    </div>
+                    <div class="remark-box" *ngIf="item.type == 'string'">
+                       {{ item.posted  }}
+                    </div>
+                </ion-col>
             </ion-row>
         </ion-grid>
     </ion-card>

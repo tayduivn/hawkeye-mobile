@@ -7,6 +7,7 @@ import { PageEffectService } from 'src/app/services/page-effect.service';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Sku } from 'src/app/widget/sku-info/sku-info.component';
 import { StorageService } from 'src/app/services/storage.service';
+import { Router, ActivatedRoute } from '@angular/router';
 
 const sku: any = {
     Brand: null,
@@ -48,6 +49,7 @@ export interface SkuUploadData {
     data_type?: 'before' | 'after';
     apply_inspection_no: string;
     is_inner_box: number;
+    contract_no: string
 }
 
 export interface SkuInspectModel {
@@ -126,6 +128,7 @@ export class InspectSkuComponent implements OnInit {
     currentToggle: any = ToggleItem[0];
     imgOrigin: string = environment.fileUrlPath;
     inspectionRequire: any = {};
+    contractNo: string
 
     inspectRequireSegment: boolean = false;
     productSize: any[] = [];
@@ -133,6 +136,7 @@ export class InspectSkuComponent implements OnInit {
         private es: PageEffectService,
         private fb: FormBuilder,
         private storage: StorageService,
+        private activeRouter: ActivatedRoute,
         private implementService: ImplementInspectService,
     ) {}
 
@@ -315,6 +319,10 @@ export class InspectSkuComponent implements OnInit {
         this.factory = this.storage.get('CURRENT_FACTORY_DATA');
         console.log(this.SkuInspectModel.value);
         this.rateStatus = this.data.rate_container > 1 ? 'outer' : 'inner';
+        this.activeRouter.params    
+            .subscribe(res => {
+                this.contractNo = res.contract_no
+            })
     }
 
     ionViewWillEnter() {
@@ -396,6 +404,7 @@ export class InspectSkuComponent implements OnInit {
                     this.factory.sku_data[0].apply_inspection_no,
                     this.currentToggle.key == 'beforeUnpacking' ? 'before' : 'after',
                     this.rateStatus == 'inner' ? 1 : 2,
+                    this.contractNo
                 )
                 .subscribe(res => {
                     this.es.showToast({
@@ -484,6 +493,7 @@ export class InspectSkuComponent implements OnInit {
                 apply_inspection_no: this.factory.sku_data[0].apply_inspection_no,
                 sku: this.data.sku,
                 is_inner_box: this.rateStatus == 'inner' ? 1 : 2,
+                contract_no: this.contractNo
             })
             .subscribe(res => {
                 if (!res) return;
@@ -666,6 +676,7 @@ export class InspectSkuComponent implements OnInit {
                 apply_inspection_no: this.factory.sku_data[0].apply_inspection_no,
                 sku: this.data.sku,
                 is_inner_box: this.rateStatus == 'inner' ? 1 : 2,
+                contract_no: this.contractNo
             })
             .subscribe(res => {
                 if (!res) return;

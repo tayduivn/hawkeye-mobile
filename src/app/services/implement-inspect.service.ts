@@ -9,6 +9,7 @@ import { FieldType } from '../widget/videotape/videotape.component';
 export interface InspectFactoryParam {
     factory_data?: FactoryModel;
     apply_inspection_no: string;
+    inspection_group_id?: string;
     contract_data?: PoModal;
 }
 
@@ -16,6 +17,7 @@ export interface SkuParams {
     apply_inspection_no: string;
     sku: string;
     is_inner_box?: 1 | 2;
+    contract_no: string;
 }
 
 export interface RemovePicParams {
@@ -24,8 +26,8 @@ export interface RemovePicParams {
     filename: string;
     contract_no?: string;
     sku?: string;
-    is_inner_box?:number
-    sort_index?: number
+    is_inner_box?: number;
+    sort_index?: number;
 }
 
 @Injectable({
@@ -41,10 +43,10 @@ export class ImplementInspectService {
         });
     }
 
-    getInspectData(no: string) {
+    getInspectData(no: string, inspection_group_id?: string) {
         return this.http.get({
             url: '/task/get_inspection_task_posted_data',
-            params: { apply_inspection_no: no },
+            params: { apply_inspection_no: no, inspection_group_id: inspection_group_id },
         });
     }
 
@@ -54,11 +56,13 @@ export class ImplementInspectService {
         apply_inspection_no: string,
         data_type: 'before' | 'after',
         is_inner_box: number,
+        contract_no: string,
     ) {
         params.data_type = data_type;
         params.sku = sku;
         params.apply_inspection_no = apply_inspection_no;
         params.is_inner_box = is_inner_box;
+        params.contract_no = contract_no;
         return this.http.post({
             url: '/task/post_inspection_post_for_product',
             params: params,

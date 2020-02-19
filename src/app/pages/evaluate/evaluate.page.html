@@ -14,7 +14,6 @@
         </ion-card-header>
 
         <ion-item
-            [routerLink]="['/evaluate/detail', item.inspection_appraisement_id,item.apply_inspection_id]"
             (click)="toDetail(item)"
             *ngFor="let item of list | async"
         >

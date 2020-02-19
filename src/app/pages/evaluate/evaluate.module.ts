@@ -18,6 +18,10 @@ const routes: Routes = [
         path: 'evaluate/detail/:id/:applyId',
         component: DetailComponent,
     },
+    {
+        path:'evaluate/reload/:id/:applyId',
+        component: DetailComponent
+    }
 ];
 
 @NgModule({

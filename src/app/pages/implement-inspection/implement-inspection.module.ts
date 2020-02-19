@@ -8,9 +8,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
-
 import { IonicModule } from '@ionic/angular';
-
 import { ImplementInspectionPage } from './implement-inspection.page';
 import { ContractPipe } from 'src/app/pipe/contract.pipe';
 import { InspectFactoryComponent } from './inspect-factory/inspect-factory.component';
@@ -24,7 +22,7 @@ const routes: Routes = [
         component: ImplementInspectionPage,
     },
     {
-        path: 'inspect-factory/:fid',
+        path: 'inspect-factory/:fid/:apply_group_id',
         component: InspectFactoryComponent,
     },
     {
@@ -32,7 +30,7 @@ const routes: Routes = [
         component: InspectPoComponent,
     },
     {
-        path: 'inspect-sku',
+        path: 'inspect-sku/:contract_no',
         component: InspectSkuComponent,
     },
     {

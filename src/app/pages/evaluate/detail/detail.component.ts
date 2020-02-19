@@ -1,8 +1,9 @@
 import { PageEffectService } from './../../../services/page-effect.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { InspectEvaluateService, InspectAppraisementParams } from './../../../services/inspect-evaluate.service';
 import { Component, OnInit } from '@angular/core';
 import { StorageService } from '../../../services/storage.service';
+import { Route } from '@angular/compiler/src/core';
 
 @Component({
     selector: 'app-detail',
@@ -48,6 +49,7 @@ export class DetailComponent implements OnInit {
         private es: PageEffectService,
         private activeRoute: ActivatedRoute,
         private storage: StorageService,
+        private router:Router
     ) {}
 
     ngOnInit() {
@@ -55,19 +57,24 @@ export class DetailComponent implements OnInit {
             this.apply_inspection_id = res.applyId;
             this.inspection_appraisement_id = res.id;
         });
+        let data = this.storage.get('EVALUATE_DETAIL_SKU');
+        data && data.forEach(elem => {
+            this.sku_appraisement.push({ sku: elem });
+        });
         if (!this.inspection_appraisement_id) return;
+        this.getData()
+    }
+
+    getData(){
         this.evalService.getEvaluateById(this.inspection_appraisement_id).subscribe(res => {
             if (!res.status) return;
             this.data = res.data;
             this.storage_condition_ary.forEach((elem, i) => {
                 this.data.storage_condition.indexOf(i) != -1 && (this.storage_condition_ary[i].value = 1);
             });
-            let data = this.storage.get('EVALUATE_DETAIL_SKU');
-            data.forEach(elem => {
-                this.sku_appraisement.push({ sku: elem });
-            });
 
-            if(this.data.sku_appraisement && this.data.sku_appraisement.length) this.sku_appraisement = this.data.sku_appraisement
+            if (this.data.sku_appraisement && this.data.sku_appraisement.length)
+                this.sku_appraisement = this.data.sku_appraisement;
         });
     }
 
@@ -85,11 +92,13 @@ export class DetailComponent implements OnInit {
         params.sku_appraisement = JSON.parse(JSON.stringify(this.sku_appraisement));
         delete params.updated_at;
         delete params.created_at;
-        console.log(params);
         this.evalService.postInspectAppraisement(params).subscribe(res => {
-            this.es.showAlert({
+            this.es.showToast({
+                color:'success',
                 message: res.message,
             });
+            let route=location.hash.indexOf('detail') != -1 ? 'reload' : 'detail'
+            this.router.navigate(['/evaluate/' + route,res.data.inspection_appraisements_id,this.apply_inspection_id])
         });
     }
 

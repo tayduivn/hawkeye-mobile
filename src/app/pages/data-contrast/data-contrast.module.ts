@@ -9,6 +9,8 @@ import { IonicModule } from '@ionic/angular';
 
 import { DataContrastPage } from './data-contrast.page';
 import { DataComparePipe } from 'src/app/pipe/data-compare.pipe';
+import { WidgetModule } from '../../widget/widget.module';
+import { DirectiveModule } from 'src/app/directives/directive.module';
 
 const routes: Routes = [
     {
@@ -22,7 +24,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-    imports: [CommonModule, FormsModule, FlexLayoutModule, IonicModule, RouterModule.forChild(routes)],
+    imports: [CommonModule, FormsModule, FlexLayoutModule, IonicModule, RouterModule.forChild(routes),WidgetModule,DirectiveModule],
     declarations: [DataContrastPage,DataComparePipe,DetailComponent],
 })
 export class DataContrastPageModule {}
