@@ -37,7 +37,7 @@ export class SkuDescriptionComponent implements OnInit {
         };
 
         this.effectCtrl.showModal(option, (data: any) => {
-            this.data.sku_desc[i] = data;
+            this.data.sku_desc[i] = data.refresh;
             console.log(data);
         });
     }

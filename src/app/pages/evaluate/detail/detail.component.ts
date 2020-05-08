@@ -3,8 +3,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { InspectEvaluateService, InspectAppraisementParams } from './../../../services/inspect-evaluate.service';
 import { Component, OnInit } from '@angular/core';
 import { StorageService } from '../../../services/storage.service';
-import { Route } from '@angular/compiler/src/core';
 
+export interface SkuEvaluator {
+    sku: string;
+    appraisement?: string;
+    desc?: Array<{ text: string; level: string }>;
+}
 @Component({
     selector: 'app-detail',
     templateUrl: './detail.component.html',
@@ -21,7 +25,7 @@ export class DetailComponent implements OnInit {
         factory_situation: '', //工厂情况
         sku_appraisement: [], //sku评价列表
     };
-    sku_appraisement: any[] = [];
+    sku_appraisement: SkuEvaluator[] = [];
     storage_condition_ary: any[] = [
         {
             key: '使用托盘',
@@ -43,29 +47,32 @@ export class DetailComponent implements OnInit {
 
     other: boolean = false;
     apply_inspection_id: number = null;
+    apply_inspection_no: number = null;
     inspection_appraisement_id: number = null;
     constructor(
         private evalService: InspectEvaluateService,
         private es: PageEffectService,
         private activeRoute: ActivatedRoute,
         private storage: StorageService,
-        private router:Router
+        private router: Router,
     ) {}
 
     ngOnInit() {
         this.activeRoute.params.subscribe(res => {
             this.apply_inspection_id = res.applyId;
             this.inspection_appraisement_id = res.id;
+            this.apply_inspection_no = res.applyNo;
         });
         let data = this.storage.get('EVALUATE_DETAIL_SKU');
-        data && data.forEach(elem => {
-            this.sku_appraisement.push({ sku: elem });
-        });
+        data &&
+            data.forEach(elem => {
+                this.sku_appraisement.push({ sku: elem ,desc:[{text:'',level:''}]});
+            });
         if (!this.inspection_appraisement_id) return;
-        this.getData()
+        this.getData();
     }
 
-    getData(){
+    getData() {
         this.evalService.getEvaluateById(this.inspection_appraisement_id).subscribe(res => {
             if (!res.status) return;
             this.data = res.data;
@@ -84,6 +91,7 @@ export class DetailComponent implements OnInit {
 
     submit() {
         this.data.apply_inspection_id = this.apply_inspection_id;
+        this.data.apply_inspection_no = this.apply_inspection_no;
         this.data.storage_condition = [];
         this.storage_condition_ary.forEach((elem, i) => {
             elem.value && this.data.storage_condition.push(i);
@@ -94,16 +102,25 @@ export class DetailComponent implements OnInit {
         delete params.created_at;
         this.evalService.postInspectAppraisement(params).subscribe(res => {
             this.es.showToast({
-                color:'success',
+                color: 'success',
                 message: res.message,
             });
-            let route=location.hash.indexOf('detail') != -1 ? 'reload' : 'detail'
-            this.router.navigate(['/evaluate/' + route,res.data.inspection_appraisements_id,this.apply_inspection_id])
+            let route = location.hash.indexOf('detail') != -1 ? 'reload' : 'detail';
+            this.router.navigate([
+                '/evaluate/' + route,
+                res.data.inspection_appraisements_id,
+                this.apply_inspection_id,
+                this.apply_inspection_no,
+            ]);
         });
     }
 
     skuAppraisementChange(e: any, i: number) {
         this.sku_appraisement[i].appraisement = e.detail.value;
         console.log(this.sku_appraisement);
+    }
+
+    descEnter(e: Array<{ text: string; level: string }>, i: number) {
+        this.sku_appraisement[i].desc = e
     }
 }

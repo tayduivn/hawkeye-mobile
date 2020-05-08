@@ -23,31 +23,31 @@
         <ion-item class="activated">
             <ion-icon name="bookmark" slot="start" mode="ios"></ion-icon>
             <ion-label>工厂名</ion-label>
-            <ion-text>{{ data.factory_name }}</ion-text>
+            <ion-text>{{ data[0].factory_name }}</ion-text>
         </ion-item>
 
         <ion-item class="activated">
             <ion-icon name="pin" slot="start" mode="ios"></ion-icon>
             <ion-label>工厂地址</ion-label>
-            <ion-text>{{ data.factory_address }}</ion-text>
+            <ion-text>{{ data[0].factory_address }}</ion-text>
         </ion-item>
 
         <ion-item class="activated">
             <ion-icon name="information-circle" slot="start" mode="ios"></ion-icon>
             <ion-label>工厂备注</ion-label>
-            <ion-text>{{ data.factory_desc ? data.factory_desc : "暂无" }}</ion-text>
+            <ion-text>{{ data[0].factory_desc ? data[0].factory_desc : "暂无" }}</ion-text>
         </ion-item>
 
         <ion-item class="activated">
             <ion-item class="inner">
                 <ion-icon name="contact" slot="start" mode="ios"></ion-icon>
                 <ion-label>联系人</ion-label>
-                <ion-text>{{ data.factory_contacts }}</ion-text>
+                <ion-text>{{ data[0].factory_contacts }}</ion-text>
             </ion-item>
             <ion-item class="inner">
                 <ion-icon name="call" slot="start" mode="ios"></ion-icon>
                 <ion-label>联系方式</ion-label>
-                <ion-text>{{ data.mobil_phone ? data.mobil_phone : "暂无" }}</ion-text>
+                <ion-text>{{ data[0].mobil_phone ? data[0].mobil_phone : "暂无" }}</ion-text>
             </ion-item>
         </ion-item>
 

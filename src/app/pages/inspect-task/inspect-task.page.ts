@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { ModalOptions } from '@ionic/core';
 import { InspectSettingBoxComponent } from 'src/app/widget/inspect-setting-box/inspect-setting-box.component';
 import { InspectTask } from './inspect-contract/inspect-contract.page';
+import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'app-inspect-task',
@@ -16,8 +17,7 @@ import { InspectTask } from './inspect-contract/inspect-contract.page';
 })
 export class InspectTaskPage implements OnInit {
     screenType: ScreenAngle;
-    inspectGroup: Observable<InspectGroup[]>;
-    listLength: number
+    inspectGroup: InspectGroup[] = [];
     constructor(
         private inspectService: InspectionService,
         private effectCtrl: PageEffectService,
@@ -32,12 +32,10 @@ export class InspectTaskPage implements OnInit {
     ngOnInit() {}
 
     ionViewWillEnter() {
-        this.inspectGroup = this.inspectService.getTaskList();
+        this.inspectService.getTaskList().subscribe(res => {
+            this.inspectGroup = res.data;
+        });
         this.storage.remove('CURRENT_INSPECT_GROUP');
-        this.inspectGroup   
-            .subscribe(res => {
-                this.listLength = res.length
-            })
     }
 
     toContract(p: any) {
@@ -54,8 +52,30 @@ export class InspectTaskPage implements OnInit {
         };
 
         this.effectCtrl.showModal(option, (data: any) => {
-            p.data[0] = data;
+            p.data[0] = data.refresh;
             console.log(data);
+        });
+    }
+
+    getList(page: number) {
+        this.inspectService.getTaskList(page).subscribe(res => {
+            this.inspectGroup = this.inspectGroup.concat(res.data);
+        });
+    }
+    page: number = 2;
+    loadData(event) {
+        this.inspectService.getTaskList(this.page).subscribe(res => {
+            if (res.data && res.data.length) {
+                this.inspectGroup = this.inspectGroup.concat(res.data);
+                this.page = res.current_page + 1;
+            } else {
+                this.effectCtrl.showToast({
+                    message: '别刷了，没有数据啦！',
+                    color: 'danger',
+                });
+            }
+
+            event.target.complete();
         });
     }
 }

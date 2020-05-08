@@ -6,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { ImplementInspectService } from 'src/app/services/implement-inspect.service';
+import { environment } from 'src/environments/environment';
 
 export interface FactoryModel {
     environments: string[]; // 环境照片
@@ -37,7 +38,10 @@ export class InspectFactoryComponent implements OnInit {
         sampleRoom: false,
         factoryOther: false,
     };
+    imgOrigin: string = environment.usFileUrl;
+    inspectDetailImg: string;
 
+    start_time: string = String(new Date('').getTime());
     constructor(
         private fb: FormBuilder,
         private ec: PageEffectService,
@@ -59,13 +63,16 @@ export class InspectFactoryComponent implements OnInit {
     get factoryOther(): FormArray {
         return this.factoryModel.get('factoryOther') as FormArray;
     }
+
+    getListByTime() {}
     metaData: any[];
     apply_inspect_no: string;
-    inspection_group_id: string
+    inspection_group_id: string;
     data: any = {
         factory_name: '',
         factory_contacts: '',
     };
+    currentApplyInsData: any;
 
     factoryModel: FormGroup = new FormGroup({
         environments: this.fb.array([]),
@@ -75,6 +82,7 @@ export class InspectFactoryComponent implements OnInit {
             text: this.fb.control(this.data.factoryAddress),
             isTrue: this.fb.control('1'),
         }),
+
         worksNum: this.fb.control('', [Validators.required]),
         receptionist: this.fb.group({
             name: this.fb.control(this.data.factory_contacts),
@@ -83,6 +91,7 @@ export class InspectFactoryComponent implements OnInit {
             isTrue: this.fb.control('1'),
         }),
         equipment: this.fb.control('', [Validators.required]),
+        trulyInspectionDate: this.fb.control('', [Validators.required]),
         remarks: this.fb.array(['']),
     });
 
@@ -97,11 +106,14 @@ export class InspectFactoryComponent implements OnInit {
         const IMPLEMENT_META_DATA = this.storage.get('IMPLEMENT-INSPECTION-META-DATA');
         this.ac.params.subscribe(res => {
             this.apply_inspect_no = res.fid;
-            this.inspection_group_id = res.apply_group_id
+            this.inspection_group_id = res.apply_group_id;
             IMPLEMENT_META_DATA.forEach(elem => {
                 elem.sku_data.forEach(element => {
                     if (element.apply_inspection_no == res.fid) {
                         this.data = elem;
+                        this.currentApplyInsData = this.data.sku_data.find(
+                            res => res.apply_inspection_no == this.apply_inspect_no,
+                        );
                     }
                 });
             });
@@ -131,7 +143,9 @@ export class InspectFactoryComponent implements OnInit {
     }
 
     getData() {
-        this.implementInspect.getInspectData(this.apply_inspect_no,this.inspection_group_id).subscribe(res => {
+        this.implementInspect.getInspectData(this.apply_inspect_no, this.inspection_group_id).subscribe(res => {
+            this.inspectDetailImg = (res.review_content?res.review_content[0]:null)
+
             if (
                 (res.factory_data.environments && res.factory_data.environments.length) ||
                 (res.factory_data.sampleRoom && res.factory_data.sampleRoom.length) ||
@@ -147,7 +161,6 @@ export class InspectFactoryComponent implements OnInit {
                     element && (this.factoryModel.get('remarks') as FormArray).push(this.fb.control(''));
                 });
             }
-
             this.factoryModel.patchValue({
                 factoryAddress: {
                     text: res.factory_data.factoryAddress.text,
@@ -160,6 +173,7 @@ export class InspectFactoryComponent implements OnInit {
                     tel: res.factory_data.receptionist.tel,
                     isTrue: res.factory_data.receptionist.isTrue,
                 },
+                trulyInspectionDate: res.factory_data.trulyInspectionDate,
                 equipment: res.factory_data.equipment,
                 remarks: res.factory_data.remarks,
             });
@@ -216,7 +230,7 @@ export class InspectFactoryComponent implements OnInit {
             .inspectFactory({
                 factory_data: this.factoryModel.value,
                 apply_inspection_no: this.apply_inspect_no,
-                inspection_group_id: this.inspection_group_id
+                inspection_group_id: this.inspection_group_id,
             })
             .subscribe(res => {
                 this.ec.showToast({

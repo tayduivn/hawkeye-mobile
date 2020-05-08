@@ -28,14 +28,18 @@ ion-content {
 ion-list {
     margin: 10px 0;
 }
-
+.w30 {
+    width: 30% !important;
+}
+.border-0 {
+    border: 0 !important;
+}
 .header-input {
     font-size: 14px;
-    margin-right: 50px;
     ion-input {
-        margin-left: 8px;
+        margin-left: 4px;
         border: 1px solid #e3e3e3;
-        width: 50px;
+        width: 80px;
         text-align: center;
         border-radius: 5px;
         --padding-top: 5px;
@@ -139,6 +143,7 @@ p.desc-tips {
 
 .test-feedback {
     margin-bottom: 10px;
+    // border: 1px solid #efefef;
 }
 
 .toggle-box {
@@ -238,3 +243,46 @@ ion-item:not(:first-child) .global-inspect-title {
     margin-right: 5px;
 }
 
+.schedule-container {
+    box-sizing: border-box;
+    width: 100%;
+}
+.schedule-item {
+    width: 50%;
+    float: left;
+    box-sizing: border-box;
+    color: #434343;
+    display: flex;
+    font-size: 14px;
+    border-bottom: 1px solid #efefef;
+    justify-content: space-between;
+    padding: 6px 0;
+    ion-label {
+        // font-weight: bold;
+        font-size: 14px;
+        color: #434343;
+    }
+    select,
+    option {
+        background: 0;
+        border: 0;
+        color: #434343;
+        font-size: 14px;
+    }
+}
+.schedule-container:after {
+    content: '';
+    display: block;
+    clear: both;
+}
+
+.accord-box {
+    border: 1px solid #f00;
+}
+
+.fs-14 {
+    font-size: 14px !important;
+}
+.mt-20 {
+    margin-top: 20px !important;
+}

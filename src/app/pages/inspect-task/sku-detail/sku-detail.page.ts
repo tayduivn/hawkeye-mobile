@@ -79,7 +79,7 @@ export class SkuDetailPage implements OnInit {
             componentProps: { contract: this.data, type: 'skuDetail' },
         };
         this.pageEffect.showModal(option, (data: any) => {
-            this.data = data;
+            this.data = data.refresh;
             console.log(data);
         });
     }

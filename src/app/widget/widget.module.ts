@@ -19,6 +19,9 @@ import { Chooser } from '@ionic-native/chooser/ngx';
 import { FilePath } from '@ionic-native/file-path/ngx';
 import { VideoEditor } from '@ionic-native/video-editor/ngx';
 import { ProductSizeComponent } from './product-size/product-size.component';
+import { File } from '@ionic-native/file/ngx';
+import { BlueBirdModule } from '../blue-bird/blue-bird.module';
+import { Base64ToGallery } from '@ionic-native/base64-to-gallery/ngx';
 
 @NgModule({
     declarations: [
@@ -28,10 +31,37 @@ import { ProductSizeComponent } from './product-size/product-size.component';
         VideoPlayerDirective,
         ItemByItemDescComponent,
         VideoPlayerDirective,
-        ProductSizeComponent
+        ProductSizeComponent,
     ],
-    imports: [CommonModule, IonicModule, DirectiveModule, ReactiveFormsModule, FormsModule, FlexLayoutModule],
-    exports: [SKUInfoComponent, PhotographComponent, VideotapeComponent, VideoPlayerDirective, ItemByItemDescComponent,ProductSizeComponent],
-    providers: [Camera, MediaCapture, Media, VideoPlayer, ImagePicker, FileChooser, Chooser, VideoEditor, FilePath],
+    imports: [
+        CommonModule,
+        IonicModule,
+        DirectiveModule,
+        ReactiveFormsModule,
+        FormsModule,
+        FlexLayoutModule,
+        BlueBirdModule,
+    ],
+    exports: [
+        SKUInfoComponent,
+        PhotographComponent,
+        VideotapeComponent,
+        VideoPlayerDirective,
+        ItemByItemDescComponent,
+        ProductSizeComponent,
+    ],
+    providers: [
+        Camera,
+        MediaCapture,
+        Media,
+        VideoPlayer,
+        ImagePicker,
+        FileChooser,
+        Chooser,
+        VideoEditor,
+        FilePath,
+        File,
+        Base64ToGallery,
+    ],
 })
 export class WidgetModule {}

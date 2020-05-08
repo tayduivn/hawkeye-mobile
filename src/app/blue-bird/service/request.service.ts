@@ -1,4 +1,6 @@
 import { Injectable } from "@angular/core";
+import { environment } from 'src/environments/environment';
+import { UserInfoService } from 'src/app/services/user-info.service';
 
 export interface FileParam {
   chunk: Blob;
@@ -8,17 +10,18 @@ export interface FileParam {
 }
 @Injectable()
 export class RequestService {
-  constructor() {}
+  constructor(private userInfo: UserInfoService) {}
 
   request({
     url,
     method = "post",
     data,
-    headers = {},
+    headers,
     onProgress = e => e,
     requestList = []
   }): Promise<any> {
     return new Promise(resolve => {
+      headers.Authorization = this.userInfo.info ? `Bearer ${this.userInfo.info.api_token}` : undefined
       const xhr: XMLHttpRequest = new XMLHttpRequest();
       xhr.upload.onprogress = onProgress;
       xhr.open(method, url);

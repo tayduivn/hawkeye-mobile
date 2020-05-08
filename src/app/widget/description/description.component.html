@@ -1,0 +1,24 @@
+<div class="pd-15">
+    <h3>请输入备注</h3>
+    <div class="content">
+        <ion-textarea [(ngModel)]="_desc.text"></ion-textarea>
+        <ion-radio-group [(ngModel)]="_desc.level">
+            <div>
+                <ion-label color="danger">特别重要</ion-label>
+                <ion-radio value="important" color="danger"></ion-radio>
+            </div>
+
+            <div>
+                <ion-label color="warning">重要</ion-label>
+                <ion-radio value="second" color="warning"></ion-radio>
+            </div>
+
+            <div>
+                <ion-label color="dark">一般</ion-label>
+                <ion-radio value="commonly" color="dark"></ion-radio>
+            </div>
+        </ion-radio-group>
+    </div>
+
+    <ion-button size="small" (click)="enter()">确定</ion-button>
+</div>

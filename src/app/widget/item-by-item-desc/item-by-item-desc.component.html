@@ -1,7 +1,10 @@
-<ng-container>
-    <label>逐个添加备注</label>
-    <div *ngFor="let item of data; let i = index">
-        <div class="item" (click)="addDesc(i, 'modify')" *ngIf="item">{{ item }}</div>
+<ul>
+    <!-- <label>逐个添加备注</label> -->
+    <li *ngFor="let item of data; let i = index">
+        <p class="item " (click)="addDesc(i, 'modify')" [ngClass]="[item.level]"  *ngIf="item.text">
+            <span>{{ i }}</span>:
+            <span>{{item.text }}</span>
+        </p>
         <ion-button
             expand="block"
             color="medium"
@@ -11,5 +14,5 @@
             (click)="addDesc(i, 'add')"
             >添加备注</ion-button
         >
-    </div>
-</ng-container>
+    </li>
+</ul>

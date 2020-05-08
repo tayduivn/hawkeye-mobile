@@ -18,6 +18,7 @@ export class InspectorSettingComponent implements OnInit {
         contract_no: '',
         id: null,
     };
+    apply_id: number = null
     constructor(
         private inspectCtrl: InspectionService,
         private activeRoute: ActivatedRoute,
@@ -26,6 +27,7 @@ export class InspectorSettingComponent implements OnInit {
 
     ngOnInit() {
         this.activeRoute.params.subscribe(params => {
+            this.apply_id = params.cid
             this.inspectCtrl.getInspectTaskById(params.cid).subscribe(res => (this.data = res.data));
         });
     }
@@ -35,11 +37,11 @@ export class InspectorSettingComponent implements OnInit {
             component: InspectSettingBoxComponent,
             cssClass: 'custom-modal-sku',
             mode: 'ios',
-            componentProps: { contract: this.data, type: 'task' },
+            componentProps: { contract: this.data, type: 'task' ,apply_id:this.apply_id},
         };
 
         this.effectCtrl.showModal(option, (data: any) => {
-            this.data = data;
+            this.data = data.refresh;
             console.log(data);
         });
     }

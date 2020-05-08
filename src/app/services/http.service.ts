@@ -39,7 +39,7 @@ export class HttpService {
     post(params: publicParams, showLoading?: boolean): Observable<any> {
         !showLoading && this.loading.setLoading(true);
         let obj: any = {
-            'Content-Type': 'application/json;charset=UTF-8',
+            'Content-Type': 'application/json;charset=UTF-8', 
             Authorization: this.userInfo.info ? `Bearer ${this.userInfo.info.api_token}` : undefined,
         };
         !this.userInfo.info && delete obj.Authorization;

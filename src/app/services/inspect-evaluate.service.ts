@@ -79,4 +79,11 @@ export class InspectEvaluateService {
     postInspectAppraisement(params: InspectAppraisementParams): Observable<any> {
         return this.http.post({ url: '/task/inspection_appraisement', params: params });
     }
+
+    cancelInspectAppraisement(inspection_appraisement_id: number): Observable<any> {
+        return this.http.get({
+            url: '/task/cancel_inspection_appraisement_by_id',
+            params: { inspection_appraisement_id: inspection_appraisement_id },
+        });
+    }
 }

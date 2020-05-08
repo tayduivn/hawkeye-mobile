@@ -20,10 +20,11 @@ import { InspectSettingBoxComponent } from './widget/inspect-setting-box/inspect
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { ScanComponent } from './widget/scan/scan.component';
 import { FileTransfer } from '@ionic-native/file-transfer/ngx';
+import { DescriptionComponent } from './widget/description/description.component';
 
 @NgModule({
-    declarations: [AppComponent, InspectSettingBoxComponent, ScanComponent, PartsComponent, VideoPlayComponent],
-    entryComponents: [InspectSettingBoxComponent, ScanComponent, PartsComponent, VideoPlayComponent],
+    declarations: [AppComponent, InspectSettingBoxComponent, ScanComponent, PartsComponent, VideoPlayComponent,DescriptionComponent],
+    entryComponents: [InspectSettingBoxComponent, ScanComponent, PartsComponent, VideoPlayComponent,DescriptionComponent],
     imports: [
         BrowserModule,
         IonicModule.forRoot(),

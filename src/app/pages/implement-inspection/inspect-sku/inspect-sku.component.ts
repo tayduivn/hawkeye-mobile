@@ -7,38 +7,7 @@ import { PageEffectService } from 'src/app/services/page-effect.service';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Sku } from 'src/app/widget/sku-info/sku-info.component';
 import { StorageService } from 'src/app/services/storage.service';
-import { Router, ActivatedRoute } from '@angular/router';
-
-const sku: any = {
-    Brand: null,
-    accessory: true,
-    complete: '',
-    container_num: 200,
-    description: null,
-    group: null,
-    has_strap: null,
-    isNew: null,
-    is_inspected_product: 0,
-    is_know_demand: 1,
-    is_need_drop_test: null,
-    is_need_sample: null,
-    news_or_return_product: null,
-    other_data: false,
-    photo: [],
-    pic: ['/UploadFiles/Product/9c58f9d1-ab96-4671-b667-2be847522664.jpg'],
-    quantity: 15,
-    rate_container: 1,
-    require_data_advise: [null, null],
-    return_rate: ' 5',
-    sku: 'CW12X0286',
-    sku_chinese_name: '原木色宠物床--不带顶',
-    chinese_description:
-        // tslint:disable-next-line: max-line-length
-        '360度折叠游戏椅，颜色：橘红色，最大承重：100kg。产品尺寸：129*58*12cm ，展开尺寸为101.3*60.3*76cm，折叠尺寸为72.9*60.3*38.6cm。 钢管：19*1.0mm，面料：仿麻布，底部是聚酯布，海绵为普通海绵+再生棉。 调节器：koyo2+5（日本）。带转盘，可360度旋转。',
-    packing_type:
-        // tslint:disable-next-line: max-line-length
-        '各块木板（每块板贴上与说明书相对应的标贴）之间用珍珠棉隔开，然后整体包裹气泡膜，并用胶带封住。螺丝及木榫分类放入自封袋（每个自封袋上贴上与说明书对应的标贴）中，再共入一个黄色气泡信封袋，且将其与气泡膜粘住。最后上述物品同英文说明书共入一个五层双瓦楞加强纸箱，纸箱六面用0.5cm泡沫保护。纸箱的所有开口处请用透明胶带封牢。纸箱六面印刷我司指定唛头，备注：封箱胶带不要起皱，纸箱不能鼓起。条形码为***，条形码需能清晰可扫。',
-};
+import { ActivatedRoute } from '@angular/router';
 
 export interface SkuUploadData {
     spotCheckNum?: number; // 抽检数量
@@ -49,7 +18,7 @@ export interface SkuUploadData {
     data_type?: 'before' | 'after';
     apply_inspection_no: string;
     is_inner_box: number;
-    contract_no: string
+    contract_no: string;
 }
 
 export interface SkuInspectModel {
@@ -112,6 +81,8 @@ export const ToggleItem: any = [
     },
 ];
 
+export type ExamineStatus = 'passed' | 'notPass' | 'undetermined' | 'accord' | 'notAccord';
+
 @Component({
     selector: 'app-inspect-sku',
     templateUrl: './inspect-sku.component.html',
@@ -128,10 +99,12 @@ export class InspectSkuComponent implements OnInit {
     currentToggle: any = ToggleItem[0];
     imgOrigin: string = environment.fileUrlPath;
     inspectionRequire: any = {};
-    contractNo: string
+    contractNo: string;
 
     inspectRequireSegment: boolean = false;
     productSize: any[] = [];
+    size: any[] = [];
+    currentApplyInsData;
     constructor(
         private es: PageEffectService,
         private fb: FormBuilder,
@@ -140,211 +113,232 @@ export class InspectSkuComponent implements OnInit {
         private implementService: ImplementInspectService,
     ) {}
 
-    SkuInspectModel: FormGroup = this.fb.group({
-        spotCheckNum: this.fb.control(''),
-        poNo: this.fb.control(''),
-        inner_box_data: this.fb.group({
-            shippingMarks: this.fb.group({
-                desc: this.fb.array([]),
-                photos: this.fb.array([]),
-            }),
-            size: this.fb.group({
-                length: this.fb.group({
-                    text: this.fb.control(''),
-                    pic: this.fb.array([]),
-                    num: this.fb.control(''),
-                }),
-                width: this.fb.group({
-                    text: this.fb.control(''),
-                    pic: this.fb.array([]),
-                    num: this.fb.control(''),
-                }),
-                height: this.fb.group({
-                    text: this.fb.control(''),
-                    pic: this.fb.array([]),
-                    num: this.fb.control(''),
-                }),
-                desc: this.fb.array([]),
-            }),
-            barCode: this.fb.group({
-                isTrue: this.fb.control(''),
-                desc: this.fb.array([]),
-                photos: this.fb.array([]),
-                text: this.fb.control(''),
-            }),
-            grossWeight: this.fb.group({
-                text1: this.fb.control(''),
-                text2: this.fb.control(''),
-                text3: this.fb.control(''),
-                text4: this.fb.control(''),
-                text5: this.fb.control(''),
-                desc: this.fb.array([]),
-                photos: this.fb.array([]),
-            }),
-            throwBox: this.fb.group({
-                text: this.fb.control(''),
-                isPass: this.fb.control('1'),
-                desc: this.fb.array([]),
-                photos: this.fb.array([]),
-                videos: this.fb.array([]),
-            }),
-            packing: this.fb.group({
-                isTrue: this.fb.control(''),
-                desc: this.fb.array([]),
-                is_double_carton: this.fb.control('1'),
-                packingType: this.fb.control(''),
-                photos: this.fb.array([]),
-            }),
-            layout: this.fb.group({
-                desc: this.fb.array(['']),
-                photos: this.fb.array([]),
-            }),
-            productDetail: this.fb.group({
-                desc: this.fb.array([]),
-                photos: this.fb.array([]),
-            }),
-            productSize: [],
-            productSizeDesc: this.fb.group({
-                desc: this.fb.array([]),
-            }),
-            instructions: this.fb.group({
-                isHas: this.fb.control('1'),
-                type: this.fb.control(''),
-                desc: this.fb.array(['']),
-                photos: this.fb.array([]),
-                instructionsType: this.fb.control('1'),
-            }),
-            crews: this.fb.group({
-                isTrue: this.fb.control(''),
-                photos: this.fb.array([]),
-                desc: this.fb.array([]),
-            }),
-            whole: this.fb.group({
-                desc: this.fb.array([]),
-                photos: this.fb.array([]),
-            }),
-            disputes: this.fb.group({
-                text: this.fb.control(''),
-                photos: this.fb.array([]),
-            }),
-            netWeight: this.fb.group({
-                textOne: this.fb.control(''),
-                textTwo: this.fb.control(''),
-                desc: this.fb.array([]),
-                photos: this.fb.array([]),
-            }),
-            appearance: this.fb.group({
-                desc: this.fb.array([]),
-                photos: this.fb.array([]),
-                videos: this.fb.array([]),
-            }),
-            function: this.fb.group({
-                desc: this.fb.array([]),
-                videos: this.fb.array([]),
-                photos: this.fb.array([]),
-            }),
-            bearing: this.fb.group({
-                desc: this.fb.array([]),
-                photos: this.fb.array([]),
-                videos: this.fb.array([]),
-            }),
-            waterContent: this.fb.group({
-                desc: this.fb.array([]),
-                photos: this.fb.array([]),
-                videos: this.fb.array([]),
-            }),
-            sumUp: this.fb.group({
-                textOne: this.fb.control(''),
-                textTwo: this.fb.control(''),
-            }),
-            desc: this.fb.group({
-                desc: this.fb.array([]),
-            }),
-        }),
-        outer_box_data: this.fb.group({
-            shippingMarks: this.fb.group({
-                photos: this.fb.array([]),
-                desc: this.fb.array([]),
-            }),
-            size: this.fb.group({
-                length: this.fb.group({
-                    text: this.fb.control(''),
-                    num: this.fb.control(''),
-                    pic: this.fb.array([]),
-                }),
-                width: this.fb.group({
-                    text: this.fb.control(''),
-                    pic: this.fb.array([]),
-                    num: this.fb.control(''),
-                }),
-                height: this.fb.group({
-                    text: this.fb.control(''),
-                    num: this.fb.control(''),
-                    pic: this.fb.array([]),
-                }),
-                desc: this.fb.array([]),
-            }),
-            barCode: this.fb.group({
-                isTrue: this.fb.control(''),
-                desc: this.fb.array([]),
-                photos: this.fb.array([]),
-                text: this.fb.control(''),
-            }),
-            grossWeight: this.fb.group({
-                text1: this.fb.control(''),
-                text2: this.fb.control(''),
-                text3: this.fb.control(''),
-                text4: this.fb.control(''),
-                photos: this.fb.array([]),
-                text5: this.fb.control(''),
-                desc: this.fb.array([]),
-            }),
-            packing: this.fb.group({
-                isTrue: this.fb.control(''),
-                type: this.fb.control('1'),
-                desc: this.fb.array([]),
-                photos: this.fb.array([]),
-                packingType: this.fb.control('1'),
-                is_double_carton: this.fb.control('1'),
-            }),
-            layout: this.fb.group({
-                desc: this.fb.array(['']),
-                photos: this.fb.array([]),
-            }),
-        }),
-    });
+    SkuInspectModel: FormGroup;
 
     ngOnInit() {
         this.data = this.storage.get('CURRENT_IMPLEMENT_SKU');
         this.factory = this.storage.get('CURRENT_FACTORY_DATA');
-        console.log(this.SkuInspectModel.value);
+        this.currentApplyInsData = this.storage.get('currentApplyInsData');
         this.rateStatus = this.data.rate_container > 1 ? 'outer' : 'inner';
-        this.activeRouter.params    
-            .subscribe(res => {
-                this.contractNo = res.contract_no
-            })
+        this.activeRouter.params.subscribe(res => {
+            this.contractNo = res.contract_no;
+        });
+        let sizeModel = null;
+        if (this.data.rate_container == 1) {
+            sizeModel = this.fb.group({
+                length: this.fb.group({
+                    text: this.fb.control(''),
+                    pic: this.fb.array([]),
+                    num: this.fb.control(''),
+                }),
+                width: this.fb.group({
+                    text: this.fb.control(''),
+                    pic: this.fb.array([]),
+                    num: this.fb.control(''),
+                }),
+                height: this.fb.group({
+                    text: this.fb.control(''),
+                    pic: this.fb.array([]),
+                    num: this.fb.control(''),
+                }),
+                desc: this.fb.array([]),
+            });
+        } else {
+            sizeModel = [];
+        }
+
+        this.SkuInspectModel = this.fb.group({
+            spotCheckNum: this.fb.control(''),
+            poNo: this.fb.control(''),
+            poNoRes: this.fb.control('accord'),
+            inner_box_data: this.fb.group({
+                shippingMarks: this.fb.group({
+                    desc: this.fb.array([]),
+                    photos: this.fb.array([]),
+                }),
+                size: sizeModel,
+                barCode: this.fb.group({
+                    isTrue: this.fb.control(''),
+                    desc: this.fb.array([]),
+                    photos: this.fb.array([]),
+                    text: this.fb.control(''),
+                }),
+                grossWeight: this.fb.group({
+                    text1: this.fb.control(''),
+                    text2: this.fb.control(''),
+                    text3: this.fb.control(''),
+                    text4: this.fb.control(''),
+                    text5: this.fb.control(''),
+                    desc: this.fb.array([]),
+                    photos: this.fb.array([]),
+                }),
+                sizeDesc: this.fb.group({
+                    desc: this.fb.array([]),
+                }),
+                throwBox: this.fb.group({
+                    text: this.fb.control(''),
+                    isPass: this.fb.control('1'),
+                    desc: this.fb.array([]),
+                    photos: this.fb.array([]),
+                    videos: this.fb.array([]),
+                }),
+                packing: this.fb.group({
+                    isTrue: this.fb.control(''),
+                    desc: this.fb.array([]),
+                    is_double_carton: this.fb.control('1'),
+                    packingType: this.fb.control(''),
+                    photos: this.fb.array([]),
+                    packingBelt: this.fb.control('undetermined'),
+                    rateWeightMark: this.fb.control('undetermined'),
+                }),
+                layout: this.fb.group({
+                    desc: this.fb.array(['']),
+                    photos: this.fb.array([]),
+                }),
+                productDetail: this.fb.group({
+                    desc: this.fb.array([]),
+                    photos: this.fb.array([]),
+                }),
+                productSize: [],
+                productSizeDesc: this.fb.group({
+                    desc: this.fb.array([]),
+                }),
+                instructions: this.fb.group({
+                    isHas: this.fb.control('1'),
+                    type: this.fb.control(''),
+                    desc: this.fb.array(['']),
+                    photos: this.fb.array([]),
+                    instructionsType: this.fb.control('1'),
+                }),
+                crews: this.fb.group({
+                    isTrue: this.fb.control(''),
+                    photos: this.fb.array([]),
+                    desc: this.fb.array([]),
+                }),
+                whole: this.fb.group({
+                    desc: this.fb.array([]),
+                    photos: this.fb.array([]),
+                }),
+                disputes: this.fb.group({
+                    text: this.fb.control(''),
+                    photos: this.fb.array([]),
+                }),
+                netWeight: this.fb.group({
+                    textOne: this.fb.control(''),
+                    textTwo: this.fb.control(''),
+                    desc: this.fb.array([]),
+                    photos: this.fb.array([]),
+                }),
+                appearance: this.fb.group({
+                    desc: this.fb.array([]),
+                    photos: this.fb.array([]),
+                    videos: this.fb.array([]),
+                }),
+                function: this.fb.group({
+                    desc: this.fb.array([]),
+                    videos: this.fb.array([]),
+                    photos: this.fb.array([]),
+                }),
+                bearing: this.fb.group({
+                    desc: this.fb.array([]),
+                    photos: this.fb.array([]),
+                    videos: this.fb.array([]),
+                }),
+                waterContent: this.fb.group({
+                    desc: this.fb.array([]),
+                    photos: this.fb.array([]),
+                    videos: this.fb.array([]),
+                }),
+                sumUp: this.fb.group({
+                    textOne: this.fb.control(''),
+                    textTwo: this.fb.control(''),
+                    prodSchedule: this.fb.control('undetermined'),
+                    package: this.fb.control('undetermined'),
+                    marksAndCode: this.fb.control('undetermined'),
+                    prodInfo: this.fb.control('undetermined'),
+                    qualityTechnology: this.fb.control('undetermined'),
+                    fieldTest: this.fb.control('undetermined'),
+                }),
+                desc: this.fb.group({
+                    desc: this.fb.array([]),
+                }),
+            }),
+            outer_box_data: this.fb.group({
+                shippingMarks: this.fb.group({
+                    photos: this.fb.array([]),
+                    desc: this.fb.array([]),
+                }),
+                size: this.fb.group({
+                    length: this.fb.group({
+                        text: this.fb.control(''),
+                        num: this.fb.control(''),
+                        pic: this.fb.array([]),
+                    }),
+                    width: this.fb.group({
+                        text: this.fb.control(''),
+                        pic: this.fb.array([]),
+                        num: this.fb.control(''),
+                    }),
+                    height: this.fb.group({
+                        text: this.fb.control(''),
+                        num: this.fb.control(''),
+                        pic: this.fb.array([]),
+                    }),
+                    desc: this.fb.array([]),
+                }),
+                barCode: this.fb.group({
+                    isTrue: this.fb.control(''),
+                    desc: this.fb.array([]),
+                    photos: this.fb.array([]),
+                    text: this.fb.control(''),
+                }),
+                grossWeight: this.fb.group({
+                    text1: this.fb.control(''),
+                    text2: this.fb.control(''),
+                    text3: this.fb.control(''),
+                    text4: this.fb.control(''),
+                    photos: this.fb.array([]),
+                    text5: this.fb.control(''),
+                    desc: this.fb.array([]),
+                }),
+                packing: this.fb.group({
+                    isTrue: this.fb.control(''),
+                    type: this.fb.control('1'),
+                    desc: this.fb.array([]),
+                    photos: this.fb.array([]),
+                    packingType: this.fb.control('1'),
+                    is_double_carton: this.fb.control('1'),
+                    packingBelt: this.fb.control('undetermined'),
+                    rateWeightMark: this.fb.control('undetermined'),
+                }),
+                layout: this.fb.group({
+                    desc: this.fb.array(['']),
+                    photos: this.fb.array([]),
+                }),
+            }),
+        });
     }
 
     ionViewWillEnter() {
         this.getBeforeBoxData();
-        //this.getAfterBoxData();
     }
 
     /**
      * 计算毛重
      */
     calcGrossWeight() {
-        if (this.otherGrossWeight) return;
         let doms = this.grossWeight.nativeElement.querySelectorAll('input'),
             ary: number[] = [],
             compare: number[] = [];
+        console.log(doms);
+
         for (var i = 0; i < doms.length; i++) {
             if (!doms[i].value) return;
             ary.push(doms[i].value);
         }
 
         compare = ary.sort((a, b) => a - b);
-        this.otherGrossWeight = compare[0] * 1.2 > compare[compare.length - 1];
+        this.otherGrossWeight = compare[0] * 1.2 < compare[compare.length - 1];
     }
 
     scan() {
@@ -387,7 +381,7 @@ export class InspectSkuComponent implements OnInit {
             let postData = JSON.parse(JSON.stringify(this.SkuInspectModel.value));
             this.rateStatus == 'inner' ? delete postData.outer_box_data : delete postData.inner_box_data;
             postData.inner_box_data && (postData.inner_box_data.productSize = this.productSize);
-            console.dir(JSON.stringify(postData));
+            postData.inner_box_data && this.data.rate_container != 1 && (postData.inner_box_data.size = this.size);
             this.es.showAlert({
                 message: '正在保存……',
                 backdropDismiss: false,
@@ -401,10 +395,10 @@ export class InspectSkuComponent implements OnInit {
                 .submitSkuData(
                     postData,
                     this.data.sku,
-                    this.factory.sku_data[0].apply_inspection_no,
+                    this.currentApplyInsData.apply_inspection_no,
                     this.currentToggle.key == 'beforeUnpacking' ? 'before' : 'after',
                     this.rateStatus == 'inner' ? 1 : 2,
-                    this.contractNo
+                    this.contractNo,
                 )
                 .subscribe(res => {
                     this.es.showToast({
@@ -430,7 +424,7 @@ export class InspectSkuComponent implements OnInit {
      */
 
     segmentChanged(ev: any) {
-        console.log(ev);
+        // alert(ev.detail.value);
 
         this.inspectRequireSegment = ev.detail.value == 'requirement';
 
@@ -464,7 +458,7 @@ export class InspectSkuComponent implements OnInit {
      * @param sItem     size
      */
     dynamicBuildFC(ary: string[], boxType: string, item: string, type: string, sItem?: string) {
-        if (item != 'spotCheckNum' && item != 'poNo') {
+        if (item != 'spotCheckNum' && item != 'poNo' && item != 'poNoRes') {
             let box: FormGroup = this.SkuInspectModel.get(boxType) as FormGroup,
                 formAry: FormArray = (box.get(item) as FormGroup).get(type) as FormArray;
             //先清空
@@ -490,10 +484,10 @@ export class InspectSkuComponent implements OnInit {
     getBeforeBoxData() {
         this.implementService
             .getBeforeBoxData({
-                apply_inspection_no: this.factory.sku_data[0].apply_inspection_no,
+                apply_inspection_no: this.currentApplyInsData.apply_inspection_no,
                 sku: this.data.sku,
                 is_inner_box: this.rateStatus == 'inner' ? 1 : 2,
-                contract_no: this.contractNo
+                contract_no: this.contractNo,
             })
             .subscribe(res => {
                 if (!res) return;
@@ -502,7 +496,6 @@ export class InspectSkuComponent implements OnInit {
                 this.inspectionRequire = res[this.rateStatus + '_box_data']
                     ? res[this.rateStatus + '_box_data'].inspection_require
                     : {};
-                console.log(this.inspectionRequire);
 
                 for (let key in box) {
                     let element = box[key];
@@ -513,7 +506,7 @@ export class InspectSkuComponent implements OnInit {
                             this.dynamicBuildFC(element.photos, this.rateStatus + '_box_data', key, 'photos');
                         }
                     }
-                    if (key == 'size') {
+                    if (key == 'size' && this.data.rate_container == 1) {
                         if (!!element) {
                             let element = box[key];
                             this.dynamicBuildFC(element.desc, this.rateStatus + '_box_data', key, 'desc');
@@ -538,15 +531,52 @@ export class InspectSkuComponent implements OnInit {
                                 'height',
                                 'pic',
                             );
-                        }
+                        } else this.dynamicBuildFC(element.desc, this.rateStatus + '_box_data', key, 'desc');
                     }
                 }
-                
+
+                let sizeModel = null;
                 //patch value to formGroup
                 if (this.rateStatus == 'inner') {
+                    if (this.data.rate_container == 1) {
+                        sizeModel = {
+                            //尺寸
+                            height: {
+                                text: res.inner_box_data.size.height.text,
+                                num: res.inner_box_data.size.height.num,
+                                pic: res.inner_box_data.size.height.pic ? res.inner_box_data.size.height.pic : [],
+                            },
+                            length: {
+                                text: res.inner_box_data.size.length.text,
+                                num: res.inner_box_data.size.length.num,
+                                pic: res.inner_box_data.size.length.pic ? res.inner_box_data.size.length.pic : [],
+                            },
+                            width: {
+                                text: res.inner_box_data.size.width.text,
+                                num: res.inner_box_data.size.width.num,
+                                pic: res.inner_box_data.size.width.pic ? res.inner_box_data.size.width.pic : [],
+                            },
+                            desc: res.inner_box_data.size.desc ? res.inner_box_data.size.desc : [],
+                        };
+                    } else {
+                        sizeModel =
+                            res.inner_box_data.size && res.inner_box_data.size.length
+                                ? res.inner_box_data.size
+                                : [
+                                      {
+                                          size_width: null,
+                                          size_height: null,
+                                          size_length: null,
+                                          size_type: null,
+                                          pic: [],
+                                      },
+                                  ];
+                    }
+
                     this.SkuInspectModel.patchValue({
                         spotCheckNum: res.inner_box_data.spotCheckNum,
                         poNo: res.inner_box_data.poNo,
+                        poNoRes: res.inner_box_data.poNoRes ? res.inner_box_data.poNoRes : 'accord',
                         inner_box_data: {
                             barCode: {
                                 //条码
@@ -567,6 +597,13 @@ export class InspectSkuComponent implements OnInit {
                                     ? res.inner_box_data.grossWeight.photos
                                     : [],
                             },
+                            size: sizeModel,
+                            sizeDesc: {
+                                desc:
+                                    res.inner_box_data.sizeDesc && res.inner_box_data.sizeDesc.desc
+                                        ? res.inner_box_data.sizeDesc.desc
+                                        : [],
+                            },
                             shippingMarks: {
                                 //唛头
                                 desc: res.inner_box_data.shippingMarks.desc
@@ -575,25 +612,6 @@ export class InspectSkuComponent implements OnInit {
                                 photos: res.inner_box_data.shippingMarks.photos
                                     ? res.inner_box_data.shippingMarks.photos
                                     : [],
-                            },
-                            size: {
-                                //尺寸
-                                height: {
-                                    text: res.inner_box_data.size.height.text,
-                                    num: res.inner_box_data.size.height.num,
-                                    pic: res.inner_box_data.size.height.pic ? res.inner_box_data.size.height.pic : [],
-                                },
-                                length: {
-                                    text: res.inner_box_data.size.length.text,
-                                    num: res.inner_box_data.size.length.num,
-                                    pic: res.inner_box_data.size.length.pic ? res.inner_box_data.size.length.pic : [],
-                                },
-                                width: {
-                                    text: res.inner_box_data.size.width.text,
-                                    num: res.inner_box_data.size.width.num,
-                                    pic: res.inner_box_data.size.width.pic ? res.inner_box_data.size.width.pic : [],
-                                },
-                                desc: res.inner_box_data.size.desc ? res.inner_box_data.size.desc : [],
                             },
                             throwBox: {
                                 //摔箱
@@ -605,10 +623,12 @@ export class InspectSkuComponent implements OnInit {
                             },
                         },
                     });
+                    console.log(this.SkuInspectModel.value);
                 } else {
                     this.SkuInspectModel.patchValue({
                         spotCheckNum: res.outer_box_data.spotCheckNum,
                         poNo: res.outer_box_data.poNo,
+                        poNoRes: res.outer_box_data.poNoRes ? res.outer_box_data.poNoRes : 'accord',
                         outer_box_data: {
                             barCode: {
                                 //条码
@@ -662,8 +682,9 @@ export class InspectSkuComponent implements OnInit {
                 }
 
                 //毛重 显示五个值
-                this.otherGrossWeight = (this.SkuInspectModel.value[this.rateStatus + '_box_data'].grossWeight.text4 &&
-                this.SkuInspectModel.value[this.rateStatus + '_box_data'].grossWeight.text5 )
+                this.otherGrossWeight =
+                    this.SkuInspectModel.value[this.rateStatus + '_box_data'].grossWeight.text4 &&
+                    this.SkuInspectModel.value[this.rateStatus + '_box_data'].grossWeight.text5;
             });
     }
 
@@ -673,10 +694,10 @@ export class InspectSkuComponent implements OnInit {
     getAfterBoxData(boxType?: 'outer' | 'inner') {
         this.implementService
             .getAfterBoxData({
-                apply_inspection_no: this.factory.sku_data[0].apply_inspection_no,
+                apply_inspection_no: this.currentApplyInsData.apply_inspection_no,
                 sku: this.data.sku,
                 is_inner_box: this.rateStatus == 'inner' ? 1 : 2,
-                contract_no: this.contractNo
+                contract_no: this.contractNo,
             })
             .subscribe(res => {
                 if (!res) return;
@@ -727,6 +748,7 @@ export class InspectSkuComponent implements OnInit {
                     this.SkuInspectModel.patchValue({
                         spotCheckNum: res.inner_box_data.spotCheckNum,
                         poNo: res.inner_box_data.poNo,
+                        poNoRes: res.inner_box_data.poNoRes ? res.inner_box_data.poNoRes : 'accord',
                         inner_box_data: {
                             packing: {
                                 //包装
@@ -735,6 +757,12 @@ export class InspectSkuComponent implements OnInit {
                                 isTrue: res.inner_box_data.packing.isTrue,
                                 packingType: res.inner_box_data.packing.packingType,
                                 photos: res.inner_box_data.packing.photos ? res.inner_box_data.packing.photos : [],
+                                packingBelt: res.inner_box_data.packing.packingBelt
+                                    ? res.inner_box_data.packing.packingBelt
+                                    : 'undetermined',
+                                rateWeightMark: res.inner_box_data.packing.rateWeightMark
+                                    ? res.inner_box_data.packing.rateWeightMark
+                                    : 'undetermined',
                             },
                             layout: {
                                 //摆放图
@@ -776,16 +804,6 @@ export class InspectSkuComponent implements OnInit {
                                 text: res.inner_box_data.disputes.text ? res.inner_box_data.disputes.text : [],
                                 photos: res.inner_box_data.disputes.photos ? res.inner_box_data.disputes.photos : [],
                             },
-                            // productSize: {
-                            //     //组装后产品尺寸
-                            //     desc: res.inner_box_data.productSize.desc ? res.inner_box_data.productSize.desc : [],
-                            //     length: res.inner_box_data.productSize.length,
-                            //     width: res.inner_box_data.productSize.width,
-                            //     height: res.inner_box_data.productSize.height,
-                            //     photos: res.inner_box_data.productSize.photos
-                            //         ? res.inner_box_data.productSize.photos
-                            //         : [],
-                            // },
                             productSize:
                                 res.inner_box_data.productSize && res.inner_box_data.productSize.length
                                     ? res.inner_box_data.productSize
@@ -795,6 +813,7 @@ export class InspectSkuComponent implements OnInit {
                                               size_height: null,
                                               size_length: null,
                                               size_type: null,
+                                              size_weight: null,
                                               pic: [],
                                           },
                                       ],
@@ -846,6 +865,24 @@ export class InspectSkuComponent implements OnInit {
                                 //总结
                                 textOne: res.inner_box_data.sumUp.textOne,
                                 textTwo: res.inner_box_data.sumUp.textTwo,
+                                prodSchedule: res.inner_box_data.sumUp.prodSchedule
+                                    ? res.inner_box_data.sumUp.prodSchedule
+                                    : 'undetermined',
+                                package: res.inner_box_data.sumUp.package
+                                    ? res.inner_box_data.sumUp.package
+                                    : 'undetermined',
+                                marksAndCode: res.inner_box_data.sumUp.marksAndCode
+                                    ? res.inner_box_data.sumUp.marksAndCode
+                                    : 'undetermined',
+                                prodInfo: res.inner_box_data.sumUp.prodInfo
+                                    ? res.inner_box_data.sumUp.prodInfo
+                                    : 'undetermined',
+                                qualityTechnology: res.inner_box_data.sumUp.qualityTechnology
+                                    ? res.inner_box_data.sumUp.qualityTechnology
+                                    : 'undetermined',
+                                fieldTest: res.inner_box_data.sumUp.fieldTest
+                                    ? res.inner_box_data.sumUp.fieldTest
+                                    : 'undetermined',
                             },
                             desc: {
                                 //整体描述
@@ -857,6 +894,7 @@ export class InspectSkuComponent implements OnInit {
                     this.SkuInspectModel.patchValue({
                         spotCheckNum: res.outer_box_data.spotCheckNum,
                         poNo: res.outer_box_data.poNo,
+                        poNoRes: res.outer_box_data.poNoRes ? res.outer_box_data.poNoRes : 'accord',
                         outer_box_data: {
                             packing: {
                                 is_double_carton: res.outer_box_data.packing.is_double_carton,
@@ -864,6 +902,12 @@ export class InspectSkuComponent implements OnInit {
                                 isTrue: res.outer_box_data.packing.isTrue,
                                 packingType: res.outer_box_data.packing.packingType,
                                 photos: res.outer_box_data.packing.photos ? res.outer_box_data.packing.photos : [],
+                                packingBelt: res.outer_box_data.packing.packingBelt
+                                    ? res.outer_box_data.packing.packingBelt
+                                    : 'undetermined',
+                                rateWeightMark: res.outer_box_data.packing.rateWeightMark
+                                    ? res.outer_box_data.packing.rateWeightMark
+                                    : 'undetermined',
                             },
                             layout: {
                                 //摆放图
@@ -879,5 +923,9 @@ export class InspectSkuComponent implements OnInit {
     productSizeChange(e: any[]) {
         this.productSize = e;
         console.log(e);
+    }
+
+    sizeChange(e: any[]) {
+        this.size = e;
     }
 }

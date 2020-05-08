@@ -1,36 +1,48 @@
 .evaluate-detail {
-  // padding: ;
+    // padding: ;
 }
 .textarea {
-  padding: 0 10px;
+    padding: 0 10px;
 }
 
 .mb-10 {
-  margin-bottom: 10px !important;
+    margin-bottom: 10px !important;
 }
 
 .storage {
-  > div {
-    margin: 0 auto;
-    width: 80%;
-  }
+    > div {
+        margin: 0 auto;
+        width: 80%;
+    }
 }
 
 .mb-20 {
-  margin-bottom: 20px !important;
+    margin-bottom: 20px !important;
 }
 
 ion-label {
-  margin-top: 15px !important;
-  color: #000;
+    margin-top: 15px !important;
+    color: #000;
 }
 
 ion-item {
-  ion-label {
-    color: #535353;
-    font-size: 14px;
-  }
-  ion-textarea {
-    color: #535353;
-  }
+    ion-label {
+        color: #535353;
+        font-size: 14px;
+    }
+    ion-textarea {
+        color: #535353;
+    }
+}
+
+app-item-by-item-desc{
+  width: 100%;
+}
+
+// :host ::ng-deep app-item-by-item-desc p.item span:first-child {
+//     display: none;
+// }
+
+.submit{
+  padding: 10px !important;
 }

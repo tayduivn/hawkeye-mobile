@@ -16,7 +16,7 @@
 </ion-header>
 
 <ion-content>
-    <ion-card *ngFor="let item of inspectGroup | async" mode="ios">
+    <ion-card *ngFor="let item of inspectGroup" mode="ios">
         <ion-item class="card-header">
             <ion-icon name="people" slot="start" color="primary"></ion-icon>
             <ion-label><span>质检员：</span>{{ item.user.join(",") }}</ion-label>
@@ -29,8 +29,8 @@
         <ion-card-content>
             <ion-label class="text-r pl-5"
                 >时间段： {{ (item.probable_inspection_date_range.start | date: "MM月-dd日") + " — " +
-                (item.probable_inspection_date_range.end ? (item.probable_inspection_date_range.end | date: "MM月-dd日") :
-                "") }}
+                (item.probable_inspection_date_range.end ? (item.probable_inspection_date_range.end | date: "MM月-dd日")
+                : "") }}
             </ion-label>
             <ion-grid *ngIf="screenType == 'Vertical'">
                 <ion-row class="title">
@@ -153,6 +153,9 @@
             </ion-grid>
         </ion-card-content>
     </ion-card>
-
-    <p *ngIf="!listLength" class="text-c ">暂无数据</p>
+    <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+        <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="正在加载">
+        </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+    <p *ngIf="!inspectGroup.length" class="text-c ">暂无数据</p>
 </ion-content>

@@ -14,15 +14,18 @@
         </ion-card-header>
 
         <ion-item
-            (click)="toDetail(item)"
+
             *ngFor="let item of list | async"
         >
             <div fxLayout="row" fxLayoutAlign="space-between center" class="w100">
-                <div>{{item.factory_name}}</div>
+                <div (click)="toDetail(item)">{{item.factory_name}}</div>
                 <ion-badge color="success" *ngIf="item.inspection_appraisement_id">已评价</ion-badge>
                 <ion-badge color="danger" *ngIf="!item.inspection_appraisement_id">未评价</ion-badge>
 
-                <div>{{item.apply_inspection_no}}</div>
+                <div fxLayout='row' fxLayoutAlign='start center' >
+                    <div (click)="toDetail(item)">{{item.apply_inspection_no}}</div >
+                    <ion-button class="ml-20" [hidden]="!item.inspection_appraisement_id" size='small' (click)="cancel(item)">取消评价</ion-button>
+                </div>
             </div>
         </ion-item>
         <p *ngIf="!listLength" class="text-c ">暂无数据</p>

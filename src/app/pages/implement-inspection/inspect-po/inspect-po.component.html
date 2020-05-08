@@ -12,7 +12,7 @@
 
 <ion-content>
     <ion-list class="po-list">
-        <ion-item *ngFor="let item of data.sku_data[0].contract_data">
+        <ion-item *ngFor="let item of currentApplyInsData.contract_data">
             <!-- data.sku_data[0].contract_data -->
             <div class="wd-100">
                 <div class="wd-100 po" fxLayout="row" fxLayoutAlign="space-between center">
@@ -28,7 +28,7 @@
                         ></ion-input>
                     </div>
                 </div>
-<!-- {{item.data | json}} -->
+                <!-- {{item.data | json}} -->
                 <ol class="sku-list">
                     <li *ngFor="let sItem of item.data" fxLayout="column" fxLayoutAlign="start start">
                         <div fxLayout="row" fxLayoutAlign="space-between  center" class="wd-100">
@@ -42,6 +42,7 @@
                                         {{ sItem.sku_chinese_name }}
                                     </p>
                                     <span class="label">申请验货数量：</span>
+                                    {{ sItem.quantity }}
                                 </div>
                             </div>
 
@@ -55,6 +56,9 @@
                                 >
                                 <ion-button size="small" color="primary" (click)="toInspectSku(item, sItem)"
                                     >保存</ion-button
+                                >
+                                <ion-button size="small" color="danger" (click)="copy(item, sItem)"
+                                    >复制到相同SKU</ion-button
                                 >
                             </div>
                         </div>
@@ -78,11 +82,31 @@
                                 ></ion-input>
                             </div>
                         </div>
+
+                        <div fxLayout="row" fxLayoutAlign="start center" class="input-item mt-5">
+                            <div fxLayout="row" fxLayoutAlign="start center">
+                                <label class="label">箱率（符合否）:</label>
+                                <select [(ngModel)]="sItem.rate_res">
+                                    <option value="">请选择</option>
+                                    <option value="accord">符合</option>
+                                    <option value="notAccord">不符合</option>
+                                </select>
+                            </div>
+                            <div fxLayout="row" fxLayoutAlign="start center">
+                                <label class="label">MADE IN CHINA 标识（符合否）:</label>
+                                <select [(ngModel)]="sItem.made_in_china_res">
+                                    <option value="">请选择</option>
+                                    <option value="accord">符合</option>
+                                    <option value="notAccord">不符合</option>
+                                </select>
+                            </div>
+                        </div>
+
                         <app-photograph
                             moduleType="removeContractPic"
                             [photos]="sItem.implement_photo"
                             [contract_no]="item.contract_no"
-                            [apply_inspection_no]="data.sku_data[0].apply_inspection_no"
+                            [apply_inspection_no]="currentApplyInsData.apply_inspection_no"
                             [sku]="sItem.sku"
                             type="contract_sku_pic"
                         ></app-photograph>

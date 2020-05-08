@@ -119,10 +119,10 @@ export class SKUInfoComponent implements OnInit {
         let description = [];
         this.screen.onResize.subscribe(res => (this.screenAngle = res));
         //description:String  change to Array<String> type
-        this.sku.description =
+        this.sku.description && (this.sku.description =
             typeof this.sku.description == 'string'
                 ? [this.sku.description]
-                : description.concat(this.sku.description ? this.sku.description : ['']);
+                : description.concat(this.sku.description ? this.sku.description : ['']))
         console.log(this.sku);
     }
 

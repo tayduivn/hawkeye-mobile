@@ -65,11 +65,7 @@
                 </ion-item>
 
                 <ion-item>
-                    <ion-textarea
-                        placeholder="请描述具体表现"
-                        [(ngModel)]="data.storage_condition_desc"
-                     
-                    ></ion-textarea>
+                    <ion-textarea placeholder="请描述具体表现" [(ngModel)]="data.storage_condition_desc"></ion-textarea>
                     <!-- *ngIf="other" -->
                 </ion-item>
             </ion-radio-group>
@@ -160,22 +156,34 @@
 
                     <ion-item>
                         <ion-label>通过</ion-label>
-                        <ion-radio slot="end" value="0" [checked]="item.appraisement == 0"></ion-radio>
+                        <ion-radio slot="end" value="0" [checked]="item.appraisement == '0'"></ion-radio>
                     </ion-item>
 
                     <ion-item>
                         <ion-label>待定</ion-label>
-                        <ion-radio slot="end" value="1" [checked]="item.appraisement == 1"></ion-radio>
+                        <ion-radio slot="end" value="1" [checked]="item.appraisement == '1'"></ion-radio>
                     </ion-item>
 
                     <ion-item>
                         <ion-label>不通过</ion-label>
-                        <ion-radio slot="end" value="2" [checked]="item.appraisement == 2"></ion-radio>
+                        <ion-radio slot="end" value="2" [checked]="item.appraisement == '2'"></ion-radio>
+                    </ion-item>
+
+                    <ion-item>
+                        <app-item-by-item-desc
+                            description="备注"
+                            [ary]="item.desc"
+                            (onComplete)="descEnter($event, i)"
+                        ></app-item-by-item-desc>
                     </ion-item>
                 </ion-radio-group>
             </ng-container>
         </ion-card>
     </div>
 
-    <ion-button expand="block" (click)="submit()" class="mb-20">提交</ion-button>
+    <div class="submit">
+        <ion-button expand="block" (click)="submit()" class="mb-20">提交</ion-button>
+
+    </div>
+
 </ion-content>

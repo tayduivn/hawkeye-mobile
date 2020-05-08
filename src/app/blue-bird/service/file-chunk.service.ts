@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Subject, Observable } from "rxjs";
+import { PageEffectService } from '../../services/page-effect.service';
 
 export interface Chunk {
   file: Blob;
@@ -9,14 +9,14 @@ export interface Chunk {
 export class FileChunkService {
   SIZE: number = 30 * 1024 * 1024  //切片10M     * 1024;
   file: Blob;
-  constructor() {}
+  constructor(private ec: PageEffectService) {}
 
   /**
    * 创建切片
    * @param file  整个file对象
    * @param size  切片大小
    */
-  createFileChunk(file: Blob, size = this.SIZE): Chunk[] {
+  createFileChunk(file: any, size = this.SIZE): Chunk[] {
     const fileChunkList: Chunk[] = [];
     let cur = 0;
     while (cur < file.size) {
@@ -32,10 +32,11 @@ export class FileChunkService {
    * @param file
    */
   handleFile(file: Blob): Promise<Chunk[]> {
+
     return new Promise(reject => {
       this.file = file;
       let fileChunkList: Chunk[] = this.createFileChunk(this.file);
-      
+
       reject(fileChunkList);
     });
   }

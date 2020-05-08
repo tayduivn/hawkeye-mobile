@@ -1,27 +1,33 @@
 <div class="size product-size" *ngFor="let item of _sizes; let i = index">
     <div class="list" fxLayout="row" fxLayoutAlign="space-between center">
-        <div (click)="changeText(i, item.size_length ? 'modify' : 'add', 'size_type','尺寸类型')">
+        <div
+            *ngIf="type == 'productSize'"
+            (click)="changeText(i, item.size_length ? 'modify' : 'add', 'size_type', '尺寸类型')"
+        >
             {{ item.size_type ? item.size_type : '尺寸类型' }}
         </div>
-        <div (click)="changeText(i, item.size_length ? 'modify' : 'add', 'size_length','长')">
+        <div (click)="changeText(i, item.size_length ? 'modify' : 'add', 'size_length', '长')">
             {{ item.size_length ? item.size_length : '输入长' }}
         </div>
-        <div (click)="changeText(i, item.size_width ? 'modify' : 'add', 'size_width','宽')">
+        <div (click)="changeText(i, item.size_width ? 'modify' : 'add', 'size_width', '宽')">
             {{ item.size_width ? item.size_width : '输入宽' }}
         </div>
-        <div (click)="changeText(i, item.size_height ? 'modify' : 'add', 'size_height','高')">
+        <div (click)="changeText(i, item.size_height ? 'modify' : 'add', 'size_height', '高')">
             {{ item.size_height ? item.size_height : '输入高' }}
+        </div>
+        <div (click)="changeText(i, item.size_weight ? 'modify' : 'add', 'size_weight', '重')">
+            {{ item.size_weight ? item.size_weight : '重量（可选）' }}
         </div>
         <ion-button size="small" (click)="add()" *ngIf="i == _sizes.length - 1">添加</ion-button>
     </div>
     <app-photograph
-        type="product_size_pic"
+        [type]="type == 'size' ? 'size_pic' : 'product_size_pic'"
         moduleType="removeSkuPic"
         [photos]="item.pic"
         [contract_no]="contract_no"
         [apply_inspection_no]="apply_inspection_no"
         [sku]="sku"
-        [sort_index]='i'
+        [sort_index]="i"
         box_type="inner"
     >
     </app-photograph>

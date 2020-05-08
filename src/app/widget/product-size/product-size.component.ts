@@ -9,17 +9,18 @@ import { PageEffectService } from '../../services/page-effect.service';
 export class ProductSizeComponent implements OnInit {
     @Input() set sizes(input: any[]) {
         if (!!input) this._sizes = input;
-        this.onChange.emit(this._sizes)
+        this.onChange.emit(this._sizes);
     }
 
     @Input() sku: string;
     @Input() contract_no: string;
     @Input() apply_inspection_no: string;
+    @Input() type: 'size' | 'productSize';
     _sizes: any[];
 
     @Output() onChange: EventEmitter<any[]> = new EventEmitter();
 
-    changeText(i: number, type: 'add' | 'modify', item: string, text:string) {
+    changeText(i: number, type: 'add' | 'modify', item: string, text: string) {
         this.es.showAlert({
             header: `请输入${text}`,
             inputs: [
@@ -35,7 +36,7 @@ export class ProductSizeComponent implements OnInit {
                     text: '确定',
                     handler: (value: any) => {
                         this._sizes[i][item] = value.text;
-                       
+
                         this.onChange.emit(this._sizes);
                     },
                 },
@@ -44,24 +45,46 @@ export class ProductSizeComponent implements OnInit {
     }
 
     add() {
-        if (
-            this._sizes[this._sizes.length - 1].size_length &&
-            this._sizes[this._sizes.length - 1].size_height &&
-            this._sizes[this._sizes.length - 1].size_width && 
-            this._sizes[this._sizes.length - 1].size_type
-        ) {
-            this._sizes.push({
-                size_length: '',
-                size_width: '',
-                size_height: '',
-                size_type: '',
-                pic: [],
-            });
+        if (this.type == 'productSize') {
+            if (
+                this._sizes[this._sizes.length - 1].size_length &&
+                this._sizes[this._sizes.length - 1].size_height &&
+                this._sizes[this._sizes.length - 1].size_width &&
+                this._sizes[this._sizes.length - 1].size_type
+            ) {
+                this._sizes.push({
+                    size_length: '',
+                    size_width: '',
+                    size_height: '',
+                    size_type: '',
+                    pic: [],
+                    weight: '',
+                });
+            } else {
+                this.es.showToast({
+                    message: '请完善此组后在添加',
+                    color: 'danger',
+                });
+            }
         } else {
-            this.es.showToast({
-                message: '请完善此组后在添加',
-                color: 'danger',
-            });
+            if (
+                this._sizes[this._sizes.length - 1].size_length &&
+                this._sizes[this._sizes.length - 1].size_height &&
+                this._sizes[this._sizes.length - 1].size_width
+            ) {
+                this._sizes.push({
+                    size_length: '',
+                    size_width: '',
+                    size_height: '',
+                    pic: [],
+                    weight: '',
+                });
+            } else {
+                this.es.showToast({
+                    message: '请完善此组后在添加',
+                    color: 'danger',
+                });
+            }
         }
     }
 

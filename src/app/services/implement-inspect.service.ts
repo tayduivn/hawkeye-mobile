@@ -30,6 +30,12 @@ export interface RemovePicParams {
     sort_index?: number;
 }
 
+export interface CopySkuParams {
+    apply_inspection_no: string;
+    sku: string;
+    contract_no: string;
+}
+
 @Injectable({
     providedIn: 'root',
 })
@@ -107,6 +113,13 @@ export class ImplementInspectService {
     removeSkuVideo(params: RemovePicParams): Observable<any> {
         return this.http.post({
             url: '/task/del_inspection_task_video_for_sku',
+            params: params,
+        });
+    }
+
+    copySku(params: CopySkuParams): Observable<any> {
+        return this.http.get({
+            url: '/task/copy_inspection_task_data',
             params: params,
         });
     }

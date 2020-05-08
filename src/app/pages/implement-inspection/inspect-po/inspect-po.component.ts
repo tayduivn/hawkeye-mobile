@@ -6,6 +6,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { ImplementInspectService, InspectFactoryParam } from 'src/app/services/implement-inspect.service';
+import { ExamineStatus } from '../inspect-sku/inspect-sku.component';
+import { CopySkuParams } from '../../../services/implement-inspect.service';
 
 export interface Factory {
     name?: string;
@@ -24,6 +26,8 @@ export interface SkuOFPoModal {
     photo: string[]; // 照片
     sku: string; // sku
     sku_production_complete_num: number; // 大货生产完成数量
+    rate_res: ExamineStatus;
+    made_in_china_res: ExamineStatus;
     desc: string[];
 }
 
@@ -37,6 +41,7 @@ export class InspectPoComponent implements OnInit {
     metaData: any = this.storage.get('IMPLEMENT-INSPECTION-META-DATA');
     currentSku: Sku = null;
     apply_inspect_no = '';
+    currentApplyInsData: any;
     data: any = {
         contract: {
             manufacturer: '',
@@ -65,6 +70,10 @@ export class InspectPoComponent implements OnInit {
                 elem.sku_data.forEach(element => {
                     if (element.apply_inspection_no == params.fid) {
                         this.data = elem;
+                        this.currentApplyInsData = this.data.sku_data.find(
+                            res => res.apply_inspection_no == this.apply_inspect_no,
+                        );
+                        this.storage.set('currentApplyInsData', this.currentApplyInsData);
                     }
                 });
             });
@@ -81,6 +90,8 @@ export class InspectPoComponent implements OnInit {
                                             if (sku.sku === element.sku) {
                                                 sku.sku_package_complete_num = element.sku_package_complete_num;
                                                 sku.sku_production_complete_num = element.sku_production_complete_num;
+                                                sku.rate_res = element.rate_res;
+                                                sku.made_in_china_res = element.made_in_china_res;
                                                 sku.implement_photo = element.pic;
                                                 sku.desc = element.desc;
                                             }
@@ -113,8 +124,24 @@ export class InspectPoComponent implements OnInit {
         );
     }
 
+    copy(p: any, sku: any) {
+        let params: CopySkuParams = {
+            apply_inspection_no: this.apply_inspect_no,
+            sku: sku.sku,
+            contract_no: p.contract_no,
+        };
+        this.implementInspect.copySku(params).subscribe(res => {
+            console.log(res);
+            this.ec.showToast({
+                message: res.message,
+                color: 'success'
+            });
+        });
+    }
+
     toInspectSku(p: any, sku: any, type?: 'go' | 'save') {
-        this.currentSku = this.data.sku_data[0].data.find(res => res.sku === sku.sku);
+        this.currentSku = this.currentApplyInsData.data.find(res => res.sku === sku.sku);
+
         if (this.verifyIpt(p, sku)) {
             const param: InspectFactoryParam = {
                 apply_inspection_no: this.apply_inspect_no,
@@ -126,6 +153,8 @@ export class InspectPoComponent implements OnInit {
                         photo: sku.photo, // 照片
                         sku: sku.sku, // sku
                         sku_production_complete_num: sku.sku_production_complete_num, // 大货生产完成数量
+                        rate_res: sku.rate_res, // 大货生产完成数量
+                        made_in_china_res: sku.made_in_china_res, // 大货生产完成数量
                         desc: sku.desc,
                     },
                 },
@@ -137,6 +166,7 @@ export class InspectPoComponent implements OnInit {
                     color: res.status === 1 ? 'success' : 'danger',
                 });
                 if (res.status && type == 'go') {
+                    
                     this.storage.set('CURRENT_IMPLEMENT_SKU', this.currentSku);
                     this.storage.set('CURRENT_FACTORY_DATA', this.data);
                     setTimeout(() => {
@@ -168,11 +198,6 @@ export class InspectPoComponent implements OnInit {
             });
             val = false;
         } else if (!sku.photo) {
-            // this.ec.showToast({
-            //     message: '至少上传一张照片',
-            //     color: 'danger',
-            // });
-            // val = false;
         }
         return val;
     }

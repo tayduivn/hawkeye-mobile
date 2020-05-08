@@ -48,7 +48,6 @@ export class PageEffectService {
         await modal.present();
         const { data } = await modal.onDidDismiss();
         if (data) {
-            // tslint:disable-next-line: no-unused-expression
             callback && callback(data);
         }
     }

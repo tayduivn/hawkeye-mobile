@@ -43,6 +43,16 @@
             <p>上传视频</p>
         </div>
     </li>
+
+    <!-- <li>
+      <div class="add-image-small" fxLayout="row" (click)="resetData()" fxLayoutAlign="start center">
+          <ion-icon name="cloud-upload" mode="ios"></ion-icon>
+          <p>暂停上传</p>
+      </div>
+  </li> -->
+
 </ul>
 
-<ion-progress-bar [value]="progress" *ngIf="progress" [color]="complate ? 'success' : ''"></ion-progress-bar>
+<ion-progress-bar [value]="uploadPercentage/100" *ngIf="uploadPercentage" [color]="uploadPercentage==100 ? 'success' : ''"></ion-progress-bar>
+
+<!-- <input type='file' (change)='handleFile($event.target.files[0])'> -->

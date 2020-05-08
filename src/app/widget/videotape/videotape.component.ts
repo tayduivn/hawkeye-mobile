@@ -1,15 +1,18 @@
-import { FileUploadService, VideoOther } from './../../services/file-upload.service';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
 import { PageEffectService } from 'src/app/services/page-effect.service';
-import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
-import { MediaCapture, CaptureError, MediaFile } from '@ionic-native/media-capture/ngx';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { MediaCapture, MediaFile } from '@ionic-native/media-capture/ngx';
 import { ActionSheetOptions } from '@ionic/core';
 import { FilePath } from '@ionic-native/file-path/ngx';
 import { VideoPlayComponent } from '../video-play/video-play.component';
 import { ImplementInspectService } from 'src/app/services/implement-inspect.service';
-import { FileTransferObject, FileTransfer, FileUploadOptions } from '@ionic-native/file-transfer/ngx';
-import { environment } from 'src/environments/environment';
+import { File } from '@ionic-native/file/ngx';
+import { Chunk, FileChunkService } from 'src/app/blue-bird/service/file-chunk.service';
+import { RequestService } from 'src/app/blue-bird/service/request.service';
+import { FileHashService } from 'src/app/blue-bird/service/file-hash.service';
 import { UserInfoService } from 'src/app/services/user-info.service';
+import { Observable } from 'rxjs';
+import { HttpService } from '../../services/http.service';
 
 export type FieldType =
     | 'throw_box_video'
@@ -42,6 +45,11 @@ export type FieldType =
 })
 export class VideotapeComponent implements OnInit {
     progress: string;
+    hash: string;
+    data: any[];
+    container: any;
+    requestList: XMLHttpRequest[] = [];
+    fileChunkList: Chunk[];
     @Input() set videos(input: string[]) {
         if (!input) {
             return;
@@ -64,77 +72,35 @@ export class VideotapeComponent implements OnInit {
         private filePath: FilePath,
         private ec: PageEffectService,
         private implement: ImplementInspectService,
-        private uploadService: FileUploadService,
-        private transfer: FileTransfer,
+        private file: File,
+        private fileReq: RequestService,
+        private fileHash: FileHashService,
+        private fileChunk: FileChunkService,
         private userInfo: UserInfoService,
-        private ChangeDetectorRef: ChangeDetectorRef,
+        private http: HttpService,
     ) {}
 
     @Output() onComplete: EventEmitter<MediaFile[][]> = new EventEmitter<MediaFile[][]>();
 
+    get uploadPercentage(): number {
+        if (!this.container || !this.container || !this.data || !this.data.length) return 0;
+        const loaded = this.data.map(item => item.size * item.percentage).reduce((acc, cur) => acc + cur);
+        return parseInt((loaded / this.container.size).toFixed(2));
+    }
+
     _videos: any[][] = [];
     _up_data: string[] = [];
-    ngOnInit() {
-        // this.uploadService.fileTransfer.onProgress(progressEvent => {
-        //     if (progressEvent.lengthComputable) {
-        //         this.progress = progressEvent.loaded / progressEvent.total;
-        //         console.log(progressEvent.loaded / progressEvent.total);
-        //     }
-        // });
-    }
+    ngOnInit() {}
 
-    upload(obj: any) {
-        let params: VideoOther = {
-            type: this.type,
-            apply_inspection_no: this.apply_inspection_no,
-            contract_no: this.contract_no,
-            box_type: this.box_type,
-            sku: this.sku,
-            sort_index: this.sort_index,
-        };
-        let param = {
-            fileUrl: obj.filePath,
-            params: params,
-        };
-        // this.uploadService.uploadVideo({ fileUrl: obj.filePath, params: params });
-        let options: FileUploadOptions = {
-            httpMethod: 'POST',
-            fileKey: 'video',
-            fileName: 'video',
-            params: param.params,
-            headers: {
-                Authorization: this.userInfo.info ? `Bearer ${this.userInfo.info.api_token}` : undefined,
-            },
-        };
-        let fileTransfer: FileTransferObject = this.transfer.create();
-        fileTransfer
-            .upload(param.fileUrl, `${environment.apiUrl}/task/add_inspection_task_video`, options)
-            .then(res => {
-               
-                console.log(res.response);
-            });
-
-        fileTransfer.onProgress(ProgressEvent => {
-            if (ProgressEvent.lengthComputable) {
-                this.progress = (ProgressEvent.loaded / ProgressEvent.total).toFixed(2);
-                this.complate = (ProgressEvent.total == 1)
-                this.ChangeDetectorRef.markForCheck();
-                this.ChangeDetectorRef.detectChanges();
-              
-            }
-        });
-        
-    }
-
-    complate: boolean = true
+    complete: boolean = true;
 
     videotape() {
-        if(!this.complate){
+        if (!this.complete) {
             this.ec.showToast({
-                message:'请等待上传完毕！',
-                color:'danger'
-            })
-            return
+                message: '请等待上传完毕！',
+                color: 'danger',
+            });
+            return;
         }
         const option: ActionSheetOptions = {
             header: '上传方式',
@@ -160,42 +126,73 @@ export class VideotapeComponent implements OnInit {
         this.ec.showActionSheet(option);
     }
 
-    fileChoose() {
-        this.ec.showAlert({
-            message: '选择中……',
-            backdropDismiss: false,
+    async fileChoose() {
+        this.ec.showLoad({
+            message: '获取文件ArrayBuffer中……',
         });
+        const uri = await this.fileChooser.open({ mime: 'video/mp4' });
+        const url = await this.filePath.resolveNativePath(uri);
 
-        this.fileChooser.open({ mime: 'video/mp4' }).then(uri => {
-            this.filePath
-                .resolveNativePath(uri)
-                .then(url => {
-                    let obj: any = {
-                        name: `${this.type}_${this._videos.length + 1}.mp4`,
-                        filePath: url,
-                        type: 'video',
-                        lastModifiedDate: null,
-                        size: null,
-                    };
-                    this.ec.clearEffectCtrl();
-                    this._videos.push([obj]);
-                    this.onComplete.emit(this._videos);
-                    this.upload(obj);
-                })
-                .catch(err => console.log(err));
+        console.log('uri:' + uri, 'url:' + url);
+
+        this.getFileEntry(url).then(res => {
+            this.ec.clearEffectCtrl();
+            this.ec.showAlert({
+                message: '获取ArrayBuffer完毕',
+            });
+            const blob = new Blob([res]);
+            this.handleFile(blob, url);
         });
     }
 
-    tape() {
-        this.mediaCapture.captureVideo({ limit: 1, quality: 30 }).then(
-            (mediaFiles: any[]) => {
-                console.log(mediaFiles);
-                this._videos.push(mediaFiles);
-                this.upload(mediaFiles[0]);
-                this.onComplete.emit(this._videos);
-            },
-            (err: CaptureError) => {},
+    async getFileEntry(url: string): Promise<any> {
+        let dirPath = url.substring(0, url.lastIndexOf('/'));
+        let fileName = url.substring(url.lastIndexOf('/') + 1, url.length);
+        return await this.file.readAsArrayBuffer(dirPath, fileName);
+    }
+
+    async tape() {
+        const mediaFiles = await this.mediaCapture.captureVideo({ limit: 1, quality: 30 });
+        let dirPath = mediaFiles[0].fullPath.substring(0, mediaFiles[0].fullPath.lastIndexOf('/'));
+        let fileName = mediaFiles[0].fullPath.substring(
+            mediaFiles[0].fullPath.lastIndexOf('/') + 1,
+            mediaFiles[0].fullPath.length,
         );
+        const dirEntry = await this.file.resolveDirectoryUrl(dirPath);
+        const fileEntry = await this.file.getFile(dirEntry, fileName, {});
+        this.getFileEntry(mediaFiles[0].fullPath).then(res => {
+          this.ec.clearEffectCtrl();
+          this.ec.showAlert({
+              message: '获取ArrayBuffer完毕',
+          });
+          const blob = new Blob([res]);
+          this.handleFile(blob, mediaFiles[0].fullPath);
+      });
+        // fileEntry.file(res => {
+        //     this.handleFile(res, mediaFiles[0].fullPath);
+        // });
+    }
+
+    async handleFile(res?: any, filepath?: string) {
+        this.container = res;
+        //文件切片
+        this.fileChunkList = await this.fileChunk.handleFile(res);
+        //文件hash
+        this.hash = await this.fileHash.initHashWorker(this.fileChunkList);
+        console.log(this.hash);
+        console.dir(this.fileChunkList);
+        //toPromise rxjs
+        const {
+            data: { uploadedList, shouldUpload },
+        } = await this.verifyUpload(this.hash, filepath);
+        if (!shouldUpload) {
+            alert('文件已上传');
+            return;
+        } else {
+            this.uploadChunks(uploadedList ? uploadedList : []);
+        }
+
+        //上传切片
     }
 
     play(p: string) {
@@ -203,6 +200,95 @@ export class VideotapeComponent implements OnInit {
             component: VideoPlayComponent,
             componentProps: { source: p },
         });
+    }
+
+    async uploadChunks(uploadedList: string[] = []) {
+        this.data = this.fileChunkList.map(({ file }, index) => ({
+            fileHash: this.hash,
+            index,
+            hash: this.hash + '-' + index,
+            cut_num: index,
+            chunk: file,
+            size: file.size,
+            percentage: uploadedList.includes(index + '') ? 100 : 0,
+        }));
+        let requestList = this.data
+            .filter(({ hash }) => !uploadedList.includes(hash))
+            .map(({ chunk, fileHash, hash, cut_num }) => {
+                let formData = new FormData();
+                formData.append('chunk', chunk);
+                formData.append('type', this.type);
+                formData.append('apply_inspection_no', this.apply_inspection_no);
+                formData.append('contract_no', this.contract_no);
+                formData.append('sku', this.sku);
+                formData.append('cut_num', cut_num);
+                formData.append('filename', this.container.name);
+                formData.append('filehash', fileHash);
+                formData.append('upload_type', 'upload');
+                return formData;
+            })
+            .map(async (formData, index) => {
+                return await this.fileReq.request({
+                    url: 'http://yy.xdrlgroup.com/api/v1/task/add_inspection_task_video',
+                    requestList: this.requestList,
+                    onProgress: this.createProgressHandler(this.data[index]),
+                    data: formData,
+                    headers: {
+                        Authorization: this.userInfo.info ? `Bearer ${this.userInfo.info.api_token}` : undefined,
+                    },
+                });
+            });
+        await Promise.all(requestList);
+        this.mergeRequest();
+    }
+
+    async mergeRequest(): Promise<any> {
+        let data = {
+          filehash: this.hash,
+          type: this.type,
+          apply_inspection_no: this.apply_inspection_no,
+          contract_no: this.contract_no,
+          sku: this.sku,
+          upload_type: 'merge',
+      }
+        this.http.post({url:'/task/add_inspection_task_video',params:data})
+            .subscribe(res => {
+              console.log(res)
+              this._up_data.push(res.data);
+            })
+
+    }
+
+    // 用闭包保存每个 chunk 的进度数据
+    createProgressHandler(item) {
+        return e => {
+            item.percentage = parseInt(String((e.loaded / e.total) * 100));
+        };
+    }
+
+    //暂停上传
+    resetData() {
+        this.requestList.forEach(xhr => xhr.abort());
+        this.requestList = [];
+    }
+
+    async verifyUpload(filehash: string, filepath?: string): Promise<VerifyResponse> {
+        const { data } = await this.fileReq.request({
+            url: 'http://yy.xdrlgroup.com/api/v1/task/add_inspection_task_video', //http://localhost:3000/merge
+            headers: {
+                'content-type': 'application/json',
+            },
+            data: JSON.stringify({
+                filehash: filehash,
+                filepath: filepath,
+                type: this.type,
+                apply_inspection_no: this.apply_inspection_no,
+                contract_no: this.contract_no,
+                sku: this.sku,
+                upload_type: 'fileVerify',
+            }),
+        });
+        return JSON.parse(data);
     }
 
     remove(i: number) {
@@ -243,4 +329,67 @@ export class VideotapeComponent implements OnInit {
             ],
         });
     }
+
+    dataURItoBlob(base64Data): any {
+        //console.log(base64Data);//data:image/png;base64,
+        var byteString;
+        if (base64Data.split(',')[0].indexOf('base64') >= 0) byteString = atob(base64Data.split(',')[1]);
+        //base64 解码
+        else {
+            byteString = unescape(base64Data.split(',')[1]);
+        }
+        var mimeString = base64Data
+            .split(',')[0]
+            .split(':')[1]
+            .split(';')[0]; //mime类型 -- image/png
+
+        // var arrayBuffer = new ArrayBuffer(byteString.length); //创建缓冲数组
+        // var ia = new Uint8Array(arrayBuffer);//创建视图
+        var ia = new Uint8Array(byteString.length); //创建视图
+        for (var i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+        }
+        var blob = new Blob([ia], {
+            type: mimeString,
+        });
+        return blob;
+    }
+
+    //将blob转为base64
+    blobToBase64(blob: Blob): Observable<string> {
+        return new Observable(observer => {
+            let fileReader = new FileReader();
+            fileReader.onload = (e: any) => {
+                observer.next(e.target.result as any);
+            };
+            fileReader.readAsDataURL(blob);
+        });
+    }
+}
+
+export interface VerifyResponse {
+    status: number;
+    message: string;
+    data: {
+        shouldUpload: boolean;
+        uploadedList?: string[];
+        filepath: string;
+    };
+}
+
+export interface UploadParams {
+    chunk: Blob;
+    type: FieldType;
+    apply_inspection_no: string;
+    contract_no: string;
+    sku: string;
+    video_info: FileBaseInfo;
+    upload_type: 'upload' | 'merge' | 'fileVerify';
+    video_extension: string;
+}
+
+export interface FileBaseInfo {
+    filehash: string;
+    hash: string;
+    filepath: string;
 }

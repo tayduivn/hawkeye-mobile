@@ -8,6 +8,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { EvaluatePage } from './evaluate.page';
+import { WidgetModule } from 'src/app/widget/widget.module';
 
 const routes: Routes = [
     {
@@ -15,11 +16,11 @@ const routes: Routes = [
         component: EvaluatePage,
     },
     {
-        path: 'evaluate/detail/:id/:applyId',
+        path: 'evaluate/detail/:id/:applyId/:applyNo',
         component: DetailComponent,
     },
     {
-        path:'evaluate/reload/:id/:applyId',
+        path:'evaluate/reload/:id/:applyId/:applyNo',
         component: DetailComponent
     }
 ];
@@ -30,6 +31,7 @@ const routes: Routes = [
         FormsModule, 
         IonicModule, 
         FlexLayoutModule, 
+        WidgetModule,
         RouterModule.forChild(routes)
     ],
     declarations: [EvaluatePage, DetailComponent],

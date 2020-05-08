@@ -21,7 +21,7 @@
                             <app-photograph
                                 moduleType="removeFactoryPic"
                                 [photos]="environments.value"
-                                [apply_inspection_no]="data.sku_data[0].apply_inspection_no"
+                                [apply_inspection_no]="currentApplyInsData.apply_inspection_no"
                                 type="factory_environment_pic"
                             ></app-photograph>
                         </div>
@@ -40,7 +40,7 @@
                             <app-photograph
                                 moduleType="removeFactoryPic"
                                 [photos]="sampleRoom.value"
-                                [apply_inspection_no]="data.sku_data[0].apply_inspection_no"
+                                [apply_inspection_no]="currentApplyInsData.apply_inspection_no"
                                 type="factory_sample_room_pic"
                             ></app-photograph>
                         </div>
@@ -59,7 +59,7 @@
                             <app-photograph
                                 moduleType="removeFactoryPic"
                                 [photos]="factoryOther.value"
-                                [apply_inspection_no]="data.sku_data[0].apply_inspection_no"
+                                [apply_inspection_no]="currentApplyInsData.apply_inspection_no"
                                 type="factory_other_pic"
                             ></app-photograph>
                         </div>
@@ -212,6 +212,35 @@
                     </div>
                 </div>
             </ion-item>
+
+            <ion-item>
+                <div fxLayout="col" fxLayoutAlign="space-between center" class="item-inner">
+                    <div fxLayout="col" fxLayoutAlign="start center">
+                        <label class="mr-0">实&nbsp;际&nbsp;验&nbsp;货&nbsp;时&nbsp;间：</label>
+                        <ion-datetime
+                            display-format="YYYY年MM月DD号"
+                            doneText="完成"
+                            max="2100"
+                            placeholder="请输入实际验货时间"
+                            formControlName="trulyInspectionDate"
+                            (ionChange)="getListByTime()"
+                            min="2020"
+                            cancelText="取消"
+                            monthShortNames="01, 02,03,04, 05,06,07,08,09,10,11,12"
+                        >
+                        </ion-datetime>
+                    </div>
+                    <div
+                        class="form-valid"
+                        *ngIf="
+                            !factoryModel.get('trulyInspectionDate').valid &&
+                            factoryModel.get('trulyInspectionDate').touched
+                        "
+                    >
+                        *请输入实际验货时间
+                    </div>
+                </div>
+            </ion-item>
         </ion-list>
 
         <ion-list>
@@ -224,6 +253,19 @@
                     [ary]="factoryModel.value.remarks"
                     (onComplete)="descEnter($event)"
                 ></app-item-by-item-desc>
+            </ion-item>
+        </ion-list>
+
+        <ion-list>
+            <ion-list-header>审&nbsp;&nbsp;核&nbsp;&nbsp;详&nbsp;&nbsp;情：</ion-list-header>
+            <ion-item *ngIf="inspectDetailImg && inspectDetailImg.length" class="pb-10">
+                <div fxLayout="col" fxLayoutAlign="space-between center" class="item-inner">
+                    <img
+                        [src]="imgOrigin + inspectDetailImg"
+                        style="width: 100%;height: auto;display: block;"
+                        imgGallery
+                    />
+                </div>
             </ion-item>
         </ion-list>
 

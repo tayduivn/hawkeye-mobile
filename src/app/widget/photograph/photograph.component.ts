@@ -9,6 +9,9 @@ import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { ImagePicker, ImagePickerOptions } from '@ionic-native/image-picker/ngx';
 import { ActionSheetOptions } from '@ionic/core';
 import { ImageOther } from 'src/app/services/file-upload.service';
+import ImageCompressor from 'image-compressor.js';
+import { from, Observable, of } from 'rxjs';
+import { concatMap, map, mergeAll, merge } from 'rxjs/operators';
 
 @Component({
     selector: 'app-photograph',
@@ -26,6 +29,8 @@ export class PhotographComponent implements OnInit {
         }
     }
 
+    Compressor: ImageCompressor;
+
     @Input() type: FieldType;
     @Input() apply_inspection_no: string;
     @Input() contract_no?: string;
@@ -33,7 +38,6 @@ export class PhotographComponent implements OnInit {
     @Input() box_type?: 'outer' | 'inner';
     @Input() moduleType: 'removeFactoryPic' | 'removeContractPic' | 'removeSkuPic';
     @Input() sort_index?: number;
-    s;
 
     constructor(
         private camera: Camera,
@@ -42,7 +46,9 @@ export class PhotographComponent implements OnInit {
         private uploadService: FileUploadService,
         private implement: ImplementInspectService,
         public platform: Platform,
-    ) {}
+    ) {
+        this.Compressor = new ImageCompressor();
+    }
     imgOrigin: string = environment.usFileUrl;
 
     @Output() onPhotograph: EventEmitter<string[]> = new EventEmitter<string[]>();
@@ -58,7 +64,7 @@ export class PhotographComponent implements OnInit {
     };
 
     pickerOpts: ImagePickerOptions = {
-        maximumImagesCount: 6,
+        // maximumImagesCount: 6,
         quality: 100,
         outputType: 1,
     };
@@ -101,7 +107,10 @@ export class PhotographComponent implements OnInit {
             imageData => {
                 this.ec.clearEffectCtrl();
                 const base64Image = 'data:image/jpeg;base64,' + imageData;
-                this.upload({ images: [base64Image] });
+                const image = this.getCompressionImage(this.dataURItoBlob(base64Image));
+                image.subscribe(base64 => {
+                    this.upload({ images: [base64] });
+                });
             },
             err => {
                 this.ec.showToast({
@@ -118,13 +127,73 @@ export class PhotographComponent implements OnInit {
                 res => {
                     this.ec.clearEffectCtrl();
                     let ary = res.map(item => 'data:image/jpeg;base64,' + item);
-                    this.upload({ images: ary });
+                    this.ec.showLoad({
+                        message:'压缩中……'
+                    })
+                    from(ary)
+                        .pipe(
+                            map(res => this.getCompressionImage(this.dataURItoBlob(res))),
+                            mergeAll(),
+                        )
+                        .subscribe(e => {
+                            this.ec.clearEffectCtrl()
+                            this.upload({ images: [e] });
+                        });
                 },
                 err => {
                     console.log(err);
                 },
             );
         }
+    }
+
+    dataURItoBlob(base64Data) :any{
+        //console.log(base64Data);//data:image/png;base64,
+        var byteString;
+        if (base64Data.split(',')[0].indexOf('base64') >= 0) byteString = atob(base64Data.split(',')[1]);
+        //base64 解码
+        else {
+            byteString = unescape(base64Data.split(',')[1]);
+        }
+        var mimeString = base64Data
+            .split(',')[0]
+            .split(':')[1]
+            .split(';')[0]; //mime类型 -- image/png
+
+        // var arrayBuffer = new ArrayBuffer(byteString.length); //创建缓冲数组
+        // var ia = new Uint8Array(arrayBuffer);//创建视图
+        var ia = new Uint8Array(byteString.length); //创建视图
+        for (var i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+        }
+        var blob = new Blob([ia], {
+            type: mimeString,
+        });
+        return blob;
+    }
+
+    //将base64转换为文件
+    dataURLtoFile(dataurl, filename): File {
+        var arr = dataurl.split(','),
+            mime = arr[0].match(/:(.*?);/)[1],
+            bstr = atob(arr[1]),
+            n = bstr.length,
+            u8arr = new Uint8Array(n);
+        while (n--) {
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+        return new File([u8arr], filename, { type: mime });
+    }
+
+    //将blob转为base64
+    blobToBase64(blob: Blob): Observable<string> {
+        return new Observable(observer => {
+            let fileReader = new FileReader();
+            fileReader.onload = (e: any) => {
+                observer.next(e.target.result as any);
+            };
+            fileReader.readAsDataURL(blob);
+        });
     }
 
     remove(i: number) {
@@ -174,7 +243,6 @@ export class PhotographComponent implements OnInit {
             message: '正在上传中……',
             backdropDismiss: false,
         });
-        debugger;
         let params: ImageOther = {
             type: this.type,
             apply_inspection_no: this.apply_inspection_no,
@@ -198,12 +266,52 @@ export class PhotographComponent implements OnInit {
     }
 
     doCheckImg(e: any) {
-        // console.log(e);
-        // let render = new FileReader();
-        // render.onload = event => {
-        //     console.log(event.target.result);
-        //     this.upload({ images: [event.target.result] });
-        // };
-        // render.readAsDataURL(e.target.files[0]);
+        // const obs$ = this.testGetBase64Ary(e);
+        // let $this = this;
+        // const ary = [];
+        // obs$.pipe(
+        //     map(res => this.getCompressionImage(this.dataURLtoFile(res, ''))),
+        //     mergeAll(),
+        // ).subscribe({
+        //     next(e) {
+        //         console.log(e);
+        //         ary.push(e);
+        //         $this.upload({ images: [e] });
+        //     },
+        // });
+    }
+
+    // testGetBase64Ary(e: any): Observable<string[]> {
+    //     return Observable.create(observer => {
+    //         let render = new FileReader();
+    //         render.onload = event => {
+    //             observer.next(event.target.result);
+    //             observer.next(event.target.result);
+    //             observer.next(event.target.result);
+    //             observer.next(event.target.result);
+    //             observer.next(event.target.result);
+    //         };
+    //         render.readAsDataURL(e.target.files[0]);
+    //     });
+    // }
+
+    getCompressionImage(file: File): Observable<string> {
+        let image = from(
+            this.Compressor.compress(file, {
+                quality: 0.8,
+                maxWidth: 1000,
+                maxHeight: 1000,
+                convertSize: 614400, //超过600kb压缩
+                success(result) {},
+                error(e) {
+                    console.log(e);
+                    throw { message: `压缩失败${e.message}` };
+                },
+            }),
+        ).pipe(
+            map(res => this.blobToBase64(res)),
+            mergeAll(),
+        );
+        return image;
     }
 }

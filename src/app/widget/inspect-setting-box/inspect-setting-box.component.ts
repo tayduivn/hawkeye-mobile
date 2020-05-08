@@ -17,6 +17,7 @@ export class InspectSettingBoxComponent implements OnInit {
 
     @Input() type?: InspectorSetType = '';
 
+    @Input() apply_id?:number = null
     _contract: any;
     constructor(
         private modalService: ModalController,
@@ -38,7 +39,7 @@ export class InspectSettingBoxComponent implements OnInit {
             apply_id:
                 this.type == 'skuList' || this.type == 'skuDetail'
                     ? this.storage.get('CURRENT_INSPECT_CONTRACT').id
-                    : this._contract.id,
+                    : this.apply_id,
         };
         if (this.type == 'skuList' || this.type == 'skuDetail') {
             this.inspectService
