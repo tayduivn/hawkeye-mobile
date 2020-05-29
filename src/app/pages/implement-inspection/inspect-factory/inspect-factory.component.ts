@@ -27,6 +27,12 @@ export interface Receptionist {
     post?: string;
 }
 
+export interface ExamineDetail {
+    img_arr: Array<string>;
+    review_summary_desc: string;
+    video_arr: Array<string>;
+}
+
 @Component({
     selector: 'app-inspect-factory',
     templateUrl: './inspect-factory.component.html',
@@ -39,7 +45,7 @@ export class InspectFactoryComponent implements OnInit {
         factoryOther: false,
     };
     imgOrigin: string = environment.usFileUrl;
-    inspectDetailImg: string;
+    examineDetail: ExamineDetail;
 
     start_time: string = String(new Date('').getTime());
     constructor(
@@ -82,7 +88,6 @@ export class InspectFactoryComponent implements OnInit {
             text: this.fb.control(this.data.factoryAddress),
             isTrue: this.fb.control('1'),
         }),
-
         worksNum: this.fb.control('', [Validators.required]),
         receptionist: this.fb.group({
             name: this.fb.control(this.data.factory_contacts),
@@ -144,8 +149,7 @@ export class InspectFactoryComponent implements OnInit {
 
     getData() {
         this.implementInspect.getInspectData(this.apply_inspect_no, this.inspection_group_id).subscribe(res => {
-            this.inspectDetailImg = (res.review_content?res.review_content[0]:null)
-
+            this.examineDetail = res.review_content;
             if (
                 (res.factory_data.environments && res.factory_data.environments.length) ||
                 (res.factory_data.sampleRoom && res.factory_data.sampleRoom.length) ||
@@ -175,7 +179,7 @@ export class InspectFactoryComponent implements OnInit {
                 },
                 trulyInspectionDate: res.factory_data.trulyInspectionDate,
                 equipment: res.factory_data.equipment,
-                remarks: res.factory_data.remarks,
+                remarks: res.factory_data.remarks ? res.factory_data.remarks : [],
             });
 
             setTimeout(() => {

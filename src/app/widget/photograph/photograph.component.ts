@@ -76,7 +76,7 @@ export class PhotographComponent implements OnInit {
             header: '上传方式',
             buttons: [
                 {
-                    text: '拍照',
+                    text: '拍照',
                     role: '',
                     icon: 'camera',
                     handler: () => {
@@ -105,16 +105,23 @@ export class PhotographComponent implements OnInit {
     graph() {
         this.camera.getPicture(this.options).then(
             imageData => {
-                this.ec.clearEffectCtrl();
-                const base64Image = 'data:image/jpeg;base64,' + imageData;
-                const image = this.getCompressionImage(this.dataURItoBlob(base64Image));
-                image.subscribe(base64 => {
-                    this.upload({ images: [base64] });
-                });
+                if (imageData) {
+                    this.ec.clearEffectCtrl();
+                    const base64Image = 'data:image/jpeg;base64,' + imageData;
+                    const image = this.getCompressionImage(this.dataURItoBlob(base64Image));
+                    image.subscribe(base64 => {
+                        this.upload({ images: [base64] });
+                    });
+                } else {
+                    this.ec.showToast({
+                        message: '没有拍摄图片',
+                        color: 'danger',
+                    });
+                }
             },
             err => {
                 this.ec.showToast({
-                    message: '请重新拍照',
+                    message: '没有拍摄照片',
                     color: 'danger',
                 });
             },
@@ -126,19 +133,26 @@ export class PhotographComponent implements OnInit {
             this.imagePicker.getPictures(this.pickerOpts).then(
                 res => {
                     this.ec.clearEffectCtrl();
-                    let ary = res.map(item => 'data:image/jpeg;base64,' + item);
-                    this.ec.showLoad({
-                        message:'压缩中……'
-                    })
-                    from(ary)
-                        .pipe(
-                            map(res => this.getCompressionImage(this.dataURItoBlob(res))),
-                            mergeAll(),
-                        )
-                        .subscribe(e => {
-                            this.ec.clearEffectCtrl()
-                            this.upload({ images: [e] });
+                    if (res && res.length) {
+                        let ary = res.map(item => 'data:image/jpeg;base64,' + item);
+                        this.ec.showLoad({
+                            message: '压缩中……',
                         });
+                        from(ary)
+                            .pipe(
+                                map(res => this.getCompressionImage(this.dataURItoBlob(res))),
+                                mergeAll(),
+                            )
+                            .subscribe(e => {
+                                this.ec.clearEffectCtrl();
+                                this.upload({ images: [e] });
+                            });
+                    } else {
+                        this.ec.showToast({
+                            message: '没有选择图片',
+                            color: 'danger',
+                        });
+                    }
                 },
                 err => {
                     console.log(err);
@@ -147,7 +161,7 @@ export class PhotographComponent implements OnInit {
         }
     }
 
-    dataURItoBlob(base64Data) :any{
+    dataURItoBlob(base64Data): any {
         //console.log(base64Data);//data:image/png;base64,
         var byteString;
         if (base64Data.split(',')[0].indexOf('base64') >= 0) byteString = atob(base64Data.split(',')[1]);

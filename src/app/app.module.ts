@@ -42,6 +42,7 @@ import { DescriptionComponent } from './widget/description/description.component
         { provide: LocationStrategy, useClass: HashLocationStrategy },
         QRScanner,
         FileTransfer,
+        
     ],
     bootstrap: [AppComponent],
 })

@@ -11,20 +11,25 @@
     <ion-card mode="ios">
         <ion-card-header>
             <ion-card-title color="primary">验货列表</ion-card-title>
+            <ion-item class="js">
+                <ion-input clearInput placeholder="请输入工厂名检索" (ionChange)='filterFactory($event)'></ion-input>
+            </ion-item>
         </ion-card-header>
 
-        <ion-item
-
-            *ngFor="let item of list | async"
-        >
+        <ion-item *ngFor="let item of list">
             <div fxLayout="row" fxLayoutAlign="space-between center" class="w100">
                 <div (click)="toDetail(item)">{{item.factory_name}}</div>
                 <ion-badge color="success" *ngIf="item.inspection_appraisement_id">已评价</ion-badge>
                 <ion-badge color="danger" *ngIf="!item.inspection_appraisement_id">未评价</ion-badge>
-
-                <div fxLayout='row' fxLayoutAlign='start center' >
-                    <div (click)="toDetail(item)">{{item.apply_inspection_no}}</div >
-                    <ion-button class="ml-20" [hidden]="!item.inspection_appraisement_id" size='small' (click)="cancel(item)">取消评价</ion-button>
+                <div fxLayout="row" fxLayoutAlign="start center">
+                    <div (click)="toDetail(item)">{{item.apply_inspection_no}}</div>
+                    <ion-button
+                        class="ml-20"
+                        [hidden]="!item.inspection_appraisement_id"
+                        size="small"
+                        (click)="cancel(item)"
+                        >取消评价</ion-button
+                    >
                 </div>
             </div>
         </ion-item>

@@ -12,7 +12,8 @@ import { PageEffectService } from '../../services/page-effect.service';
     styleUrls: ['./evaluate.page.scss'],
 })
 export class EvaluatePage implements OnInit {
-    list: Observable<InspectAppraisementItem[]>;
+    list: InspectAppraisementItem[] = [];
+    metaList: InspectAppraisementItem[] = [];
     listLength: number;
     constructor(
         private router: Router,
@@ -22,8 +23,15 @@ export class EvaluatePage implements OnInit {
     ) {}
 
     ngOnInit() {
-        this.list = this.InspectEval.getEvaluateList().pipe(map((res: any) => res.data));
-        this.list.subscribe(res => {
+        this.getList();
+    }
+
+    getList(){
+        this.InspectEval.getEvaluateList()
+        .pipe(map((res: any) => res.data))
+        .subscribe(res => {
+            this.list = res;
+            this.metaList = JSON.parse(JSON.stringify(res));
             this.listLength = res.length ? res.length : 0;
         });
     }
@@ -52,7 +60,7 @@ export class EvaluatePage implements OnInit {
                                     message: res.message,
                                 });
                                 setTimeout(() => {
-                                    this.list = this.InspectEval.getEvaluateList().pipe(map((res: any) => res.data));
+                                    this.getList();
                                 }, 1000);
                             }
                         });
@@ -63,5 +71,10 @@ export class EvaluatePage implements OnInit {
                 },
             ],
         });
+    }
+
+    filterFactory(e: any) {
+        console.log(e);
+        this.list = this.metaList.filter(res => res.factory_name.indexOf(e.detail.value) != -1)
     }
 }

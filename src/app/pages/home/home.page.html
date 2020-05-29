@@ -7,9 +7,7 @@
             首页
         </ion-title>
         <ion-title slot="end">
-            姓名：{{user.info.name }}
-            <span> </span>
-            工号：{{user.info.company_no}}
+            <img src="../../../assets/img/slogan.png" alt="" />
         </ion-title>
     </ion-toolbar>
 </ion-header>
@@ -18,7 +16,11 @@
     <ion-card class="welcome-card">
         <ion-img [src]="src"></ion-img>
         <ion-card-header>
-            <ion-card-subtitle>HELLO</ion-card-subtitle>
+            <ion-card-subtitle
+                >姓名：{{user.info.name }}
+                <span> </span>
+                工号：{{user.info.company_no}}</ion-card-subtitle
+            >
             <ion-card-title>欢迎进入鹰眼系统</ion-card-title>
         </ion-card-header>
         <ion-card-content> </ion-card-content>

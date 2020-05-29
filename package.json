@@ -24,6 +24,7 @@
     "@angular/platform-browser": "~8.1.2",
     "@angular/platform-browser-dynamic": "~8.1.2",
     "@angular/router": "~8.1.2",
+    "@ionic-native/barcode-scanner": "^5.26.0",
     "@ionic-native/base64-to-gallery": "^5.21.6",
     "@ionic-native/camera": "^5.15.0",
     "@ionic-native/chooser": "^5.16.0",
@@ -43,7 +44,7 @@
     "@ionic/angular": "^4.7.1",
     "@ionic/pro": "2.0.4",
     "clipboard": "^2.0.4",
-    "cordova-android": "^8.1.0",
+    "cordova-android": "8.1.0",
     "cordova-base64-to-gallery": "^4.1.3",
     "cordova-clipboard": "1.3.0",
     "cordova-ios": "5.0.1",
@@ -67,6 +68,7 @@
     "file-transfer": "0.0.0",
     "image-compressor.js": "^1.1.4",
     "loadsh": "0.0.4",
+    "phonegap-plugin-barcodescanner": "8.1.0",
     "phonegap-plugin-mobile-accessibility": "^1.0.5",
     "rxjs": "~6.5.1",
     "tslib": "^1.9.0",
@@ -131,10 +133,14 @@
       "cordova-plugin-filepath": {},
       "phonegap-plugin-mobile-accessibility": {},
       "cordova-plugin-video-editor": {},
-      "cordova-base64-to-gallery": {}
+      "cordova-base64-to-gallery": {},
+      "phonegap-plugin-barcodescanner": {
+        "ANDROID_SUPPORT_V4_VERSION": "27.+"
+      }
     },
     "platforms": [
-      "ios"
+      "ios",
+      "android"
     ]
   }
 }

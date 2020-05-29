@@ -261,6 +261,7 @@ export class InspectSkuComponent implements OnInit {
                 }),
                 desc: this.fb.group({
                     desc: this.fb.array([]),
+                    photos: this.fb.array([])
                 }),
             }),
             outer_box_data: this.fb.group({
@@ -506,7 +507,9 @@ export class InspectSkuComponent implements OnInit {
                             this.dynamicBuildFC(element.photos, this.rateStatus + '_box_data', key, 'photos');
                         }
                     }
-                    if (key == 'size' && this.data.rate_container == 1) {
+
+                    //多箱率的外箱和单向率的内箱是有size的
+                    if (key == 'size' && (this.rateStatus == 'outer' || this.data.rate_container == 1)) {
                         if (!!element) {
                             let element = box[key];
                             this.dynamicBuildFC(element.desc, this.rateStatus + '_box_data', key, 'desc');
@@ -623,7 +626,6 @@ export class InspectSkuComponent implements OnInit {
                             },
                         },
                     });
-                    console.log(this.SkuInspectModel.value);
                 } else {
                     this.SkuInspectModel.patchValue({
                         spotCheckNum: res.outer_box_data.spotCheckNum,
@@ -680,7 +682,6 @@ export class InspectSkuComponent implements OnInit {
                         },
                     });
                 }
-
                 //毛重 显示五个值
                 this.otherGrossWeight =
                     this.SkuInspectModel.value[this.rateStatus + '_box_data'].grossWeight.text4 &&
@@ -887,6 +888,7 @@ export class InspectSkuComponent implements OnInit {
                             desc: {
                                 //整体描述
                                 desc: res.inner_box_data.desc ? res.inner_box_data.desc.desc : [],
+                                photos: res.inner_box_data.desc.photos ? res.inner_box_data.desc.photos :[]
                             },
                         },
                     });

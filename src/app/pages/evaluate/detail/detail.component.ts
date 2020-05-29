@@ -66,7 +66,7 @@ export class DetailComponent implements OnInit {
         let data = this.storage.get('EVALUATE_DETAIL_SKU');
         data &&
             data.forEach(elem => {
-                this.sku_appraisement.push({ sku: elem ,desc:[{text:'',level:''}]});
+                this.sku_appraisement.push({ sku: elem, desc: [{ text: '', level: '' }] });
             });
         if (!this.inspection_appraisement_id) return;
         this.getData();
@@ -102,25 +102,27 @@ export class DetailComponent implements OnInit {
         delete params.created_at;
         this.evalService.postInspectAppraisement(params).subscribe(res => {
             this.es.showToast({
-                color: 'success',
-                message: res.message,
+                color: res.status ? 'success' : 'danger',
+                message: res.status ? res.message : '请填写完提交',
             });
-            let route = location.hash.indexOf('detail') != -1 ? 'reload' : 'detail';
-            this.router.navigate([
-                '/evaluate/' + route,
-                res.data.inspection_appraisements_id,
-                this.apply_inspection_id,
-                this.apply_inspection_no,
-            ]);
+            if (!res.status) return;
+            setTimeout(() => {
+                let route = location.hash.indexOf('detail') != -1 ? 'reload' : 'detail';
+                this.router.navigate([
+                    '/evaluate/' + route,
+                    res.data.inspection_appraisements_id,
+                    this.apply_inspection_id,
+                    this.apply_inspection_no,
+                ]);
+            }, 1000);
         });
     }
 
     skuAppraisementChange(e: any, i: number) {
         this.sku_appraisement[i].appraisement = e.detail.value;
-        console.log(this.sku_appraisement);
     }
 
     descEnter(e: Array<{ text: string; level: string }>, i: number) {
-        this.sku_appraisement[i].desc = e
+        this.sku_appraisement[i].desc = e;
     }
 }

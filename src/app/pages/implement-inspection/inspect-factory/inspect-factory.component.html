@@ -258,15 +258,7 @@
 
         <ion-list>
             <ion-list-header>审&nbsp;&nbsp;核&nbsp;&nbsp;详&nbsp;&nbsp;情：</ion-list-header>
-            <ion-item *ngIf="inspectDetailImg && inspectDetailImg.length" class="pb-10">
-                <div fxLayout="col" fxLayoutAlign="space-between center" class="item-inner">
-                    <img
-                        [src]="imgOrigin + inspectDetailImg"
-                        style="width: 100%;height: auto;display: block;"
-                        imgGallery
-                    />
-                </div>
-            </ion-item>
+            <app-examine-detail [data]="examineDetail"></app-examine-detail> 
         </ion-list>
 
         <div class="next" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="gappx">

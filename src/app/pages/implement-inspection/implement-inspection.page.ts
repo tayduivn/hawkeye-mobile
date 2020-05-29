@@ -42,10 +42,12 @@ import { Router } from '@angular/router';
 export class ImplementInspectionPage implements OnInit {
     active: string = 'factory';
     inspectTask: any[] = [];
+    metaInspectTask: any[] = [];
     task: any[] = [];
     factory: any = '';
     contract: any = '';
     contractList: any[] = [];
+    currentFactory: string;
     constructor(private inspectService: InspectionService, private storage: StorageService, private router: Router) {}
 
     ngOnInit() {}
@@ -57,7 +59,8 @@ export class ImplementInspectionPage implements OnInit {
 
     ionViewWillEnter() {
         this.inspectService.getInspectTaskList().subscribe(res => {
-            this.inspectTask = res;
+            this.metaInspectTask = res;
+            this.inspectTask = JSON.parse(JSON.stringify(res));
             this.task = res;
             this.storage.set('IMPLEMENT-INSPECTION-META-DATA', res);
         });
@@ -72,5 +75,9 @@ export class ImplementInspectionPage implements OnInit {
             });
         });
         return rVal;
+    }
+
+    factoryChange() {
+        this.inspectTask = this.metaInspectTask.filter(res => res.factory_name.indexOf(this.currentFactory) != -1);
     }
 }

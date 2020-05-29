@@ -13,6 +13,7 @@ import { FileHashService } from 'src/app/blue-bird/service/file-hash.service';
 import { UserInfoService } from 'src/app/services/user-info.service';
 import { Observable } from 'rxjs';
 import { HttpService } from '../../services/http.service';
+import { environment } from 'src/environments/environment';
 
 export type FieldType =
     | 'throw_box_video'
@@ -91,13 +92,12 @@ export class VideotapeComponent implements OnInit {
     _videos: any[][] = [];
     _up_data: string[] = [];
     ngOnInit() {}
-
     complete: boolean = true;
 
     videotape() {
         if (!this.complete) {
             this.ec.showToast({
-                message: '请等待上传完毕！',
+                message: '请等待上传完毕！',
                 color: 'danger',
             });
             return;
@@ -127,22 +127,26 @@ export class VideotapeComponent implements OnInit {
     }
 
     async fileChoose() {
-        this.ec.showLoad({
-            message: '获取文件ArrayBuffer中……',
-        });
         const uri = await this.fileChooser.open({ mime: 'video/mp4' });
         const url = await this.filePath.resolveNativePath(uri);
-
-        console.log('uri:' + uri, 'url:' + url);
-
-        this.getFileEntry(url).then(res => {
-            this.ec.clearEffectCtrl();
-            this.ec.showAlert({
-                message: '获取ArrayBuffer完毕',
+        if (url && uri) {
+            this.ec.showLoad({
+                message: '获取文件ArrayBuffer中……',
             });
-            const blob = new Blob([res]);
-            this.handleFile(blob, url);
-        });
+            this.getFileEntry(url).then(res => {
+                this.ec.clearEffectCtrl();
+                this.ec.showAlert({
+                    message: '获取ArrayBuffer完毕',
+                });
+                const blob = new Blob([res]);
+                this.handleFile(blob, url);
+            });
+        } else {
+            this.ec.showToast({
+                message: '没有选中文件',
+                color: 'danger',
+            });
+        }
     }
 
     async getFileEntry(url: string): Promise<any> {
@@ -153,24 +157,28 @@ export class VideotapeComponent implements OnInit {
 
     async tape() {
         const mediaFiles = await this.mediaCapture.captureVideo({ limit: 1, quality: 30 });
-        let dirPath = mediaFiles[0].fullPath.substring(0, mediaFiles[0].fullPath.lastIndexOf('/'));
-        let fileName = mediaFiles[0].fullPath.substring(
-            mediaFiles[0].fullPath.lastIndexOf('/') + 1,
-            mediaFiles[0].fullPath.length,
-        );
-        const dirEntry = await this.file.resolveDirectoryUrl(dirPath);
-        const fileEntry = await this.file.getFile(dirEntry, fileName, {});
-        this.getFileEntry(mediaFiles[0].fullPath).then(res => {
-          this.ec.clearEffectCtrl();
-          this.ec.showAlert({
-              message: '获取ArrayBuffer完毕',
-          });
-          const blob = new Blob([res]);
-          this.handleFile(blob, mediaFiles[0].fullPath);
-      });
-        // fileEntry.file(res => {
-        //     this.handleFile(res, mediaFiles[0].fullPath);
-        // });
+        // let dirPath = mediaFiles[0].fullPath.substring(0, mediaFiles[0].fullPath.lastIndexOf('/'));
+        // let fileName = mediaFiles[0].fullPath.substring(
+        //     mediaFiles[0].fullPath.lastIndexOf('/') + 1,
+        //     mediaFiles[0].fullPath.length,
+        // );
+        // const dirEntry = await this.file.resolveDirectoryUrl(dirPath);
+        // const fileEntry = await this.file.getFile(dirEntry, fileName, {});
+        if (mediaFiles) {
+            this.getFileEntry(mediaFiles[0].fullPath).then(res => {
+                this.ec.clearEffectCtrl();
+                this.ec.showAlert({
+                    message: '获取ArrayBuffer完毕',
+                });
+                const blob = new Blob([res]);
+                this.handleFile(blob, mediaFiles[0].fullPath);
+            });
+        } else {
+            this.ec.showToast({
+                message: '没有拍摄视频',
+                color: 'danger',
+            });
+        }
     }
 
     async handleFile(res?: any, filepath?: string) {
@@ -179,8 +187,6 @@ export class VideotapeComponent implements OnInit {
         this.fileChunkList = await this.fileChunk.handleFile(res);
         //文件hash
         this.hash = await this.fileHash.initHashWorker(this.fileChunkList);
-        console.log(this.hash);
-        console.dir(this.fileChunkList);
         //toPromise rxjs
         const {
             data: { uploadedList, shouldUpload },
@@ -191,7 +197,6 @@ export class VideotapeComponent implements OnInit {
         } else {
             this.uploadChunks(uploadedList ? uploadedList : []);
         }
-
         //上传切片
     }
 
@@ -217,6 +222,7 @@ export class VideotapeComponent implements OnInit {
             .map(({ chunk, fileHash, hash, cut_num }) => {
                 let formData = new FormData();
                 formData.append('chunk', chunk);
+                this.sort_index && formData.append('sort_index', this.sort_index as any);
                 formData.append('type', this.type);
                 formData.append('apply_inspection_no', this.apply_inspection_no);
                 formData.append('contract_no', this.contract_no);
@@ -225,11 +231,12 @@ export class VideotapeComponent implements OnInit {
                 formData.append('filename', this.container.name);
                 formData.append('filehash', fileHash);
                 formData.append('upload_type', 'upload');
+                console.log(this.sort_index);
                 return formData;
             })
             .map(async (formData, index) => {
                 return await this.fileReq.request({
-                    url: 'http://yy.xdrlgroup.com/api/v1/task/add_inspection_task_video',
+                    url: `${environment.apiUrl}/task/add_inspection_task_video`,
                     requestList: this.requestList,
                     onProgress: this.createProgressHandler(this.data[index]),
                     data: formData,
@@ -244,19 +251,18 @@ export class VideotapeComponent implements OnInit {
 
     async mergeRequest(): Promise<any> {
         let data = {
-          filehash: this.hash,
-          type: this.type,
-          apply_inspection_no: this.apply_inspection_no,
-          contract_no: this.contract_no,
-          sku: this.sku,
-          upload_type: 'merge',
-      }
-        this.http.post({url:'/task/add_inspection_task_video',params:data})
-            .subscribe(res => {
-              console.log(res)
-              this._up_data.push(res.data);
-            })
-
+            filehash: this.hash,
+            type: this.type,
+            apply_inspection_no: this.apply_inspection_no,
+            contract_no: this.contract_no,
+            sku: this.sku,
+            upload_type: 'merge',
+            sort_index: this.sort_index,
+        };
+        !this.sort_index && delete data.sort_index;
+        this.http.post({ url: '/task/add_inspection_task_video', params: data }).subscribe(res => {
+            this._up_data.push(res.data);
+        });
     }
 
     // 用闭包保存每个 chunk 的进度数据
@@ -274,7 +280,7 @@ export class VideotapeComponent implements OnInit {
 
     async verifyUpload(filehash: string, filepath?: string): Promise<VerifyResponse> {
         const { data } = await this.fileReq.request({
-            url: 'http://yy.xdrlgroup.com/api/v1/task/add_inspection_task_video', //http://localhost:3000/merge
+            url: `${environment.apiUrl}/task/add_inspection_task_video`, //http://localhost:3000/merge
             headers: {
                 'content-type': 'application/json',
             },

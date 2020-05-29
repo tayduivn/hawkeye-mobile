@@ -1,3 +1,4 @@
+import { ExamineDetailComponent } from './inspect-factory/examine-detail/examine-detail.component';
 import { EvaluationComponent } from './evaluation/evaluation.component';
 import { InspectSkuComponent } from './inspect-sku/inspect-sku.component';
 import { DirectiveModule } from './../../directives/directive.module';
@@ -59,6 +60,7 @@ const routes: Routes = [
         InspectPoComponent,
         InspectSkuComponent,
         EvaluationComponent,
+        ExamineDetailComponent
     ],
     providers: [Camera],
 })

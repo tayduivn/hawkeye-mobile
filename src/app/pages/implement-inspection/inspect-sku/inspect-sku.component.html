@@ -20,7 +20,7 @@
     </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content #content>
     <app-sku-info [sku]="data" type="implement"></app-sku-info>
     <div class="label-item">
         <ion-grid>
@@ -175,7 +175,7 @@
                 <ion-item *ngIf="data.rate_container != 1">
                     <div class="w100">
                         <div class="global-inspect-title">
-                            <p>尺寸(单位：CM,叠高高度：1-2M）</p>
+                            <p>尺寸(单位：CM）</p>
                         </div>
                         <inspect-product-size
                             type="size"
@@ -984,6 +984,15 @@
                         <div class="global-inspect-title">
                             <p>备注</p>
                         </div>
+                        <app-photograph
+                            type="summary_pic"
+                            moduleType="removeSkuPic"
+                            [photos]="SkuInspectModel.value.inner_box_data.desc.photos"
+                            [contract_no]="contractNo"
+                            [apply_inspection_no]="currentApplyInsData.apply_inspection_no"
+                            [sku]="data.sku"
+                            box_type="inner"
+                        ></app-photograph>
                         <div class="maozhong pb-10">
                             <app-item-by-item-desc
                                 description="备注"
@@ -1439,9 +1448,21 @@
         </div>
     </form>
 </ion-content>
-
-<ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="!inspectRequireSegment">
-    <ion-fab-button color="danger" (click)="save().subscribe()">
-        <p>保存</p>
+ 
+<ion-fab vertical="bottom" horizontal="end" slot="fixed"  *ngIf="!inspectRequireSegment">
+    <ion-fab-button color="secondary">
+        <ion-icon name="add"></ion-icon>
     </ion-fab-button>
+
+    <ion-fab-list side="start">
+        <ion-fab-button (click)="save().subscribe()" color='danger'>
+            <p>保存</p>
+        </ion-fab-button>
+    </ion-fab-list>
+
+    <ion-fab-list side="top">
+        <ion-fab-button (click)="content.scrollToTop()" color='primary'>
+            <p>顶部</p>
+        </ion-fab-button>
+    </ion-fab-list>
 </ion-fab>

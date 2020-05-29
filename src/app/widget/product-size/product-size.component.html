@@ -15,9 +15,9 @@
         <div (click)="changeText(i, item.size_height ? 'modify' : 'add', 'size_height', '高')">
             {{ item.size_height ? item.size_height : '输入高' }}
         </div>
-        <div (click)="changeText(i, item.size_weight ? 'modify' : 'add', 'size_weight', '重')">
+        <!-- <div (click)="changeText(i, item.size_weight ? 'modify' : 'add', 'size_weight', '重')">
             {{ item.size_weight ? item.size_weight : '重量（可选）' }}
-        </div>
+        </div> -->
         <ion-button size="small" (click)="add()" *ngIf="i == _sizes.length - 1">添加</ion-button>
     </div>
     <app-photograph

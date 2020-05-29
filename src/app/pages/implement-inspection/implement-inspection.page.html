@@ -10,6 +10,9 @@
 <ion-content>
     <ul class="inspect-list pos-r">
         <li class="pos-a" [@openClose]="active == 'factory' ? 'open' : 'closed'">
+            <div class="retrieval">
+                <ion-input clearInput placeholder="输入工厂名检索" (ionChange)='factoryChange()'  [(ngModel)]="currentFactory"></ion-input>
+            </div>
             <div class="inspect-item first pos-a">
                 <ion-card mode="ios">
                     <ion-card-header class="activated">

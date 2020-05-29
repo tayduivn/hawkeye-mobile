@@ -1,0 +1,15 @@
+<div class="detail">
+    {{ _data.review_summary_desc }}
+</div>
+
+<ul class="videos">
+    <li *ngFor="let item of _data.video_arr">
+        <video [src]="env + '/' + item" controls></video>
+    </li>
+</ul>
+
+<ul class="images" imgGallery>
+    <li *ngFor="let item of _data.img_arr">
+        <img [src]="env + '/' + item" alt="" />
+    </li>
+</ul>
