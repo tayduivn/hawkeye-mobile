@@ -18,7 +18,7 @@ export class InspectSettingBoxComponent implements OnInit {
     @Input() type?: InspectorSetType = '';
 
     @Input() apply_id?:number = null
-    _contract: any;
+    _contract: any; 
     constructor(
         private modalService: ModalController,
         private storage: StorageService,

@@ -94,6 +94,7 @@ export class InspectSkuComponent implements OnInit {
     data: Sku = null;
     factory: any = null;
     barCode: string = null;
+    outerBarCode: string = null;
     rateStatus: 'outer' | 'inner' = 'inner';
     toggleItem: any[] = ToggleItem;
     currentToggle: any = ToggleItem[0];
@@ -162,6 +163,7 @@ export class InspectSkuComponent implements OnInit {
                     desc: this.fb.array([]),
                     photos: this.fb.array([]),
                     text: this.fb.control(''),
+                    agreement: this.fb.control(''),
                 }),
                 grossWeight: this.fb.group({
                     text1: this.fb.control(''),
@@ -261,7 +263,7 @@ export class InspectSkuComponent implements OnInit {
                 }),
                 desc: this.fb.group({
                     desc: this.fb.array([]),
-                    photos: this.fb.array([])
+                    photos: this.fb.array([]),
                 }),
             }),
             outer_box_data: this.fb.group({
@@ -292,6 +294,7 @@ export class InspectSkuComponent implements OnInit {
                     desc: this.fb.array([]),
                     photos: this.fb.array([]),
                     text: this.fb.control(''),
+                    agreement: this.fb.control(''),
                 }),
                 grossWeight: this.fb.group({
                     text1: this.fb.control(''),
@@ -342,17 +345,25 @@ export class InspectSkuComponent implements OnInit {
         this.otherGrossWeight = compare[0] * 1.2 < compare[compare.length - 1];
     }
 
-    scan() {
+    scan(p: 'inner' | 'outer') {
         const modal = this.es.showModal(
             {
                 component: ScanComponent,
             },
             res => {
-                this.barCode = res.value;
+                this[p == 'inner' ? 'barCode' : 'outerBarCode'] = res.value;
+                if (p == 'inner') {
+                    this.innerCode =
+                        this.SkuInspectModel.value.inner_box_data.barCode.text == this.barCode ? '1' : '0';
+                } else {
+                    this.outerCode =
+                        this.SkuInspectModel.value.outer_box_data.barCode.text == this.outerBarCode ? '1' : '0';
+                }
             },
         );
     }
-
+    innerCode = null
+    outerCode = null
     /**
      * app-item-by-item-desc callback
      * @param e     description array
@@ -379,6 +390,13 @@ export class InspectSkuComponent implements OnInit {
      */
     save(): Observable<any> {
         const saved = new Observable(observer => {
+            //条码逻辑
+
+            this.SkuInspectModel.value.inner_box_data.barCode.isTrue =
+                this.SkuInspectModel.value.inner_box_data.barCode.text == this.barCode ? '1' : '0';
+            this.SkuInspectModel.value.outer_box_data.barCode.isTrue =
+                this.SkuInspectModel.value.outer_box_data.barCode.text == this.outerBarCode ? '1' : '0';
+
             let postData = JSON.parse(JSON.stringify(this.SkuInspectModel.value));
             this.rateStatus == 'inner' ? delete postData.outer_box_data : delete postData.inner_box_data;
             postData.inner_box_data && (postData.inner_box_data.productSize = this.productSize);
@@ -497,7 +515,6 @@ export class InspectSkuComponent implements OnInit {
                 this.inspectionRequire = res[this.rateStatus + '_box_data']
                     ? res[this.rateStatus + '_box_data'].inspection_require
                     : {};
-
                 for (let key in box) {
                     let element = box[key];
                     if (box.hasOwnProperty(key) && key != 'inspection_require' && key != 'size') {
@@ -507,7 +524,6 @@ export class InspectSkuComponent implements OnInit {
                             this.dynamicBuildFC(element.photos, this.rateStatus + '_box_data', key, 'photos');
                         }
                     }
-
                     //多箱率的外箱和单向率的内箱是有size的
                     if (key == 'size' && (this.rateStatus == 'outer' || this.data.rate_container == 1)) {
                         if (!!element) {
@@ -537,7 +553,6 @@ export class InspectSkuComponent implements OnInit {
                         } else this.dynamicBuildFC(element.desc, this.rateStatus + '_box_data', key, 'desc');
                     }
                 }
-
                 let sizeModel = null;
                 //patch value to formGroup
                 if (this.rateStatus == 'inner') {
@@ -575,7 +590,6 @@ export class InspectSkuComponent implements OnInit {
                                       },
                                   ];
                     }
-
                     this.SkuInspectModel.patchValue({
                         spotCheckNum: res.inner_box_data.spotCheckNum,
                         poNo: res.inner_box_data.poNo,
@@ -888,7 +902,7 @@ export class InspectSkuComponent implements OnInit {
                             desc: {
                                 //整体描述
                                 desc: res.inner_box_data.desc ? res.inner_box_data.desc.desc : [],
-                                photos: res.inner_box_data.desc.photos ? res.inner_box_data.desc.photos :[]
+                                photos: res.inner_box_data.desc.photos ? res.inner_box_data.desc.photos : [],
                             },
                         },
                     });

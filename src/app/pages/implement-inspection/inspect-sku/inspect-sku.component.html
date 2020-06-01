@@ -206,15 +206,16 @@
                         <div class="bar-code" fxLayout="row" fxLayoutAlign="start center">
                             <input class="h-30" placeholder="请输入条码" formControlName="text" />
                             <ion-button fill="clear">{{ barCode }}</ion-button>
-                            <ion-button
-                                fill="clear"
-                                (click)="scan()"
-                                *ngIf="!SkuInspectModel.value.inner_box_data.barCode.isTrue"
-                            >
+                            <ion-button fill="clear" (click)="scan('inner')">
+                                <!-- *ngIf="!SkuInspectModel.value.inner_box_data.barCode.isTrue" -->
                                 扫码
                             </ion-button>
                             <ion-button
-                                *ngIf="SkuInspectModel.value.inner_box_data.barCode.isTrue"
+                                *ngIf="
+                                    SkuInspectModel.value.inner_box_data.barCode.isTrue ||
+                                    barCode == SkuInspectModel.value.inner_box_data.barCode.text || 
+                                    barCode == innerCode
+                                "
                                 color="success"
                                 size="small"
                                 fill="clear"
@@ -234,7 +235,7 @@
                             <p class="global-inspect-title gray-color">
                                 是否六面条码一致？
                             </p>
-                            <select class="select" formControlName="isTrue">
+                            <select class="select" formControlName="agreement">
                                 <option value="1">是</option>
                                 <option value="0">否</option>
                             </select>
@@ -1186,21 +1187,25 @@
                         </div>
                         <div class="bar-code" fxLayout="row" fxLayoutAlign="start center">
                             <input class="h-30" placeholder="请输入条码" formControlName="text" />
-                            <ion-button
-                                [fill]="'clear'"
-                                (click)="scan()"
-                                [disabled]="barCode"
-                                *ngIf="!SkuInspectModel.value.outer_box_data.barCode.isTrue"
-                            >
-                                {{ barCode ? barCode : '扫码' }}
+                            <ion-button fill="clear">{{ outerBarCode }}</ion-button>
+                            <ion-button [fill]="'clear'" (click)="scan('outer')">
+                                扫码
+                                <!-- [disabled]="barCode" -->
+                                <!-- *ngIf="!SkuInspectModel.value.outer_box_data.barCode.isTrue" -->
+                                <!-- {{ barCode ? barCode : '扫码' }} -->
                             </ion-button>
                             <ion-button
-                                *ngIf="SkuInspectModel.value.outer_box_data.barCode.isTrue"
+                                *ngIf="
+                                    SkuInspectModel.value.outer_box_data.barCode.isTrue ||
+                                    outerBarCode == SkuInspectModel.value.outer_box_data.barCode.text ||
+                                    outerBarCode == outerCode
+                                "
                                 color="success"
                                 size="small"
                                 fill="clear"
-                                >扫码已通过</ion-button
                             >
+                                扫码已通过
+                            </ion-button>
                         </div>
                         <app-photograph
                             type="bar_code_pic"
@@ -1216,7 +1221,7 @@
                             <p class="global-inspect-title gray-color">
                                 是否六面条码一致？
                             </p>
-                            <select class="select" formControlName="isTrue">
+                            <select class="select" formControlName="agreement">
                                 <option value="1">是</option>
                                 <option value="0">否</option>
                             </select>
@@ -1448,20 +1453,20 @@
         </div>
     </form>
 </ion-content>
- 
-<ion-fab vertical="bottom" horizontal="end" slot="fixed"  *ngIf="!inspectRequireSegment">
+
+<ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="!inspectRequireSegment">
     <ion-fab-button color="secondary">
         <ion-icon name="add"></ion-icon>
     </ion-fab-button>
 
     <ion-fab-list side="start">
-        <ion-fab-button (click)="save().subscribe()" color='danger'>
+        <ion-fab-button (click)="save().subscribe()" color="danger">
             <p>保存</p>
         </ion-fab-button>
     </ion-fab-list>
 
     <ion-fab-list side="top">
-        <ion-fab-button (click)="content.scrollToTop()" color='primary'>
+        <ion-fab-button (click)="content.scrollToTop()" color="primary">
             <p>顶部</p>
         </ion-fab-button>
     </ion-fab-list>

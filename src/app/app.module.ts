@@ -21,10 +21,24 @@ import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { ScanComponent } from './widget/scan/scan.component';
 import { FileTransfer } from '@ionic-native/file-transfer/ngx';
 import { DescriptionComponent } from './widget/description/description.component';
+import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 
 @NgModule({
-    declarations: [AppComponent, InspectSettingBoxComponent, ScanComponent, PartsComponent, VideoPlayComponent,DescriptionComponent],
-    entryComponents: [InspectSettingBoxComponent, ScanComponent, PartsComponent, VideoPlayComponent,DescriptionComponent],
+    declarations: [
+        AppComponent,
+        InspectSettingBoxComponent,
+        ScanComponent,
+        PartsComponent,
+        VideoPlayComponent,
+        DescriptionComponent,
+    ],
+    entryComponents: [
+        InspectSettingBoxComponent,
+        ScanComponent,
+        PartsComponent,
+        VideoPlayComponent,
+        DescriptionComponent,
+    ],
     imports: [
         BrowserModule,
         IonicModule.forRoot(),
@@ -42,7 +56,7 @@ import { DescriptionComponent } from './widget/description/description.component
         { provide: LocationStrategy, useClass: HashLocationStrategy },
         QRScanner,
         FileTransfer,
-        
+        BarcodeScanner,
     ],
     bootstrap: [AppComponent],
 })

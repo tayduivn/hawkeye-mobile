@@ -62,6 +62,7 @@ import { Base64ToGallery } from '@ionic-native/base64-to-gallery/ngx';
         FilePath,
         File,
         Base64ToGallery,
+        
     ],
 })
 export class WidgetModule {}

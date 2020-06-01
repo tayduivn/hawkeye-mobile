@@ -43,12 +43,12 @@ export class InspectTaskPage implements OnInit {
         this.router.navigate(['inspect-contract']);
     }
 
-    inspectOp(p: any) {
+    inspectOp(p: any,e:any) {
         let option: ModalOptions = {
             component: InspectSettingBoxComponent,
             cssClass: 'custom-modal-sku',
             mode: 'ios',
-            componentProps: { contract: p.data[0], type: 'group' },
+            componentProps: { contract: p.data[0], type: 'group',apply_id: p.data[0].id},
         };
 
         this.effectCtrl.showModal(option, (data: any) => {

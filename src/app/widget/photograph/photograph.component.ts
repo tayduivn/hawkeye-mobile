@@ -11,7 +11,7 @@ import { ActionSheetOptions } from '@ionic/core';
 import { ImageOther } from 'src/app/services/file-upload.service';
 import ImageCompressor from 'image-compressor.js';
 import { from, Observable, of } from 'rxjs';
-import { concatMap, map, mergeAll, merge } from 'rxjs/operators';
+import { map, mergeAll } from 'rxjs/operators';
 
 @Component({
     selector: 'app-photograph',
@@ -56,7 +56,7 @@ export class PhotographComponent implements OnInit {
     metaPhotos: string[] = [];
 
     options: CameraOptions = {
-        quality: 100,
+        quality: 10,
         destinationType: this.camera.DestinationType.DATA_URL,
         encodingType: this.camera.EncodingType.JPEG,
         mediaType: this.camera.MediaType.PICTURE,
