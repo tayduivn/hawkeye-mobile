@@ -212,9 +212,9 @@
                             </ion-button>
                             <ion-button
                                 *ngIf="
-                                    SkuInspectModel.value.inner_box_data.barCode.isTrue ||
-                                    barCode == SkuInspectModel.value.inner_box_data.barCode.text || 
-                                    barCode == innerCode
+                                    SkuInspectModel.value.inner_box_data.barCode.isTrue == '1' ||
+                                    (barCode && barCode == SkuInspectModel.value.inner_box_data.barCode.text) ||
+                                    (barCode&&barCode == innerCode)
                                 "
                                 color="success"
                                 size="small"
@@ -1196,9 +1196,9 @@
                             </ion-button>
                             <ion-button
                                 *ngIf="
-                                    SkuInspectModel.value.outer_box_data.barCode.isTrue ||
-                                    outerBarCode == SkuInspectModel.value.outer_box_data.barCode.text ||
-                                    outerBarCode == outerCode
+                                    SkuInspectModel.value.outer_box_data.barCode.isTrue == '1' ||
+                                    (outerBarCode && outerBarCode == SkuInspectModel.value.outer_box_data.barCode.text) ||
+                                    (outerBarCode&&outerBarCode == outerCode)
                                 "
                                 color="success"
                                 size="small"

@@ -93,8 +93,8 @@ export class InspectSkuComponent implements OnInit {
     otherGrossWeight: boolean = false;
     data: Sku = null;
     factory: any = null;
-    barCode: string = null;
-    outerBarCode: string = null;
+    barCode: string = '';
+    outerBarCode: string = '';
     rateStatus: 'outer' | 'inner' = 'inner';
     toggleItem: any[] = ToggleItem;
     currentToggle: any = ToggleItem[0];
@@ -353,8 +353,7 @@ export class InspectSkuComponent implements OnInit {
             res => {
                 this[p == 'inner' ? 'barCode' : 'outerBarCode'] = res.value;
                 if (p == 'inner') {
-                    this.innerCode =
-                        this.SkuInspectModel.value.inner_box_data.barCode.text == this.barCode ? '1' : '0';
+                    this.innerCode = this.SkuInspectModel.value.inner_box_data.barCode.text == this.barCode ? '1' : '0';
                 } else {
                     this.outerCode =
                         this.SkuInspectModel.value.outer_box_data.barCode.text == this.outerBarCode ? '1' : '0';
@@ -362,8 +361,8 @@ export class InspectSkuComponent implements OnInit {
             },
         );
     }
-    innerCode = null
-    outerCode = null
+    innerCode = null;
+    outerCode = null;
     /**
      * app-item-by-item-desc callback
      * @param e     description array
