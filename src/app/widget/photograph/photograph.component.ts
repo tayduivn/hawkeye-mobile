@@ -11,8 +11,9 @@ import { ImagePicker, ImagePickerOptions } from '@ionic-native/image-picker/ngx'
 import { ActionSheetOptions } from '@ionic/core';
 import { ImageOther } from 'src/app/services/file-upload.service';
 import ImageCompressor from 'image-compressor.js';
-import { from, Observable, of } from 'rxjs';
+import { from, Observable } from 'rxjs';
 import { map, mergeAll } from 'rxjs/operators';
+import { File as androidFile } from '@ionic-native/file/ngx';
 
 @Component({
     selector: 'app-photograph',
@@ -48,7 +49,8 @@ export class PhotographComponent implements OnInit {
         private uploadService: FileUploadService,
         private implement: ImplementInspectService,
         public platform: Platform,
-        private androidStorage:SecureStorage
+        private androidStorage: SecureStorage,
+        private file: androidFile,
     ) {
         this.Compressor = new ImageCompressor();
     }
@@ -106,17 +108,26 @@ export class PhotographComponent implements OnInit {
     }
 
     graph() {
-        this.camera.getPicture(this.options).then( 
+        this.camera.getPicture(this.options).then(
             imageData => {
-                debugger
                 if (imageData) {
-                    console.log(imageData)
+                    console.log(imageData);
                     this.ec.clearEffectCtrl();
                     const base64Image = 'data:image/jpeg;base64,' + imageData;
                     const image = this.getCompressionImage(this.dataURItoBlob(base64Image));
-                    image.subscribe(base64 => {
-                        this.upload({ images: [base64] });
-                    });
+                    //判断高速还是低速
+                    if (this.highSpeed) {
+                        image.subscribe(base64 => {
+                            this.upload({ images: [base64] });
+                        });
+                    }else{
+                        //存入缓存
+                        //新建文件夹 -> 流水号 ->
+                        this.file.createDir('/','hawkeye',false)
+                            .then(res => {
+                                console.log(res)
+                            })
+                    }
                 } else {
                     this.ec.showToast({
                         message: '没有拍摄图片',
@@ -165,6 +176,8 @@ export class PhotographComponent implements OnInit {
             );
         }
     }
+
+    setCache() {}
 
     dataURItoBlob(base64Data): any {
         //console.log(base64Data);//data:image/png;base64,
@@ -284,36 +297,10 @@ export class PhotographComponent implements OnInit {
         });
     }
 
-    doCheckImg(e: any) {
-        // const obs$ = this.testGetBase64Ary(e);
-        // let $this = this;
-        // const ary = [];
-        // obs$.pipe(
-        //     map(res => this.getCompressionImage(this.dataURLtoFile(res, ''))),
-        //     mergeAll(),
-        // ).subscribe({
-        //     next(e) {
-        //         console.log(e);
-        //         ary.push(e);
-        //         $this.upload({ images: [e] });
-        //     },
-        // });
-    }
-
-    // testGetBase64Ary(e: any): Observable<string[]> {
-    //     return Observable.create(observer => {
-    //         let render = new FileReader();
-    //         render.onload = event => {
-    //             observer.next(event.target.result);
-    //             observer.next(event.target.result);
-    //             observer.next(event.target.result);
-    //             observer.next(event.target.result);
-    //             observer.next(event.target.result);
-    //         };
-    //         render.readAsDataURL(e.target.files[0]);
-    //     });
-    // }
-
+    /**
+     * 压缩图片
+     * @param file file对象
+     */
     getCompressionImage(file: File): Observable<string> {
         let image = from(
             this.Compressor.compress(file, {
