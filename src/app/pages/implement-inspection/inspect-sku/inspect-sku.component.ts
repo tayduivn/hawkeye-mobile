@@ -96,8 +96,8 @@ export class InspectSkuComponent implements OnInit {
     otherGrossWeight: boolean = false;
     data: Sku = null;
     factory: any = null;
-    barCode: string = null;
-    outerBarCode: string = null;
+    barCode: string = '';
+    outerBarCode: string = '';
     rateStatus: 'outer' | 'inner' = 'inner';
     toggleItem: any[] = ToggleItem;
     currentToggle: any = ToggleItem[0];
