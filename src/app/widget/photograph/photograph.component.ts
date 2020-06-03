@@ -1,3 +1,4 @@
+import { SecureStorage } from '@ionic-native/secure-storage/ngx';
 import { Platform } from '@ionic/angular';
 import { FieldType } from './../videotape/videotape.component';
 import { ImplementInspectService } from 'src/app/services/implement-inspect.service';
@@ -38,6 +39,7 @@ export class PhotographComponent implements OnInit {
     @Input() box_type?: 'outer' | 'inner';
     @Input() moduleType: 'removeFactoryPic' | 'removeContractPic' | 'removeSkuPic';
     @Input() sort_index?: number;
+    @Input() highSpeed: boolean;
 
     constructor(
         private camera: Camera,
@@ -46,6 +48,7 @@ export class PhotographComponent implements OnInit {
         private uploadService: FileUploadService,
         private implement: ImplementInspectService,
         public platform: Platform,
+        private androidStorage:SecureStorage
     ) {
         this.Compressor = new ImageCompressor();
     }
@@ -103,9 +106,11 @@ export class PhotographComponent implements OnInit {
     }
 
     graph() {
-        this.camera.getPicture(this.options).then(
+        this.camera.getPicture(this.options).then( 
             imageData => {
+                debugger
                 if (imageData) {
+                    console.log(imageData)
                     this.ec.clearEffectCtrl();
                     const base64Image = 'data:image/jpeg;base64,' + imageData;
                     const image = this.getCompressionImage(this.dataURItoBlob(base64Image));

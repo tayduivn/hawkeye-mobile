@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+ import { Observable } from 'rxjs';
 import { ImplementInspectService } from 'src/app/services/implement-inspect.service';
 import { environment } from './../../../../environments/environment';
 import { FormBuilder, FormGroup, FormArray, FormControl } from '@angular/forms';
@@ -83,6 +83,8 @@ export const ToggleItem: any = [
 
 export type ExamineStatus = 'passed' | 'notPass' | 'undetermined' | 'accord' | 'notAccord';
 
+export type SpeedStatus = 'high' | 'low';
+
 @Component({
     selector: 'app-inspect-sku',
     templateUrl: './inspect-sku.component.html',
@@ -90,6 +92,7 @@ export type ExamineStatus = 'passed' | 'notPass' | 'undetermined' | 'accord' | '
 })
 export class InspectSkuComponent implements OnInit {
     @ViewChild('grossWeight', { static: false }) grossWeight: ElementRef;
+    speed: boolean = false;
     otherGrossWeight: boolean = false;
     data: Sku = null;
     factory: any = null;
@@ -321,6 +324,16 @@ export class InspectSkuComponent implements OnInit {
                 }),
             }),
         });
+        document.getElementsByTagName('html')[0].setAttribute('style','-webkit-filter: saturate(0.5);')
+    }
+
+    /**
+     * 上传状态改变
+     */
+    speedChange(e: any){
+        let html = document.getElementsByTagName('html')[0]
+        if(this.speed) html.setAttribute('style','0')
+        else html.setAttribute('style','-webkit-filter: saturate(0.5);')
     }
 
     ionViewWillEnter() {
@@ -353,8 +366,7 @@ export class InspectSkuComponent implements OnInit {
             res => {
                 this[p == 'inner' ? 'barCode' : 'outerBarCode'] = res.value;
                 if (p == 'inner') {
-                    this.innerCode =
-                        this.SkuInspectModel.value.inner_box_data.barCode.text == this.barCode ? '1' : '0';
+                    this.innerCode = this.SkuInspectModel.value.inner_box_data.barCode.text == this.barCode ? '1' : '0';
                 } else {
                     this.outerCode =
                         this.SkuInspectModel.value.outer_box_data.barCode.text == this.outerBarCode ? '1' : '0';
@@ -362,8 +374,8 @@ export class InspectSkuComponent implements OnInit {
             },
         );
     }
-    innerCode = null
-    outerCode = null
+    innerCode = null;
+    outerCode = null;
     /**
      * app-item-by-item-desc callback
      * @param e     description array
@@ -938,10 +950,13 @@ export class InspectSkuComponent implements OnInit {
 
     productSizeChange(e: any[]) {
         this.productSize = e;
-        console.log(e);
     }
 
     sizeChange(e: any[]) {
         this.size = e;
+    }
+
+    ionViewDidLeave(){
+        document.getElementsByTagName('html')[0].setAttribute('style','-webkit-filter: 0;') 
     }
 }

@@ -1,10 +1,14 @@
 <ion-header mode="ios">
     <ion-toolbar>
+
         <ion-buttons slot="start">
             <ion-menu-button></ion-menu-button>
         </ion-buttons>
         <ion-title>{{ data.sku }}</ion-title>
+
         <ion-buttons slot="end" class="tops">
+            <span>高速</span>
+            <ion-toggle color="light" (ionChange)="speedChange($event)" [(ngModel)]="speed"></ion-toggle>
             <span>箱率：{{ data.rate_container }}</span>
             <select (change)="toggleBoxRate()" [(ngModel)]="rateStatus" *ngIf="data.rate_container != 1">
                 <option value="inner">内箱</option>
@@ -14,9 +18,11 @@
                 <option value="outer" selected>外箱</option>
             </select>
         </ion-buttons>
+
         <ion-buttons slot="end">
             <ion-back-button defaultHref="/inspect-po" text="返回" color="white" mode="md"></ion-back-button>
         </ion-buttons>
+
     </ion-toolbar>
 </ion-header>
 

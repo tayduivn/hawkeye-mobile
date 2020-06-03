@@ -25,6 +25,11 @@
 @import '~@ionic/angular/css/text-transformation.css';
 @import '~@ionic/angular/css/flex-utils.css';
 
+
+html{
+    transition: -webkit-filter .6s ease-in-out;
+}
+
 .global-back-text {
     font-size: 0.6rem;
     margin-left: 0.2rem;

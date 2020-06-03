@@ -22,6 +22,7 @@ import { ScanComponent } from './widget/scan/scan.component';
 import { FileTransfer } from '@ionic-native/file-transfer/ngx';
 import { DescriptionComponent } from './widget/description/description.component';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
+import { SecureStorage, SecureStorageObject } from '@ionic-native/secure-storage/ngx';
 
 @NgModule({
     declarations: [
@@ -57,6 +58,7 @@ import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
         QRScanner,
         FileTransfer,
         BarcodeScanner,
+        SecureStorage
     ],
     bootstrap: [AppComponent],
 })
