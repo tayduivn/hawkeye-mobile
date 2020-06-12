@@ -23,6 +23,7 @@ import { FileTransfer } from '@ionic-native/file-transfer/ngx';
 import { DescriptionComponent } from './widget/description/description.component';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 import { SecureStorage, SecureStorageObject } from '@ionic-native/secure-storage/ngx';
+import { QueueComponent } from './pages/implement-inspection/queue/queue.component';
 
 @NgModule({
     declarations: [
@@ -32,6 +33,7 @@ import { SecureStorage, SecureStorageObject } from '@ionic-native/secure-storage
         PartsComponent,
         VideoPlayComponent,
         DescriptionComponent,
+        QueueComponent
     ],
     entryComponents: [
         InspectSettingBoxComponent,
@@ -39,6 +41,7 @@ import { SecureStorage, SecureStorageObject } from '@ionic-native/secure-storage
         PartsComponent,
         VideoPlayComponent,
         DescriptionComponent,
+        QueueComponent
     ],
     imports: [
         BrowserModule,

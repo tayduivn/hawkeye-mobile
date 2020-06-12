@@ -1,4 +1,3 @@
-import { SecureStorage } from '@ionic-native/secure-storage/ngx';
 import { Platform } from '@ionic/angular';
 import { FieldType } from './../videotape/videotape.component';
 import { ImplementInspectService } from 'src/app/services/implement-inspect.service';
@@ -49,7 +48,6 @@ export class PhotographComponent implements OnInit {
         private uploadService: FileUploadService,
         private implement: ImplementInspectService,
         public platform: Platform,
-        private androidStorage: SecureStorage,
         private file: androidFile,
     ) {
         this.Compressor = new ImageCompressor();
@@ -62,7 +60,7 @@ export class PhotographComponent implements OnInit {
 
     options: CameraOptions = {
         quality: 10,
-        destinationType: this.camera.DestinationType.DATA_URL,
+        destinationType: this.camera.DestinationType.FILE_URI,
         encodingType: this.camera.EncodingType.JPEG,
         mediaType: this.camera.MediaType.PICTURE,
         saveToPhotoAlbum: true,
@@ -107,27 +105,98 @@ export class PhotographComponent implements OnInit {
         this.ec.showActionSheet(option);
     }
 
+    // graph() {
+    //     this.camera.getPicture(this.options).then(
+    //         imageData => {
+    //             if (imageData) {
+    //                 this.ec.clearEffectCtrl();
+    //                 const base64Image = 'data:image/jpeg;base64,' + imageData;
+    //                 const image = this.getCompressionImage(this.dataURItoBlob(base64Image));
+    //                 //判断高速还是低速
+    //                 image.subscribe(base64 => {
+    //                     this._photos.push(base64);
+    //                     console.log(base64);
+    //                     if (this.highSpeed) {
+    //                         this.upload({ images: [base64] });
+    //                     } else {
+    //                         //存入缓存
+    //                         //新建文件夹 -> 流水号 ->
+    //                         (window as any).resolveLocalFileSystemURL(
+    //                             'cordova.file.externalRootDirectory',
+    //                             function(root: any) {
+    //                                 root.getFile(
+    //                                     'demo.txt',
+    //                                     { create: true },
+    //                                     function(fileEntry) {
+    //                                         var dataObj = new Blob(['欢迎访问hangge.com'], { type: 'text/plain' });
+    //                                         //写入文件
+    //                                         this.writeFile(fileEntry, dataObj);
+    //                                     },
+    //                                     function(err) {
+    //                                         console.log('创建失败!');
+    //                                     },
+    //                                 );
+    //                             },
+    //                             function(err) {},
+    //                         );
+    //                         return;
+    //                         this.file
+    //                             .checkDir(this.file.dataDirectory, 'hawkeye')
+    //                             .then(has => {
+    //                                 if (has) {
+    //                                     this.file
+    //                                         .readAsDataURL(this.file.dataDirectory + '/hawkeye/', 'test.jpg')
+    //                                         .then(res => {
+    //                                             console.log(res);
+    //                                             this._photos.push(res);
+    //                                         })
+    //                                         .catch(err => console.log(err));
+    //                                 } else {
+    //                                     this.file.createDir(this.file.dataDirectory, 'hawkeye', true).then(res => {
+    //                                         debugger;
+    //                                         console.log(res);
+    //                                         this.file
+    //                                             .writeFile(this.file.dataDirectory + '/hawkeye/', 'test.jpg', imageData)
+    //                                             .then(e => {
+    //                                                 console.log(e);
+    //                                             });
+    //                                     });
+    //                                 }
+    //                             })
+    //                             .catch(err => console.log(err));
+    //                     }
+    //                 });
+    //             } else {
+    //                 this.ec.showToast({
+    //                     message: '没有拍摄图片',
+    //                     color: 'danger',
+    //                 });
+    //             }
+    //         },
+    //         err => {
+    //             this.ec.showToast({
+    //                 message: '没有拍摄照片',
+    //                 color: 'danger',
+    //             });
+    //         },
+    //     );
+    // }
     graph() {
         this.camera.getPicture(this.options).then(
             imageData => {
+                this.ec.clearEffectCtrl();
                 if (imageData) {
-                    console.log(imageData);
-                    this.ec.clearEffectCtrl();
-                    const base64Image = 'data:image/jpeg;base64,' + imageData;
-                    const image = this.getCompressionImage(this.dataURItoBlob(base64Image));
-                    //判断高速还是低速
-                    if (this.highSpeed) {
-                        image.subscribe(base64 => {
-                            this.upload({ images: [base64] });
+                    this.file
+                        .readAsDataURL(
+                            imageData.substr(0, imageData.lastIndexOf('/') + 1),
+                            imageData.substr(imageData.lastIndexOf('/') + 1),
+                        )
+                        .then(res => {
+                            const image = this.getCompressionImage(this.dataURItoBlob(res));
+                            image.subscribe(base64 => {
+                                this.upload({ images: [ base64 ] });
+                            });
                         });
-                    }else{
-                        //存入缓存
-                        //新建文件夹 -> 流水号 ->
-                        this.file.createDir('/','hawkeye',false)
-                            .then(res => {
-                                console.log(res)
-                            })
-                    }
                 } else {
                     this.ec.showToast({
                         message: '没有拍摄图片',
@@ -144,13 +213,31 @@ export class PhotographComponent implements OnInit {
         );
     }
 
+    writeFile(fileEntry: { createWriter: (arg0: (fileWriter: any) => void) => void; }, dataObj: any) {
+        //创建一个写入对象
+        fileEntry.createWriter(function(fileWriter) {
+            //文件写入成功
+            fileWriter.onwriteend = function() {
+                console.log('Successful file read...');
+            };
+
+            //文件写入失败
+            fileWriter.onerror = function(e) {
+                console.log('Failed file read: ' + e.toString());
+            };
+
+            //写入文件
+            fileWriter.write(dataObj);
+        });
+    }
+
     picker() {
         if (this.platform.is('hybrid')) {
             this.imagePicker.getPictures(this.pickerOpts).then(
                 res => {
                     this.ec.clearEffectCtrl();
-                    if (res && res.length) {
-                        let ary = res.map(item => 'data:image/jpeg;base64,' + item);
+                    if (res && res.length){
+                        let ary = res.map((item: string) => 'data:image/jpeg;base64,' + item);
                         this.ec.showLoad({
                             message: '压缩中……',
                         });
@@ -205,7 +292,7 @@ export class PhotographComponent implements OnInit {
     }
 
     //将base64转换为文件
-    dataURLtoFile(dataurl, filename): File {
+    dataURLtoFile(dataurl: string, filename: string): File {
         var arr = dataurl.split(','),
             mime = arr[0].match(/:(.*?);/)[1],
             bstr = atob(arr[1]),
@@ -273,7 +360,7 @@ export class PhotographComponent implements OnInit {
         console.log(obj);
         this.ec.showLoad({
             message: '正在上传中……',
-            backdropDismiss: false,
+            backdropDismiss: true,
         });
         let params: ImageOther = {
             type: this.type,

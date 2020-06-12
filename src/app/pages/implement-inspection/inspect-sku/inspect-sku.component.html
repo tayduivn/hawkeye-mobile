@@ -7,8 +7,10 @@
         <ion-title>{{ data.sku }}</ion-title>
 
         <ion-buttons slot="end" class="tops">
-            <span>高速</span>
-            <ion-toggle color="light" (ionChange)="speedChange($event)" [(ngModel)]="speed"></ion-toggle>
+            <!-- <span>高速</span>
+            <ion-toggle color="light" (ionChange)="speedChange($event)" [(ngModel)]="speed"></ion-toggle> -->
+            <!-- <ion-button (click)='showModal()'>下载进度</ion-button> -->
+            
             <span>箱率：{{ data.rate_container }}</span>
             <select (change)="toggleBoxRate()" [(ngModel)]="rateStatus" *ngIf="data.rate_container != 1">
                 <option value="inner">内箱</option>
@@ -27,6 +29,7 @@
 </ion-header>
 
 <ion-content #content>
+    <!-- <app-queue *ngIf="showProgress"></app-queue> -->
     <app-sku-info [sku]="data" type="implement"></app-sku-info>
     <div class="label-item">
         <ion-grid>
@@ -59,7 +62,7 @@
                     </div>
                     <div class="header-input" fxLayout="row" fxLayoutAlign="start center">
                         <label class="label">PO号</label>
-                        <ion-input placeholder="请填写PO号" formControlName="poNo" type="text"></ion-input>
+                        <ion-input placeholder="PO号" formControlName="poNo" type="text"></ion-input>
                     </div>
 
                     <div class="schedule-item w30 border-0">
@@ -220,7 +223,7 @@
                                 *ngIf="
                                     SkuInspectModel.value.inner_box_data.barCode.isTrue == '1' ||
                                     (barCode && barCode == SkuInspectModel.value.inner_box_data.barCode.text) ||
-                                    (barCode&&barCode == innerCode)
+                                    (barCode && barCode == innerCode)
                                 "
                                 color="success"
                                 size="small"
@@ -327,9 +330,6 @@
                         <div class="global-inspect-title">
                             <p>摔箱测试</p>
                         </div>
-                        <ion-text class="fs-14 mt-20" color="danger" *ngIf="!data.is_need_drop_test"
-                            >此货号不用摔箱</ion-text
-                        >
                         <div fxLayout="row" fxLayoutAlign="start center">
                             <div class="header-input w180" fxLayout="row" fxLayoutAlign="start center">
                                 <label class="label">计划摔箱数</label>
@@ -1203,8 +1203,9 @@
                             <ion-button
                                 *ngIf="
                                     SkuInspectModel.value.outer_box_data.barCode.isTrue == '1' ||
-                                    (outerBarCode && outerBarCode == SkuInspectModel.value.outer_box_data.barCode.text) ||
-                                    (outerBarCode&&outerBarCode == outerCode)
+                                    (outerBarCode &&
+                                        outerBarCode == SkuInspectModel.value.outer_box_data.barCode.text) ||
+                                    (outerBarCode && outerBarCode == outerCode)
                                 "
                                 color="success"
                                 size="small"

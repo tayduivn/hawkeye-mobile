@@ -157,13 +157,6 @@ export class VideotapeComponent implements OnInit {
 
     async tape() {
         const mediaFiles = await this.mediaCapture.captureVideo({ limit: 1, quality: 30 });
-        // let dirPath = mediaFiles[0].fullPath.substring(0, mediaFiles[0].fullPath.lastIndexOf('/'));
-        // let fileName = mediaFiles[0].fullPath.substring(
-        //     mediaFiles[0].fullPath.lastIndexOf('/') + 1,
-        //     mediaFiles[0].fullPath.length,
-        // );
-        // const dirEntry = await this.file.resolveDirectoryUrl(dirPath);
-        // const fileEntry = await this.file.getFile(dirEntry, fileName, {});
         if (mediaFiles) {
             this.getFileEntry(mediaFiles[0].fullPath).then(res => {
                 this.ec.clearEffectCtrl();

@@ -78,5 +78,10 @@ export class PageEffectService {
                 this.alertCtrl.dismiss();
             }
         });
+        this.modalCtrl.getTop().then((e: any) => {
+            if (e && e.id) {
+                this.modalCtrl.dismiss();
+            }
+        });
     }
 }

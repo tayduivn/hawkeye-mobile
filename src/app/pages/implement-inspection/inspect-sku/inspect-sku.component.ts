@@ -8,6 +8,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Sku } from 'src/app/widget/sku-info/sku-info.component';
 import { StorageService } from 'src/app/services/storage.service';
 import { ActivatedRoute } from '@angular/router';
+import { QueueComponent } from '../queue/queue.component';
 
 export interface SkuUploadData {
     spotCheckNum?: number; // 抽检数量
@@ -109,6 +110,7 @@ export class InspectSkuComponent implements OnInit {
     productSize: any[] = [];
     size: any[] = [];
     currentApplyInsData;
+    showProgress: boolean = false;
     constructor(
         private es: PageEffectService,
         private fb: FormBuilder,
@@ -118,6 +120,12 @@ export class InspectSkuComponent implements OnInit {
     ) {}
 
     SkuInspectModel: FormGroup;
+
+    showModal(){
+        this.es.showModal({
+            component: QueueComponent
+        })
+    }
 
     ngOnInit() {
         this.data = this.storage.get('CURRENT_IMPLEMENT_SKU');
@@ -324,7 +332,7 @@ export class InspectSkuComponent implements OnInit {
                 }),
             }),
         });
-        document.getElementsByTagName('html')[0].setAttribute('style','-webkit-filter: saturate(0.5);')
+        // document.getElementsByTagName('html')[0].setAttribute('style','-webkit-filter: saturate(0.5);')
     }
 
     /**
@@ -613,6 +621,7 @@ export class InspectSkuComponent implements OnInit {
                                 desc: res.inner_box_data.barCode.desc ? res.inner_box_data.barCode.desc : [],
                                 text: res.inner_box_data.barCode.text,
                                 photos: res.inner_box_data.barCode.photos ? res.inner_box_data.barCode.photos : [],
+                                agreement: res.inner_box_data.barCode.agreement ? res.inner_box_data.barCode.agreement : '0'
                             },
                             grossWeight: {
                                 //毛重
@@ -664,6 +673,7 @@ export class InspectSkuComponent implements OnInit {
                                 desc: res.outer_box_data.barCode.desc ? res.outer_box_data.barCode.desc : [],
                                 text: res.outer_box_data.barCode.text,
                                 photos: res.outer_box_data.barCode.photos ? res.outer_box_data.barCode.photos : [],
+                                agreement: res.outer_box_data.barCode.agreement ? res.outer_box_data.barCode.agreement : '0'
                             },
                             grossWeight: {
                                 //毛重
@@ -957,6 +967,6 @@ export class InspectSkuComponent implements OnInit {
     }
 
     ionViewDidLeave(){
-        document.getElementsByTagName('html')[0].setAttribute('style','-webkit-filter: 0;') 
+        // document.getElementsByTagName('html')[0].setAttribute('style','-webkit-filter: 0;') 
     }
 }

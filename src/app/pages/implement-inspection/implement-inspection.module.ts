@@ -16,7 +16,8 @@ import { InspectFactoryComponent } from './inspect-factory/inspect-factory.compo
 import { Camera } from '@ionic-native/camera/ngx';
 import { InspectPoComponent } from './inspect-po/inspect-po.component';
 import { TestPipe } from 'src/app/pipe/test.pipe';
-
+import { SkuGuard } from './sku.guard';
+ 
 const routes: Routes = [
     {
         path: 'implement-inspection',
@@ -33,6 +34,7 @@ const routes: Routes = [
     {
         path: 'inspect-sku/:contract_no',
         component: InspectSkuComponent,
+        canDeactivate: [SkuGuard],
     },
     {
         path: 'inspect-evaluation',
@@ -60,7 +62,8 @@ const routes: Routes = [
         InspectPoComponent,
         InspectSkuComponent,
         EvaluationComponent,
-        ExamineDetailComponent
+        ExamineDetailComponent,
+       
     ],
     providers: [Camera],
 })

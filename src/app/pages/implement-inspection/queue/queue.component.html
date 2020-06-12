@@ -1,0 +1,18 @@
+<ion-header mode="ios">
+  <ion-toolbar>
+     
+      <ion-title>下载进度</ion-title>
+      <ion-buttons slot="end">
+          <ion-button (click)="close()">关闭</ion-button>
+      </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="container">
+    <ul>
+        <li *ngFor="let item of queue">{{ item.size }}</li>
+    </ul>
+</div>
+
+</ion-content>

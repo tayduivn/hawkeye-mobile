@@ -7,6 +7,7 @@ import { Component, OnInit, ElementRef, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PageEffectService } from '../../services/page-effect.service';
+import { SecureStorage } from '@ionic-native/secure-storage/ngx';
 
 @Component({
     selector: 'app-login',
@@ -81,7 +82,7 @@ export class LoginPage implements OnInit, AfterViewInit {
     }
 
     // 每次数据发生改变时触发此方法
-    onValueChanged(data?: any) {
+    onValueChanged(data?: any) { 
         // 如果表单不存在则返回
         if (!this.registerForm) return;
         // 获取当前的表单
@@ -126,6 +127,13 @@ export class LoginPage implements OnInit, AfterViewInit {
             this.storage.remove('USER_INFO');
             this.storage.remove('PERMISSION');
         }
+
+        let account = JSON.parse(localStorage.getItem('HAWKEYE_ACCOUNT')),
+            pwd = JSON.parse(localStorage.getItem('HAWKEYE_PASSWORD'));
+        if (account && pwd) {
+            this.loginInfo.company_no = account;
+            this.loginInfo.password = pwd;
+        }
     }
 
     ngAfterViewInit(): void {
@@ -165,13 +173,16 @@ export class LoginPage implements OnInit, AfterViewInit {
                         this.userInfo.info = base.data;
                         this.rights.rights = base.permission.data;
                         this.storage.set('USER_INFO', this.userInfo.info);
+
                         this.storage.set('PERMISSION', this.rights.rights);
                         //判断是否是第一次登录
                         this.userInfo.info.is_first = base.is_first;
                         //判断是否是验货人
                         this.Router.navigate(['/home']);
-
                         this.menu.setMenuChange(true);
+
+                        localStorage.setItem('HAWKEYE_ACCOUNT', JSON.stringify(this.loginInfo.company_no));
+                        localStorage.setItem('HAWKEYE_PASSWORD', JSON.stringify(this.loginInfo.password));
                     }
                 });
             });

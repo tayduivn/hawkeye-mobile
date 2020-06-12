@@ -10,15 +10,19 @@
 <ion-content>
     <ul class="inspect-list pos-r">
         <li class="pos-a" [@openClose]="active == 'factory' ? 'open' : 'closed'">
-            <div class="retrieval">
-                <ion-input clearInput placeholder="输入工厂名检索" (ionChange)='factoryChange()'  [(ngModel)]="currentFactory"></ion-input>
-            </div>
+            
             <div class="inspect-item first pos-a">
                 <ion-card mode="ios">
                     <ion-card-header class="activated">
                         <ion-icon name="wifi" slot="start"></ion-icon>
                         <ion-label>选择工厂</ion-label>
                     </ion-card-header>
+
+                    <ion-item class="activated">
+                        <!-- <div class="retrieval"> -->
+                            <ion-input clearInput placeholder="输入工厂名检索" (ionChange)='factoryChange()'  [(ngModel)]="currentFactory"></ion-input>
+                        <!-- </div> -->
+                    </ion-item>
 
                     <ion-item class="activated">
                         <select class="form-control" [(ngModel)]="factory">
