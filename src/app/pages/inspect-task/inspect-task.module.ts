@@ -14,7 +14,7 @@ import { InspectContractPage } from './inspect-contract/inspect-contract.page';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { InspectorSettingComponent } from '../inspector-setting/inspector-setting.component';
 import { SkuDescriptionComponent } from './sku-description/sku-description.component';
-
+  
 const routes: Routes = [
     {
         path: 'inspect-task',
@@ -48,7 +48,7 @@ const routes: Routes = [
         DirectiveModule,
         ReactiveFormsModule,
         RouterModule.forChild(routes),
-    ],
+     ],
     declarations: [
         InspectTaskPage,
         ShowFactoryPipe,

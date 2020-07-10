@@ -5,6 +5,9 @@ import { Router } from '@angular/router';
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { MenuController } from '@ionic/angular';
 import { Menu } from 'src/app/services/menu.service';
+import { QueueComponent } from '../implement-inspection/queue/queue.component';
+import { PageEffectService } from 'src/app/services/page-effect.service';
+import { UploadQueueService } from '../implement-inspection/upload-queue.service';
 
 @Component({
     selector: 'app-home',
@@ -20,6 +23,8 @@ export class HomePage {
         private menuService: MenuService,
         private screen: ScreenService,
         private Router: Router,
+        private es: PageEffectService,
+        private uQueue: UploadQueueService
     ) {}
 
     ngOnInit(): void {
@@ -47,6 +52,14 @@ export class HomePage {
             } else this.src = `../../../assets/img/home-img/${this.dayToBeat}_1254X570.jpg`;
         }
     }
+    alreadyUpProgress:boolean = this.uQueue.alreadyUpProgress;
+    showModal(){
+        this.es.showModal({
+            component: QueueComponent
+        })
+        this.alreadyUpProgress = true
+    }
+
 
     get dayToBeat(): string {
         let today = new Date().getDay();

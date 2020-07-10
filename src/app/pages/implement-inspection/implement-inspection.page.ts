@@ -52,9 +52,8 @@ export class ImplementInspectionPage implements OnInit {
 
     ngOnInit() {}
 
-    toInspect() {
-        let currentFactory = this.inspectTask.find(res => res.factory_code == this.factory);
-        this.router.navigate(['/inspect-factory', this.contract, currentFactory.inspection_group_id]);
+    toInspect(contractNo: string,inspectId: string) {
+        this.router.navigate(['/inspect-factory', contractNo, inspectId]);
     }
 
     ionViewWillEnter() {

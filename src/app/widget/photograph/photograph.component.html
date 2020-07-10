@@ -1,19 +1,23 @@
 <ul class="img-list" imgGallery>
     <li *ngFor="let item of _photos; index as i" class="image-list pos-r">
-        <img [src]="item" alt="" />
+        <img
+            alt=""
+            [defaultImage]="'../assets/img/image-loading.jpg'"
+            *ngIf="item && item.length < 10000"
+            [lazyLoad]="item"
+        />
+        <img [src]="item" *ngIf="item && item.length > 10000" alt="" />
         <div class="pos-a">
-            <ion-icon name="close" mode="ios" (click)="remove(i)"></ion-icon>
+            <ion-icon name="close" mode="ios" *ngIf="_photos[i].length < 1000" (click)="remove(i)"></ion-icon>
         </div>
     </li>
-
     <li>
-        <div class="add-image-small" fxLayout="row" (click)="photograph()" fxLayoutAlign="start center">
-            <ion-icon name="cloud-upload" mode="ios"></ion-icon>
-            <p>上传照片</p>
-        </div>
+        <input type="file" *ngIf="!platform.is('hybrid')" multiple="multiple" (change)="doCheckImg($event)" />
     </li>
-
-    <!-- <li>
-        <input type='file' *ngIf='!platform.is("hybrid")' (change)="doCheckImg($event)"/>
-    </li> -->
 </ul>
+<div class="add-image-small" fxLayout="row" (click)="photograph()" fxLayoutAlign="start center">
+    <ion-icon name="cloud-upload" mode="ios"></ion-icon>
+    <p>上传照片</p>
+</div>
+
+<!-- <input type='file' multiple (change)="doCheckImg($event)"/> -->

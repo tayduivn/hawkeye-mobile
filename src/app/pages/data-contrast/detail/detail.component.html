@@ -21,13 +21,18 @@
 
             <ion-row
                 *ngFor="let item of compareData; let i = index"
-                [ngClass]="{ success: item.compare_res == 1, danger: item.compare_res == 2 }"
+                [ngClass]="{ success: $any(item.compare_res) == 1, danger: $any(item.compare_res) == 2 }"
             >
                 <ion-col align-self-center size="4">{{ item.chinese_name }}</ion-col>
                 <ion-col align-self-center size="4">{{ item.system ? item.system : '暂无' }}</ion-col>
                 <ion-col class="align-self-center" size="4">
                     <ng-container *ngIf="item.type == 'pic'">
-                        <img *ngFor="let sItem of item.posted" [src]="imgOrigin + sItem" imgGallery />
+                        <img
+                            *ngFor="let sItem of item.posted"
+                            imgGallery
+                            [defaultImage]="'../assets/img/image-loading.jpg'"
+                            [lazyLoad]="imgOrigin + sItem + '?random=' + random"
+                        />
                     </ng-container>
                     <ng-container *ngIf="item.type == 'video'">
                         <video *ngFor="let sItem of item.posted" [src]="imgOrigin + sItem"></video>
@@ -36,7 +41,7 @@
                         <p *ngFor="let sItem of item.posted">{{ sItem }}</p>
                     </div>
                     <div class="remark-box" *ngIf="item.type == 'string'">
-                       {{ item.posted  }}
+                        {{ item.posted }}
                     </div>
                 </ion-col>
             </ion-row>

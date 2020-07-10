@@ -38,10 +38,11 @@
                         type="submit"
                         color="secondary"
                         [disabled]="
-                  !registerForm.value.company_no ||
-                  formErrors.company_no ||
-                  !registerForm.value.password
-                "
+                        !registerForm.value.company_no ||
+                        formErrors.company_no ||
+                        !registerForm.value.password||
+                        isClick
+                        "
                         expand="block"
                         *ngIf="status == 'login'"
                         (click)="doLogin()"

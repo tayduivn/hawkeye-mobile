@@ -5,6 +5,7 @@
         </ion-buttons>
         <ion-title>{{ data.factoryName }}</ion-title>
         <ion-buttons slot="end">
+            <ion-button (click)="showModal()" [disabled]="alreadyUpProgress" size="small">上传进度</ion-button>
             <ion-back-button text="返回" color="white" mode="md"></ion-back-button>
         </ion-buttons>
     </ion-toolbar>
@@ -33,7 +34,7 @@
                     <li *ngFor="let sItem of item.data" fxLayout="column" fxLayoutAlign="start start">
                         <div fxLayout="row" fxLayoutAlign="space-between  center" class="wd-100">
                             <div fxLayout="row" fxLayoutAlign="start  center">
-                                <img class="head" [src]="imgOrigin + sItem.pic[0]" alt="" imgGallery />
+                                <img class="head" [src]="imgOrigin + sItem.pic[0]" alt="" imgGallery [url]='imgOrigin + sItem.pic[0]'/>
                                 <div class="span-box">
                                     <span><span class="label"> SKU: </span>{{ sItem.sku }}</span
                                     ><br />
@@ -57,8 +58,8 @@
                                 <ion-button size="small" color="primary" (click)="toInspectSku(item, sItem)"
                                     >保存</ion-button
                                 >
-                                <ion-button size="small" color="danger" (click)="copy(item, sItem)"
-                                    >复制到相同SKU</ion-button
+                                <ion-button size="small" color="danger" *ngIf="item.data && item.data.length > 1" (click)="copy(item, sItem)"
+                                    >复制SKU</ion-button
                                 >
                             </div>
                         </div>

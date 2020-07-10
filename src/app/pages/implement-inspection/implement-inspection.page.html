@@ -8,60 +8,66 @@
 </ion-header>
 
 <ion-content>
-    <ul class="inspect-list pos-r">
-        <li class="pos-a" [@openClose]="active == 'factory' ? 'open' : 'closed'">
-            
-            <div class="inspect-item first pos-a">
-                <ion-card mode="ios">
-                    <ion-card-header class="activated">
-                        <ion-icon name="wifi" slot="start"></ion-icon>
-                        <ion-label>选择工厂</ion-label>
-                    </ion-card-header>
+    <ion-searchbar
+        animated
+        clearInput
+        mode="ios"
+        placeholder="输入工厂名检索"
+        (ionChange)="factoryChange()"
+        [(ngModel)]="currentFactory"
+    ></ion-searchbar>
 
-                    <ion-item class="activated">
-                        <!-- <div class="retrieval"> -->
-                            <ion-input clearInput placeholder="输入工厂名检索" (ionChange)='factoryChange()'  [(ngModel)]="currentFactory"></ion-input>
-                        <!-- </div> -->
-                    </ion-item>
+    <ion-card *ngFor="let item of inspectTask" mode="ios">
+        <ion-item class="card-header">
+            <ion-icon name="people" slot="start" color="primary"></ion-icon>
+            <ion-label><span>验货工厂：</span>{{ item.factory_name }}</ion-label>
+            <ion-label class="text-c"><span>工厂联系人：</span>{{ item.factory_contacts }}</ion-label>
+        </ion-item>
 
-                    <ion-item class="activated">
-                        <select class="form-control" [(ngModel)]="factory">
-                            <option value="">选择工厂</option>
-                            <option [value]="item.factory_code" *ngFor="let item of inspectTask">
-                                {{ item.factory_name }}
-                            </option>
-                        </select>
-                    </ion-item>
-                    <div class="next" fxLayout="row" fxLayoutAlign="center center"></div>
-                </ion-card>
-            </div>
+        <ion-card-content>
+            <ion-grid>
+                <ion-row class="title">
+                    <ion-col align-self-center [size]="3">
+                        验货流水号
+                    </ion-col>
+                    <ion-col align-self-center [size]="3">
+                        验货合同数
+                    </ion-col>
+                    <ion-col align-self-center [size]="3">
+                        验货SKU数
+                    </ion-col>
+                    <ion-col align-self-center [size]="3">
+                        操作
+                    </ion-col>
+                </ion-row>
 
-            <div class="inspect-item last pos-a">
-                <ion-card mode="ios">
-                    <ion-card-header class="activated">
-                        <ion-icon name="wifi" slot="start"></ion-icon>
-                        <ion-label>选择验货编号</ion-label>
-                    </ion-card-header>
+                <ion-row *ngFor="let sItem of item.sku_data">
+                    <ion-col align-self-center [size]="3">
+                        {{ sItem.apply_inspection_no }}
+                    </ion-col>
+                    <ion-col align-self-center [size]="3">
+                        {{ sItem.contract_data.length }}
+                    </ion-col>
 
-                    <ion-item class="activated">
-                        <select class="form-control" [(ngModel)]="contract">
-                            <option value="">选择验货编号</option>
-                            <option
-                                [value]="item.apply_inspection_no"
-                                *ngFor="let item of (inspectTask | contract:factory)"
-                            >
-                                {{ item.apply_inspection_no }}
-                            </option>
-                        </select>
-                    </ion-item>
-
-                    <div class="next" fxLayout="row" fxLayoutAlign="center center">
-                        <button class="next-btn" [disabled]="!contract" (click)="toInspect()">
-                            <ion-icon name="arrow-dropright" mode="ios"></ion-icon>
-                        </button>
-                    </div>
-                </ion-card>
-            </div>
-        </li>
-    </ul>
+                    <ion-col align-self-center [size]="3">
+                        {{ sItem.data.length }}
+                    </ion-col>
+                    <ion-col
+                        align-self-center
+                        [size]="3"
+                        class="ion-col-no-pad"
+                        fxLayout="row"
+                        fxLayoutAlign="start center"
+                    >
+                        <ion-button
+                            fill="clear"
+                            size="small"
+                            (click)="toInspect(sItem.apply_inspection_no,item.inspection_group_id)"
+                            >去验货</ion-button
+                        >
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+        </ion-card-content>
+    </ion-card>
 </ion-content>

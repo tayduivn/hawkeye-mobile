@@ -6,6 +6,7 @@ import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Router } from '@angular/router';
 import { PageEffectService } from './services/page-effect.service';
+import { BackgroundMode } from '@ionic-native/background-mode/ngx';
 
 @Component({
     selector: 'app-root',
@@ -23,12 +24,14 @@ export class AppComponent implements OnInit {
         private menu: MenuService,
         private Router: Router,
         private effectCtrl: PageEffectService,
+        private backgroundMode: BackgroundMode
     ) {
         this.initializeApp();
         this.statusBar.overlaysWebView(false);
 
         // set status bar to white
         this.statusBar.backgroundColorByHexString('#03a9f4');
+        backgroundMode.enable();        //防止后台睡觉
     }
 
     initializeApp() {

@@ -3,14 +3,6 @@
         <ion-buttons slot="start">
             <ion-menu-button></ion-menu-button>
         </ion-buttons>
-        <!-- <ion-buttons slot="end">
-      <ion-back-button
-        defaultHref="home"
-        text="返回"
-        color="white"
-        mode="md"
-      ></ion-back-button>
-    </ion-buttons> -->
         <ion-title>验货任务</ion-title>
     </ion-toolbar>
 </ion-header>
@@ -22,9 +14,6 @@
             <ion-label><span>质检员：</span>{{ item.user.join(",") }}</ion-label>
             <ion-label class="text-c"><span>验货批次号：</span>{{ item.inspection_group_no }}</ion-label>
         </ion-item>
-        <!-- <ion-item> -->
-
-        <!-- </ion-item> -->
 
         <ion-card-content>
             <ion-label class="text-r pl-5"
@@ -153,6 +142,7 @@
             </ion-grid>
         </ion-card-content>
     </ion-card>
+    
     <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
         <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="正在加载"> </ion-infinite-scroll-content>
     </ion-infinite-scroll>

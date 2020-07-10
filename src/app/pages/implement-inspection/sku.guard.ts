@@ -20,6 +20,7 @@ export class SkuGuard implements CanDeactivate<CanComponentDeactivate> {
         currentState: RouterStateSnapshot,
         nextState?: RouterStateSnapshot,
     ): any {
-        return window.confirm('请注意保存数据，一旦返回未保存的数据会丢失！')
+        return true;
+        // return window.confirm('请注意保存数据，一旦返回未保存的数据会丢失！')
     }
 }

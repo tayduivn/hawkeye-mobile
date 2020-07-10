@@ -7,6 +7,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { ImplementInspectService } from 'src/app/services/implement-inspect.service';
 import { environment } from 'src/environments/environment';
+import { QueueComponent } from '../queue/queue.component';
+import { UploadQueueService } from '../upload-queue.service';
 
 export interface FactoryModel {
     environments: string[]; // 环境照片
@@ -56,6 +58,7 @@ export class InspectFactoryComponent implements OnInit {
         private ac: ActivatedRoute,
         private storage: StorageService,
         private implementInspect: ImplementInspectService,
+        private uQueue: UploadQueueService
     ) {}
 
     get environments(): FormArray {
@@ -146,10 +149,19 @@ export class InspectFactoryComponent implements OnInit {
         (this.factoryModel.get('remarks') as FormArray).push(this.fb.control(''));
         console.log(this.factoryModel.get('remarks'));
     }
+    alreadyUpProgress:boolean = this.uQueue.alreadyUpProgress;
+    showModal(){
+        this.ec.showModal({
+            component: QueueComponent
+        })
+        this.alreadyUpProgress = true
+    }
 
+    review_status: boolean;
     getData() {
         this.implementInspect.getInspectData(this.apply_inspect_no, this.inspection_group_id).subscribe(res => {
             this.examineDetail = res.review_content;
+            this.review_status = res.review_status;
             if (
                 (res.factory_data.environments && res.factory_data.environments.length) ||
                 (res.factory_data.sampleRoom && res.factory_data.sampleRoom.length) ||

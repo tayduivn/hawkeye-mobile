@@ -18,6 +18,10 @@ ul {
     }
 }
 
+.add-image-small{
+    display: inline-flex !important;
+}
+
 ul:after {
     content: '';
     display: block;

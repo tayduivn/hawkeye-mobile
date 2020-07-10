@@ -15,14 +15,14 @@ import {
 import { Router } from '@angular/router';
 
 import { Observable, of } from 'rxjs';
-import { mergeMap, catchError, timeout, retryWhen, scan, delay, tap } from 'rxjs/operators';
+import { mergeMap, catchError, timeout, retryWhen, scan, delay, tap, takeWhile } from 'rxjs/operators';
 import { renewInitRequestTime, maxRenewInitRequest } from '../config/config';
 import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class DefaultInterceptor implements HttpInterceptor {
     public errArr: Array<number> = [401, 404, 500, 502, 301];
-
+    filterUrls: string = '/task/add_inspection_task_img /task/add_inspection_task_video';
     constructor(private router: Router, private loading: LoadingService, public effectCtrl: PageEffectService) {}
 
     intercept(
@@ -45,6 +45,7 @@ export class DefaultInterceptor implements HttpInterceptor {
             timeout(renewInitRequestTime),
             retryWhen(err$ => {
                 //重试 节奏控制器
+                // takeWhile(req => (req as any).url.indexOf(this.filterUrls) != -1),
                 return err$.pipe(
                     scan((errCount, err: HttpErrorResponse) => {
                         if (errCount >= maxRenewInitRequest || this.errArr.indexOf(err.status) != -1) {
@@ -52,7 +53,7 @@ export class DefaultInterceptor implements HttpInterceptor {
                         }
                         return errCount + 1;
                     }, 0),
-                    delay(30000),
+                    delay(3000),
                     tap(errCount => {
                         if (errCount == 1) {
                             //第一次重试时显示友好信息

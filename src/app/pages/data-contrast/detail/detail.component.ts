@@ -22,6 +22,7 @@ export class DetailComponent implements OnInit {
     applyNo: string;
     imgOrigin = environment.usFileUrl + 'storage/'
     sku: string;
+    random: number = Math.random();
     compareData: CompareItem[] = []
     constructor(private activeRoute: ActivatedRoute, private dataCompare: DataCompareService) {
         this.activeRoute.params.subscribe(res => {

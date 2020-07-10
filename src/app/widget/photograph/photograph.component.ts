@@ -1,18 +1,19 @@
 import { Platform } from '@ionic/angular';
 import { FieldType } from './../videotape/videotape.component';
 import { ImplementInspectService } from 'src/app/services/implement-inspect.service';
-import { FileUploadService } from './../../services/file-upload.service';
+import { FileUploadService, ImageOther } from './../../services/file-upload.service';
 import { environment } from 'src/environments/environment';
 import { PageEffectService } from 'src/app/services/page-effect.service';
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { ImagePicker, ImagePickerOptions } from '@ionic-native/image-picker/ngx';
 import { ActionSheetOptions } from '@ionic/core';
-import { ImageOther } from 'src/app/services/file-upload.service';
 import ImageCompressor from 'image-compressor.js';
-import { from, Observable } from 'rxjs';
-import { map, mergeAll } from 'rxjs/operators';
+import { from, Observable, zip } from 'rxjs';
+import { mergeMap, takeWhile, tap } from 'rxjs/operators';
 import { File as androidFile } from '@ionic-native/file/ngx';
+import { UploadQueueService, HashCode } from 'src/app/pages/implement-inspection/upload-queue.service';
+import { InspectCacheService } from 'src/app/pages/implement-inspection/inspect-cache.service';
 
 @Component({
     selector: 'app-photograph',
@@ -20,26 +21,26 @@ import { File as androidFile } from '@ionic-native/file/ngx';
     styleUrls: ['./photograph.component.scss'],
 })
 export class PhotographComponent implements OnInit {
+    @Input() type: FieldType; //图片类型 （验货字段）
+    @Input() apply_inspection_no: string; //申请验货编号
+    @Input() contract_no?: string; //合同号
+    @Input() sku?: string; //sku
+    @Input() box_type?: 'outer' | 'inner'; //内外箱区分
+    @Input() moduleType: 'removeFactoryPic' | 'removeContractPic' | 'removeSkuPic'; //删除用到参数 区分工厂/合同/sku
+    @Input() sort_index?: number; //验货要求用到的图片index
     @Input() set photos(input: string[]) {
         if (!input) {
-            return;
+            input = [];
         }
         input = input.map(res => this.imgOrigin + res);
         if (!!input) {
             this._photos = input;
         }
+        this.getCache();
     }
 
     Compressor: ImageCompressor;
-
-    @Input() type: FieldType;
-    @Input() apply_inspection_no: string;
-    @Input() contract_no?: string;
-    @Input() sku?: string;
-    @Input() box_type?: 'outer' | 'inner';
-    @Input() moduleType: 'removeFactoryPic' | 'removeContractPic' | 'removeSkuPic';
-    @Input() sort_index?: number;
-    @Input() highSpeed: boolean;
+    random: number = Math.random();
 
     constructor(
         private camera: Camera,
@@ -49,17 +50,21 @@ export class PhotographComponent implements OnInit {
         private implement: ImplementInspectService,
         public platform: Platform,
         private file: androidFile,
+        public uQueue: UploadQueueService,
+        private inspectCache: InspectCacheService,
     ) {
-        this.Compressor = new ImageCompressor();
+        this.Compressor = new ImageCompressor(); //原生压缩
     }
-    imgOrigin: string = environment.usFileUrl;
+    imgOrigin: string = environment.usFileUrl; //图片显示域名
 
-    @Output() onPhotograph: EventEmitter<string[]> = new EventEmitter<string[]>();
-    _photos: string[] = [];
-    metaPhotos: string[] = [];
-
+    @Output() onPhotograph: EventEmitter<string[]> = new EventEmitter<string[]>(); //拍完照回调
+    _photos: string[] = []; //显示图片数组
+    metaPhotos: string[] = []; //显示图片源数据
+    _caches: Array<ImageOther> = []; //hybrid用来存native file url的数组
+    rmClicked: number[] = [];
+    //拍照配置项
     options: CameraOptions = {
-        quality: 10,
+        // quality: 10, //质量
         destinationType: this.camera.DestinationType.FILE_URI,
         encodingType: this.camera.EncodingType.JPEG,
         mediaType: this.camera.MediaType.PICTURE,
@@ -67,13 +72,41 @@ export class PhotographComponent implements OnInit {
     };
 
     pickerOpts: ImagePickerOptions = {
-        // maximumImagesCount: 6,
+        //选择图片配置项
+        maximumImagesCount: 30,
         quality: 100,
-        outputType: 1,
+        outputType: 0, //文件本机 url
     };
 
     ngOnInit() {}
 
+    removal(arr: Array<any>) {
+        return arr.reduce((prev, cur) => (prev.includes(cur) ? prev : [...prev, cur]), []);
+    }
+
+    //拿缓存
+    getCache() {
+        let allCache: Array<ImageOther> = this.inspectCache.getImagePath(),
+            _photos: Array<ImageOther> = [];
+        if (!allCache) return;
+        _photos = allCache.filter(
+            elem =>
+                elem.apply_inspection_no == this.apply_inspection_no &&
+                elem.contract_no == this.contract_no &&
+                elem.is_inner_box == (this.box_type == 'inner' ? 0 : 2) &&
+                elem.sku == this.sku &&
+                elem.type == this.type &&
+                elem.sort_index == this.sort_index,
+        );
+        if (_photos && _photos.length) {
+            this._caches = _photos;
+            this.getPathByCache();
+        }
+    }
+
+    /**
+     * 调起选择框
+     */
     photograph() {
         const option: ActionSheetOptions = {
             header: '上传方式',
@@ -105,222 +138,179 @@ export class PhotographComponent implements OnInit {
         this.ec.showActionSheet(option);
     }
 
-    // graph() {
-    //     this.camera.getPicture(this.options).then(
-    //         imageData => {
-    //             if (imageData) {
-    //                 this.ec.clearEffectCtrl();
-    //                 const base64Image = 'data:image/jpeg;base64,' + imageData;
-    //                 const image = this.getCompressionImage(this.dataURItoBlob(base64Image));
-    //                 //判断高速还是低速
-    //                 image.subscribe(base64 => {
-    //                     this._photos.push(base64);
-    //                     console.log(base64);
-    //                     if (this.highSpeed) {
-    //                         this.upload({ images: [base64] });
-    //                     } else {
-    //                         //存入缓存
-    //                         //新建文件夹 -> 流水号 ->
-    //                         (window as any).resolveLocalFileSystemURL(
-    //                             'cordova.file.externalRootDirectory',
-    //                             function(root: any) {
-    //                                 root.getFile(
-    //                                     'demo.txt',
-    //                                     { create: true },
-    //                                     function(fileEntry) {
-    //                                         var dataObj = new Blob(['欢迎访问hangge.com'], { type: 'text/plain' });
-    //                                         //写入文件
-    //                                         this.writeFile(fileEntry, dataObj);
-    //                                     },
-    //                                     function(err) {
-    //                                         console.log('创建失败!');
-    //                                     },
-    //                                 );
-    //                             },
-    //                             function(err) {},
-    //                         );
-    //                         return;
-    //                         this.file
-    //                             .checkDir(this.file.dataDirectory, 'hawkeye')
-    //                             .then(has => {
-    //                                 if (has) {
-    //                                     this.file
-    //                                         .readAsDataURL(this.file.dataDirectory + '/hawkeye/', 'test.jpg')
-    //                                         .then(res => {
-    //                                             console.log(res);
-    //                                             this._photos.push(res);
-    //                                         })
-    //                                         .catch(err => console.log(err));
-    //                                 } else {
-    //                                     this.file.createDir(this.file.dataDirectory, 'hawkeye', true).then(res => {
-    //                                         debugger;
-    //                                         console.log(res);
-    //                                         this.file
-    //                                             .writeFile(this.file.dataDirectory + '/hawkeye/', 'test.jpg', imageData)
-    //                                             .then(e => {
-    //                                                 console.log(e);
-    //                                             });
-    //                                     });
-    //                                 }
-    //                             })
-    //                             .catch(err => console.log(err));
-    //                     }
-    //                 });
-    //             } else {
-    //                 this.ec.showToast({
-    //                     message: '没有拍摄图片',
-    //                     color: 'danger',
-    //                 });
-    //             }
-    //         },
-    //         err => {
-    //             this.ec.showToast({
-    //                 message: '没有拍摄照片',
-    //                 color: 'danger',
-    //             });
-    //         },
-    //     );
-    // }
+    /**
+     * 原生拍照
+     */
     graph() {
-        this.camera.getPicture(this.options).then(
-            imageData => {
-                this.ec.clearEffectCtrl();
-                if (imageData) {
-                    this.file
-                        .readAsDataURL(
-                            imageData.substr(0, imageData.lastIndexOf('/') + 1),
-                            imageData.substr(imageData.lastIndexOf('/') + 1),
-                        )
-                        .then(res => {
-                            const image = this.getCompressionImage(this.dataURItoBlob(res));
-                            image.subscribe(base64 => {
-                                this.upload({ images: [ base64 ] });
-                            });
-                        });
-                } else {
-                    this.ec.showToast({
-                        message: '没有拍摄图片',
-                        color: 'danger',
-                    });
-                }
-            },
-            err => {
-                this.ec.showToast({
-                    message: '没有拍摄照片',
-                    color: 'danger',
+        const getImage$ = from(this.camera.getPicture(this.options)),
+            params: ImageOther = {
+                type: this.type,
+                apply_inspection_no: this.apply_inspection_no,
+                contract_no: this.contract_no,
+                sku: this.sku,
+                path: '',
+                is_inner_box: this.box_type == 'inner' ? 0 : 2,
+                sort_index: this.sort_index,
+            };
+        getImage$
+            .pipe(
+                takeWhile(str => str && str.length),
+                tap(res => this.ec.showToast({ message: '拍摄成功', color: 'success' })),
+                mergeMap((filePath: string) => {
+                    params.path = filePath;
+                    params.hash = HashCode(params.type + params.sku + params.is_inner_box + params.path);
+                    if (this.sort_index == undefined || this.sort_index == null) delete params.sort_index;
+
+                    return from(
+                        this.file //将文件地址读取为base64
+                            .readAsDataURL(
+                                filePath.substr(0, filePath.lastIndexOf('/') + 1),
+                                filePath.substr(filePath.lastIndexOf('/') + 1),
+                            ),
+                    );
+                }),
+                //本地展示
+                tap(base64 => this._photos.push(base64)),
+                //调用base64 TO blob webWorker
+                mergeMap(base64 => this.doWorkerGetBlob(base64)),
+                //native图片压缩
+                // mergeMap(blob => this.getCompressionImage(blob.data as any)),
+            )
+            .subscribe(msg => {
+                //blob协议展示图片
+                // this._photos.push(URL.createObjectURL(image));
+                //hash是有 fieldType+sku+is_inner_box+path
+                this.uQueue.add({
+                    type: 'img',
+                    size: msg.data.size,
+                    blob: msg.data,
+                    payload: params,
+                    hash: HashCode(params.type + params.sku + params.is_inner_box + params.path),
                 });
-            },
-        );
+            });
     }
 
-    writeFile(fileEntry: { createWriter: (arg0: (fileWriter: any) => void) => void; }, dataObj: any) {
-        //创建一个写入对象
-        fileEntry.createWriter(function(fileWriter) {
-            //文件写入成功
-            fileWriter.onwriteend = function() {
-                console.log('Successful file read...');
-            };
-
-            //文件写入失败
-            fileWriter.onerror = function(e) {
-                console.log('Failed file read: ' + e.toString());
-            };
-
-            //写入文件
-            fileWriter.write(dataObj);
-        });
-    }
-
+    /**
+     * 选择图片功能
+     */
     picker() {
         if (this.platform.is('hybrid')) {
-            this.imagePicker.getPictures(this.pickerOpts).then(
-                res => {
-                    this.ec.clearEffectCtrl();
-                    if (res && res.length){
-                        let ary = res.map((item: string) => 'data:image/jpeg;base64,' + item);
-                        this.ec.showLoad({
-                            message: '压缩中……',
-                        });
-                        from(ary)
-                            .pipe(
-                                map(res => this.getCompressionImage(this.dataURItoBlob(res))),
-                                mergeAll(),
-                            )
-                            .subscribe(e => {
-                                this.ec.clearEffectCtrl();
-                                this.upload({ images: [e] });
-                            });
-                    } else {
-                        this.ec.showToast({
-                            message: '没有选择图片',
-                            color: 'danger',
-                        });
-                    }
-                },
-                err => {
-                    console.log(err);
-                },
-            );
-        }
-    }
-
-    setCache() {}
-
-    dataURItoBlob(base64Data): any {
-        //console.log(base64Data);//data:image/png;base64,
-        var byteString;
-        if (base64Data.split(',')[0].indexOf('base64') >= 0) byteString = atob(base64Data.split(',')[1]);
-        //base64 解码
-        else {
-            byteString = unescape(base64Data.split(',')[1]);
-        }
-        var mimeString = base64Data
-            .split(',')[0]
-            .split(':')[1]
-            .split(';')[0]; //mime类型 -- image/png
-
-        // var arrayBuffer = new ArrayBuffer(byteString.length); //创建缓冲数组
-        // var ia = new Uint8Array(arrayBuffer);//创建视图
-        var ia = new Uint8Array(byteString.length); //创建视图
-        for (var i = 0; i < byteString.length; i++) {
-            ia[i] = byteString.charCodeAt(i);
-        }
-        var blob = new Blob([ia], {
-            type: mimeString,
-        });
-        return blob;
-    }
-
-    //将base64转换为文件
-    dataURLtoFile(dataurl: string, filename: string): File {
-        var arr = dataurl.split(','),
-            mime = arr[0].match(/:(.*?);/)[1],
-            bstr = atob(arr[1]),
-            n = bstr.length,
-            u8arr = new Uint8Array(n);
-        while (n--) {
-            u8arr[n] = bstr.charCodeAt(n);
-        }
-        return new File([u8arr], filename, { type: mime });
-    }
-
-    //将blob转为base64
-    blobToBase64(blob: Blob): Observable<string> {
-        return new Observable(observer => {
-            let fileReader = new FileReader();
-            fileReader.onload = (e: any) => {
-                observer.next(e.target.result as any);
+            // let getImages$: Observable<Array<string>> = from(this.imagePicker.getPictures(this.pickerOpts)),
+            let params: ImageOther = {
+                type: this.type,
+                apply_inspection_no: this.apply_inspection_no,
+                contract_no: this.contract_no,
+                sku: this.sku,
+                path: '',
+                is_inner_box: this.box_type == 'inner' ? 0 : 2,
+                sort_index: this.sort_index,
             };
-            fileReader.readAsDataURL(blob);
+            this.imagePicker.getPictures(this.pickerOpts).then(arr => {
+                let getImages$ = from(arr as Array<string>);
+                zip(
+                    getImages$,
+                    getImages$.pipe(
+                        // mergeMap(elem => from(elem)),
+                        mergeMap(elem =>
+                            this.file.readAsDataURL(
+                                //读取图片本机地址为base64
+                                elem.substr(0, elem.lastIndexOf('/') + 1),
+                                elem.substr(elem.lastIndexOf('/') + 1),
+                            ),
+                        ),
+                        //本地展示
+                        tap(base64 => this._photos.push(base64)),
+                        mergeMap(base64 => this.doWorkerGetBlob(base64)),
+                    ),
+                ).subscribe(([elem, { data }]) => {
+                    console.log('---------- 选择完毕 ---------');
+                    params.path = elem;
+                    params.hash = HashCode(params.type + params.sku + params.is_inner_box + elem);
+                    this.uQueue.add({
+                        type: 'img',
+                        size: data.size,
+                        blob: data,
+                        payload: params,
+                        hash: HashCode(params.type + params.sku + params.is_inner_box + params.path),
+                    });
+                });
+            });
+        }
+    }
+
+    /**
+     * 通过base64ToBlob WebWorker 得到Blob
+     * @param base64
+     */
+    doWorkerGetBlob(base64: String): Observable<any> {
+        let obs = new Observable(observer => {
+            const worker: Worker = new Worker('../assets/js/dataURItoBlob.js');
+            worker.postMessage({ res: base64 });
+            worker.onmessage = e => {
+                observer.next(e);
+            };
+        });
+        return obs;
+    }
+
+    doWorkerGetBase64(blob: Blob): Observable<any> {
+        let obs = new Observable(observer => {
+            const worker: Worker = new Worker('../assets/js/blobtobase64.js');
+            worker.postMessage({ data: blob });
+            worker.onmessage = e => {
+                observer.next(e);
+            };
+        });
+        return obs;
+    }
+
+    doCheckImg(e: any) {
+        let params: ImageOther = {
+            type: this.type,
+            apply_inspection_no: this.apply_inspection_no,
+            contract_no: this.contract_no,
+            is_inner_box: this.box_type == 'inner' ? 0 : 2,
+            sku: this.sku,
+            sort_index: this.sort_index,
+            path: '',
+        };
+
+        // return;
+        Array.prototype.map.call(e.target.files, (file: File) => {
+            params.path =
+                '../assets/img/WeChatIMG143.jpeg?random=' +
+                HashCode(params.type + params.sku + params.is_inner_box + params.path);
+            if (this.sort_index == undefined || this.sort_index == null) delete params.sort_index;
+            params.hash = HashCode(params.type + params.sku + params.is_inner_box + params.path);
+
+            this.uQueue.add({
+                type: 'img',
+                size: file.size,
+                blob: file,
+                payload: params,
+                hash: HashCode(params.type + params.sku + params.is_inner_box + params.path),
+            });
         });
     }
 
     remove(i: number) {
+        if (this.rmClicked.find(item => item === i)) {
+            console.log('------ 稍安勿躁 ------');
+            return;
+        }
+        this.rmClicked.push(i);
+
         this.ec.showAlert({
             message: '确定要删除吗？',
             buttons: [
                 {
                     text: '取消',
+                    handler: () => {
+                        this.rmClicked.splice(
+                            this.rmClicked.findIndex(item => item === i),
+                            1,
+                        );
+                    },
                 },
                 {
                     text: '确定',
@@ -334,11 +324,12 @@ export class PhotographComponent implements OnInit {
                             is_inner_box: this.box_type == 'inner' ? 1 : 2,
                             sort_index: this.sort_index,
                         };
-                        !this.sort_index && delete this.sort_index;
+                        if (this.sort_index == undefined || this.sort_index == null) delete params.sort_index;
                         this.implement[this.moduleType](params).subscribe(res => {
                             if (res.status) {
                                 this._photos.splice(i, 1);
                                 this.onPhotograph.emit(this._photos);
+
                                 this.ec.showToast({
                                     message: '删除成功！',
                                     color: 'success',
@@ -348,6 +339,10 @@ export class PhotographComponent implements OnInit {
                                     message: '删除失败！',
                                     color: 'danger',
                                 });
+                                this.rmClicked.splice(
+                                    this.rmClicked.findIndex(item => item === i),
+                                    1,
+                                );
                             }
                         });
                     },
@@ -357,7 +352,6 @@ export class PhotographComponent implements OnInit {
     }
 
     upload(obj: any) {
-        console.log(obj);
         this.ec.showLoad({
             message: '正在上传中……',
             backdropDismiss: true,
@@ -368,10 +362,8 @@ export class PhotographComponent implements OnInit {
             contract_no: this.contract_no,
             is_inner_box: this.box_type == 'inner' ? 0 : 2,
             sku: this.sku,
-            images: obj.images,
             sort_index: this.sort_index,
         };
-
         this.uploadService.uploadImage(params).subscribe(res => {
             if (res.status) {
                 this._photos = this._photos.concat(res.data.map(item => this.imgOrigin + item));
@@ -388,10 +380,12 @@ export class PhotographComponent implements OnInit {
      * 压缩图片
      * @param file file对象
      */
-    getCompressionImage(file: File): Observable<string> {
+    getCompressionImage(file: File): Observable<Blob> {
+        let that = this;
+
         let image = from(
             this.Compressor.compress(file, {
-                quality: 0.8,
+                quality: 1,
                 maxWidth: 1000,
                 maxHeight: 1000,
                 convertSize: 614400, //超过600kb压缩
@@ -401,10 +395,38 @@ export class PhotographComponent implements OnInit {
                     throw { message: `压缩失败${e.message}` };
                 },
             }),
-        ).pipe(
-            map(res => this.blobToBase64(res)),
-            mergeAll(),
         );
         return image;
+    }
+
+    /**
+     * 根据缓存里的数据获取path拿到地址展示用
+     */
+    getPathByCache() {
+        //防止重复取缓存
+        let imgCaches$: Observable<ImageOther> = from(this._caches);
+        if (!this._caches || !this._caches.length) return;
+
+        // imgCaches$.subscribe((res) => {      //TODO web端测试用
+        //     this._photos.push(res.path);
+        // });
+        imgCaches$
+            .pipe(
+                takeWhile(res => this.platform.is('hybrid') && this._photos.indexOf(res.path) == -1),
+                mergeMap(elem => {
+                    return from(
+                        this.file.readAsDataURL(
+                            //读取图片本机地址为base64
+                            elem.path.substr(0, elem.path.lastIndexOf('/') + 1),
+                            elem.path.substr(elem.path.lastIndexOf('/') + 1),
+                        ),
+                    );
+                }),
+            )
+            .subscribe(base64 => {
+                console.log('----------------  缓存中的  --------------');
+                this._photos.push(base64);
+                this._photos = this.removal(this._photos);
+            });
     }
 }

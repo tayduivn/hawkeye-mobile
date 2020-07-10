@@ -11,9 +11,9 @@ import { Chunk, FileChunkService } from 'src/app/blue-bird/service/file-chunk.se
 import { RequestService } from 'src/app/blue-bird/service/request.service';
 import { FileHashService } from 'src/app/blue-bird/service/file-hash.service';
 import { UserInfoService } from 'src/app/services/user-info.service';
-import { Observable } from 'rxjs';
 import { HttpService } from '../../services/http.service';
 import { environment } from 'src/environments/environment';
+import { UploadQueueService } from 'src/app/pages/implement-inspection/upload-queue.service';
 
 export type FieldType =
     | 'throw_box_video'
@@ -26,6 +26,7 @@ export type FieldType =
     | 'gross_weight_pic'
     | 'throw_box'
     | 'size_pic'
+    | 'product_size_pic'
     | 'packing_pic'
     | 'product_place_pic'
     | 'instructions_and_accessories_pic'
@@ -37,6 +38,10 @@ export type FieldType =
     | 'contract_sku_pic'
     | 'factory_environment_pic'
     | 'factory_sample_room_pic'
+    | 'size_pic_width'
+    | 'size_pic_height'
+    | 'size_pic_length'
+    | 'inspection_require_pic'
     | 'factory_other_pic';
 
 @Component({
@@ -45,12 +50,12 @@ export type FieldType =
     styleUrls: ['./videotape.component.scss'],
 })
 export class VideotapeComponent implements OnInit {
-    progress: string;
-    hash: string;
-    data: any[];
+    progress: string; //上传进度
+    hash: string; //唯一哈希
+    data: any[]; //
     container: any;
-    requestList: XMLHttpRequest[] = [];
-    fileChunkList: Chunk[];
+    requestList: XMLHttpRequest[] = []; //请求列表（并发）
+    fileChunkList: Chunk[]; //文件切片列表
     @Input() set videos(input: string[]) {
         if (!input) {
             return;
@@ -60,12 +65,12 @@ export class VideotapeComponent implements OnInit {
         }
     }
 
-    @Input() type: FieldType;
-    @Input() apply_inspection_no: string;
-    @Input() contract_no: string;
-    @Input() sku: string;
-    @Input() box_type: 'outer' | 'inner';
-    @Input() sort_index?: number;
+    @Input() type: FieldType; //验货字段
+    @Input() apply_inspection_no: string; //流水号
+    @Input() contract_no: string; //合同号
+    @Input() sku: string; //sku
+    @Input() box_type: 'outer' | 'inner'; //箱类型
+    @Input() sort_index?: number; //验货要求时需要
 
     constructor(
         public mediaCapture: MediaCapture,
@@ -79,10 +84,14 @@ export class VideotapeComponent implements OnInit {
         private fileChunk: FileChunkService,
         private userInfo: UserInfoService,
         private http: HttpService,
+        private uQueue: UploadQueueService,
     ) {}
 
     @Output() onComplete: EventEmitter<MediaFile[][]> = new EventEmitter<MediaFile[][]>();
 
+    /**
+     * 上传总进度
+     */
     get uploadPercentage(): number {
         if (!this.container || !this.container || !this.data || !this.data.length) return 0;
         const loaded = this.data.map(item => item.size * item.percentage).reduce((acc, cur) => acc + cur);
@@ -131,15 +140,29 @@ export class VideotapeComponent implements OnInit {
         const url = await this.filePath.resolveNativePath(uri);
         if (url && uri) {
             this.ec.showLoad({
-                message: '获取文件ArrayBuffer中……',
+                message: '请耐心等待…',
             });
             this.getFileEntry(url).then(res => {
                 this.ec.clearEffectCtrl();
-                this.ec.showAlert({
-                    message: '获取ArrayBuffer完毕',
-                });
                 const blob = new Blob([res]);
-                this.handleFile(blob, url);
+                let params: any = {
+                    sort_index: this.sort_index,
+                    type: this.type,
+                    apply_inspection_no: this.apply_inspection_no,
+                    contract_no: this.contract_no,
+                    sku: this.sku,
+                    path: url,
+                    filename: (blob as any).name, //BUG
+                };
+
+                this.uQueue.add({
+                    type: 'video',
+                    size: blob.size,
+                    blob: blob,
+                    payload: params,
+                });
+
+                //this.handleFile(blob, url);
             });
         } else {
             this.ec.showToast({
@@ -147,12 +170,6 @@ export class VideotapeComponent implements OnInit {
                 color: 'danger',
             });
         }
-    }
-
-    async getFileEntry(url: string): Promise<any> {
-        let dirPath = url.substring(0, url.lastIndexOf('/'));
-        let fileName = url.substring(url.lastIndexOf('/') + 1, url.length);
-        return await this.file.readAsArrayBuffer(dirPath, fileName);
     }
 
     async tape() {
@@ -164,7 +181,24 @@ export class VideotapeComponent implements OnInit {
                     message: '获取ArrayBuffer完毕',
                 });
                 const blob = new Blob([res]);
-                this.handleFile(blob, mediaFiles[0].fullPath);
+
+                let params: any = {
+                    sort_index: this.sort_index,
+                    type: this.type,
+                    apply_inspection_no: this.apply_inspection_no,
+                    contract_no: this.contract_no,
+                    path: mediaFiles[0].fullPath,
+                    sku: this.sku,
+                    filename: mediaFiles[0].name,
+                };
+
+                this.uQueue.add({
+                    type: 'video',
+                    size: blob.size,
+                    blob: blob,
+                    payload: params,
+                });
+                //this.handleFile(blob, mediaFiles[0].fullPath);
             });
         } else {
             this.ec.showToast({
@@ -174,7 +208,35 @@ export class VideotapeComponent implements OnInit {
         }
     }
 
-    async handleFile(res?: any, filepath?: string) {
+    async getFileEntry(url: string): Promise<any> {
+        let dirPath = url.substring(0, url.lastIndexOf('/'));
+        let fileName = url.substring(url.lastIndexOf('/') + 1, url.length);
+        return await this.file.readAsArrayBuffer(dirPath, fileName);
+    }
+
+    testHandle(e: any) {
+        const file = e.target.files[0];
+        // this.handleFile(file);
+        // return
+        let params: any = {
+            sort_index: this.sort_index,
+            type: this.type,
+            apply_inspection_no: this.apply_inspection_no,
+            contract_no: this.contract_no,
+            sku: this.sku,
+            filename: file.name,
+            path: 'jeiiwenwomdasdmasm',
+        };
+
+        this.uQueue.add({
+            type: 'video',
+            size: file.size,
+            blob: file,
+            payload: params,
+        });
+    }
+
+    async handleFile(res?: any, filePath?: string) {
         this.container = res;
         //文件切片
         this.fileChunkList = await this.fileChunk.handleFile(res);
@@ -183,7 +245,7 @@ export class VideotapeComponent implements OnInit {
         //toPromise rxjs
         const {
             data: { uploadedList, shouldUpload },
-        } = await this.verifyUpload(this.hash, filepath);
+        } = await this.verifyUpload(this.hash, filePath);
         if (!shouldUpload) {
             alert('文件已上传');
             return;
@@ -224,7 +286,6 @@ export class VideotapeComponent implements OnInit {
                 formData.append('filename', this.container.name);
                 formData.append('filehash', fileHash);
                 formData.append('upload_type', 'upload');
-                console.log(this.sort_index);
                 return formData;
             })
             .map(async (formData, index) => {
@@ -328,42 +389,6 @@ export class VideotapeComponent implements OnInit {
             ],
         });
     }
-
-    dataURItoBlob(base64Data): any {
-        //console.log(base64Data);//data:image/png;base64,
-        var byteString;
-        if (base64Data.split(',')[0].indexOf('base64') >= 0) byteString = atob(base64Data.split(',')[1]);
-        //base64 解码
-        else {
-            byteString = unescape(base64Data.split(',')[1]);
-        }
-        var mimeString = base64Data
-            .split(',')[0]
-            .split(':')[1]
-            .split(';')[0]; //mime类型 -- image/png
-
-        // var arrayBuffer = new ArrayBuffer(byteString.length); //创建缓冲数组
-        // var ia = new Uint8Array(arrayBuffer);//创建视图
-        var ia = new Uint8Array(byteString.length); //创建视图
-        for (var i = 0; i < byteString.length; i++) {
-            ia[i] = byteString.charCodeAt(i);
-        }
-        var blob = new Blob([ia], {
-            type: mimeString,
-        });
-        return blob;
-    }
-
-    //将blob转为base64
-    blobToBase64(blob: Blob): Observable<string> {
-        return new Observable(observer => {
-            let fileReader = new FileReader();
-            fileReader.onload = (e: any) => {
-                observer.next(e.target.result as any);
-            };
-            fileReader.readAsDataURL(blob);
-        });
-    }
 }
 
 export interface VerifyResponse {
@@ -385,6 +410,10 @@ export interface UploadParams {
     video_info: FileBaseInfo;
     upload_type: 'upload' | 'merge' | 'fileVerify';
     video_extension: string;
+    cut_num?: number;
+    hash?: string | number;
+    filehash?: string | number;
+    sort_index?: number;
 }
 
 export interface FileBaseInfo {

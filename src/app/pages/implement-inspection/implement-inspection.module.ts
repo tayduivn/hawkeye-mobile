@@ -17,7 +17,7 @@ import { Camera } from '@ionic-native/camera/ngx';
 import { InspectPoComponent } from './inspect-po/inspect-po.component';
 import { TestPipe } from 'src/app/pipe/test.pipe';
 import { SkuGuard } from './sku.guard';
- 
+
 const routes: Routes = [
     {
         path: 'implement-inspection',
@@ -63,7 +63,6 @@ const routes: Routes = [
         InspectSkuComponent,
         EvaluationComponent,
         ExamineDetailComponent,
-       
     ],
     providers: [Camera],
 })

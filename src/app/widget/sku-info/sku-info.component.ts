@@ -98,6 +98,7 @@ export class SKUInfoComponent implements OnInit {
     @Input() toInspectionParams?: string;
 
     screenAngle: ScreenAngle;
+    random: number = Math.random();
     imgOrigin: string = environment.fileUrlPath;
     photoOrigin: string = 'http://192.168.1.144/storage/';
 

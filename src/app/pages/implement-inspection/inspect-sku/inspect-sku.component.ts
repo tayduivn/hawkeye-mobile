@@ -1,4 +1,4 @@
- import { Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { ImplementInspectService } from 'src/app/services/implement-inspect.service';
 import { environment } from './../../../../environments/environment';
 import { FormBuilder, FormGroup, FormArray, FormControl } from '@angular/forms';
@@ -9,6 +9,9 @@ import { Sku } from 'src/app/widget/sku-info/sku-info.component';
 import { StorageService } from 'src/app/services/storage.service';
 import { ActivatedRoute } from '@angular/router';
 import { QueueComponent } from '../queue/queue.component';
+import { UploadQueueService } from '../upload-queue.service';
+import { debounceTime } from 'rxjs/operators';
+import { InspectCacheService } from '../inspect-cache.service';
 
 export interface SkuUploadData {
     spotCheckNum?: number; // 抽检数量
@@ -117,14 +120,18 @@ export class InspectSkuComponent implements OnInit {
         private storage: StorageService,
         private activeRouter: ActivatedRoute,
         private implementService: ImplementInspectService,
+        private uQueue: UploadQueueService,
+        private inspectCache: InspectCacheService,
     ) {}
 
     SkuInspectModel: FormGroup;
 
-    showModal(){
+    alreadyUpProgress: boolean = this.uQueue.alreadyUpProgress;
+    showModal() {
         this.es.showModal({
-            component: QueueComponent
-        })
+            component: QueueComponent,
+        });
+        this.uQueue.alreadyUpProgress = true
     }
 
     ngOnInit() {
@@ -332,19 +339,29 @@ export class InspectSkuComponent implements OnInit {
                 }),
             }),
         });
-        // document.getElementsByTagName('html')[0].setAttribute('style','-webkit-filter: saturate(0.5);')
+
+        this.SkuInspectModel.valueChanges.pipe(debounceTime(900)).subscribe(res => {
+            console.log(res);
+            //此处存入缓存
+            this.inspectCache.cacheInspectText(res);
+        });
     }
 
     /**
      * 上传状态改变
      */
-    speedChange(e: any){
-        let html = document.getElementsByTagName('html')[0]
-        if(this.speed) html.setAttribute('style','0')
-        else html.setAttribute('style','-webkit-filter: saturate(0.5);')
+    speedChange(e: any) {
+        let html = document.getElementsByTagName('html')[0];
+        if (this.speed) html.setAttribute('style', '0');
+        else html.setAttribute('style', '-webkit-filter: saturate(0.5);');
     }
 
     ionViewWillEnter() {
+        //如果有缓存 则patch 防止闪退
+        if (this.inspectCache.getInspectText()) {
+            this.SkuInspectModel.patchValue(this.inspectCache.getInspectText());
+        }
+        //再获取数据
         this.getBeforeBoxData();
     }
 
@@ -423,7 +440,7 @@ export class InspectSkuComponent implements OnInit {
             postData.inner_box_data && this.data.rate_container != 1 && (postData.inner_box_data.size = this.size);
             this.es.showAlert({
                 message: '正在保存……',
-                backdropDismiss: false,
+                backdropDismiss: true,
             });
 
             if (this.currentToggle.key == 'requirement') {
@@ -621,7 +638,9 @@ export class InspectSkuComponent implements OnInit {
                                 desc: res.inner_box_data.barCode.desc ? res.inner_box_data.barCode.desc : [],
                                 text: res.inner_box_data.barCode.text,
                                 photos: res.inner_box_data.barCode.photos ? res.inner_box_data.barCode.photos : [],
-                                agreement: res.inner_box_data.barCode.agreement ? res.inner_box_data.barCode.agreement : '0'
+                                agreement: res.inner_box_data.barCode.agreement
+                                    ? res.inner_box_data.barCode.agreement
+                                    : '0',
                             },
                             grossWeight: {
                                 //毛重
@@ -673,7 +692,9 @@ export class InspectSkuComponent implements OnInit {
                                 desc: res.outer_box_data.barCode.desc ? res.outer_box_data.barCode.desc : [],
                                 text: res.outer_box_data.barCode.text,
                                 photos: res.outer_box_data.barCode.photos ? res.outer_box_data.barCode.photos : [],
-                                agreement: res.outer_box_data.barCode.agreement ? res.outer_box_data.barCode.agreement : '0'
+                                agreement: res.outer_box_data.barCode.agreement
+                                    ? res.outer_box_data.barCode.agreement
+                                    : '0',
                             },
                             grossWeight: {
                                 //毛重
@@ -966,7 +987,7 @@ export class InspectSkuComponent implements OnInit {
         this.size = e;
     }
 
-    ionViewDidLeave(){
-        // document.getElementsByTagName('html')[0].setAttribute('style','-webkit-filter: 0;') 
+    ionViewDidLeave() {
+        // document.getElementsByTagName('html')[0].setAttribute('style','-webkit-filter: 0;')
     }
 }

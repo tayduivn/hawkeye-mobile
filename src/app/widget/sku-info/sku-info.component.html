@@ -164,7 +164,7 @@
                     <ion-col size=".9">
                         <div class="img-box desc" *ngIf="item.pic && item.pic.length" imgGallery>
                             <ng-container *ngFor="let item of item.pic; let i = index">
-                                <img [src]="imgOrigin + item" alt="" *ngIf="i == 0" />
+                                <img alt="" *ngIf="i == 0"  [src]="imgOrigin + item" />
                             </ng-container>
                         </div>
                         <ion-text class="danger" *ngIf="!item.pic.length">暂无</ion-text>

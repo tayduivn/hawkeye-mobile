@@ -1,13 +1,10 @@
-self.onmessage = data => {
-    let fileReader = new FileReader();
-    fileReader.onload = e => {
-        let blob = this.dataURItoBlob(e.target.result);
-        self.postMessage({
-            blob: blob,
-        });
-        self.close();
-    };
-    fileReader.readAsDataURL(data.data.file);
+/**
+ * base64转blob🗜️
+ */
+self.onmessage = (e) => {
+    const file = dataURItoBlob(e.data.res);
+    self.postMessage( file );
+    self.close();
 };
 
 function dataURItoBlob(base64Data) {
@@ -22,7 +19,6 @@ function dataURItoBlob(base64Data) {
         .split(',')[0]
         .split(':')[1]
         .split(';')[0]; //mime类型 -- image/png
-
     // var arrayBuffer = new ArrayBuffer(byteString.length); //创建缓冲数组
     // var ia = new Uint8Array(arrayBuffer);//创建视图
     var ia = new Uint8Array(byteString.length); //创建视图
@@ -34,5 +30,3 @@ function dataURItoBlob(base64Data) {
     });
     return blob;
 }
-
-

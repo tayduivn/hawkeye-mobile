@@ -5,6 +5,7 @@
         </ion-buttons>
         <ion-title>{{ data.factory_name }}</ion-title>
         <ion-buttons slot="end">
+            <ion-button (click)="showModal()" size="small">上传进度</ion-button>
             <ion-back-button defaultHref="/implement-inspection" text="返回" color="white" mode="md"></ion-back-button>
         </ion-buttons>
     </ion-toolbar>
@@ -256,7 +257,7 @@
             </ion-item>
         </ion-list>
 
-        <ion-list>
+        <ion-list *ngIf="review_status">
             <ion-list-header>审&nbsp;&nbsp;核&nbsp;&nbsp;详&nbsp;&nbsp;情：</ion-list-header>
             <app-examine-detail [data]="examineDetail"></app-examine-detail>
         </ion-list>

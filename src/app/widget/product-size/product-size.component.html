@@ -1,7 +1,7 @@
 <div class="size product-size" *ngFor="let item of _sizes; let i = index">
     <div class="list" fxLayout="row" fxLayoutAlign="space-between center">
         <div
-            *ngIf="type == 'productSize'"
+            *ngIf="_type == 'productSize'"
             (click)="changeText(i, item.size_length ? 'modify' : 'add', 'size_type', '尺寸类型')"
         >
             {{ item.size_type ? item.size_type : '尺寸类型' }}
@@ -21,7 +21,7 @@
         <ion-button size="small" (click)="add()" *ngIf="i == _sizes.length - 1">添加</ion-button>
     </div>
     <app-photograph
-        [type]="type == 'size' ? 'size_pic' : 'product_size_pic'"
+        [type]="photographType"
         moduleType="removeSkuPic"
         [photos]="item.pic"
         [contract_no]="contract_no"

@@ -22,8 +22,11 @@ import { ScanComponent } from './widget/scan/scan.component';
 import { FileTransfer } from '@ionic-native/file-transfer/ngx';
 import { DescriptionComponent } from './widget/description/description.component';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
-import { SecureStorage, SecureStorageObject } from '@ionic-native/secure-storage/ngx';
+import { SecureStorage } from '@ionic-native/secure-storage/ngx';
 import { QueueComponent } from './pages/implement-inspection/queue/queue.component';
+import { BackgroundMode } from '@ionic-native/background-mode/ngx';
+import { Network } from '@ionic-native/network/ngx';
+import { File } from '@ionic-native/file/ngx';
 
 @NgModule({
     declarations: [
@@ -33,7 +36,7 @@ import { QueueComponent } from './pages/implement-inspection/queue/queue.compone
         PartsComponent,
         VideoPlayComponent,
         DescriptionComponent,
-        QueueComponent
+        QueueComponent,
     ],
     entryComponents: [
         InspectSettingBoxComponent,
@@ -41,7 +44,7 @@ import { QueueComponent } from './pages/implement-inspection/queue/queue.compone
         PartsComponent,
         VideoPlayComponent,
         DescriptionComponent,
-        QueueComponent
+        QueueComponent,
     ],
     imports: [
         BrowserModule,
@@ -61,7 +64,10 @@ import { QueueComponent } from './pages/implement-inspection/queue/queue.compone
         QRScanner,
         FileTransfer,
         BarcodeScanner,
-        SecureStorage
+        SecureStorage,
+        BackgroundMode,
+        File,
+        Network,
     ],
     bootstrap: [AppComponent],
 })

@@ -1,16 +1,13 @@
 <ion-header mode="ios">
     <ion-toolbar>
-
         <ion-buttons slot="start">
             <ion-menu-button></ion-menu-button>
         </ion-buttons>
         <ion-title>{{ data.sku }}</ion-title>
 
         <ion-buttons slot="end" class="tops">
-            <!-- <span>高速</span>
-            <ion-toggle color="light" (ionChange)="speedChange($event)" [(ngModel)]="speed"></ion-toggle> -->
-            <!-- <ion-button (click)='showModal()'>下载进度</ion-button> -->
-            
+            <ion-button (click)="showModal()" [disabled]="alreadyUpProgress">上传进度</ion-button>
+
             <span>箱率：{{ data.rate_container }}</span>
             <select (change)="toggleBoxRate()" [(ngModel)]="rateStatus" *ngIf="data.rate_container != 1">
                 <option value="inner">内箱</option>
@@ -24,12 +21,10 @@
         <ion-buttons slot="end">
             <ion-back-button defaultHref="/inspect-po" text="返回" color="white" mode="md"></ion-back-button>
         </ion-buttons>
-
     </ion-toolbar>
 </ion-header>
 
 <ion-content #content>
-    <!-- <app-queue *ngIf="showProgress"></app-queue> -->
     <app-sku-info [sku]="data" type="implement"></app-sku-info>
     <div class="label-item">
         <ion-grid>
@@ -68,6 +63,7 @@
                     <div class="schedule-item w30 border-0">
                         <ion-label>PO号是否符合</ion-label>
                         <select formControlName="poNoRes">
+                            <option value="none">请选择</option>
                             <option value="accord">符合</option>
                             <option value="notAccord">不符合</option>
                         </select>
@@ -77,7 +73,7 @@
         </div>
         <!-- 内箱 -->
         <div class="out-box" *ngIf="rateStatus == 'inner'" formGroupName="inner_box_data">
-            <ion-list [hidden]="currentToggle.key != 'beforeUnpacking'">
+            <ion-list *ngIf="currentToggle.key == 'beforeUnpacking'">
                 <ion-item>
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -206,7 +202,7 @@
                     </div>
                 </ion-item>
             </ion-list>
-            <ion-list [hidden]="currentToggle.key != 'beforeUnpacking'">
+            <ion-list *ngIf="currentToggle.key == 'beforeUnpacking'">
                 <ion-item formGroupName="barCode">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -245,6 +241,7 @@
                                 是否六面条码一致？
                             </p>
                             <select class="select" formControlName="agreement">
+                                <option value="none">请选择</option>
                                 <option value="1">是</option>
                                 <option value="0">否</option>
                             </select>
@@ -324,8 +321,8 @@
                 </ion-item>
             </ion-list>
             <!-- 摔箱测试 -->
-            <ion-list [hidden]="currentToggle.key != 'beforeUnpacking'">
-                <ion-item formGroupName="throwBox">
+            <ion-list *ngIf="currentToggle.key == 'beforeUnpacking'">
+                <ion-item formGroupName="throwBox" [hidden]='!data.is_need_drop_test'>
                     <div class="w100">
                         <div class="global-inspect-title">
                             <p>摔箱测试</p>
@@ -343,6 +340,7 @@
                             <div fxLayout="row" fxLayoutAlign="start center">
                                 <p class="global-inspect-title gray-color">是否通过：</p>
                                 <select class="select" formControlName="isPass" [disabled]="!data.is_need_drop_test">
+                                    <option value="none">请选择</option>
                                     <option value="1">是</option>
                                     <option value="0">否</option>
                                 </select>
@@ -380,7 +378,7 @@
                 </ion-item>
             </ion-list>
             <!-- 包装 -->
-            <ion-list [hidden]="currentToggle.key != 'afterUnpacking'">
+            <ion-list   *ngIf="currentToggle.key == 'afterUnpacking'">
                 <ion-item formGroupName="packing">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -408,6 +406,7 @@
                                         是否与以上信息对应？
                                     </p>
                                     <select class="select" formControlName="isTrue">
+                                        <option value="none">请选择</option>
                                         <option value="1">是</option>
                                         <option value="0">否</option>
                                     </select>
@@ -417,6 +416,7 @@
                                         是否是双纸箱:
                                     </p>
                                     <select class="select" formControlName="is_double_carton">
+                                        <option value="none">请选择</option>
                                         <option value="1">是</option>
                                         <option value="0">否</option>
                                     </select>
@@ -492,7 +492,7 @@
                 </ion-item>
             </ion-list>
             <!-- 摆放图与说明书及配件包 -->
-            <ion-list [hidden]="currentToggle.key != 'afterUnpacking'">
+            <ion-list   *ngIf="currentToggle.key == 'afterUnpacking'">
                 <ion-item formGroupName="layout">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -519,7 +519,7 @@
                     </div>
                 </ion-item>
             </ion-list>
-            <ion-list [hidden]="currentToggle.key != 'afterUnpacking'">
+            <ion-list   *ngIf="currentToggle.key == 'afterUnpacking'">
                 <ion-item formGroupName="productDetail">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -546,7 +546,7 @@
                     </div>
                 </ion-item>
             </ion-list>
-            <ion-list [hidden]="currentToggle.key != 'afterUnpacking'">
+            <ion-list   *ngIf="currentToggle.key == 'afterUnpacking'">
                 <ion-item formGroupName="instructions">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -556,6 +556,7 @@
                             <div class="item" fxLayout="row" fxLayoutAlign="start center">
                                 <p class="global-inspect-title gray-color">是否有说明书</p>
                                 <select class="select" formControlName="isHas">
+                                    <option value="none">请选择</option>
                                     <option value="1">是</option>
                                     <option value="0">否</option>
                                 </select>
@@ -598,6 +599,7 @@
                             <div class="item" fxLayout="row" fxLayoutAlign="start center">
                                 <p class="global-inspect-title gray-color">是否有螺丝包</p>
                                 <select class="select" formControlName="isTrue">
+                                    <option value="none">请选择</option>
                                     <option value="1">是</option>
                                     <option value="0">否</option>
                                 </select>
@@ -626,7 +628,7 @@
             </ion-list>
 
             <!-- 产品整体图 -->
-            <ion-list [hidden]="currentToggle.key != 'afterUnpacking'">
+            <ion-list   *ngIf="currentToggle.key == 'afterUnpacking'">
                 <ion-item formGroupName="whole">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -654,7 +656,7 @@
                 </ion-item>
             </ion-list>
 
-            <ion-list [hidden]="currentToggle.key != 'afterUnpacking'">
+            <ion-list   *ngIf="currentToggle.key == 'afterUnpacking'">
                 <ion-item formGroupName="disputes">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -675,11 +677,11 @@
             </ion-list>
 
             <!-- 产品尺寸 -->
-            <ion-list [hidden]="currentToggle.key != 'afterUnpacking'">
+            <ion-list   *ngIf="currentToggle.key == 'afterUnpacking'">
                 <ion-item>
                     <div class="w100">
                         <div class="global-inspect-title">
-                            <p>产品尺寸(单位：CM)</p>
+                            <p>产品尺寸(单位：CM )</p>
                         </div>
                         <inspect-product-size
                             type="productSize"
@@ -703,7 +705,7 @@
             </ion-list>
 
             <!-- 净重 -->
-            <ion-list [hidden]="currentToggle.key != 'afterUnpacking'">
+            <ion-list   *ngIf="currentToggle.key == 'afterUnpacking'">
                 <ion-item formGroupName="netWeight">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -745,7 +747,7 @@
             </ion-list>
 
             <!-- 外观检测选项 -->
-            <ion-list [hidden]="currentToggle.key != 'afterUnpacking'">
+            <ion-list   *ngIf="currentToggle.key == 'afterUnpacking'">
                 <ion-item formGroupName="appearance">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -773,7 +775,7 @@
                             ></app-videotape>
                             <div class="test-feedback">
                                 <div>
-                                    <p class="global-inspect-title  gray-color desc-tips">
+                                    <p class="global-inspect-title gray-color desc-tips">
                                         请输入说明
                                     </p>
                                     <div>
@@ -792,7 +794,7 @@
             </ion-list>
 
             <!-- 测试部分 -->
-            <ion-list [hidden]="currentToggle.key != 'afterUnpacking'">
+            <ion-list   *ngIf="currentToggle.key == 'afterUnpacking'">
                 <ion-item formGroupName="function">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -904,7 +906,7 @@
             </ion-list>
 
             <!-- 总结 -->
-            <ion-list [hidden]="currentToggle.key != 'afterUnpacking'">
+            <ion-list   *ngIf="currentToggle.key == 'afterUnpacking'">
                 <ion-item formGroupName="sumUp">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -914,19 +916,14 @@
                         <div class="maozhong pb-10" fxLayout="row" fxLayoutAlign="space-between center">
                             <label for="" class="label mf">请输入实际抽检数量</label>
                             <ion-input
-                                placeholder="请输入实际抽检数量"
+                                placeholder="0"
                                 type="number"
                                 class="w150"
                                 class="mr-10"
                                 formControlName="textOne"
                             ></ion-input>
                             <label for="" class="label mf">请输入实际摔箱数量</label>
-                            <ion-input
-                                placeholder="请输入实际摔箱数量"
-                                type="number"
-                                class="w150"
-                                formControlName="textTwo"
-                            >
+                            <ion-input placeholder="0" type="number" class="w150" formControlName="textTwo">
                             </ion-input>
                         </div>
 
@@ -985,7 +982,7 @@
             </ion-list>
 
             <!-- 备注 -->
-            <ion-list [hidden]="currentToggle.key != 'afterUnpacking'">
+            <ion-list   *ngIf="currentToggle.key == 'afterUnpacking'">
                 <ion-item formGroupName="desc">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -1012,10 +1009,8 @@
             </ion-list>
 
             <!-- 验货要求 -->
-            <ion-grid
-                class="inspection_require"
-                *ngIf="currentToggle.key == 'requirement' && data.inspection_require && data.inspection_require.length"
-            >
+            <ion-grid class="inspection_require" *ngIf="currentToggle.key == 'requirement'">
+                <!-- *ngIf="data.inspection_require && data.inspection_require.length" -->
                 <ion-row>
                     <ion-col [size]="1.8" align-self-center>验货条目</ion-col>
                     <ion-col [size]="3.1" align-self-center>验货要求</ion-col>
@@ -1024,7 +1019,7 @@
                 </ion-row>
                 <ng-container *ngIf="data.inspection_require && data.inspection_require.length">
                     <ion-row *ngFor="let item of data.inspection_require; let i = index">
-                        <ion-col align-self-center [size]="1.8" class="content" Chipboard class="chip-text ">
+                        <ion-col align-self-center [size]="1.8" class="content" Chipboard class="chip-text">
                             {{ item.theme_name }}
                         </ion-col>
                         <ion-col align-self-center [size]="3.1" class="content" Chipboard class="chip-text content">
@@ -1065,13 +1060,13 @@
                     </ion-row>
                 </ng-container>
                 <ion-row *ngIf="data.inspection_require && !data.inspection_require.length">
-                    <ion-col size="12" style="text-align: center" class="danger">暂无</ion-col>
+                    <ion-col size="12" style="text-align: center;" class="danger">暂无</ion-col>
                 </ion-row>
             </ion-grid>
         </div>
         <!-- 外箱 -->
         <div class="out-box" *ngIf="rateStatus == 'outer'" formGroupName="outer_box_data">
-            <ion-list [hidden]="currentToggle.key != 'beforeUnpacking'">
+            <ion-list *ngIf="currentToggle.key == 'beforeUnpacking'">
                 <ion-item>
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -1107,7 +1102,7 @@
                         <div class="w100">
                             <ion-grid class="size-grid">
                                 <ion-row align-items-center>
-                                    <ion-col size="4">叠高尺寸</ion-col>
+                                    <ion-col size="4">叠高尺寸是</ion-col>
                                     <ion-col size="4">叠高数量</ion-col>
                                     <ion-col size="4">照片上传</ion-col>
                                 </ion-row>
@@ -1185,7 +1180,7 @@
                 </ion-item>
             </ion-list>
 
-            <ion-list [hidden]="currentToggle.key != 'beforeUnpacking'">
+            <ion-list *ngIf="currentToggle.key == 'beforeUnpacking'">
                 <ion-item formGroupName="barCode">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -1229,6 +1224,7 @@
                                 是否六面条码一致？
                             </p>
                             <select class="select" formControlName="agreement">
+                                <option value="none">请选择</option>
                                 <option value="1">是</option>
                                 <option value="0">否</option>
                             </select>
@@ -1314,7 +1310,7 @@
             </ion-list>
 
             <!-- 包装 -->
-            <ion-list [hidden]="currentToggle.key != 'afterUnpacking'">
+            <ion-list   *ngIf="currentToggle.key == 'afterUnpacking'">
                 <ion-item formGroupName="packing">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -1344,6 +1340,7 @@
                                         是否与以上信息对应？
                                     </p>
                                     <select class="select" formControlName="isTrue">
+                                        <option value="none">请选择</option>
                                         <option value="1">是</option>
                                         <option value="0">否</option>
                                     </select>
@@ -1354,6 +1351,7 @@
                                         是否是双纸箱
                                     </p>
                                     <select class="select" formControlName="is_double_carton">
+                                        <option value="none">请选择</option>
                                         <option value="1">是</option>
                                         <option value="0">否</option>
                                     </select>
@@ -1430,7 +1428,7 @@
             </ion-list>
 
             <!-- 摆放图与说明书及配件包 -->
-            <ion-list [hidden]="currentToggle.key != 'afterUnpacking'">
+            <ion-list   *ngIf="currentToggle.key == 'afterUnpacking'">
                 <ion-item formGroupName="layout">
                     <div class="w100">
                         <div class="global-inspect-title">

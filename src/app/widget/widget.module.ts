@@ -19,9 +19,8 @@ import { Chooser } from '@ionic-native/chooser/ngx';
 import { FilePath } from '@ionic-native/file-path/ngx';
 import { VideoEditor } from '@ionic-native/video-editor/ngx';
 import { ProductSizeComponent } from './product-size/product-size.component';
-import { File } from '@ionic-native/file/ngx';
 import { BlueBirdModule } from '../blue-bird/blue-bird.module';
-import { Base64ToGallery } from '@ionic-native/base64-to-gallery/ngx';
+import { LazyLoadImageModule } from 'ng-lazyload-image';
 
 @NgModule({
     declarations: [
@@ -41,6 +40,7 @@ import { Base64ToGallery } from '@ionic-native/base64-to-gallery/ngx';
         FormsModule,
         FlexLayoutModule,
         BlueBirdModule,
+        LazyLoadImageModule
     ],
     exports: [
         SKUInfoComponent,
@@ -60,9 +60,6 @@ import { Base64ToGallery } from '@ionic-native/base64-to-gallery/ngx';
         Chooser,
         VideoEditor,
         FilePath,
-        File,
-        Base64ToGallery,
-        
     ],
 })
 export class WidgetModule {}

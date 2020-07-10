@@ -8,6 +8,8 @@ import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { ImplementInspectService, InspectFactoryParam } from 'src/app/services/implement-inspect.service';
 import { ExamineStatus } from '../inspect-sku/inspect-sku.component';
 import { CopySkuParams } from '../../../services/implement-inspect.service';
+import { QueueComponent } from '../queue/queue.component';
+import { UploadQueueService } from '../upload-queue.service';
 
 export interface Factory {
     name?: string;
@@ -53,7 +55,7 @@ export class InspectPoComponent implements OnInit {
         encodingType: this.camera.EncodingType.JPEG,
         mediaType: this.camera.MediaType.PICTURE,
     };
-
+   
     constructor(
         private storage: StorageService,
         private activeRouter: ActivatedRoute,
@@ -61,8 +63,9 @@ export class InspectPoComponent implements OnInit {
         private ec: PageEffectService,
         private implementInspect: ImplementInspectService,
         private router: Router,
+        private uQueue: UploadQueueService
     ) {}
-
+    alreadyUpProgress: boolean = this.uQueue.alreadyUpProgress
     ngOnInit() {
         this.activeRouter.params.subscribe(params => {
             this.apply_inspect_no = params.fid;
@@ -104,6 +107,14 @@ export class InspectPoComponent implements OnInit {
                 });
             });
         });
+    }
+
+     
+    showModal(){
+        this.ec.showModal({
+            component: QueueComponent
+        })
+        this.alreadyUpProgress = true
     }
 
     photograph(p: Sku) {

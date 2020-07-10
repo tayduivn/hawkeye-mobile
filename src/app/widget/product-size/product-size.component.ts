@@ -15,9 +15,17 @@ export class ProductSizeComponent implements OnInit {
     @Input() sku: string;
     @Input() contract_no: string;
     @Input() apply_inspection_no: string;
-    @Input() type: 'size' | 'productSize';
+    @Input() set type(input: 'size' | 'productSize') {
+        if (!!input) {
+            this._type = input;
+        }
+    }
     _sizes: any[];
+    _type: 'size' | 'productSize';
 
+    get photographType(): 'size_pic' | 'product_size_pic' {
+        return this._type == 'size' ? 'size_pic' : 'product_size_pic';
+    }
     @Output() onChange: EventEmitter<any[]> = new EventEmitter();
 
     changeText(i: number, type: 'add' | 'modify', item: string, text: string) {
@@ -45,7 +53,7 @@ export class ProductSizeComponent implements OnInit {
     }
 
     add() {
-        if (this.type == 'productSize') {
+        if (this._type == 'productSize') {
             if (
                 this._sizes[this._sizes.length - 1].size_length &&
                 this._sizes[this._sizes.length - 1].size_height &&

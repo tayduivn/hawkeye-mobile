@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { Chunk } from './file-chunk.service';
 import { PageEffectService } from '../../services/page-effect.service';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class FileHashService {
     constructor(private ec: PageEffectService) {}
 
@@ -10,7 +12,7 @@ export class FileHashService {
         return new Promise(reject => {
             let worker = new Worker('../assets/js/hash.js');
             this.ec.showLoad({
-              message:'正在获取文件hash……'
+              message:'正在获取文件hash……',
             })
             worker.postMessage({ fileChunkList });
             worker.onmessage = e => {
@@ -21,7 +23,7 @@ export class FileHashService {
                 }
             };
         });
-    }
+    } 
 
     fileToBlob(file: File): Promise<any> {
         return new Promise(reject => {
@@ -33,4 +35,6 @@ export class FileHashService {
             };
         });
     }
+
+    
 }
