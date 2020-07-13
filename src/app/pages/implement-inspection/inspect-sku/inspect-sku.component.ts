@@ -131,7 +131,7 @@ export class InspectSkuComponent implements OnInit {
         this.es.showModal({
             component: QueueComponent,
         });
-        this.uQueue.alreadyUpProgress = true
+        this.uQueue.alreadyUpProgress = true;
     }
 
     ngOnInit() {
@@ -203,10 +203,10 @@ export class InspectSkuComponent implements OnInit {
                     videos: this.fb.array([]),
                 }),
                 packing: this.fb.group({
-                    isTrue: this.fb.control(''),
+                    isTrue: this.fb.control('none'),
                     desc: this.fb.array([]),
                     is_double_carton: this.fb.control('1'),
-                    packingType: this.fb.control(''),
+                    packingType: this.fb.control('none'),
                     photos: this.fb.array([]),
                     packingBelt: this.fb.control('undetermined'),
                     rateWeightMark: this.fb.control('undetermined'),
@@ -324,12 +324,12 @@ export class InspectSkuComponent implements OnInit {
                     desc: this.fb.array([]),
                 }),
                 packing: this.fb.group({
-                    isTrue: this.fb.control(''),
+                    isTrue: this.fb.control('none'),
                     type: this.fb.control('1'),
                     desc: this.fb.array([]),
                     photos: this.fb.array([]),
-                    packingType: this.fb.control('1'),
-                    is_double_carton: this.fb.control('1'),
+                    packingType: this.fb.control('none'),
+                    is_double_carton: this.fb.control('none'),
                     packingBelt: this.fb.control('undetermined'),
                     rateWeightMark: this.fb.control('undetermined'),
                 }),
@@ -359,7 +359,7 @@ export class InspectSkuComponent implements OnInit {
     ionViewWillEnter() {
         //如果有缓存 则patch 防止闪退
         if (this.inspectCache.getInspectText()) {
-            this.SkuInspectModel.patchValue(this.inspectCache.getInspectText());
+            // this.SkuInspectModel.patchValue(this.inspectCache.getInspectText());
         }
         //再获取数据
         this.getBeforeBoxData();
@@ -422,6 +422,21 @@ export class InspectSkuComponent implements OnInit {
         this.currentToggle.key == 'beforeUnpacking' ? this.getBeforeBoxData() : this.getAfterBoxData();
     }
 
+    setEmptyPhotos(obj: any): any {
+        let e = obj['inner_box_data'];
+        for (var key in e) {
+            if (e[key] && e[key].photos) {
+                e[key].photos = [];
+            }
+            if (key == 'productSize' && e['productSize'] && e['productSize'].length) {
+                for (var i = 0; i < e['productSize'].length; i++) {
+                    e['productSize'][i].pic = [];
+                }
+            }
+        }
+        return obj
+    }
+
     /**
      * 保存
      */
@@ -430,14 +445,20 @@ export class InspectSkuComponent implements OnInit {
             //条码逻辑
 
             this.SkuInspectModel.value.inner_box_data.barCode.isTrue =
-                this.SkuInspectModel.value.inner_box_data.barCode.text == this.barCode ? '1' : '0';
+                this.SkuInspectModel.value.inner_box_data.barCode.text === (this.barCode && this.barCode.length ? '1' : '0');
             this.SkuInspectModel.value.outer_box_data.barCode.isTrue =
-                this.SkuInspectModel.value.outer_box_data.barCode.text == this.outerBarCode ? '1' : '0';
+                this.SkuInspectModel.value.outer_box_data.barCode.text === (this.outerBarCode && this.outerBarCode.length ? '1' : '0');
 
             let postData = JSON.parse(JSON.stringify(this.SkuInspectModel.value));
             this.rateStatus == 'inner' ? delete postData.outer_box_data : delete postData.inner_box_data;
             postData.inner_box_data && (postData.inner_box_data.productSize = this.productSize);
             postData.inner_box_data && this.data.rate_container != 1 && (postData.inner_box_data.size = this.size);
+            console.log(postData);
+
+            //此处将深拷贝的元数据的photos置空 ，影响速度
+            postData = this.setEmptyPhotos(postData);
+
+            console.log(postData)
             this.es.showAlert({
                 message: '正在保存……',
                 backdropDismiss: true,
@@ -480,8 +501,6 @@ export class InspectSkuComponent implements OnInit {
      */
 
     segmentChanged(ev: any) {
-        // alert(ev.detail.value);
-
         this.inspectRequireSegment = ev.detail.value == 'requirement';
 
         this.save().subscribe(res => {

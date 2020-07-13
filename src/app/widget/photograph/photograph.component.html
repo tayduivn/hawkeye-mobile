@@ -11,8 +11,8 @@
             <ion-icon name="close" mode="ios" *ngIf="_photos[i].length < 1000" (click)="remove(i)"></ion-icon>
         </div>
     </li>
-    <li>
-        <input type="file" *ngIf="!platform.is('hybrid')" multiple="multiple" (change)="doCheckImg($event)" />
+    <li *ngIf="!platform.is('hybrid')">
+        <input type="file" multiple="multiple" (change)="doCheckImg($event)" />
     </li>
 </ul>
 <div class="add-image-small" fxLayout="row" (click)="photograph()" fxLayoutAlign="start center">

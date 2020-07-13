@@ -14,6 +14,7 @@ import { UserInfoService } from 'src/app/services/user-info.service';
 import { HttpService } from '../../services/http.service';
 import { environment } from 'src/environments/environment';
 import { UploadQueueService } from 'src/app/pages/implement-inspection/upload-queue.service';
+import { filter } from 'rxjs/operators';
 
 export type FieldType =
     | 'throw_box_video'
@@ -100,7 +101,23 @@ export class VideotapeComponent implements OnInit {
 
     _videos: any[][] = [];
     _up_data: string[] = [];
-    ngOnInit() {}
+    ngOnInit() {
+        this.uQueue.alreadyUploadPayload$
+            .asObservable()
+            .pipe(
+                filter(
+                    node =>
+                        node.payload.sku === this.sku &&
+                        node.payload.type === this.type &&
+                        node.payload.apply_inspection_no === this.apply_inspection_no,
+                ),
+            )
+            .subscribe(res => {
+                console.log('----------- 视频路径回流 ----------');
+                this._up_data.push((res as any).path);
+                // console.log(this._up_data)
+            });
+    }
     complete: boolean = true;
 
     videotape() {

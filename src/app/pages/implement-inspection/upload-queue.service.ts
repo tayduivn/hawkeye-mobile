@@ -6,7 +6,7 @@ import { PageEffectService } from 'src/app/services/page-effect.service';
 import { InspectCacheService } from './inspect-cache.service';
 import { Network } from '@ionic-native/network/ngx';
 import { ImageOther, VideoOther } from 'src/app/services/file-upload.service';
-import { from, Observable, Subscription, BehaviorSubject, zip } from 'rxjs';
+import { from, Observable, Subscription, BehaviorSubject, zip, Subject } from 'rxjs';
 import { mergeMap, filter } from 'rxjs/operators';
 import { File as AndroidFile } from '@ionic-native/file/ngx';
 import { VerifyResponse, UploadParams } from 'src/app/widget/videotape/videotape.component';
@@ -119,16 +119,17 @@ export class UploadQueueService {
     /**
      * 队列出列
      */
-    pop() {
+    pop(path?: string) {
         const qNode = this.queue.shift();
-        this.alreadyUploadQueue.push({
+        let node = {
             type: qNode.type,
             size: qNode.size,
             percentage: 100,
-            payload: {
-                type: qNode.payload.type,
-            },
-        });
+            payload: qNode.payload,
+            path:path
+        }
+        this.alreadyUploadQueue.push(node);
+        this.alreadyUploadPayload$.next(node);
         return qNode;
     }
 
@@ -272,7 +273,6 @@ export class UploadQueueService {
      */
     async upload() {
         let chunkNode: Array<QueueNode<ImageOther | UploadParams>> = [];
-        console.log(this.front);
         //此处判断是否有chunks
         if (this.front.chunks && this.front.chunks.length) {
             //如果有则将chunks转为队列
@@ -296,7 +296,7 @@ export class UploadQueueService {
                     //合并完成之后 判断状态 如果成功则删除缓存 在让主队列的front出列
                     if (msg.status === 1 && this.front) {
                         this.cache.removeCache(this.front.payload);
-                        this.pop();
+                        this.pop(msg.data);
                         if (this.size) {
                             this.upload();
                             //此处判断如果一维队列没有queue可传 则将总状态（status）置为false
@@ -309,10 +309,14 @@ export class UploadQueueService {
         const next = await this.driveUpload(chunkNode[0]);
         // debugger
         if (next === true || (next && !JSON.parse(next.data).error)) {
+            // next !== true && console.log(JSON.parse(next.data))
             //先删除缓存
             this.cache.removeCache(this.front.payload);
-            //再出队列
-            this.pop();
+            //再出队列 将已经上传的node的线上url发布出去 等待photograph component订阅
+            (this.front as any).dd = JSON.parse(next.data).data[0]
+           
+            this.pop(JSON.parse(next.data).data[0]);
+            
             if (this.size) {
                 this.upload();
             } else this.status = false;
@@ -325,6 +329,9 @@ export class UploadQueueService {
             this.front.percentage = 0;
         }
     }
+
+    //
+    alreadyUploadPayload$: Subject<QueueNode<ImageOther>> = new Subject();
 
     // 用闭包保存每个 chunk 的进度数据
     createProgressHandler(item: QueueNode<any>) {
@@ -495,6 +502,8 @@ export class UploadQueueService {
         });
         return JSON.parse(data);
     }
+
+    //成员回流机制
 }
 
 export function HashCode(str: string) {

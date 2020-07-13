@@ -217,15 +217,16 @@
                             </ion-button>
                             <ion-button
                                 *ngIf="
-                                    SkuInspectModel.value.inner_box_data.barCode.isTrue == '1' ||
-                                    (barCode && barCode == SkuInspectModel.value.inner_box_data.barCode.text) ||
-                                    (barCode && barCode == innerCode)
+                                    SkuInspectModel.value.inner_box_data.barCode.isTrue === '1' ||
+                                    (barCode.length && barCode === SkuInspectModel.value.inner_box_data.barCode.text) ||
+                                    (barCode.length && barCode === innerCode)
                                 "
                                 color="success"
                                 size="small"
                                 fill="clear"
-                                >扫码已通过</ion-button
                             >
+                                扫码已通过
+                            </ion-button>
                         </div>
                         <app-photograph
                             type="bar_code_pic"
@@ -322,7 +323,7 @@
             </ion-list>
             <!-- 摔箱测试 -->
             <ion-list *ngIf="currentToggle.key == 'beforeUnpacking'">
-                <ion-item formGroupName="throwBox" [hidden]='!data.is_need_drop_test'>
+                <ion-item formGroupName="throwBox" [hidden]="!data.is_need_drop_test">
                     <div class="w100">
                         <div class="global-inspect-title">
                             <p>摔箱测试</p>
@@ -378,7 +379,7 @@
                 </ion-item>
             </ion-list>
             <!-- 包装 -->
-            <ion-list   *ngIf="currentToggle.key == 'afterUnpacking'">
+            <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
                 <ion-item formGroupName="packing">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -426,6 +427,9 @@
                                         请选择纸箱类型:
                                     </p>
                                     <select class="select" formControlName="packingType">
+                                        <option value="none">
+                                            请选择
+                                        </option>
                                         <option
                                             value="inner"
                                             *ngIf="SkuInspectModel.value.inner_box_data.packing.is_double_carton == 1"
@@ -492,7 +496,7 @@
                 </ion-item>
             </ion-list>
             <!-- 摆放图与说明书及配件包 -->
-            <ion-list   *ngIf="currentToggle.key == 'afterUnpacking'">
+            <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
                 <ion-item formGroupName="layout">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -519,7 +523,7 @@
                     </div>
                 </ion-item>
             </ion-list>
-            <ion-list   *ngIf="currentToggle.key == 'afterUnpacking'">
+            <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
                 <ion-item formGroupName="productDetail">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -546,7 +550,7 @@
                     </div>
                 </ion-item>
             </ion-list>
-            <ion-list   *ngIf="currentToggle.key == 'afterUnpacking'">
+            <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
                 <ion-item formGroupName="instructions">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -628,7 +632,7 @@
             </ion-list>
 
             <!-- 产品整体图 -->
-            <ion-list   *ngIf="currentToggle.key == 'afterUnpacking'">
+            <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
                 <ion-item formGroupName="whole">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -656,7 +660,7 @@
                 </ion-item>
             </ion-list>
 
-            <ion-list   *ngIf="currentToggle.key == 'afterUnpacking'">
+            <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
                 <ion-item formGroupName="disputes">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -677,7 +681,7 @@
             </ion-list>
 
             <!-- 产品尺寸 -->
-            <ion-list   *ngIf="currentToggle.key == 'afterUnpacking'">
+            <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
                 <ion-item>
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -705,7 +709,7 @@
             </ion-list>
 
             <!-- 净重 -->
-            <ion-list   *ngIf="currentToggle.key == 'afterUnpacking'">
+            <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
                 <ion-item formGroupName="netWeight">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -747,7 +751,7 @@
             </ion-list>
 
             <!-- 外观检测选项 -->
-            <ion-list   *ngIf="currentToggle.key == 'afterUnpacking'">
+            <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
                 <ion-item formGroupName="appearance">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -794,7 +798,7 @@
             </ion-list>
 
             <!-- 测试部分 -->
-            <ion-list   *ngIf="currentToggle.key == 'afterUnpacking'">
+            <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
                 <ion-item formGroupName="function">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -906,7 +910,7 @@
             </ion-list>
 
             <!-- 总结 -->
-            <ion-list   *ngIf="currentToggle.key == 'afterUnpacking'">
+            <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
                 <ion-item formGroupName="sumUp">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -982,7 +986,7 @@
             </ion-list>
 
             <!-- 备注 -->
-            <ion-list   *ngIf="currentToggle.key == 'afterUnpacking'">
+            <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
                 <ion-item formGroupName="desc">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -1102,7 +1106,7 @@
                         <div class="w100">
                             <ion-grid class="size-grid">
                                 <ion-row align-items-center>
-                                    <ion-col size="4">叠高尺寸是</ion-col>
+                                    <ion-col size="4">叠高尺寸</ion-col>
                                     <ion-col size="4">叠高数量</ion-col>
                                     <ion-col size="4">照片上传</ion-col>
                                 </ion-row>
@@ -1310,7 +1314,7 @@
             </ion-list>
 
             <!-- 包装 -->
-            <ion-list   *ngIf="currentToggle.key == 'afterUnpacking'">
+            <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
                 <ion-item formGroupName="packing">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -1361,6 +1365,9 @@
                                         请选择纸箱类型
                                     </p>
                                     <select class="select" formControlName="packingType">
+                                        <option value="none">
+                                            请选择
+                                        </option>
                                         <option
                                             value="inner"
                                             *ngIf="SkuInspectModel.value.outer_box_data.packing.is_double_carton == 1"
@@ -1428,7 +1435,7 @@
             </ion-list>
 
             <!-- 摆放图与说明书及配件包 -->
-            <ion-list   *ngIf="currentToggle.key == 'afterUnpacking'">
+            <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
                 <ion-item formGroupName="layout">
                     <div class="w100">
                         <div class="global-inspect-title">

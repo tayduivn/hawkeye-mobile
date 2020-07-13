@@ -10,7 +10,7 @@ import { ImagePicker, ImagePickerOptions } from '@ionic-native/image-picker/ngx'
 import { ActionSheetOptions } from '@ionic/core';
 import ImageCompressor from 'image-compressor.js';
 import { from, Observable, zip } from 'rxjs';
-import { mergeMap, takeWhile, tap } from 'rxjs/operators';
+import { mergeMap, takeWhile, tap, filter } from 'rxjs/operators';
 import { File as androidFile } from '@ionic-native/file/ngx';
 import { UploadQueueService, HashCode } from 'src/app/pages/implement-inspection/upload-queue.service';
 import { InspectCacheService } from 'src/app/pages/implement-inspection/inspect-cache.service';
@@ -78,7 +78,24 @@ export class PhotographComponent implements OnInit {
         outputType: 0, //文件本机 url
     };
 
-    ngOnInit() {}
+    ngOnInit() {
+        let that = this;
+        this.uQueue.alreadyUploadPayload$
+            .asObservable()
+            .pipe(
+                filter(
+                    node =>
+                        node.payload.sku === this.sku &&
+                        node.payload.type === this.type &&
+                        node.payload.apply_inspection_no === this.apply_inspection_no,
+                ),
+            )
+            .subscribe((res: any) => {
+                console.log('----------- 图片路径回流 ----------');
+                this._photos.push(that.imgOrigin + res.path);
+                console.dir(that._photos);
+            });
+    }
 
     removal(arr: Array<any>) {
         return arr.reduce((prev, cur) => (prev.includes(cur) ? prev : [...prev, cur]), []);
@@ -195,7 +212,6 @@ export class PhotographComponent implements OnInit {
      */
     picker() {
         if (this.platform.is('hybrid')) {
-            // let getImages$: Observable<Array<string>> = from(this.imagePicker.getPictures(this.pickerOpts)),
             let params: ImageOther = {
                 type: this.type,
                 apply_inspection_no: this.apply_inspection_no,
@@ -218,12 +234,13 @@ export class PhotographComponent implements OnInit {
                                 elem.substr(elem.lastIndexOf('/') + 1),
                             ),
                         ),
-                        //本地展示
-                        tap(base64 => this._photos.push(base64)),
+                        //本地展示 TODO
+                        // tap(base64 => this._photos.push(base64)),
                         mergeMap(base64 => this.doWorkerGetBlob(base64)),
                     ),
                 ).subscribe(([elem, { data }]) => {
                     console.log('---------- 选择完毕 ---------');
+
                     params.path = elem;
                     params.hash = HashCode(params.type + params.sku + params.is_inner_box + elem);
                     this.uQueue.add({
@@ -274,7 +291,7 @@ export class PhotographComponent implements OnInit {
             sort_index: this.sort_index,
             path: '',
         };
-
+        console.log(params);
         // return;
         Array.prototype.map.call(e.target.files, (file: File) => {
             params.path =
@@ -315,36 +332,46 @@ export class PhotographComponent implements OnInit {
                 {
                     text: '确定',
                     handler: () => {
-                        let params = {
-                            apply_inspection_no: this.apply_inspection_no,
-                            type: this.type,
-                            filename: this._photos[i].substring(this.imgOrigin.length, this._photos[i].length),
-                            contract_no: this.contract_no,
-                            sku: this.sku,
-                            is_inner_box: this.box_type == 'inner' ? 1 : 2,
-                            sort_index: this.sort_index,
-                        };
-                        if (this.sort_index == undefined || this.sort_index == null) delete params.sort_index;
-                        this.implement[this.moduleType](params).subscribe(res => {
-                            if (res.status) {
-                                this._photos.splice(i, 1);
-                                this.onPhotograph.emit(this._photos);
+                        this.ec
+                            .showLoad({
+                                spinner: null,
+                                duration: 0,
+                                message: '正在删除…',
+                                translucent: false,
+                            })
+                            .then(() => {
+                                let params = {
+                                    apply_inspection_no: this.apply_inspection_no,
+                                    type: this.type,
+                                    filename: this._photos[i].substring(this.imgOrigin.length, this._photos[i].length),
+                                    contract_no: this.contract_no,
+                                    sku: this.sku,
+                                    is_inner_box: this.box_type == 'inner' ? 1 : 2,
+                                    sort_index: this.sort_index,
+                                };
+                                if (this.sort_index == undefined || this.sort_index == null) delete params.sort_index;
+                                this.implement[this.moduleType](params).subscribe(res => {
+                                    if (res.status) {
+                                        this.ec.loadCtrl.dismiss();
+                                        this._photos.splice(i, 1);
+                                        this.onPhotograph.emit(this._photos);
 
-                                this.ec.showToast({
-                                    message: '删除成功！',
-                                    color: 'success',
+                                        this.ec.showToast({
+                                            message: '删除成功！',
+                                            color: 'success',
+                                        });
+                                    } else {
+                                        this.ec.showToast({
+                                            message: '删除失败！',
+                                            color: 'danger',
+                                        });
+                                        this.rmClicked.splice(
+                                            this.rmClicked.findIndex(item => item === i),
+                                            1,
+                                        );
+                                    }
                                 });
-                            } else {
-                                this.ec.showToast({
-                                    message: '删除失败！',
-                                    color: 'danger',
-                                });
-                                this.rmClicked.splice(
-                                    this.rmClicked.findIndex(item => item === i),
-                                    1,
-                                );
-                            }
-                        });
+                            });
                     },
                 },
             ],
@@ -382,7 +409,6 @@ export class PhotographComponent implements OnInit {
      */
     getCompressionImage(file: File): Observable<Blob> {
         let that = this;
-
         let image = from(
             this.Compressor.compress(file, {
                 quality: 1,
