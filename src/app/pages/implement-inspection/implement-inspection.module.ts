@@ -17,6 +17,9 @@ import { Camera } from '@ionic-native/camera/ngx';
 import { InspectPoComponent } from './inspect-po/inspect-po.component';
 import { TestPipe } from 'src/app/pipe/test.pipe';
 import { SkuGuard } from './sku.guard';
+import { InspectTabBarComponent } from 'src/app/inspect-tab-bar/inspect-tab-bar.component';
+import { InspectPartsComponent } from './inspect-parts/inspect-parts.component';
+import { InspectCustomTestComponent } from './inspect-custom-test/inspect-custom-test.component';
 
 const routes: Routes = [
     {
@@ -40,6 +43,10 @@ const routes: Routes = [
         path: 'inspect-evaluation',
         component: EvaluationComponent,
     },
+    {
+        path: 'inspect-parts',
+        component: InspectPartsComponent
+    }
 ];
 
 @NgModule({
@@ -63,6 +70,9 @@ const routes: Routes = [
         InspectSkuComponent,
         EvaluationComponent,
         ExamineDetailComponent,
+        InspectTabBarComponent,
+        InspectPartsComponent,
+        InspectCustomTestComponent
     ],
     providers: [Camera],
 })

@@ -3,12 +3,9 @@ import { StorageService } from './../../services/storage.service';
 import { ScreenAngle, ScreenService } from './../../services/screen.service';
 import { Component, OnInit } from '@angular/core';
 import { InspectionService, InspectGroup } from 'src/app/services/inspection.service';
-import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { ModalOptions } from '@ionic/core';
 import { InspectSettingBoxComponent } from 'src/app/widget/inspect-setting-box/inspect-setting-box.component';
-import { InspectTask } from './inspect-contract/inspect-contract.page';
-import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'app-inspect-task',
@@ -18,6 +15,11 @@ import { map } from 'rxjs/operators';
 export class InspectTaskPage implements OnInit {
     screenType: ScreenAngle;
     inspectGroup: InspectGroup[] = [];
+    getListParams: any = {
+        keywords: 'factory_name',
+        value: '',
+        page: 1,
+    };
     constructor(
         private inspectService: InspectionService,
         private effectCtrl: PageEffectService,
@@ -32,8 +34,10 @@ export class InspectTaskPage implements OnInit {
     ngOnInit() {}
 
     ionViewWillEnter() {
-        this.inspectService.getTaskList().subscribe(res => {
+        this.getListParams.page = 1;
+        this.inspectService.getTaskList(this.getListParams).subscribe(res => {
             this.inspectGroup = res.data;
+            this.getListParams.page = res.current_page + 1;
         });
         this.storage.remove('CURRENT_INSPECT_GROUP');
     }
@@ -43,31 +47,30 @@ export class InspectTaskPage implements OnInit {
         this.router.navigate(['inspect-contract']);
     }
 
-    inspectOp(p: any,e:any) {
+    inspectOp(p: any, e: any) {
         let option: ModalOptions = {
             component: InspectSettingBoxComponent,
             cssClass: 'custom-modal-sku',
             mode: 'ios',
-            componentProps: { contract: p.data[0], type: 'group',apply_id: p.data[0].id},
+            componentProps: { contract: p.data[0], type: 'group', apply_id: p.data[0].id },
         };
 
         this.effectCtrl.showModal(option, (data: any) => {
             p.data[0] = data.refresh;
-            console.log(data);
         });
     }
 
-    getList(page: number) {
-        this.inspectService.getTaskList(page).subscribe(res => {
+    getList() {
+        this.inspectService.getTaskList(this.getListParams).subscribe(res => {
             this.inspectGroup = this.inspectGroup.concat(res.data);
+            this.getListParams.page = res.current_page + 1;
         });
     }
-    page: number = 2;
     loadData(event) {
-        this.inspectService.getTaskList(this.page).subscribe(res => {
+        this.inspectService.getTaskList(this.getListParams).subscribe(res => {
             if (res.data && res.data.length) {
                 this.inspectGroup = this.inspectGroup.concat(res.data);
-                this.page = res.current_page + 1;
+                this.getListParams.page = res.current_page + 1;
             } else {
                 this.effectCtrl.showToast({
                     message: '别刷了，没有数据啦！',
@@ -76,6 +79,18 @@ export class InspectTaskPage implements OnInit {
             }
 
             event.target.complete();
+        });
+    }
+
+    factoryChange() {
+        this.getListParams.page = 1;
+        this.inspectService.getTaskList(this.getListParams).subscribe(res => {
+            if (res.data && res.data.length) {
+                this.inspectGroup = res.data;
+                this.getListParams.page = res.current_page + 1;
+            } else {
+                this.inspectGroup = [];
+            }
         });
     }
 }

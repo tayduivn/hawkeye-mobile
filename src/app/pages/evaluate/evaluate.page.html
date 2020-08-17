@@ -8,13 +8,22 @@
 </ion-header>
 
 <ion-content>
+    <ion-searchbar
+        animated
+        clearInput
+        mode="ios"
+        placeholder="输入工厂名检索"
+        (ionChange)="filterFactory()"
+        [(ngModel)]="getListParams.value"
+    ></ion-searchbar>
+
     <ion-card mode="ios">
         <ion-card-header>
             <ion-card-title color="primary">验货列表</ion-card-title>
-            <ion-item class="js">
-                <ion-input clearInput placeholder="请输入工厂名检索" (ionChange)='filterFactory($event)'></ion-input>
-            </ion-item>
         </ion-card-header>
+        <ion-button fill="clear" expand="full" *ngIf="!list || !list.length" (click)="ionViewWillEnter()"
+            >重新获取</ion-button
+        >
 
         <ion-item *ngFor="let item of list">
             <div fxLayout="row" fxLayoutAlign="space-between center" class="w100">
@@ -33,6 +42,10 @@
                 </div>
             </div>
         </ion-item>
-        <p *ngIf="!listLength" class="text-c ">暂无数据</p>
+
+        <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+            <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="正在加载"> </ion-infinite-scroll-content>
+        </ion-infinite-scroll>
+        <p *ngIf="!list.length" class="text-c ">暂无数据</p>
     </ion-card>
 </ion-content>

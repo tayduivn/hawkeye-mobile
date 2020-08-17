@@ -1,0 +1,11 @@
+<ul>
+  <li (click)="select('before')" [ngClass]="[current === 'before' ? 'active': '']">
+    开箱前
+  </li>
+  <li (click)="select('after')" [ngClass]="[current === 'after' ? 'active': '']">
+    开箱后
+  </li>
+  <li (click)="select('require')" [ngClass]="[current === 'require' ? 'active': '']">
+    验货要求
+  </li>
+</ul>

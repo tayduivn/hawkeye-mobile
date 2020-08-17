@@ -9,7 +9,7 @@ import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { ImagePicker, ImagePickerOptions } from '@ionic-native/image-picker/ngx';
 import { ActionSheetOptions } from '@ionic/core';
 import ImageCompressor from 'image-compressor.js';
-import { from, Observable, zip } from 'rxjs';
+import { from, Observable, zip, combineLatest } from 'rxjs';
 import { mergeMap, takeWhile, tap, filter } from 'rxjs/operators';
 import { File as androidFile } from '@ionic-native/file/ngx';
 import { UploadQueueService, HashCode } from 'src/app/pages/implement-inspection/upload-queue.service';
@@ -36,7 +36,8 @@ export class PhotographComponent implements OnInit {
         if (!!input) {
             this._photos = input;
         }
-        this.getCache();
+        //本地去缓存展示
+        //this.getCache();
     }
 
     Compressor: ImageCompressor;
@@ -87,13 +88,15 @@ export class PhotographComponent implements OnInit {
                     node =>
                         node.payload.sku === this.sku &&
                         node.payload.type === this.type &&
-                        node.payload.apply_inspection_no === this.apply_inspection_no,
+                        node.payload.contract_no === this.contract_no &&
+                        node.payload.apply_inspection_no === this.apply_inspection_no &&
+                        node.payload.sort_index === this.sort_index &&
+                        this._photos.indexOf((node as any).path) === -1,
                 ),
             )
             .subscribe((res: any) => {
-                console.log('----------- 图片路径回流 ----------');
+                // console.log('----------- 图片路径回流 ----------', res.path,res.type);
                 this._photos.push(that.imgOrigin + res.path);
-                console.dir(that._photos);
             });
     }
 
@@ -187,7 +190,7 @@ export class PhotographComponent implements OnInit {
                     );
                 }),
                 //本地展示
-                tap(base64 => this._photos.push(base64)),
+                // tap(base64 => this._photos.push(base64)),
                 //调用base64 TO blob webWorker
                 mergeMap(base64 => this.doWorkerGetBlob(base64)),
                 //native图片压缩
@@ -222,7 +225,41 @@ export class PhotographComponent implements OnInit {
                 sort_index: this.sort_index,
             };
             this.imagePicker.getPictures(this.pickerOpts).then(arr => {
+                // console.log('------- 本机文件选择完毕 -------');
+                // console.log(arr);
+                // return
+
                 let getImages$ = from(arr as Array<string>);
+
+                // getImages$
+                //     .pipe(
+                //         mergeMap(elem =>
+                //             this.file.readAsDataURL(
+                //                 //读取图片本机地址为base64
+                //                 elem.substr(0, elem.lastIndexOf('/') + 1),
+                //                 elem.substr(elem.lastIndexOf('/') + 1),
+                //             ),
+                //         ),
+                //         //本地展示 TODO
+                //         // tap(base64 => this._photos.push(base64)),
+                //         mergeMap(base64 => this.doWorkerGetBlob(base64)),
+                //     )
+                //     .subscribe(res => {
+                //         console.log('---------- 选择完毕 ---------');
+                //         params.path = '222222';
+                //         params.hash = HashCode(params.type + params.sku + params.is_inner_box + '22222');
+                //         // console.log('111', params);
+                //         // return;
+                //         this.uQueue.add({
+                //             type: 'img',
+                //             size: res.data.size,
+                //             blob: res.data,
+                //             payload: params,
+                //             hash: HashCode(params.type + params.sku + params.is_inner_box + params.path),
+                //         });
+                //     })
+
+                // return
                 zip(
                     getImages$,
                     getImages$.pipe(
@@ -240,7 +277,6 @@ export class PhotographComponent implements OnInit {
                     ),
                 ).subscribe(([elem, { data }]) => {
                     console.log('---------- 选择完毕 ---------');
-
                     params.path = elem;
                     params.hash = HashCode(params.type + params.sku + params.is_inner_box + elem);
                     this.uQueue.add({
@@ -291,11 +327,10 @@ export class PhotographComponent implements OnInit {
             sort_index: this.sort_index,
             path: '',
         };
-        console.log(params);
-        // return;
+
         Array.prototype.map.call(e.target.files, (file: File) => {
             params.path =
-                '../assets/img/WeChatIMG143.jpeg?random=' +
+                '../aszzzzzzzzzzzzzzsets/img/WeChatIMG143.jpeg?random=' +
                 HashCode(params.type + params.sku + params.is_inner_box + params.path);
             if (this.sort_index == undefined || this.sort_index == null) delete params.sort_index;
             params.hash = HashCode(params.type + params.sku + params.is_inner_box + params.path);
@@ -311,11 +346,11 @@ export class PhotographComponent implements OnInit {
     }
 
     remove(i: number) {
-        if (this.rmClicked.find(item => item === i)) {
-            console.log('------ 稍安勿躁 ------');
-            return;
-        }
-        this.rmClicked.push(i);
+        // if (this.rmClicked.find(item => item === i)) {
+        //     console.log('------ 稍安勿躁 ------');
+        //     return;
+        // }
+        // this.rmClicked.push(i);
 
         this.ec.showAlert({
             message: '确定要删除吗？',
@@ -323,10 +358,10 @@ export class PhotographComponent implements OnInit {
                 {
                     text: '取消',
                     handler: () => {
-                        this.rmClicked.splice(
-                            this.rmClicked.findIndex(item => item === i),
-                            1,
-                        );
+                        // this.rmClicked.splice(
+                        //     this.rmClicked.findIndex(item => item === i),
+                        //     1,
+                        // );
                     },
                 },
                 {
@@ -365,10 +400,10 @@ export class PhotographComponent implements OnInit {
                                             message: '删除失败！',
                                             color: 'danger',
                                         });
-                                        this.rmClicked.splice(
-                                            this.rmClicked.findIndex(item => item === i),
-                                            1,
-                                        );
+                                        // this.rmClicked.splice(
+                                        //     this.rmClicked.findIndex(item => item === i),
+                                        //     1,
+                                        // );
                                     }
                                 });
                             });

@@ -9,6 +9,8 @@ import { PageEffectService } from '../../services/page-effect.service';
 export class ProductSizeComponent implements OnInit {
     @Input() set sizes(input: any[]) {
         if (!!input) this._sizes = input;
+        console.log('------------ 产品尺寸 ------------');
+        console.log(input);
         this.onChange.emit(this._sizes);
     }
 
@@ -94,6 +96,24 @@ export class ProductSizeComponent implements OnInit {
                 });
             }
         }
+    }
+
+    remove(i: number) {
+        this.es.showAlert({
+            message: '确定要删除吗？',
+            buttons: [
+                {
+                    text: '取消',
+                },
+                {
+                    text: '确定',
+                    handler: () => {
+                        console.log(this._sizes, i);
+                        this._sizes.splice(i, 1);
+                    },
+                },
+            ],
+        });
     }
 
     constructor(private es: PageEffectService) {}

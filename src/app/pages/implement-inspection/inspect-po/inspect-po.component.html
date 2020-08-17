@@ -34,7 +34,13 @@
                     <li *ngFor="let sItem of item.data" fxLayout="column" fxLayoutAlign="start start">
                         <div fxLayout="row" fxLayoutAlign="space-between  center" class="wd-100">
                             <div fxLayout="row" fxLayoutAlign="start  center">
-                                <img class="head" [src]="imgOrigin + sItem.pic[0]" alt="" imgGallery [url]='imgOrigin + sItem.pic[0]'/>
+                                <img
+                                    class="head"
+                                    [src]="imgOrigin + sItem.pic[0]"
+                                    alt=""
+                                    imgGallery
+                                    [url]="imgOrigin + sItem.pic[0]"
+                                />
                                 <div class="span-box">
                                     <span><span class="label"> SKU: </span>{{ sItem.sku }}</span
                                     ><br />
@@ -50,16 +56,14 @@
                             <div>
                                 <ion-button
                                     size="small"
+                                    class="f-r"
                                     expand="clear"
                                     color="primary"
                                     (click)="toInspectSku(item, sItem, 'go')"
                                     >去验货</ion-button
                                 >
-                                <ion-button size="small" color="primary" (click)="toInspectSku(item, sItem)"
+                                <ion-button class="f-r" size="small" color="primary" (click)="toInspectSku(item, sItem)"
                                     >保存</ion-button
-                                >
-                                <ion-button size="small" color="danger" *ngIf="item.data && item.data.length > 1" (click)="copy(item, sItem)"
-                                    >复制SKU</ion-button
                                 >
                             </div>
                         </div>
@@ -68,8 +72,11 @@
                             <div fxLayout="row" fxLayoutAlign="start center">
                                 <label class="label">大货包装完成数量:</label>
                                 <ion-input
+                                    (ionChange)="calcMust($event, sItem, 'sku_package_complete_num')"
                                     placeholder="0"
+                                    [max]="sItem.quantity"
                                     type="number"
+                                    (ionChange)="regValid($event)"
                                     (ionBlur)="calcContractNum(item, sItem)"
                                     [(ngModel)]="sItem.sku_package_complete_num"
                                 ></ion-input>
@@ -77,7 +84,9 @@
                             <div fxLayout="row" fxLayoutAlign="start center">
                                 <label class="label">大货生产完成数量:</label>
                                 <ion-input
+                                    (ionChange)="calcMust($event, sItem, 'sku_production_complete_num')"
                                     placeholder="0"
+                                    (ionChange)="regValid($event)"
                                     type="number"
                                     [(ngModel)]="sItem.sku_production_complete_num"
                                 ></ion-input>
@@ -103,6 +112,22 @@
                             </div>
                         </div>
 
+                        <div class="w100 mt-10">
+                            <ion-button
+                                class="f-r"
+                                *ngIf="item.is_rework == '1'"
+                                size="small"
+                                expand="clear"
+                                color="primary"
+                                (click)="feedback(item, sItem)"
+                                >问题描述</ion-button
+                            >
+
+                            <!-- *ngIf="item.data && item.data.length > 1" -->
+                            <ion-button class="f-r" size="small" color="danger" (click)="copy(item, sItem)"
+                                >复制SKU</ion-button
+                            >
+                        </div>
                         <app-photograph
                             moduleType="removeContractPic"
                             [photos]="sItem.implement_photo"

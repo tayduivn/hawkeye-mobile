@@ -7,4 +7,6 @@ export const environment = {
     apiUrl: 'http://yy.xdrlgroup.com/api/v1',
     fileUrlPath: 'http://114.55.32.144:443',
     usFileUrl: 'http://yy.xdrlgroup.com/',
+    origin:'http://yy.xdrlgroup.com'
+
 };

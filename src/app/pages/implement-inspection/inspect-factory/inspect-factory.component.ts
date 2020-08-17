@@ -58,7 +58,7 @@ export class InspectFactoryComponent implements OnInit {
         private ac: ActivatedRoute,
         private storage: StorageService,
         private implementInspect: ImplementInspectService,
-        private uQueue: UploadQueueService
+        private uQueue: UploadQueueService,
     ) {}
 
     get environments(): FormArray {
@@ -82,6 +82,11 @@ export class InspectFactoryComponent implements OnInit {
         factory_contacts: '',
     };
     currentApplyInsData: any;
+    regValid(e: any){
+        if(!/^(?!0+(?:\0+)?$)(?:[1-9]\d*|0)(?:\\d{1,2})?$/.test(e.detail.value)){
+            e.target.value = null
+        }
+    }
 
     factoryModel: FormGroup = new FormGroup({
         environments: this.fb.array([]),
@@ -149,12 +154,12 @@ export class InspectFactoryComponent implements OnInit {
         (this.factoryModel.get('remarks') as FormArray).push(this.fb.control(''));
         console.log(this.factoryModel.get('remarks'));
     }
-    alreadyUpProgress:boolean = this.uQueue.alreadyUpProgress;
-    showModal(){
+    alreadyUpProgress: boolean = this.uQueue.alreadyUpProgress;
+    showModal() {
         this.ec.showModal({
-            component: QueueComponent
-        })
-        this.alreadyUpProgress = true
+            component: QueueComponent,
+        });
+        this.uQueue.alreadyUpProgress = true;
     }
 
     review_status: boolean;
@@ -193,7 +198,6 @@ export class InspectFactoryComponent implements OnInit {
                 equipment: res.factory_data.equipment,
                 remarks: res.factory_data.remarks ? res.factory_data.remarks : [],
             });
-
             setTimeout(() => {
                 if (res.factory_data.environments && res.factory_data.environments.length) {
                     for (let i = 0; i < res.factory_data.environments.length; i++) {
@@ -201,7 +205,6 @@ export class InspectFactoryComponent implements OnInit {
                     }
                     (this.factoryModel.get('environments') as FormArray).setValue(res.factory_data.environments);
                 }
-
                 if (res.factory_data.sampleRoom && res.factory_data.sampleRoom.length) {
                     // tslint:disable-next-line: prefer-for-of
                     for (let i = 0; i < res.factory_data.sampleRoom.length; i++) {
@@ -230,18 +233,17 @@ export class InspectFactoryComponent implements OnInit {
     }
 
     toInspectPo() {
-        if (!(this.factoryModel.get('environments') as FormArray).value.length) {
-            this.ec.showAlert({
-                message: ' 工厂环境照片是必传项 ',
+        if (!this.factoryModel.valid) {
+            this.ec.showToast({
+                message: '请输入必选项',
+                color: 'danger',
             });
-            // return;
+            return;
         }
-
         this.ec.showLoad({
             message: ' 正在上传 ',
             backdropDismiss: false,
         });
-
         this.implementInspect
             .inspectFactory({
                 factory_data: this.factoryModel.value,

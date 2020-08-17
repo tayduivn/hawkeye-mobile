@@ -1,10 +1,10 @@
-import { Observable } from 'rxjs';
 import { InspectEvaluateService, InspectAppraisementItem } from './../../services/inspect-evaluate.service';
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { StorageService } from '../../services/storage.service';
 import { PageEffectService } from '../../services/page-effect.service';
+import { Paging } from 'src/app/services/inspection.service';
 
 @Component({
     selector: 'app-evaluate',
@@ -12,9 +12,19 @@ import { PageEffectService } from '../../services/page-effect.service';
     styleUrls: ['./evaluate.page.scss'],
 })
 export class EvaluatePage implements OnInit {
+    ngOnInit(): void {}
     list: InspectAppraisementItem[] = [];
+    data: Paging<InspectAppraisementItem[]> = null;
     metaList: InspectAppraisementItem[] = [];
     listLength: number;
+    keywords: string = '';
+
+    getListParams: any = {
+        keywords: 'factory_name',
+        value: '',
+        page: 1,
+    };
+
     constructor(
         private router: Router,
         private es: PageEffectService,
@@ -22,18 +32,37 @@ export class EvaluatePage implements OnInit {
         private InspectEval: InspectEvaluateService,
     ) {}
 
-    ngOnInit() {
+    ionViewWillEnter() {
+        this.getListParams.page = 1;
         this.getList();
     }
 
-    getList(){
-        this.InspectEval.getEvaluateList()
-        .pipe(map((res: any) => res.data))
-        .subscribe(res => {
-            this.list = res;
-            this.metaList = JSON.parse(JSON.stringify(res));
-            this.listLength = res.length ? res.length : 0;
-        });
+    getList() {
+        this.InspectEval.getEvaluateList(this.getListParams)
+            .pipe(map((res: any) => res.data))
+            .subscribe(res => {
+                this.list = res.data;
+                this.metaList = JSON.parse(JSON.stringify(res.data));
+                this.getListParams.page = res.current_page + 1;
+            });
+    }
+
+    loadData(event: any) {
+        this.InspectEval.getEvaluateList(this.getListParams)
+            .pipe(map((res: any) => res.data))
+            .subscribe(res => {
+                if (res.data && res.data.length) {
+                    this.list = this.list.concat(res.data);
+                    this.metaList = JSON.parse(JSON.stringify(res.data));
+                    this.getListParams.page = res.current_page + 1;
+                } else {
+                    this.es.showToast({
+                        message: '别刷了，没有数据啦！',
+                        color: 'danger',
+                    });
+                }
+                event.target.complete();
+            });
     }
 
     toDetail(p: any) {
@@ -60,8 +89,9 @@ export class EvaluatePage implements OnInit {
                                     message: res.message,
                                 });
                                 setTimeout(() => {
+                                    this.getListParams.page = 1;
                                     this.getList();
-                                }, 1000);
+                                }, 200);
                             }
                         });
                     },
@@ -74,7 +104,19 @@ export class EvaluatePage implements OnInit {
     }
 
     filterFactory(e: any) {
-        console.log(e);
-        this.list = this.metaList.filter(res => res.factory_name.indexOf(e.detail.value) != -1)
+        this.getListParams.page = 1;
+        this.InspectEval.getEvaluateList(this.getListParams)
+            .pipe(map((res: any) => res.data))
+            .subscribe(res => {
+                if (res.data && res.data.length) {
+                    this.list = res.data;
+                    this.getListParams.page = res.current_page + 1;
+                } else {
+                    this.es.showToast({
+                        message: '暂未搜索到匹配的工厂',
+                        color: 'danger',
+                    });
+                }
+            });
     }
 }

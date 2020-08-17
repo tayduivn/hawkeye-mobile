@@ -59,11 +59,9 @@ export const utilFn: any = {
                 /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i,
             )
         ) {
-            /*window.location.href="你的手机版地址";*/
-            return 'mobile';
+            return 'mobile'; /*window.location.href="你的手机版地址";*/
         } else {
-            /*window.location.href="你的电脑版地址";    */
-            return 'pc';
+            return 'pc'; /*window.location.href="你的电脑版地址";    */
         }
     },
 
@@ -72,5 +70,7 @@ export const utilFn: any = {
     },
 };
 export const upLoadMaxImgLength: number = 5; //图片上传限量
-export const renewInitRequestTime: number = 5000;
+export const renewInitRequestTime: number = 10000;
 export const maxRenewInitRequest: number = 3;
+
+export const AppVersion: string = 'hawkeye_1.0.4';

@@ -19,6 +19,7 @@
             {{ item.size_weight ? item.size_weight : '重量（可选）' }}
         </div> -->
         <ion-button size="small" (click)="add()" *ngIf="i == _sizes.length - 1">添加</ion-button>
+        <ion-button size="small" color="danger" (click)="remove(i)" *ngIf="i !== 0">删除</ion-button>
     </div>
     <app-photograph
         [type]="photographType"

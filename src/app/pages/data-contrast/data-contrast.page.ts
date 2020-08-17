@@ -11,7 +11,7 @@ import { Component, OnInit } from '@angular/core';
 export class DataContrastPage implements OnInit {
     data: any[] = [];
     currentFactory: any = '';
-    currentSku:Sku
+    currentSku:Sku;
     constructor(private dataCompare: DataCompareService, private router:Router) {}
 
     ngOnInit() {
@@ -25,6 +25,12 @@ export class DataContrastPage implements OnInit {
         console.log(sku)
         this.currentSku = sku
         this.router.navigate(['data-contrast/detail',this.currentContract,this.currentApplyNo,sku.sku])
+    }
+
+    ionViewWillEnter(){
+        this.dataCompare.getCompareBasicList().subscribe(res => {
+            this.data = res;
+        });
     }
 
     get currentApplyNo(){

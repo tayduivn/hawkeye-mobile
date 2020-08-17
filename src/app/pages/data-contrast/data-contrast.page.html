@@ -19,6 +19,9 @@
                 <option *ngFor="let item of data" [value]="item.apply_inspection_no">{{item.factory_name}}</option>
             </select>
         </ion-item>
+
+        <ion-button fill='clear' expand="full" *ngIf="!data || !data.length" (click)="ionViewWillEnter()">重新获取</ion-button>
+
         <ion-item *ngFor="let item of (data | dataCompare:currentFactory)" (click)="toDetail(item)">
             <ion-label>{{item.sku_chinese_name}}</ion-label>
             <ion-note slot="end">{{item.sku}}</ion-note>

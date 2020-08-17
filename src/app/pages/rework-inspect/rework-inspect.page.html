@@ -1,0 +1,81 @@
+<ion-header mode="ios">
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>返工验货</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-searchbar
+        animated
+        clearInput
+        mode="ios"
+        placeholder="输入工厂名检索"
+        (ionChange)="factoryChange()"
+        [(ngModel)]="getListParams.value"
+    ></ion-searchbar>
+
+    <ion-button fill="clear" expand="full" *ngIf="!inspectTask || !inspectTask.length" (click)="ionViewWillEnter()"
+        >重新获取</ion-button
+    >
+    <ion-card *ngFor="let item of inspectTask" mode="ios">
+        <ion-item class="card-header">
+            <ion-icon name="people" slot="start" color="primary"></ion-icon>
+            <ion-label><span>验货工厂：</span>{{ item.factory_name }}</ion-label>
+            <ion-label class="text-c"><span>工厂联系人：</span>{{ item.factory_contacts }}</ion-label>
+        </ion-item>
+
+        <ion-card-content>
+            <ion-grid>
+                <ion-row class="title">
+                    <ion-col align-self-center [size]="3">
+                        验货流水号
+                    </ion-col>
+                    <ion-col align-self-center [size]="3">
+                        验货合同数
+                    </ion-col>
+                    <ion-col align-self-center [size]="3">
+                        验货SKU数
+                    </ion-col>
+                    <ion-col align-self-center [size]="3">
+                        操作
+                    </ion-col>
+                </ion-row>
+
+                <ion-row *ngFor="let sItem of item.sku_data">
+                    <ion-col align-self-center [size]="3">
+                        {{ sItem.apply_inspection_no }}
+                    </ion-col>
+                    <ion-col align-self-center [size]="3">
+                        {{ sItem.contract_data.length }}
+                    </ion-col>
+
+                    <ion-col align-self-center [size]="3">
+                        {{ sItem.data.length }}
+                    </ion-col>
+                    <ion-col
+                        align-self-center
+                        [size]="3"
+                        class="ion-col-no-pad"
+                        fxLayout="row"
+                        fxLayoutAlign="start center"
+                    >
+                        <ion-button
+                            fill="clear"
+                            size="small"
+                            (click)="toInspect(sItem.apply_inspection_no,item.inspection_group_id)"
+                            >去验货</ion-button
+                        >
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+        </ion-card-content>
+    </ion-card>
+
+    <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+        <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="正在加载"> </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+    <p *ngIf="!inspectTask.length" class="text-c ">暂无数据</p>
+</ion-content>

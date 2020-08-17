@@ -10,6 +10,7 @@ import { ExamineStatus } from '../inspect-sku/inspect-sku.component';
 import { CopySkuParams } from '../../../services/implement-inspect.service';
 import { QueueComponent } from '../queue/queue.component';
 import { UploadQueueService } from '../upload-queue.service';
+import { FeedbackComponent } from '../../rework-inspect/feedback/feedback.component';
 
 export interface Factory {
     name?: string;
@@ -55,7 +56,7 @@ export class InspectPoComponent implements OnInit {
         encodingType: this.camera.EncodingType.JPEG,
         mediaType: this.camera.MediaType.PICTURE,
     };
-   
+
     constructor(
         private storage: StorageService,
         private activeRouter: ActivatedRoute,
@@ -63,9 +64,10 @@ export class InspectPoComponent implements OnInit {
         private ec: PageEffectService,
         private implementInspect: ImplementInspectService,
         private router: Router,
-        private uQueue: UploadQueueService
+        private uQueue: UploadQueueService,
+        private es: PageEffectService,
     ) {}
-    alreadyUpProgress: boolean = this.uQueue.alreadyUpProgress
+    alreadyUpProgress: boolean = this.uQueue.alreadyUpProgress;
     ngOnInit() {
         this.activeRouter.params.subscribe(params => {
             this.apply_inspect_no = params.fid;
@@ -109,12 +111,11 @@ export class InspectPoComponent implements OnInit {
         });
     }
 
-     
-    showModal(){
+    showModal() {
         this.ec.showModal({
-            component: QueueComponent
-        })
-        this.alreadyUpProgress = true
+            component: QueueComponent,
+        });
+        this.uQueue.alreadyUpProgress = true;
     }
 
     photograph(p: Sku) {
@@ -135,6 +136,21 @@ export class InspectPoComponent implements OnInit {
         );
     }
 
+    regValid(e: any) {
+        if (!/^(?!0+(?:\0+)?$)(?:[1-9]\d*|0)(?:\\d{1,2})?$/.test(e.detail.value)) {
+            e.target.value = null;
+        }
+    }
+    calcMust(e: any, n: any, p: string) {
+        if (e.detail.value > n.quantity) {
+            n[p] = null;
+            this.ec.showToast({
+                message: '不能大于申请验货数量',
+                color: 'danger',
+            });
+        }
+    }
+
     copy(p: any, sku: any) {
         let params: CopySkuParams = {
             apply_inspection_no: this.apply_inspect_no,
@@ -145,7 +161,7 @@ export class InspectPoComponent implements OnInit {
             console.log(res);
             this.ec.showToast({
                 message: res.message,
-                color: 'success'
+                color: 'success',
             });
         });
     }
@@ -177,7 +193,6 @@ export class InspectPoComponent implements OnInit {
                     color: res.status === 1 ? 'success' : 'danger',
                 });
                 if (res.status && type == 'go') {
-                    
                     this.storage.set('CURRENT_IMPLEMENT_SKU', this.currentSku);
                     this.storage.set('CURRENT_FACTORY_DATA', this.data);
                     setTimeout(() => {
@@ -196,20 +211,20 @@ export class InspectPoComponent implements OnInit {
 
     verifyIpt(p: any, sku: any): boolean {
         let val = true;
-        if (!sku.sku_package_complete_num) {
-            this.ec.showToast({
-                message: '请输入sku验货数量',
-                color: 'danger',
-            });
-            val = false;
-        } else if (!sku.sku_production_complete_num) {
-            this.ec.showToast({
-                message: '请输入sku生产完成数量',
-                color: 'danger',
-            });
-            val = false;
-        } else if (!sku.photo) {
-        }
+        // if (!sku.sku_package_complete_num) {
+        //     this.ec.showToast({
+        //         message: '请输入sku验货数量',
+        //         color: 'danger',
+        //     });
+        //     val = false;
+        // } else if (!sku.sku_production_complete_num) {
+        //     this.ec.showToast({
+        //         message: '请输入sku生产完成数量',
+        //         color: 'danger',
+        //     });
+        //     val = false;
+        // } else if (!sku.photo) {
+        // }
         return val;
     }
 
@@ -218,6 +233,13 @@ export class InspectPoComponent implements OnInit {
         p.data.forEach(element => {
             p.inspection_complete_num += element.sku_package_complete_num ? element.sku_package_complete_num : 0;
             p.inspection_complete_no += element.sku_package_complete_num ? element.sku_package_complete_num : 0;
+        });
+    }
+
+    feedback(p: any, sku: any) {
+        this.es.showModal({
+            component: FeedbackComponent,
+            componentProps: { apply_inspection_no: this.apply_inspect_no, sku: sku.sku, contract_no: p.contract_no },
         });
     }
 }

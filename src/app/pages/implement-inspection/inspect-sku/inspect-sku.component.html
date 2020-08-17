@@ -4,10 +4,8 @@
             <ion-menu-button></ion-menu-button>
         </ion-buttons>
         <ion-title>{{ data.sku }}</ion-title>
-
         <ion-buttons slot="end" class="tops">
             <ion-button (click)="showModal()" [disabled]="alreadyUpProgress">上传进度</ion-button>
-
             <span>箱率：{{ data.rate_container }}</span>
             <select (change)="toggleBoxRate()" [(ngModel)]="rateStatus" *ngIf="data.rate_container != 1">
                 <option value="inner">内箱</option>
@@ -17,7 +15,6 @@
                 <option value="outer" selected>外箱</option>
             </select>
         </ion-buttons>
-
         <ion-buttons slot="end">
             <ion-back-button defaultHref="/inspect-po" text="返回" color="white" mode="md"></ion-back-button>
         </ion-buttons>
@@ -53,7 +50,12 @@
                 <ion-item fxLayout="row" fxLayoutAlign="start center">
                     <div class="header-input" fxLayout="row" fxLayoutAlign="start center">
                         <label class="label">计划抽检数量</label>
-                        <ion-input placeholder="0" type="number" formControlName="spotCheckNum"></ion-input>
+                        <ion-input
+                            placeholder="0"
+                            type="number"
+                            formControlName="spotCheckNum"
+                            (ionChange)="regValid($event)"
+                        ></ion-input>
                     </div>
                     <div class="header-input" fxLayout="row" fxLayoutAlign="start center">
                         <label class="label">PO号</label>
@@ -323,7 +325,7 @@
             </ion-list>
             <!-- 摔箱测试 -->
             <ion-list *ngIf="currentToggle.key == 'beforeUnpacking'">
-                <ion-item formGroupName="throwBox" [hidden]="!data.is_need_drop_test">
+                <ion-item formGroupName="throwBox" [hidden]="data.is_need_drop_test === '0'">
                     <div class="w100">
                         <div class="global-inspect-title">
                             <p>摔箱测试</p>
@@ -389,7 +391,7 @@
                             {{ data.packing_type }}
                         </div>
                         <p class="global-inspect-title gray-color desc-tips">
-                            包含纸箱层数特写照片
+                            包含纸箱层数和纸箱鼓包特写照片
                         </p>
                         <app-photograph
                             type="packing_pic"
@@ -401,7 +403,7 @@
                             box_type="inner"
                         ></app-photograph>
                         <div class="test-feedback">
-                            <div fxLayout="row" fxLayoutAlign="start center">
+                            <div>
                                 <div fxLayout="row" fxLayoutAlign="start center">
                                     <p class="global-inspect-title gray-color">
                                         是否与以上信息对应？
@@ -412,7 +414,7 @@
                                         <option value="0">否</option>
                                     </select>
                                 </div>
-                                <div class="ml-10" fxLayout="row" fxLayoutAlign="start center">
+                                <div fxLayout="row" fxLayoutAlign="start center">
                                     <p class="global-inspect-title gray-color">
                                         是否是双纸箱:
                                     </p>
@@ -462,25 +464,44 @@
                                         >
                                     </select>
                                 </div>
-                            </div>
-                            <div fxLayout="row" fxLayoutAlign="space-between center" class="schedule-container mb-10">
-                                <div class="schedule-item">
-                                    <ion-label>打包带及粘胶带</ion-label>
-                                    <select formControlName="packingBelt">
+                                <div fxLayout="row" fxLayoutAlign="start center">
+                                    <!--class="schedule-item"-->
+                                    <p class="global-inspect-title gray-color">
+                                        打包带及粘胶带:
+                                    </p>
+                                    <select formControlName="packingBelt" class="select">
                                         <option value="passed">通过</option>
                                         <option value="notPass">不通过</option>
                                         <option value="undetermined">待定</option>
                                     </select>
                                 </div>
-                                <div class="schedule-item">
-                                    <ion-label>多箱率、超重标、易碎贴向上标识等</ion-label>
-                                    <select formControlName="rateWeightMark">
+                                <div fxLayout="row" fxLayoutAlign="start center">
+                                    <p class="global-inspect-title gray-color">
+                                        是否存在鼓包:
+                                    </p>
+                                    <select formControlName="swelling" class="select">
+                                        <option value="none">请选择</option>
+                                        <option value="y">存在</option>
+                                        <option value="n">不存在</option>
+                                    </select>
+                                </div>
+                                <div fxLayout="row" fxLayoutAlign="start center">
+                                    <p class="global-inspect-title gray-color">
+                                        多箱率、超重标、易碎贴向上标识等
+                                    </p>
+                                    <ion-label></ion-label>
+                                    <select formControlName="rateWeightMark" class="select">
                                         <option value="passed">通过</option>
                                         <option value="notPass">不通过</option>
                                         <option value="undetermined">待定</option>
                                     </select>
                                 </div>
                             </div>
+                            <div
+                                fxLayout="row"
+                                fxLayoutAlign="space-between center"
+                                class="schedule-container mb-10"
+                            ></div>
 
                             <div>
                                 <div>
@@ -524,7 +545,7 @@
                 </ion-item>
             </ion-list>
             <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
-                <ion-item formGroupName="productDetail">
+                <!-- <ion-item formGroupName="productDetail">
                     <div class="w100">
                         <div class="global-inspect-title">
                             <p>产品细节图</p>
@@ -548,7 +569,7 @@
                             </div>
                         </div>
                     </div>
-                </ion-item>
+                </ion-item> -->
             </ion-list>
             <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
                 <ion-item formGroupName="instructions">
@@ -631,12 +652,32 @@
                 </ion-item>
             </ion-list>
 
+            <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
+                <ion-item formGroupName="disputes">
+                    <div class="w100">
+                        <div class="global-inspect-title">
+                            <p>SKU中文描述</p>
+                        </div>
+
+                        <div class="packing-info">
+                            {{ data.chinese_description }}
+                        </div>
+
+                        <div class="w100">
+                            <div>
+                                <ion-textarea formControlName="text" placeholder="请输入SKU描述争议"></ion-textarea>
+                            </div>
+                        </div>
+                    </div>
+                </ion-item>
+            </ion-list>
+
             <!-- 产品整体图 -->
             <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
                 <ion-item formGroupName="whole">
                     <div class="w100">
                         <div class="global-inspect-title">
-                            <p>产品整体图</p>
+                            <p>产品照片</p>
                         </div>
                         <app-photograph
                             type="product_wholes_pic"
@@ -654,26 +695,6 @@
                                     [ary]="SkuInspectModel.value.inner_box_data.whole.desc"
                                     (onComplete)="descEnter($event, 'whole', 'inner')"
                                 ></app-item-by-item-desc>
-                            </div>
-                        </div>
-                    </div>
-                </ion-item>
-            </ion-list>
-
-            <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
-                <ion-item formGroupName="disputes">
-                    <div class="w100">
-                        <div class="global-inspect-title">
-                            <p>SKU中文描述</p>
-                        </div>
-
-                        <div class="packing-info">
-                            {{ data.chinese_description }}
-                        </div>
-
-                        <div class="w100">
-                            <div>
-                                <ion-textarea formControlName="text" placeholder="请输入SKU描述争议"></ion-textarea>
                             </div>
                         </div>
                     </div>
@@ -727,6 +748,7 @@
 
                                 <ion-input placeholder="请输入净重" type="number" formControlName="textTwo"></ion-input>
                             </div>
+
                             <app-photograph
                                 type="net_weight_pic"
                                 moduleType="removeSkuPic"
@@ -736,6 +758,7 @@
                                 [sku]="data.sku"
                                 box_type="inner"
                             ></app-photograph>
+
                             <div class="pb-10">
                                 <div>
                                     <app-item-by-item-desc
@@ -799,6 +822,7 @@
 
             <!-- 测试部分 -->
             <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
+                <!-- 功能性测试 -->
                 <ion-item formGroupName="function">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -835,6 +859,7 @@
                     </div>
                 </ion-item>
 
+                <!-- 承重测试 -->
                 <ion-item formGroupName="bearing">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -871,6 +896,7 @@
                     </div>
                 </ion-item>
 
+                <!-- 含水量测试 -->
                 <ion-item formGroupName="waterContent">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -908,6 +934,14 @@
                     </div>
                 </ion-item>
             </ion-list>
+
+            <app-inspect-custom-test 
+                [contract_no]='contractNo'
+                [apply_inspection_no]='currentApplyInsData.apply_inspection_no'
+                [sku]='data.sku'
+                [box_type]='"outer"'
+                [customTestArray]=''>
+            </app-inspect-custom-test>
 
             <!-- 总结 -->
             <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
@@ -981,6 +1015,15 @@
                                 </select>
                             </div>
                         </div>
+
+                        <app-videotape
+                            type="sum_up_video"
+                            [videos]="SkuInspectModel.value.inner_box_data.sumUp.videos"
+                            [contract_no]="contractNo"
+                            [apply_inspection_no]="currentApplyInsData.apply_inspection_no"
+                            [sku]="data.sku"
+                            box_type="inner"
+                        ></app-videotape>
                     </div>
                 </ion-item>
             </ion-list>
@@ -1068,6 +1111,7 @@
                 </ion-row>
             </ion-grid>
         </div>
+
         <!-- 外箱 -->
         <div class="out-box" *ngIf="rateStatus == 'outer'" formGroupName="outer_box_data">
             <ion-list *ngIf="currentToggle.key == 'beforeUnpacking'">
@@ -1100,7 +1144,7 @@
                 <ion-item formGroupName="size">
                     <div class="w100">
                         <div class="global-inspect-title">
-                            <p>外箱尺寸(单位：CM,叠高高度：1-2M）</p>
+                            <p>外箱尺寸--A(单位：CM,叠高高度：1-2M）</p>
                         </div>
 
                         <div class="w100">
@@ -1183,6 +1227,34 @@
                     </div>
                 </ion-item>
             </ion-list>
+
+            <!-- 要上的新版内容 -->
+            <!-- <ion-list>
+                <ion-item>
+                    <div class="w100">
+                        <div class="global-inspect-title">
+                            <p>外箱尺寸--B(单位：CM）</p>
+                        </div>
+                        <inspect-product-size
+                            type="productSize"
+                            [contract_no]="contractNo"
+                            [apply_inspection_no]="currentApplyInsData.apply_inspection_no"
+                            [sku]="data.sku"
+                            (onChange)="productSizeChange($event)"
+                            [sizes]="SkuInspectModel.value.inner_box_data.size"
+                        ></inspect-product-size>
+                        <div class="pb-10">
+                            <div>
+                                <app-item-by-item-desc
+                                    description="备注"
+                                    [ary]="SkuInspectModel.value.inner_box_data.productSizeDesc.desc"
+                                    (onComplete)="descEnter($event, 'productSizeDesc', 'inner')"
+                                ></app-item-by-item-desc>
+                            </div>
+                        </div>
+                    </div>
+                </ion-item>
+            </ion-list> -->
 
             <ion-list *ngIf="currentToggle.key == 'beforeUnpacking'">
                 <ion-item formGroupName="barCode">
@@ -1325,7 +1397,7 @@
                             {{ data.packing_type }}
                         </div>
                         <p class="global-inspect-title gray-color desc-tips">
-                            包含纸箱层数特写照片
+                            包含纸箱层数和纸箱鼓包特写照片
                         </p>
                         <app-photograph
                             type="packing_pic"
@@ -1338,7 +1410,7 @@
                         ></app-photograph>
 
                         <div class="test-feedback">
-                            <div fxLayout="row" fxLayoutAlign="start center">
+                            <div>
                                 <div fxLayout="row" fxLayoutAlign="start center">
                                     <p class="global-inspect-title gray-color">
                                         是否与以上信息对应？
@@ -1350,7 +1422,7 @@
                                     </select>
                                 </div>
 
-                                <div class="ml-10" fxLayout="row" fxLayoutAlign="start center">
+                                <div fxLayout="row" fxLayoutAlign="start center">
                                     <p class="global-inspect-title gray-color">
                                         是否是双纸箱
                                     </p>
@@ -1360,6 +1432,7 @@
                                         <option value="0">否</option>
                                     </select>
                                 </div>
+
                                 <div fxLayout="row" fxLayoutAlign="start center">
                                     <p class="global-inspect-title gray-color">
                                         请选择纸箱类型
@@ -1400,19 +1473,33 @@
                                         >
                                     </select>
                                 </div>
-                            </div>
-                            <div fxLayout="row" fxLayoutAlign="space-between center" class="schedule-container mb-10">
-                                <div class="schedule-item">
-                                    <ion-label>打包带及粘胶带</ion-label>
-                                    <select formControlName="packingBelt">
+
+                                <div fxLayout="row" fxLayoutAlign="start center">
+                                    <p class="global-inspect-title gray-color">
+                                        打包带及粘胶带:
+                                    </p>
+                                    <select formControlName="packingBelt" class="select">
                                         <option value="passed">通过</option>
                                         <option value="notPass">不通过</option>
                                         <option value="undetermined">待定</option>
                                     </select>
                                 </div>
-                                <div class="schedule-item">
-                                    <ion-label>多箱率、超重标、易碎贴向上标识等</ion-label>
-                                    <select formControlName="rateWeightMark">
+
+                                <div fxLayout="row" fxLayoutAlign="start center">
+                                    <p class="global-inspect-title gray-color">
+                                        是否存在鼓包:
+                                    </p>
+                                    <select formControlName="swelling" class="select">
+                                        <option value="none">请选择</option>
+                                        <option value="y">存在</option>
+                                        <option value="n">不存在</option>
+                                    </select>
+                                </div>
+                                <div fxLayout="row" fxLayoutAlign="start center">
+                                    <p class="global-inspect-title gray-color">
+                                        多箱率、超重标、易碎贴向上标识等
+                                    </p>
+                                    <select formControlName="rateWeightMark" class="select">
                                         <option value="passed">通过</option>
                                         <option value="notPass">不通过</option>
                                         <option value="undetermined">待定</option>

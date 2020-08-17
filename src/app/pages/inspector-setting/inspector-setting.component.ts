@@ -1,7 +1,6 @@
 import { PageEffectService } from 'src/app/services/page-effect.service';
 import { Component, OnInit } from '@angular/core';
 import { InspectTask } from '../inspect-task/inspect-contract/inspect-contract.page';
-import { Observable } from 'rxjs';
 import { InspectionService } from 'src/app/services/inspection.service';
 import { ActivatedRoute } from '@angular/router';
 import { ModalOptions } from '@ionic/core/dist/types/components/modal/modal-interface';

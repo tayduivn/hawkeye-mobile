@@ -57,6 +57,7 @@ export interface Sku {
     chinese_description?: string;
     system_logo_desc?: string;
     sku_appraisement: any;
+    need_bring_back_instructor?:any;
     putImgs?: string[]; //摆放图（验po的时候）
 }
 

@@ -2,8 +2,8 @@ import { StorageService } from 'src/app/services/storage.service';
 import { Component, OnInit } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { InspectionService } from 'src/app/services/inspection.service';
-import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
+import { PageEffectService } from 'src/app/services/page-effect.service';
 
 @Component({
     selector: 'app-implement-inspection',
@@ -32,10 +32,10 @@ import { Router } from '@angular/router';
                     right: '-100%',
                 }),
             ),
-            transition('open => closed', [animate('0.3s ease-in-out')]),
-            transition('back => open', [animate('0.3s ease-out')]),
-            transition('open => back', [animate('0.3s ease-in-out')]),
-            transition('closed => open', [animate('0.3s ease-out')]),
+            transition('open => closed', [ animate('0.3s ease-in-out')] ),
+            transition('back => open', [ animate('0.3s ease-out')] ),
+            transition('open => back', [ animate('0.3s ease-in-out')] ),
+            transition('closed => open', [ animate('0.3s ease-out')] ),
         ]),
     ],
 })
@@ -48,20 +48,33 @@ export class ImplementInspectionPage implements OnInit {
     contract: any = '';
     contractList: any[] = [];
     currentFactory: string;
-    constructor(private inspectService: InspectionService, private storage: StorageService, private router: Router) {}
+    getListParams: any = {
+        page: 1,
+        keywords: 'factory_name',
+        value: '',
+    };
+    constructor(
+        private inspectService: InspectionService,
+        private effectCtrl: PageEffectService,
+        private storage: StorageService,
+        private router: Router,
+    ) {}
 
     ngOnInit() {}
 
-    toInspect(contractNo: string,inspectId: string) {
+    toInspect(contractNo: string, inspectId: string) {
+        console.log(contractNo, inspectId);
         this.router.navigate(['/inspect-factory', contractNo, inspectId]);
     }
 
     ionViewWillEnter() {
-        this.inspectService.getInspectTaskList().subscribe(res => {
-            this.metaInspectTask = res;
-            this.inspectTask = JSON.parse(JSON.stringify(res));
+        this.getListParams.page = 1;
+        this.inspectService.getInspectTaskList(this.getListParams).subscribe(res => {
+            this.metaInspectTask = res.data;
+            this.inspectTask = JSON.parse(JSON.stringify(res.data));
             this.task = res;
-            this.storage.set('IMPLEMENT-INSPECTION-META-DATA', res);
+            this.getListParams.page = res.current_page + 1;
+            this.storage.set('IMPLEMENT-INSPECTION-META-DATA', this.inspectTask);
         });
     }
 
@@ -76,7 +89,34 @@ export class ImplementInspectionPage implements OnInit {
         return rVal;
     }
 
+    keywords: string = '';
     factoryChange() {
-        this.inspectTask = this.metaInspectTask.filter(res => res.factory_name.indexOf(this.currentFactory) != -1);
+        this.getListParams.page = 1;
+        this.inspectService.getInspectTaskList(this.getListParams).subscribe(res => {
+            if (res.data && res.data.length) {
+                this.inspectTask = res.data;
+                this.getListParams.page = res.current_page + 1;
+                this.storage.set('IMPLEMENT-INSPECTION-META-DATA', this.inspectTask);
+            } else {
+                this.inspectTask = [];
+            }
+        });
+    }
+
+    page: number = 1;
+    loadData(event) {
+        this.inspectService.getInspectTaskList(this.getListParams).subscribe(res => {
+            if (res.data && res.data.length) {
+                this.inspectTask = this.inspectTask.concat(res.data);
+                this.getListParams.page = res.current_page + 1;
+                this.storage.set('IMPLEMENT-INSPECTION-META-DATA', this.inspectTask);
+            } else {
+                this.effectCtrl.showToast({
+                    message: '别刷了，没有数据啦！',
+                    color: 'danger',
+                });
+            }
+            event.target.complete();
+        });
     }
 }

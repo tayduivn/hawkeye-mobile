@@ -1,6 +1,6 @@
 import { PageEffectService } from './../../../services/page-effect.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { InspectEvaluateService, InspectAppraisementParams } from './../../../services/inspect-evaluate.service';
+import { InspectEvaluateService } from './../../../services/inspect-evaluate.service';
 import { Component, OnInit } from '@angular/core';
 import { StorageService } from '../../../services/storage.service';
 

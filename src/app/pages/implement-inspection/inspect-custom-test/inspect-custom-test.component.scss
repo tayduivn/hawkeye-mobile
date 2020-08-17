@@ -1,0 +1,22 @@
+.global-inspect-title {
+    font-size: 14px;
+    color: #3880fc;
+    font-weight: bold;
+    margin: 5px 0 !important;
+    padding-left: 15px;
+    p {
+        margin: 0;
+    }
+}
+
+input{
+    border: 1px solid #e3e3e3;
+    height: 30px;
+    border-radius: 5px;
+    font-size: 14px;
+    overflow: hidden;
+}
+
+ion-item{
+    margin-top: 10px;
+}

@@ -1,8 +1,6 @@
 import { HttpService } from './http.service';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ModalOptions } from '@ionic/core';
-import { InspectSettingBoxComponent } from '../widget/inspect-setting-box/inspect-setting-box.component';
 
 export interface InspectGroup {
     apply_inspections: any[]; //申请数据
@@ -55,8 +53,8 @@ export interface Paging<T> {
 export class InspectionService {
     constructor(private http: HttpService) {}
 
-    getTaskList(page?: number): Observable<Paging<InspectGroup[]>> {
-        return this.http.get({ url: '/inspection/get_inspection_task_data', params: { page } });
+    getTaskList(obj: { page?: number; keywords?: 'factory_name'; value?: string }): Observable<Paging<InspectGroup[]>> {
+        return this.http.get({ url: '/inspection/get_inspection_task_data', params: obj });
     }
 
     inspectSetting(params: any): Observable<any> {
@@ -66,8 +64,25 @@ export class InspectionService {
         });
     }
 
-    getInspectTaskList(): Observable<any> {
-        return this.http.get({ url: '/task/inspection_task_list' });
+    getInspectTaskList(obj: { page?: number; keywords?: 'factory_name'; value?: string }): Observable<any> {
+        return this.http.get({
+            url: '/task/inspection_task_list',
+            params: { page: obj.page, keywords: obj.keywords, value: obj.value },
+        });
+    }
+
+    getReworkInspectList(obj: { page?: number; keywords?: 'factory_name'; value?: string }): Observable<any> {
+        return this.http.get({
+            url: '/task/inspection_task_list_rework',
+            params: { page: obj.page, keywords: obj.keywords, value: obj.value },
+        });
+    }
+
+    getReworkTaskContent(obj: { apply_inspection_no: string; sku: string; contract_no: string }) {
+        return this.http.get({
+            url: '/task/get_inspection_task_rework_desc',
+            params: { apply_inspection_no: obj.apply_inspection_no, sku: obj.sku, contract_no: obj.contract_no },
+        });
     }
 
     toInspection(params: inspectParams): Observable<contractsResponse> {

@@ -1,6 +1,7 @@
-<ul class="img-list" imgGallery>
+<ul class="img-list" >
     <li *ngFor="let item of _photos; index as i" class="image-list pos-r">
         <img
+            imgGallery
             alt=""
             [defaultImage]="'../assets/img/image-loading.jpg'"
             *ngIf="item && item.length < 10000"
@@ -11,7 +12,7 @@
             <ion-icon name="close" mode="ios" *ngIf="_photos[i].length < 1000" (click)="remove(i)"></ion-icon>
         </div>
     </li>
-    <li *ngIf="!platform.is('hybrid')">
+    <li *ngIf="!platform.is('hybrid')"><!--  -->
         <input type="file" multiple="multiple" (change)="doCheckImg($event)" />
     </li>
 </ul>
@@ -19,5 +20,3 @@
     <ion-icon name="cloud-upload" mode="ios"></ion-icon>
     <p>上传照片</p>
 </div>
-
-<!-- <input type='file' multiple (change)="doCheckImg($event)"/> -->

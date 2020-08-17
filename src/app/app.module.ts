@@ -27,6 +27,9 @@ import { QueueComponent } from './pages/implement-inspection/queue/queue.compone
 import { BackgroundMode } from '@ionic-native/background-mode/ngx';
 import { Network } from '@ionic-native/network/ngx';
 import { File } from '@ionic-native/file/ngx';
+import { FileOpener } from '@ionic-native/file-opener/ngx';
+import { FeedbackComponent } from './pages/rework-inspect/feedback/feedback.component';
+import { DirectiveModule } from './directives/directive.module';
 
 @NgModule({
     declarations: [
@@ -37,6 +40,7 @@ import { File } from '@ionic-native/file/ngx';
         VideoPlayComponent,
         DescriptionComponent,
         QueueComponent,
+        FeedbackComponent
     ],
     entryComponents: [
         InspectSettingBoxComponent,
@@ -45,6 +49,7 @@ import { File } from '@ionic-native/file/ngx';
         VideoPlayComponent,
         DescriptionComponent,
         QueueComponent,
+        FeedbackComponent
     ],
     imports: [
         BrowserModule,
@@ -53,6 +58,7 @@ import { File } from '@ionic-native/file/ngx';
         FormsModule,
         BrowserAnimationsModule,
         HttpClientModule,
+        DirectiveModule
     ],
     providers: [
         Camera,
@@ -68,6 +74,7 @@ import { File } from '@ionic-native/file/ngx';
         BackgroundMode,
         File,
         Network,
+        FileOpener
     ],
     bootstrap: [AppComponent],
 })

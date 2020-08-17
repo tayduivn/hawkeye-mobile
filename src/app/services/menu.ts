@@ -39,6 +39,14 @@ const appPages: Array<menuItem> = [
         active: false,
     },
     {
+        title: '返工验货',
+        url: '/rework-inspect',
+        type: 'link',
+        limit: 'rework-inspect',
+        icon: 'redo',
+        active: false,
+    },
+    {
         title: '退出',
         type: 'btn',
         icon: 'exit',

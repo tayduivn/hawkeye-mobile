@@ -14,9 +14,10 @@
         mode="ios"
         placeholder="输入工厂名检索"
         (ionChange)="factoryChange()"
-        [(ngModel)]="currentFactory"
+        [(ngModel)]="getListParams.value"
     ></ion-searchbar>
 
+    <ion-button fill='clear' expand="full" *ngIf="!inspectTask || !inspectTask.length" (click)="ionViewWillEnter()">重新获取</ion-button>
     <ion-card *ngFor="let item of inspectTask" mode="ios">
         <ion-item class="card-header">
             <ion-icon name="people" slot="start" color="primary"></ion-icon>
@@ -70,4 +71,9 @@
             </ion-grid>
         </ion-card-content>
     </ion-card>
+
+    <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+        <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="正在加载"> </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+    <p *ngIf="!inspectTask.length" class="text-c ">暂无数据</p>
 </ion-content>

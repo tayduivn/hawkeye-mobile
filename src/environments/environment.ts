@@ -1,15 +1,23 @@
 // This file can be replaced during build by using the `fileReplacements` array.
-// `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
+// `ng build --prod` replaces `environment.ts` with `environment.p w z wrod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
     production: false,
     apiUrl: 'http://192.168.1.49/api/v1',
-    fileUrlPath: 'http://114.55.32.49:443',
+    fileUrlPath: 'http://keyi.xdrlgroup.com',
     usFileUrl: 'http://192.168.1.49/',
-    // apiUrl: 'http://yy.xdrlgroup.com/api/v1',
-    // fileUrlPath: 'http://114.55.32.144:443',
-    // usFileUrl: 'http://yy.xdrlgroup.com/',
+    origin:'http://192.168.1.49'
+
+    // apiUrl: 'http://121.196.179.68/api/v1',
+    // fileUrlPath: 'http://keyi.xdrlgroup.com',
+    // usFileUrl: 'http://121.196.179.68/',
+    // origin:'http://121.196.179.68'
+
+    // apiUrl: 'http://121.196.179.68:8081/api/v1',
+    // fileUrlPath: 'http://keyi.xdrlgroup.com',
+    // usFileUrl: 'http://121.196.179.68:8081/',
+    // origin: 'http://121.196.179.68:8081',
 };
 
 /*

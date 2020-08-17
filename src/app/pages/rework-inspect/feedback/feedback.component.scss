@@ -1,0 +1,42 @@
+ion-item{
+    padding: 10px 0;
+}
+
+.vdo-list{
+    width: 100%;
+    li{
+        float: left;
+        width: 50%;
+        video{
+            width: 100%;
+        }
+    }
+}
+
+.img-list,.vdo-list{
+    width: 100%;
+    li{
+        float: left;
+        width: 50%;
+        max-height: 250px;
+        overflow: hidden;
+        padding: .5rem;
+        padding-right: 0;
+        img,video{
+            border: 1px solid #ccc;
+            height: 100%;
+            width: 100%;
+        }
+    }
+}
+
+.img-list::after{
+    content: '';
+    display: block;
+    clear: both;
+}
+
+ion-text{
+    color: #505050;
+    font-size: 14px;
+}

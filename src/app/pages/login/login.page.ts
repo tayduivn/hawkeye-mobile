@@ -67,7 +67,6 @@ export class LoginPage implements OnInit, AfterViewInit {
         // 每次表单数据发生变化的时候更新错误信息
         this.registerForm.valueChanges.subscribe(data => {
             this.onValueChanged(data);
-            // console.log(data);
             if (data.password_confirmation && !data.password) {
                 this.formErrors['password_confirmation'] += this.validationMessage['password_confirmation']['notPwd'];
             }
@@ -119,6 +118,7 @@ export class LoginPage implements OnInit, AfterViewInit {
         private storage: StorageService,
         public effectCtrl: PageEffectService,
         private uQueue: UploadQueueService,
+       
     ) {}
 
     ngOnInit() {
@@ -150,9 +150,9 @@ export class LoginPage implements OnInit, AfterViewInit {
         }, 2000);
     }
 
-    isClick : boolean = false
+    isClick: boolean = false;
     doLogin() {
-        this.isClick = true
+        this.isClick = true;
         this.effectCtrl
             .showLoad({
                 spinner: null,
@@ -162,45 +162,52 @@ export class LoginPage implements OnInit, AfterViewInit {
             })
             .then(() => {
                 let params = JSON.parse(JSON.stringify(this.loginInfo));
-                this.http.post({ url: '/login', params: params }, true).subscribe(data => {
-                    this.effectCtrl.loadCtrl.dismiss();
-                    this.isClick = false
-                    let base: any = data;
-                    if (base.status == 0) {
-                        this.effectCtrl.showAlert({
-                            message: '登陆失败！',
-                            header: '提示',
-                            buttons: ['确定'],
-                            subHeader: '',
-                        });
-                    } else {
-                        this.userInfo.info = base.data;
-                        this.rights.rights = base.permission.data;
-                        this.storage.set('USER_INFO', this.userInfo.info);
+                this.http.post({ url: '/login', params: params }, true)
+                    .subscribe(data => {
+                        this.effectCtrl.loadCtrl.dismiss();
+                        this.isClick = false;
+                        let base: any = data;
+                        if (base.status == 0) {
+                            this.effectCtrl.showAlert({
+                                message: '登陆失败！',
+                                header: '提示',
+                                buttons: ['确定'],
+                                subHeader: '',
+                            });
+                        } else {
+                            this.userInfo.info = base.data;
+                            this.rights.rights = base.permission.data;
+                            this.storage.set('USER_INFO', this.userInfo.info);
 
-                        this.storage.set('PERMISSION', this.rights.rights);
-                        //判断是否是第一次登录
-                        this.userInfo.info.is_first = base.is_first;
-                        //判断是否是验货人
-                        this.Router.navigate(['/home']);
-                        this.menu.setMenuChange(true);
+                            this.storage.set('PERMISSION', this.rights.rights);
+                            //判断是否是第一次登录
+                            this.userInfo.info.is_first = base.is_first;
+                            //判断是否是验货人
+                            this.Router.navigate(['/home']);
+                            this.menu.setMenuChange(true);
 
-                        localStorage.setItem('HAWKEYE_ACCOUNT', JSON.stringify(this.loginInfo.company_no));
-                        localStorage.setItem('HAWKEYE_PASSWORD', JSON.stringify(this.loginInfo.password));
+                            localStorage.setItem('HAWKEYE_ACCOUNT', JSON.stringify(this.loginInfo.company_no));
+                            localStorage.setItem('HAWKEYE_PASSWORD', JSON.stringify(this.loginInfo.password));
                         
-                        //先清空队列
-                        this.uQueue.clear();
-                        this.uQueue.globalImgCache && this.uQueue.globalImgCache.unsubscribe(); //每次登录的时候先取消订阅，防止重复发布
-                        this.uQueue.pathToBase64();
-                    }
-                });
+                            //先清空队列
+                            this.uQueue.clear();
+                            this.uQueue.globalImgCache && this.uQueue.globalImgCache.unsubscribe(); //每次登录的时候先取消订阅，防止重复发布
+                            this.uQueue.pathToBase64();
+                        }
+                }
+                )
+                
             });
+        setTimeout(() => {
+            this.isClick = false;
+        }, 12000);
     }
 
     ionViewCanLeave() {
         this.effectCtrl.clearEffectCtrl();
-        console.log('ionViewCanLeave');
     }
+
+
 }
 
 export class loginInfo {

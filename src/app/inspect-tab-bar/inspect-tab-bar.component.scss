@@ -1,0 +1,25 @@
+ul{
+    width: 100%;
+    border: 1px solid #2c6aff;
+    height: 24px;
+    color: #2c6aff;
+    border-radius: 4px ;
+    overflow: hidden;
+    li{
+        cursor: pointer;
+        text-align: center;
+        line-height: 24px;
+        width: 33.33%;
+        float: left;
+        font-size: 13px;
+        background: #fff;
+        border-right: 1px solid #2c6aff;
+    }
+    li:last-child{
+        border: 0 ;
+    }
+    li.active{
+        background: #2c6aff;
+        color: #fff;
+    }
+}

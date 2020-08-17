@@ -10,7 +10,7 @@ import { PageEffectService } from 'src/app/services/page-effect.service';
     selector: 'app-queue',
     templateUrl: './queue.component.html',
     styleUrls: ['./queue.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Default
+    changeDetection: ChangeDetectionStrategy.Default,
 })
 export class QueueComponent implements OnInit {
     uploadStatus: 'uploading' | 'uploaded' = 'uploading';
@@ -36,10 +36,11 @@ export class QueueComponent implements OnInit {
         });
         //网络变化的时候触发
         network.onChange().subscribe(res => {
+            // console.log('---- 重新进入 ----')
             let msg: string = '',
                 color: string = 'success';
             if (!this.queue || !this.queue.length) return;
-          
+
             switch (network.type) {
                 case '2g':
                     msg = `当前网络环境为2g,系统判定暂停上传任务。`;
@@ -81,8 +82,7 @@ export class QueueComponent implements OnInit {
         this.uQueue.alreadyUpProgress = false;
     }
 
-    ngOnInit() {
-    }
+    ngOnInit() {}
 
     async upload() {}
 

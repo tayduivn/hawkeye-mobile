@@ -5,7 +5,8 @@
         </ion-buttons>
         <ion-title>评价详情</ion-title>
         <ion-buttons slot="end">
-            <ion-back-button text="返回" color="white" mode="md"></ion-back-button>
+            <!-- <ion-back-button defaultHref='/evaluate' text="返回" color="white" mode="md"></ion-back-button> -->
+            <ion-button [routerLink]="['/evaluate']">返回</ion-button>
         </ion-buttons>
     </ion-toolbar>
 </ion-header>
@@ -22,7 +23,8 @@
                 [value]="data.inspection_cooperation_level"
             >
                 <ion-list-header>
-                    <ion-label>1.验货配合度</ion-label>
+                    <ion-label >1.验货配合度   <span class="must-text">*</span></ion-label>
+                 
                 </ion-list-header>
 
                 <ion-item>
@@ -41,8 +43,9 @@
                 </ion-item>
 
                 <ion-item>
+                    <!-- *ngIf="data.inspection_cooperation_level != 1" -->
                     <ion-textarea
-                        *ngIf="data.inspection_cooperation_level != 1"
+                     
                         [(ngModel)]="data.inspection_cooperation_level_desc"
                         placeholder="请描述具体表现"
                     ></ion-textarea>
@@ -51,7 +54,7 @@
 
             <ion-radio-group>
                 <ion-list-header>
-                    <ion-label>2.工厂的仓储条件</ion-label>
+                    <ion-label>2.工厂的仓储条件 <span class="must-text">*</span></ion-label>
                 </ion-list-header>
 
                 <ion-item *ngFor="let item of storage_condition_ary">
@@ -75,7 +78,7 @@
                 [value]="data.storage_condition_appraisement"
             >
                 <ion-list-header>
-                    <ion-label>3.工厂的仓储条件等级</ion-label>
+                    <ion-label>3.工厂的仓储条件等级 <span class="must-text">*</span></ion-label>
                 </ion-list-header>
                 <ion-item>
                     <ion-label>优秀</ion-label>
@@ -98,7 +101,7 @@
                 [value]="data.remaining_storage_space_condition"
             >
                 <ion-list-header>
-                    <ion-label>4.剩余仓储情况</ion-label>
+                    <ion-label>4.剩余仓储情况 <span class="must-text">*</span></ion-label>
                 </ion-list-header>
 
                 <ion-item>

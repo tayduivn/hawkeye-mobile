@@ -41,9 +41,10 @@ export type FieldType =
     | 'factory_sample_room_pic'
     | 'size_pic_width'
     | 'size_pic_height'
-    | 'size_pic_length'
+    | 'size_pic_length' 
     | 'inspection_require_pic'
-    | 'factory_other_pic';
+    | 'factory_other_pic'
+    | 'custom_test'
 
 @Component({
     selector: 'app-videotape',
@@ -109,7 +110,8 @@ export class VideotapeComponent implements OnInit {
                     node =>
                         node.payload.sku === this.sku &&
                         node.payload.type === this.type &&
-                        node.payload.apply_inspection_no === this.apply_inspection_no,
+                        node.payload.apply_inspection_no === this.apply_inspection_no && 
+                        node.payload.sort_index === this.sort_index
                 ),
             )
             .subscribe(res => {
@@ -337,7 +339,7 @@ export class VideotapeComponent implements OnInit {
     }
 
     // 用闭包保存每个 chunk 的进度数据
-    createProgressHandler(item) {
+    createProgressHandler(item: any) {
         return e => {
             item.percentage = parseInt(String((e.loaded / e.total) * 100));
         };

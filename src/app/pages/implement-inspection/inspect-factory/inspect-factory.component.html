@@ -87,7 +87,7 @@
                             </div>
                             <ion-input
                                 type="text"
-                                [readonly]="factoryModel.controls['factoryAddress'].value.isTrue == 1"
+                                *ngIf="factoryModel.controls['factoryAddress'].value.isTrue == 0"
                                 formControlName="text"
                                 [placeholder]="
                                     factoryModel.controls['factoryAddress'].value.isTrue == 0 ? '请输入实际地址' : ''
@@ -121,12 +121,16 @@
                                 </select>
                             </div>
                             <div>
-                                <div fxLayout="row" fxLayoutAlign="start center" class="small">
+                                <div
+                                    fxLayout="row"
+                                    fxLayoutAlign="start center"
+                                    class="small"
+                                    *ngIf="factoryModel.controls['receptionist'].value.isTrue == 0"
+                                >
                                     <label>姓名:</label>
                                     <ion-input
                                         type="text"
                                         [(ngModel)]="data.factory_contacts"
-                                        [readonly]="factoryModel.controls['receptionist'].value.isTrue == 1"
                                         formControlName="name"
                                         [placeholder]="
                                             factoryModel.controls['receptionist'].value.isTrue == 0
@@ -136,11 +140,15 @@
                                     ></ion-input>
                                 </div>
 
-                                <div fxLayout="row" fxLayoutAlign="start center" class="small">
+                                <div
+                                    fxLayout="row"
+                                    fxLayoutAlign="start center"
+                                    class="small"
+                                    *ngIf="factoryModel.controls['receptionist'].value.isTrue == 0"
+                                >
                                     <label>职位:</label>
                                     <ion-input
                                         type="text"
-                                        [readonly]="factoryModel.controls['receptionist'].value.isTrue == 1"
                                         formControlName="post"
                                         [placeholder]="
                                             factoryModel.controls['receptionist'].value.isTrue == 0
@@ -151,11 +159,15 @@
                                     </ion-input>
                                 </div>
 
-                                <div fxLayout="row" fxLayoutAlign="start center" class="small">
+                                <div
+                                    fxLayout="row"
+                                    fxLayoutAlign="start center"
+                                    class="small"
+                                    *ngIf="factoryModel.controls['receptionist'].value.isTrue == 0"
+                                >
                                     <label>电话:</label>
                                     <ion-input
                                         type="text"
-                                        [readonly]="factoryModel.controls['receptionist'].value.isTrue == 1"
                                         formControlName="tel"
                                         [placeholder]="
                                             factoryModel.controls['receptionist'].value.isTrue == 0
@@ -186,7 +198,12 @@
                 <div fxLayout="col" fxLayoutAlign="space-between center" class="item-inner">
                     <div fxLayout="col" fxLayoutAlign="start center">
                         <label class="mr-0">工&nbsp;&nbsp;厂&nbsp;&nbsp;工&nbsp;&nbsp;人&nbsp;数：</label>
-                        <ion-input placeholder="请输入工厂工人数" formControlName="worksNum" type="number"></ion-input>
+                        <ion-input
+                            placeholder="请输入工厂工人数"
+                            (ionChange)="regValid($event)"
+                            formControlName="worksNum"
+                            type="number"
+                        ></ion-input>
                     </div>
                     <div
                         class="form-valid"
@@ -263,7 +280,7 @@
         </ion-list>
 
         <div class="next" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="gappx">
-            <button class="next-btn" (click)="toInspectPo()" [disabled]="!factoryModel.valid">
+            <button class="next-btn" (click)="toInspectPo()">
                 <ion-icon name="arrow-dropright" mode="ios"></ion-icon>
             </button>
         </div>

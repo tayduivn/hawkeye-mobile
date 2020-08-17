@@ -108,12 +108,15 @@ export class InspectSkuComponent implements OnInit {
     imgOrigin: string = environment.fileUrlPath;
     inspectionRequire: any = {};
     contractNo: string;
+    currentSegment = 'beforeUnpacking';
 
     inspectRequireSegment: boolean = false;
     productSize: any[] = [];
     size: any[] = [];
     currentApplyInsData;
     showProgress: boolean = false;
+
+    customTestArray: Array<any> = [];
     constructor(
         private es: PageEffectService,
         private fb: FormBuilder,
@@ -210,6 +213,7 @@ export class InspectSkuComponent implements OnInit {
                     photos: this.fb.array([]),
                     packingBelt: this.fb.control('undetermined'),
                     rateWeightMark: this.fb.control('undetermined'),
+                    swelling: this.fb.control('none'),
                 }),
                 layout: this.fb.group({
                     desc: this.fb.array(['']),
@@ -278,6 +282,7 @@ export class InspectSkuComponent implements OnInit {
                     prodInfo: this.fb.control('undetermined'),
                     qualityTechnology: this.fb.control('undetermined'),
                     fieldTest: this.fb.control('undetermined'),
+                    // videos: this.fb.array([])
                 }),
                 desc: this.fb.group({
                     desc: this.fb.array([]),
@@ -332,6 +337,7 @@ export class InspectSkuComponent implements OnInit {
                     is_double_carton: this.fb.control('none'),
                     packingBelt: this.fb.control('undetermined'),
                     rateWeightMark: this.fb.control('undetermined'),
+                    swelling: this.fb.control('none'),
                 }),
                 layout: this.fb.group({
                     desc: this.fb.array(['']),
@@ -341,7 +347,6 @@ export class InspectSkuComponent implements OnInit {
         });
 
         this.SkuInspectModel.valueChanges.pipe(debounceTime(900)).subscribe(res => {
-            console.log(res);
             //此处存入缓存
             this.inspectCache.cacheInspectText(res);
         });
@@ -372,7 +377,6 @@ export class InspectSkuComponent implements OnInit {
         let doms = this.grossWeight.nativeElement.querySelectorAll('input'),
             ary: number[] = [],
             compare: number[] = [];
-        console.log(doms);
 
         for (var i = 0; i < doms.length; i++) {
             if (!doms[i].value) return;
@@ -434,7 +438,7 @@ export class InspectSkuComponent implements OnInit {
                 }
             }
         }
-        return obj
+        return obj;
     }
 
     /**
@@ -445,23 +449,23 @@ export class InspectSkuComponent implements OnInit {
             //条码逻辑
 
             this.SkuInspectModel.value.inner_box_data.barCode.isTrue =
-                this.SkuInspectModel.value.inner_box_data.barCode.text === (this.barCode && this.barCode.length ? '1' : '0');
+                this.SkuInspectModel.value.inner_box_data.barCode.text ===
+                (this.barCode && this.barCode.length ? '1' : '0');
             this.SkuInspectModel.value.outer_box_data.barCode.isTrue =
-                this.SkuInspectModel.value.outer_box_data.barCode.text === (this.outerBarCode && this.outerBarCode.length ? '1' : '0');
+                this.SkuInspectModel.value.outer_box_data.barCode.text ===
+                (this.outerBarCode && this.outerBarCode.length ? '1' : '0');
 
             let postData = JSON.parse(JSON.stringify(this.SkuInspectModel.value));
             this.rateStatus == 'inner' ? delete postData.outer_box_data : delete postData.inner_box_data;
-            postData.inner_box_data && (postData.inner_box_data.productSize = this.productSize);
+            postData.inner_box_data &&
+                (postData.inner_box_data.productSize = JSON.parse(JSON.stringify(this.productSize)));
             postData.inner_box_data && this.data.rate_container != 1 && (postData.inner_box_data.size = this.size);
-            console.log(postData);
 
             //此处将深拷贝的元数据的photos置空 ，影响速度
             postData = this.setEmptyPhotos(postData);
-
-            console.log(postData)
             this.es.showAlert({
                 message: '正在保存……',
-                backdropDismiss: true,
+                backdropDismiss: false,
             });
 
             if (this.currentToggle.key == 'requirement') {
@@ -486,7 +490,6 @@ export class InspectSkuComponent implements OnInit {
                     observer.next(res.status);
                 });
         });
-
         return saved;
     }
 
@@ -499,28 +502,74 @@ export class InspectSkuComponent implements OnInit {
      * 切换 开箱前后 验货要求
      * @param ev  event
      */
+    selectSegment(s: 'beforeUnpacking' | 'afterUnpacking' | 'requirement') {
+        this.es.showAlert({
+            message: '确定要保存吗？',
+            buttons: [
+                {
+                    text: '取消',
+                },
+                {
+                    text: '确定',
+                    handler: () => {
+                        this.save().subscribe(res => {
+                            if (!res) {
+                                return;
+                            }
+                            switch (s) {
+                                case 'beforeUnpacking':
+                                    this.getBeforeBoxData(s);
+                                    // this.save()
+                                    break;
+                                case 'afterUnpacking':
+                                    this.getAfterBoxData(s);
+                                    // this.save()
+                                    break;
+                                default: {
+                                }
+                            }
+                            this.currentToggle = this.toggleItem.find(res => res.key == s);
+                        });
+                    },
+                },
+            ],
+        });
+    }
 
     segmentChanged(ev: any) {
+        console.log(ev);
         this.inspectRequireSegment = ev.detail.value == 'requirement';
-
-        this.save().subscribe(res => {
-            if (!res) {
-                return;
-            }
-            console.dir(this.SkuInspectModel);
-            switch (ev.detail.value) {
-                case 'beforeUnpacking':
-                    this.getBeforeBoxData();
-                    // this.save()
-                    break;
-                case 'afterUnpacking':
-                    this.getAfterBoxData();
-                    // this.save()
-                    break;
-                default: {
-                }
-            }
-            this.currentToggle = this.toggleItem.find(res => res.key == ev.detail.value);
+        // return
+        this.es.showAlert({
+            message: '确定要保存吗？',
+            buttons: [
+                {
+                    text: '取消',
+                },
+                {
+                    text: '确定',
+                    handler: () => {
+                        this.save().subscribe(res => {
+                            if (!res) {
+                                return;
+                            }
+                            switch (ev.detail.value) {
+                                case 'beforeUnpacking':
+                                    this.getBeforeBoxData();
+                                    // this.save()
+                                    break;
+                                case 'afterUnpacking':
+                                    this.getAfterBoxData();
+                                    // this.save()
+                                    break;
+                                default: {
+                                }
+                            }
+                            this.currentToggle = this.toggleItem.find(res => res.key == ev.detail.value);
+                        });
+                    },
+                },
+            ],
         });
     }
 
@@ -543,9 +592,7 @@ export class InspectSkuComponent implements OnInit {
                 formAry = formAry.get(sItem) as FormArray;
                 formAry && formAry.clear();
             }
-
             if (!ary || !(ary instanceof Array)) return;
-
             ary.forEach(res => {
                 formAry && formAry.push(new FormControl(''));
                 box = null;
@@ -553,10 +600,16 @@ export class InspectSkuComponent implements OnInit {
         }
     }
 
+    regValid(e: any) {
+        if (!/^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/.test(e.detail.value)) {
+            e.target.value = null;
+        }
+    }
+
     /**
      * 获取开箱前数据
      */
-    getBeforeBoxData() {
+    getBeforeBoxData(s?) {
         this.implementService
             .getBeforeBoxData({
                 apply_inspection_no: this.currentApplyInsData.apply_inspection_no,
@@ -565,6 +618,8 @@ export class InspectSkuComponent implements OnInit {
                 contract_no: this.contractNo,
             })
             .subscribe(res => {
+                s && (this.currentSegment = s);
+
                 if (!res) return;
                 let box = res[this.rateStatus + '_box_data'];
                 this.SkuInspectModel.reset();
@@ -768,7 +823,7 @@ export class InspectSkuComponent implements OnInit {
     /**
      * 获取开箱后数据
      */
-    getAfterBoxData(boxType?: 'outer' | 'inner') {
+    getAfterBoxData(s?) {
         this.implementService
             .getAfterBoxData({
                 apply_inspection_no: this.currentApplyInsData.apply_inspection_no,
@@ -778,6 +833,7 @@ export class InspectSkuComponent implements OnInit {
             })
             .subscribe(res => {
                 if (!res) return;
+                s && (this.currentSegment = s);
                 this.SkuInspectModel.reset();
                 let box = res[this.rateStatus + '_box_data'];
                 this.inspectionRequire = res[this.rateStatus + '_box_data']
@@ -840,6 +896,9 @@ export class InspectSkuComponent implements OnInit {
                                 rateWeightMark: res.inner_box_data.packing.rateWeightMark
                                     ? res.inner_box_data.packing.rateWeightMark
                                     : 'undetermined',
+                                swelling: res.inner_box_data.packing.swelling
+                                    ? res.inner_box_data.packing.swelling
+                                    : 'none',
                             },
                             layout: {
                                 //摆放图
@@ -960,10 +1019,13 @@ export class InspectSkuComponent implements OnInit {
                                 fieldTest: res.inner_box_data.sumUp.fieldTest
                                     ? res.inner_box_data.sumUp.fieldTest
                                     : 'undetermined',
+                                // videos: res.inner_box_data.sumUp.videos
+                                //     ? res.inner_box_data.sumUp.videos
+                                //     : []
                             },
                             desc: {
                                 //整体描述
-                                desc: res.inner_box_data.desc ? res.inner_box_data.desc.desc : [],
+                                desc: res.inner_box_data.desc.desc ? res.inner_box_data.desc.desc : [],
                                 photos: res.inner_box_data.desc.photos ? res.inner_box_data.desc.photos : [],
                             },
                         },
@@ -986,6 +1048,9 @@ export class InspectSkuComponent implements OnInit {
                                 rateWeightMark: res.outer_box_data.packing.rateWeightMark
                                     ? res.outer_box_data.packing.rateWeightMark
                                     : 'undetermined',
+                                swelling: res.outer_box_data.packing.swelling
+                                    ? res.outer_box_data.packing.swelling
+                                    : 'none',
                             },
                             layout: {
                                 //摆放图
@@ -997,6 +1062,8 @@ export class InspectSkuComponent implements OnInit {
                 }
             });
     }
+
+    addCustomTest() {}
 
     productSizeChange(e: any[]) {
         this.productSize = e;

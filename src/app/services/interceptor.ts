@@ -1,6 +1,6 @@
 import { LoadingService } from './loading.service';
 import { PageEffectService } from './page-effect.service';
-import { Injectable, Injector } from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
     HttpInterceptor,
     HttpRequest,
@@ -82,6 +82,9 @@ export class DefaultInterceptor implements HttpInterceptor {
         // this.injector.get(_HttpClient).end();
         // 业务处理：一些通用操作
         this.loading.setLoading(false);
+        // this.effectCtrl.showLoad({
+        //     message: '加载中…'
+        // })
         switch (event.status) {
             case 200:
                 !environment.production && console.log('成功发送请求');
@@ -104,6 +107,7 @@ export class DefaultInterceptor implements HttpInterceptor {
                 //         return of(event);
                 //     }
                 // }
+                
                 this.clearEffectElem();
                 if (event instanceof HttpResponse) {
                     const body: any = event.body;
@@ -192,5 +196,10 @@ export class DefaultInterceptor implements HttpInterceptor {
                 this.effectCtrl.alertCtrl.dismiss();
             }
         });
+        this.effectCtrl.loadCtrl.getTop().then((e: any) => {
+            if (e && e.id){
+                this.effectCtrl.loadCtrl.dismiss();
+            }
+        })
     }
 }

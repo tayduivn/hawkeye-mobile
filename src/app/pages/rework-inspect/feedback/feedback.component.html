@@ -1,0 +1,37 @@
+<ion-header mode="ios">
+    <ion-toolbar>
+        <ion-buttons slot="end">
+            <ion-button (click)="close()">关闭</ion-button>
+        </ion-buttons>
+        <ion-title>问题描述</ion-title>
+    </ion-toolbar>
+</ion-header>
+ 
+<ion-content>
+    <ion-card>
+        <ion-item class="ion-activated" >
+            <ion-icon name="text" slot="start"></ion-icon>
+            <ion-text *ngIf="data && data.desc; else noData">{{ data.desc }}</ion-text>
+        </ion-item>
+
+        <ion-item class="ion-activated">
+            <ion-icon name="image" slot="start"></ion-icon>
+            <ul class="img-list"*ngIf="data && data.review_summary_img; else noData" imgGallery >
+                <li *ngFor="let item of data.review_summary_img" >
+                    <img [src]="imgOrigin + item" alt="" />
+                </li>
+            </ul>
+        </ion-item>
+
+        <ion-item class="ion-activated">
+            <ion-icon name="videocam" slot="start"></ion-icon>
+            <ul class="vdo-list"*ngIf="data && data.review_summary_video; else noData">
+                <li *ngFor="let item of data.review_summary_video" (click)="play(item)">
+                    <video [src]="imgOrigin + item"></video>
+                </li>
+            </ul>
+        </ion-item>
+    </ion-card>
+</ion-content>
+
+<ng-template #noData>暂无</ng-template>

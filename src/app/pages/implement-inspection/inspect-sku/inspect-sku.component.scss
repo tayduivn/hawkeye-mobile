@@ -8,7 +8,7 @@ ion-content {
         padding: 5px;
     }
 }
- 
+
 .tops {
     font-size: 12px;
     select {
@@ -62,10 +62,10 @@ ion-item:last-child {
 }
 
 .global-inspect-title {
-    // margin-top: 10px;
     font-size: 14px;
     color: #3880fc;
     font-weight: bold;
+    margin: 5px 0 !important;
     p {
         margin: 0;
     }
@@ -247,6 +247,7 @@ ion-item:not(:first-child) .global-inspect-title {
     box-sizing: border-box;
     width: 100%;
 }
+
 .schedule-item {
     width: 50%;
     float: left;
@@ -283,9 +284,45 @@ ion-item:not(:first-child) .global-inspect-title {
 .fs-14 {
     font-size: 14px !important;
 }
+
 .mt-20 {
     margin-top: 20px !important;
 }
-app-queue{
+
+app-queue {
     background: white;
+}
+
+ul.segment {
+    width: 100%;
+    border: 1px solid #2c6aff;
+    height: 24px;
+    color: #2c6aff;
+    border-radius: 4px;
+    overflow: hidden;
+    li {
+        cursor: pointer;
+        text-align: center;
+        line-height: 24px;
+        width: 33.33%;
+        float: left;
+        font-size: 13px;
+        background: #fff;
+        border-right: 1px solid #2c6aff;
+    }
+    li:last-child {
+        border: 0;
+    }
+    li.active {
+        background: #2c6aff;
+        color: #fff;
+    }
+}
+
+.pl-10 {
+    padding-left: 10px !important;
+}
+
+.w50 {
+    width: 50% !important;
 }

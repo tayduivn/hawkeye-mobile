@@ -18,25 +18,6 @@ export class AccInspFormRemindGuard implements CanDeactivate<AccInspecPage> {
     ): boolean | UrlTree | import('rxjs').Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
         if (!component.isFormDirty()) {
             let some: boolean = true;
-            // this.effectCtrl.showAlert({
-            //   header:'提示',
-            //   message:'您还未保存数据，确认要离开吗？',
-            //   backdropDismiss:false,
-            //   buttons:[{
-            //     text:'取消',
-            //     role:'cancel',
-            //     handler:()=>{
-            //       some = true
-            //     }
-            //   },{
-            //     text:'确认',
-            //     handler:()=>{
-            //       debugger
-            //       some = false
-            //       return some
-            //     }
-            //   }]
-            // })
             return window.confirm('您还未保存数据，确定要离开吗？');
         } else return true;
     }

@@ -51,6 +51,11 @@ const routes: Routes = [
         canActivate: [LoginGuard],
     },
     {
+        path: 'rework-inspect',
+        loadChildren: () => import('./pages/rework-inspect/rework-inspect.module').then(m => m.ReworkInspectPageModule),
+        canActivate: [LoginGuard],
+    },
+    {
         path: '',
         loadChildren: () => import('./pages/data-contrast/data-contrast.module').then(m => m.DataContrastPageModule),
         canActivate: [LoginGuard],

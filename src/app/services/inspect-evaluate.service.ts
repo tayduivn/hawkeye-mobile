@@ -1,6 +1,7 @@
 import { Observable } from 'rxjs';
 import { HttpService } from './http.service';
 import { Injectable } from '@angular/core';
+import { Paging } from './inspection.service';
 
 export interface InspectEvaluateResponse {
     status: number;
@@ -64,9 +65,13 @@ export interface InspectAppraisementItem {
 export class InspectEvaluateService {
     constructor(private http: HttpService) {}
 
-    getEvaluateList(): Observable<InspectAppraisementListResponse> {
+    getEvaluateList(obj: {
+        page?: number;
+        keywords?: 'factory_name';
+        value?: string;
+    }): Observable<Paging<Array<InspectAppraisementItem>>> {
         //获取评价列表
-        return this.http.get({ url: '/task/inspection_appraisement_list' });
+        return this.http.get({ url: '/task/inspection_appraisement_list', params: obj });
     }
 
     getEvaluateById(inspection_appraisement_id: number): Observable<InspectEvaluateResponse> {

@@ -55,7 +55,7 @@
                         }}</ion-col
                     >
                     <ion-col size="4" Chipboard class="chip-text"
-                        ><span class="label"> 是否摔箱: </span> {{ sku.is_need_drop_test ? '是' : '否' }}</ion-col
+                        ><span class="label"> 是否摔箱: </span> {{ sku.is_need_drop_test  == 1 ? '是' : '否' }}</ion-col
                     >
                     <ion-col size="4" Chipboard class="chip-text"
                         ><span class="label"> 有无打包带: </span> {{ sku.has_strap == 1 ? '是' : '否' }}</ion-col
@@ -69,6 +69,7 @@
                     <ion-col size="8" Chipboard class="chip-text"
                         ><span class="label">LOGO: </span> {{ sku.logo_desc }}</ion-col
                     >
+                    
                 </ion-row>
 
                 <ion-row>
@@ -80,6 +81,11 @@
                         ><span class="label">临时备注: </span>
                         {{ sku.temporary_description ? sku.temporary_description : '暂无' }}</ion-col
                     >
+                </ion-row>
+                <ion-row>
+                    <ion-col size="12" Chipboard class="chip-text"
+                    ><span class="label">是否需要带回说明书: </span> {{ sku.need_bring_back_instructor ==1 ? '是' : '否' }}</ion-col
+                >
                 </ion-row>
             </ion-grid>
         </div>

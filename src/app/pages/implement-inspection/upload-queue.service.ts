@@ -9,7 +9,7 @@ import { ImageOther, VideoOther } from 'src/app/services/file-upload.service';
 import { from, Observable, Subscription, BehaviorSubject, zip, Subject } from 'rxjs';
 import { mergeMap, filter } from 'rxjs/operators';
 import { File as AndroidFile } from '@ionic-native/file/ngx';
-import { VerifyResponse, UploadParams } from 'src/app/widget/videotape/videotape.component';
+import { VerifyResponse, UploadParams, FieldType } from 'src/app/widget/videotape/videotape.component';
 import { FileChunkService, Chunk } from 'src/app/blue-bird/service/file-chunk.service';
 import { FileHashService } from 'src/app/blue-bird/service/file-hash.service';
 import { HttpService } from 'src/app/services/http.service';
@@ -39,6 +39,15 @@ export class UploadQueueService {
     alreadyUploadQueue: Array<QueueNode<any>> = []; //已上传数组队列
     onChangeUploadStatus: BehaviorSubject<boolean> = new BehaviorSubject(this.isSuspend);
     alreadyUpProgress: boolean = false; //已经点过“上传进度”按钮 状态
+
+    getImgData: BehaviorSubject<{ data: Blob; elem: ImageOther }> = new BehaviorSubject(null);
+
+    //保存一个全局图片状态
+    globalImgCache: Subscription;
+    //保存一个全局视频状态
+    globalVideoCache: Subscription;
+
+    alreadyUploadPayload$: Subject<QueueNode<ImageOther>> = new Subject();
     constructor(
         private request: RequestService,
         private userInfo: UserInfoService,
@@ -52,6 +61,7 @@ export class UploadQueueService {
         private http: HttpService,
     ) {
         network.onChange().subscribe(res => {
+            // console.log('---- 重新进入 ----')
             let msg: string = '',
                 color: string = 'success';
             if (!this.queue || !this.queue.length) return;
@@ -117,19 +127,22 @@ export class UploadQueueService {
     }
 
     /**
-     * 队列出列
+     * 队列出列 -
      */
-    pop(path?: string) {
-        const qNode = this.queue.shift();
+    pop(payload?: { path: string; type: FieldType }, notEmitImg?: boolean) {
+        let qNode = this.queue.shift();
+        if (!qNode) return;
         let node = {
             type: qNode.type,
             size: qNode.size,
             percentage: 100,
             payload: qNode.payload,
-            path:path
-        }
+            path: payload.path,
+        };
+        // qNode.payload.type = payload.type;
         this.alreadyUploadQueue.push(node);
-        this.alreadyUploadPayload$.next(node);
+        console.log('------ 回传 -----', node.path);
+        !notEmitImg && this.alreadyUploadPayload$.next(node);
         return qNode;
     }
 
@@ -175,7 +188,6 @@ export class UploadQueueService {
      */
     run() {
         this.status = true;
-
         if (!this.networkLogic()) return;
         this.upload();
     }
@@ -183,7 +195,11 @@ export class UploadQueueService {
     //Add 外部调用
     add(ele: QueueNode<any>, cache?: boolean) {
         if (ele.type == 'img') {
+            // console.log('------ cache到队列前 -------');
+            // console.log(ele);
             this.push(ele, cache);
+            // console.log('------ ADD到队列前 -------');
+            // console.log(this.queue);
             !this.status && this.run();
         } else this.packingVideo(ele);
     }
@@ -248,6 +264,8 @@ export class UploadQueueService {
                 formData.append('chunk', (node as any).chunk);
                 formData.delete('hash');
             }
+            // console.log('-----  上传之前FormData  -----');
+            // console.log(node.payload)
         } catch (e) {
             console.log('getFront没有', this.queue, node);
         }
@@ -296,7 +314,8 @@ export class UploadQueueService {
                     //合并完成之后 判断状态 如果成功则删除缓存 在让主队列的front出列
                     if (msg.status === 1 && this.front) {
                         this.cache.removeCache(this.front.payload);
-                        this.pop(msg.data);
+                        // this.pop(msg.data);
+                        this.pop(msg.data[0], msg.data.status === 'already');
                         if (this.size) {
                             this.upload();
                             //此处判断如果一维队列没有queue可传 则将总状态（status）置为false
@@ -306,18 +325,20 @@ export class UploadQueueService {
                 }
             }
         }
+
         const next = await this.driveUpload(chunkNode[0]);
-        // debugger
-        if (next === true || (next && !JSON.parse(next.data).error)) {
-            // next !== true && console.log(JSON.parse(next.data))
-            //先删除缓存
-            this.cache.removeCache(this.front.payload);
-            //再出队列 将已经上传的node的线上url发布出去 等待photograph component订阅
-            (this.front as any).dd = JSON.parse(next.data).data[0]
-           
-            this.pop(JSON.parse(next.data).data[0]);
-            
-            if (this.size) {
+
+        if (next === true || (next && next.data && !JSON.parse(next.data).error)) {
+            try {
+                console.log('------ 返回值 -------', JSON.parse(next.data));
+                this.cache.removeCache(this.front.payload);
+                //!Important  此处判断因为后台去重后返回的值status 为 already时 不pop队列 不删除缓存 继续往下执行方法
+                //再出队列 将已经上传的node的线上url发布出去 等待photograph component订阅
+                this.pop(JSON.parse(next.data).data[0], JSON.parse(next.data).status === 'already');
+            } catch (e) {
+                console.log(this.front);
+            }
+            if (this.size && this.front) {
                 this.upload();
             } else this.status = false;
         } else {
@@ -330,13 +351,10 @@ export class UploadQueueService {
         }
     }
 
-    //
-    alreadyUploadPayload$: Subject<QueueNode<ImageOther>> = new Subject();
-
     // 用闭包保存每个 chunk 的进度数据
     createProgressHandler(item: QueueNode<any>) {
         try {
-            return e => {
+            return (e: { loaded: number; total: number }) => {
                 if (item.type == 'img') {
                     item.percentage = parseInt(String((e.loaded / e.total) * 100));
                 } else {
@@ -410,12 +428,6 @@ export class UploadQueueService {
         return await this.file.readAsArrayBuffer(dirPath, fileName);
     }
 
-    //保存一个全局图片状态
-    globalImgCache: Subscription;
-    //保存一个全局视频状态
-    globalVideoCache: Subscription;
-    //取图片缓存将本机path转为base64，
-
     pathToBase64() {
         let cache: Array<ImageOther> = JSON.parse(localStorage.getItem('CURRENT_INSPECT_META_DATA_PATH')),
             imgCaches$ = cache && cache.length ? from(cache) : null;
@@ -456,8 +468,6 @@ export class UploadQueueService {
             );
         });
     }
-
-    getImgData: BehaviorSubject<{ data: Blob; elem: ImageOther }> = new BehaviorSubject(null);
 
     //根据参数获取base64流 （每个photograph展示用）
     getCacheImagesByParams(params: ImageOther) {
@@ -502,7 +512,6 @@ export class UploadQueueService {
         });
         return JSON.parse(data);
     }
-
     //成员回流机制
 }
 

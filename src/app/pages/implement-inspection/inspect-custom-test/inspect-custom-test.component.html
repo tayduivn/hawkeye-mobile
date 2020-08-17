@@ -1,0 +1,47 @@
+<ion-list>
+    <div class="global-inspect-title pl-10">
+        <p>自定义测试（可添加）</p>
+    </div>
+    <ion-item *ngFor="let item of _customTestArray; let i = index">
+        <div class="w100" fxLayout="row" fxLayoutAlign="space-between center">
+            <div>
+                <div>
+                    <input [(ngModel)]="item.chinese_name" placeholder="请填写测试字段名" class="w50 text-l" />
+                </div>
+                <app-photograph
+                    [type]="'other_test_' + i"
+                    moduleType="removeSkuPic"
+                    [photos]="item.photos"
+                    [contract_no]="contract_no"
+                    [apply_inspection_no]="apply_inspection_no"
+                    [sku]="sku"
+                    [box_type]="box_type"
+                ></app-photograph>
+                <app-videotape
+                    [type]="'other_test_' + i"
+                    [videos]="item.videos"
+                    [contract_no]="contract_no"
+                    [apply_inspection_no]="apply_inspection_no"
+                    [sku]="sku" vvz2z
+                    [box_type]="box_type"
+                ></app-videotape>
+                <div class="test-feedback">
+                    <div>
+                        <div>
+                         <app-item-by-item-desc
+                                description="备注"
+                                [ary]="item.ary"
+                                (onComplete)="descEnter($event, 'other_test_' + i, box_type)"
+                            >
+                        </app-item-by-item-desc>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <ion-button size="small" *ngIf="i === _customTestArray.length - 1" (click)="addCustomTest()">添加</ion-button>
+            </div>
+        </div>
+    </ion-item>
+</ion-list>
