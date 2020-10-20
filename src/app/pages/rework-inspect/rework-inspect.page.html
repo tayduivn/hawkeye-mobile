@@ -44,16 +44,16 @@
                     </ion-col>
                 </ion-row>
 
-                <ion-row *ngFor="let sItem of item.sku_data">
+                <ion-row *ngFor="let sItem of item.data">
                     <ion-col align-self-center [size]="3">
                         {{ sItem.apply_inspection_no }}
                     </ion-col>
                     <ion-col align-self-center [size]="3">
-                        {{ sItem.contract_data.length }}
+                        {{ sItem.contract_total }}
                     </ion-col>
 
                     <ion-col align-self-center [size]="3">
-                        {{ sItem.data.length }}
+                        {{ sItem.sku_total }}
                     </ion-col>
                     <ion-col
                         align-self-center
@@ -65,8 +65,8 @@
                         <ion-button
                             fill="clear"
                             size="small"
-                            (click)="toInspect(sItem.apply_inspection_no,item.inspection_group_id)"
-                            >去验货</ion-button
+                            [routerLink]="['/rework-inspect/rework-po',sItem.apply_inspection_no]"
+                            >查看详情</ion-button
                         >
                     </ion-col>
                 </ion-row>

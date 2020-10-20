@@ -1,0 +1,140 @@
+<ion-header mode="ios">
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>{{ sku }}</ion-title>
+        <ion-buttons slot="end">
+            <ion-back-button text="返回" color="white" mode="md"></ion-back-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content [formGroup]="skuInspectModel">
+    <app-sku-info [sku]="skuInfo" type="implement"></app-sku-info>
+    <ion-list>
+        <ion-item>
+            <div class="w100">
+                <div class="global-inspect-title">
+                    <p>验货时间/数量</p>
+                </div>
+
+                <div class="other-item">
+                    <ion-item>
+                        <ion-label>验货时间</ion-label>
+                        <ion-datetime
+                            cancelText="取消"
+                            doneText="确定"
+                            displayFormat="YYYY-MM-DD"
+                            formGroupName="inspectionDate"
+                            value="2012-12-15T13:47:20.789"
+                        >
+                        </ion-datetime>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label position="floating">拆箱数量</ion-label>
+                        <ion-input
+                            (ionChange)="numChange($event)"
+                            placeholder="输入拆箱数量"
+                            type="number"
+                            formGroupName="unpackingNum"
+                        ></ion-input>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label>拆箱比例</ion-label>
+                        <span>{{ unpackingPercent | number: '1.2' }}</span
+                        >%
+                    </ion-item>
+                </div>
+            </div>
+        </ion-item>
+    </ion-list>
+    <ion-list>
+        <ion-item formGroupName="barCode">
+            <div class="w100">
+                <div class="global-inspect-title">
+                    <p>条码</p>
+                </div>
+                <div class="bar-code" fxLayout="row" fxLayoutAlign="start center">
+                    <input class="h-30" placeholder="请输入条码" formControlName="text" />
+                    <ion-button fill="clear">{{ barCode }}</ion-button>
+                    <ion-button fill="clear" (click)="scan('inner')">
+                        扫码
+                    </ion-button>
+                    <ion-button
+                        color="success"
+                        size="small"
+                        fill="clear"
+                        *ngIf="barCode === skuInspectModel.get('barCode').get('text')"
+                    >
+                        扫码已通过
+                    </ion-button>
+                </div>
+                <app-photograph
+                    type="bar_code_pic"
+                    moduleType="removeSkuPic"
+                    [photos]="skuInspectModel.value.barCode.photos"
+                    [contract_no]="contract_no"
+                    [apply_inspection_no]="apply_inspection_no"
+                    [sku]="skuInfo.sku"
+                    box_type="inner"
+                ></app-photograph>
+                <div class="desc-box mt-10">
+                    <app-item-by-item-desc
+                        description="备注"
+                        [ary]="skuInspectModel.value.barCode.desc"
+                        (onComplete)="descEnter($event, 'barCode')"
+                    ></app-item-by-item-desc>
+                </div>
+            </div>
+        </ion-item>
+    </ion-list>
+
+    <ion-list>
+        <ion-item class="w100">
+            <div class="w100 other-item">
+                <div class="global-inspect-title">
+                    <p>问题阐述</p>
+                </div>
+
+                <ion-item class="ion-activated">
+                    <ion-icon name="text" slot="start"></ion-icon>
+                    <ul>
+                        <li
+                            *ngFor="let item of question.desc; let i = index"
+                            [ngStyle]="{ color: item.color ? item.color : '#000' }"
+                        >
+                            {{ i + 1 + '.    ' + item.text }}
+                        </li>
+                    </ul>
+                </ion-item>
+
+                <ion-item class="ion-activated w100">
+                    <ion-icon name="image" slot="start"></ion-icon>
+                    <ul class="img-list" *ngIf="skuInfo && question.review_summary_img; else noData" imgGallery>
+                        <li *ngFor="let item of question.review_summary_img">
+                            <img [src]="imgOrigin + item" alt="" />
+                        </li>
+                    </ul>
+                </ion-item>
+
+                <ion-item class="ion-activated w100">
+                    <ion-icon name="videocam" slot="start"></ion-icon>
+                    <ul class="vdo-list" *ngIf="skuInfo && question.review_summary_video; else noData">
+                        <li *ngFor="let item of question.review_summary_video" (click)="play(item)">
+                            <video [src]="imgOrigin + item" poster=""></video>
+                        </li>
+                    </ul>
+                </ion-item>
+            </div>
+        </ion-item>
+    </ion-list>
+
+    <ion-list class="w100">
+        <ion-item class="w100">
+            <ion-button expand="block" class="w100" (click)="submit()">提交</ion-button>
+        </ion-item>
+    </ion-list>
+</ion-content>
+
+<ng-template #noData>暂无</ng-template>

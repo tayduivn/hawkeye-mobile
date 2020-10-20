@@ -129,6 +129,8 @@
                             >
                         </div>
                         <app-photograph
+                            [disabled]="sItem.is_appraise"
+                            errorInfo="已评价不能上传图片！"
                             moduleType="removeContractPic"
                             [photos]="sItem.implement_photo"
                             [contract_no]="item.contract_no"
@@ -136,6 +138,7 @@
                             [sku]="sItem.sku"
                             type="contract_sku_pic"
                         ></app-photograph>
+
                         <app-item-by-item-desc
                             class="wd-100"
                             description="备注"

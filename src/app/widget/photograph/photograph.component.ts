@@ -9,7 +9,7 @@ import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { ImagePicker, ImagePickerOptions } from '@ionic-native/image-picker/ngx';
 import { ActionSheetOptions } from '@ionic/core';
 import ImageCompressor from 'image-compressor.js';
-import { from, Observable, zip, combineLatest } from 'rxjs';
+import { from, Observable, zip } from 'rxjs';
 import { mergeMap, takeWhile, tap, filter } from 'rxjs/operators';
 import { File as androidFile } from '@ionic-native/file/ngx';
 import { UploadQueueService, HashCode } from 'src/app/pages/implement-inspection/upload-queue.service';
@@ -28,6 +28,8 @@ export class PhotographComponent implements OnInit {
     @Input() box_type?: 'outer' | 'inner'; //内外箱区分
     @Input() moduleType: 'removeFactoryPic' | 'removeContractPic' | 'removeSkuPic'; //删除用到参数 区分工厂/合同/sku
     @Input() sort_index?: number; //验货要求用到的图片index
+    @Input() disabled: boolean = false;
+    @Input() errorInfo: string;
     @Input() set photos(input: string[]) {
         if (!input) {
             input = [];
@@ -86,6 +88,7 @@ export class PhotographComponent implements OnInit {
             .pipe(
                 filter(
                     node =>
+                        node.type === 'img' &&
                         node.payload.sku === this.sku &&
                         node.payload.type === this.type &&
                         node.payload.contract_no === this.contract_no &&
@@ -128,6 +131,14 @@ export class PhotographComponent implements OnInit {
      * 调起选择框
      */
     photograph() {
+        if (this.disabled) {
+            this.ec.showToast({
+                message: this.errorInfo ? this.errorInfo : '未知原因造成不能上传',
+                color: 'danger',
+            });
+            return;
+        }
+
         const option: ActionSheetOptions = {
             header: '上传方式',
             buttons: [
@@ -225,45 +236,10 @@ export class PhotographComponent implements OnInit {
                 sort_index: this.sort_index,
             };
             this.imagePicker.getPictures(this.pickerOpts).then(arr => {
-                // console.log('------- 本机文件选择完毕 -------');
-                // console.log(arr);
-                // return
-
                 let getImages$ = from(arr as Array<string>);
-
-                // getImages$
-                //     .pipe(
-                //         mergeMap(elem =>
-                //             this.file.readAsDataURL(
-                //                 //读取图片本机地址为base64
-                //                 elem.substr(0, elem.lastIndexOf('/') + 1),
-                //                 elem.substr(elem.lastIndexOf('/') + 1),
-                //             ),
-                //         ),
-                //         //本地展示 TODO
-                //         // tap(base64 => this._photos.push(base64)),
-                //         mergeMap(base64 => this.doWorkerGetBlob(base64)),
-                //     )
-                //     .subscribe(res => {
-                //         console.log('---------- 选择完毕 ---------');
-                //         params.path = '222222';
-                //         params.hash = HashCode(params.type + params.sku + params.is_inner_box + '22222');
-                //         // console.log('111', params);
-                //         // return;
-                //         this.uQueue.add({
-                //             type: 'img',
-                //             size: res.data.size,
-                //             blob: res.data,
-                //             payload: params,
-                //             hash: HashCode(params.type + params.sku + params.is_inner_box + params.path),
-                //         });
-                //     })
-
-                // return
                 zip(
                     getImages$,
                     getImages$.pipe(
-                        // mergeMap(elem => from(elem)),
                         mergeMap(elem =>
                             this.file.readAsDataURL(
                                 //读取图片本机地址为base64
@@ -272,7 +248,6 @@ export class PhotographComponent implements OnInit {
                             ),
                         ),
                         //本地展示 TODO
-                        // tap(base64 => this._photos.push(base64)),
                         mergeMap(base64 => this.doWorkerGetBlob(base64)),
                     ),
                 ).subscribe(([elem, { data }]) => {
@@ -346,23 +321,12 @@ export class PhotographComponent implements OnInit {
     }
 
     remove(i: number) {
-        // if (this.rmClicked.find(item => item === i)) {
-        //     console.log('------ 稍安勿躁 ------');
-        //     return;
-        // }
-        // this.rmClicked.push(i);
-
         this.ec.showAlert({
             message: '确定要删除吗？',
             buttons: [
                 {
                     text: '取消',
-                    handler: () => {
-                        // this.rmClicked.splice(
-                        //     this.rmClicked.findIndex(item => item === i),
-                        //     1,
-                        // );
-                    },
+                    handler: () => {},
                 },
                 {
                     text: '确定',
@@ -400,10 +364,6 @@ export class PhotographComponent implements OnInit {
                                             message: '删除失败！',
                                             color: 'danger',
                                         });
-                                        // this.rmClicked.splice(
-                                        //     this.rmClicked.findIndex(item => item === i),
-                                        //     1,
-                                        // );
                                     }
                                 });
                             });
@@ -468,9 +428,6 @@ export class PhotographComponent implements OnInit {
         let imgCaches$: Observable<ImageOther> = from(this._caches);
         if (!this._caches || !this._caches.length) return;
 
-        // imgCaches$.subscribe((res) => {      //TODO web端测试用
-        //     this._photos.push(res.path);
-        // });
         imgCaches$
             .pipe(
                 takeWhile(res => this.platform.is('hybrid') && this._photos.indexOf(res.path) == -1),

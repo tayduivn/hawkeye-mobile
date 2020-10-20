@@ -1,5 +1,7 @@
 <div class="detail">
-    {{ _data.review_summary_desc }}
+    <div *ngFor="let item of _data.review_summary_desc">
+        <p [style]="{'color': item.color}">{{ item.text }}</p>
+    </div>
 </div>
 
 <ul class="videos">

@@ -4,34 +4,37 @@
     </div>
     <ion-item *ngFor="let item of _customTestArray; let i = index">
         <div class="w100" fxLayout="row" fxLayoutAlign="space-between center">
-            <div>
+            <div class="w-60"><!-- [class]="i === _customTestArray.length - 1 ? 'w-60' : 'w100'" -->
                 <div>
-                    <input [(ngModel)]="item.chinese_name" placeholder="请填写测试字段名" class="w50 text-l" />
-                </div>
+                    <span class="preview mr-20">{{ item.name }}</span>
+                    <input (blur)="onValueChange.emit(_customTestArray)" [(ngModel)]="item.name" placeholder="请填写或编辑测试字段名" class="text-l" />
+                </div>  
                 <app-photograph
-                    [type]="'other_test_' + i"
+                    [type]="'custom_test'"
                     moduleType="removeSkuPic"
-                    [photos]="item.photos"
+                    [photos]="item.pic"
                     [contract_no]="contract_no"
                     [apply_inspection_no]="apply_inspection_no"
                     [sku]="sku"
                     [box_type]="box_type"
+                    [sort_index]="i"
                 ></app-photograph>
                 <app-videotape
-                    [type]="'other_test_' + i"
+                    [type]="'custom_test'"
                     [videos]="item.videos"
                     [contract_no]="contract_no"
                     [apply_inspection_no]="apply_inspection_no"
-                    [sku]="sku" vvz2z
+                    [sku]="sku" 
                     [box_type]="box_type"
+                    [sort_index]="i"
                 ></app-videotape>
                 <div class="test-feedback">
                     <div>
                         <div>
                          <app-item-by-item-desc
                                 description="备注"
-                                [ary]="item.ary"
-                                (onComplete)="descEnter($event, 'other_test_' + i, box_type)"
+                                [ary]="item.desc"
+                                (onComplete)="descEnter($event, i, box_type)"
                             >
                         </app-item-by-item-desc>
                         </div>
@@ -40,8 +43,11 @@
             </div>
 
             <div>
-                <ion-button size="small" *ngIf="i === _customTestArray.length - 1" (click)="addCustomTest()">添加</ion-button>
+                <ion-button size="small" [hidden]="i !== _customTestArray.length - 1" (click)="addCustomTest()">添加</ion-button>
             </div>
+
+            
+            <ion-button (click)="delete(i)" color='danger' size="small" [hidden]="_customTestArray.length === 1">删除</ion-button>
         </div>
     </ion-item>
 </ion-list>

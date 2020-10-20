@@ -167,6 +167,13 @@ export class InspectPoComponent implements OnInit {
     }
 
     toInspectSku(p: any, sku: any, type?: 'go' | 'save') {
+        if(sku.is_appraise){
+            this.es.showToast({
+                message: '已评价不能验货！',
+                color:'danger'
+            })
+            return
+        }
         this.currentSku = this.currentApplyInsData.data.find(res => res.sku === sku.sku);
 
         if (this.verifyIpt(p, sku)) {

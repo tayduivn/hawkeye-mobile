@@ -11,7 +11,12 @@
     <ion-card>
         <ion-item class="ion-activated" >
             <ion-icon name="text" slot="start"></ion-icon>
-            <ion-text *ngIf="data && data.desc; else noData">{{ data.desc }}</ion-text>
+            <!-- <textarea readonly *ngIf="data && data.desc; else noData">{{ data.desc }}</textarea> -->
+            <ul>
+                <li *ngFor="let item of data.desc;let i = index" [ngStyle]="{'color': item.color?item.color:'#000'}">
+                    {{i + 1 + '.    ' + item.text}}
+                </li>
+            </ul>
         </ion-item>
 
         <ion-item class="ion-activated">
@@ -27,7 +32,7 @@
             <ion-icon name="videocam" slot="start"></ion-icon>
             <ul class="vdo-list"*ngIf="data && data.review_summary_video; else noData">
                 <li *ngFor="let item of data.review_summary_video" (click)="play(item)">
-                    <video [src]="imgOrigin + item"></video>
+                    <video [src]="imgOrigin + item" poster=""></video>
                 </li>
             </ul>
         </ion-item>

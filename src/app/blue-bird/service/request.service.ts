@@ -15,6 +15,7 @@ export class RequestService {
     constructor(private userInfo: UserInfoService) {}
 
     request({ url, method = 'post', data, headers, onProgress = e => e, requestList = [] }): Promise<any> {
+        //console.log('-------    请求    -------')
         return new Promise(resolve => {
             headers.Authorization = this.userInfo.info ? `Bearer ${this.userInfo.info.api_token}` : undefined;
             const xhr: XMLHttpRequest = new XMLHttpRequest();

@@ -1,13 +1,18 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FieldType } from 'src/app/widget/videotape/videotape.component';
 import { PageEffectService } from 'src/app/services/page-effect.service';
+import { Description } from 'src/app/widget/item-by-item-desc/item-by-item-desc.component';
+import {
+    ImplementInspectService,
+    DelInspectFiledParams,
+} from 'src/app/services/implement-inspect.service';
 
 export interface CustomTest {
-    photos: Array<string>;
+    pic: Array<string>;
     videos: Array<string>;
-    ary: Array<string>;
+    desc: Array<Description>;
     fieldType?: string;
-    chinese_name: string;
+    name: string;
 }
 
 @Component({
@@ -20,14 +25,12 @@ export class InspectCustomTestComponent implements OnInit {
         if (!!input) {
             this._customTestArray = input;
         } else {
-            debugger;
             this._customTestArray = [
                 {
-                    photos: [],
+                    pic: [],
                     videos: [],
-                    ary: [],
-                    fieldType: 'custom_test_1',
-                    chinese_name: '',
+                    desc: [],
+                    name: '',
                 },
             ];
         }
@@ -41,16 +44,17 @@ export class InspectCustomTestComponent implements OnInit {
 
     @Input() box_type: string = '';
 
+    @Output() onValueChange: EventEmitter<Array<CustomTest>> = new EventEmitter();
+
     _customTestArray: Array<CustomTest> = [
         {
-            chinese_name: '',
-            photos: [],
+            name: '',
+            pic: [],
             videos: [],
-            ary: [],
-            fieldType: 'custom_test_0',
+            desc: [],
         },
     ];
-    constructor(private es: PageEffectService) {}
+    constructor(private es: PageEffectService, private implement: ImplementInspectService) {}
 
     get last() {
         return this._customTestArray[this._customTestArray.length - 1];
@@ -58,37 +62,56 @@ export class InspectCustomTestComponent implements OnInit {
 
     ngOnInit() {}
 
-    descEnter(e: any, f: FieldType, b: 'inner' | 'outer') {
-        
+    descEnter(e: any, i: number, b: 'inner' | 'outer') {
+        this._customTestArray.find((item, index) => index == i).desc = e;
+        this.onValueChange.emit(this._customTestArray);
     }
 
     addCustomTest() {
-        if (!this.last.chinese_name) {
+        if (!this.last.name) {
             this.es.showToast({
                 message: '请填写完测试名在添加！',
                 color: 'danger',
             });
             return;
-        } 
-        // else if (
-        //     (this.last.ary && !this.last.ary.length) ||
-        //     (this.last.ary && !this.last.photos.length) ||
-        //     (this.last.ary && !this.last.videos.length)
-        // ) {
-        //     this.es.showToast({
-        //         message: '请完善其图片,视频,备注任意一项再添加！',
-        //         color: 'danger',
-        //     });
-        //     return;
-        // }
+        }
 
         this._customTestArray.push({
-            chinese_name: '',
-            photos: [],
+            name: '',
+            pic: [],
             videos: [],
-            ary: [],
-            fieldType: `custom_test_${this._customTestArray.length}`
+            desc: [],
         });
         console.log(this._customTestArray);
+    }
+
+    delete(i: number) {
+        this.es.showAlert({
+            message: '确定要删除吗？',
+            buttons: [
+                {
+                    text: '取消',
+                },
+                {
+                    text: '确定',
+                    handler: () => {
+                        let params: DelInspectFiledParams = {
+                            index: i,
+                            apply_inspection_no: this.apply_inspection_no,
+                            contract_no: this.contract_no,
+                            sku: this.sku,
+                            type:'custom_test'
+                        };
+                        this.implement.deleteInspectFiled(params).subscribe(res => {
+                            this.es.showToast({
+                                message: res.message,
+                                color: res.status ? 'success' : 'danger',
+                            });
+                            res.status && this._customTestArray.splice(i, 1);
+                        });
+                    },
+                },
+            ],
+        });
     }
 }

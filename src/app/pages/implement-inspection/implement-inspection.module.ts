@@ -20,6 +20,7 @@ import { SkuGuard } from './sku.guard';
 import { InspectTabBarComponent } from 'src/app/inspect-tab-bar/inspect-tab-bar.component';
 import { InspectPartsComponent } from './inspect-parts/inspect-parts.component';
 import { InspectCustomTestComponent } from './inspect-custom-test/inspect-custom-test.component';
+import { InspectCheckComponent } from './inspect-check/inspect-check.component';
 
 const routes: Routes = [
     {
@@ -46,6 +47,10 @@ const routes: Routes = [
     {
         path: 'inspect-parts',
         component: InspectPartsComponent
+    },
+    {
+        path: 'inspect-check',
+        component: InspectCheckComponent
     }
 ];
 
@@ -72,7 +77,8 @@ const routes: Routes = [
         ExamineDetailComponent,
         InspectTabBarComponent,
         InspectPartsComponent,
-        InspectCustomTestComponent
+        InspectCustomTestComponent,
+        InspectCheckComponent
     ],
     providers: [Camera],
 })

@@ -19,7 +19,7 @@ export interface VideoOther {
     apply_inspection_no: string;
     contract_no: string;
     sku: string;
-    box_type: 'outer' | 'inner';
+    box_type?: 'outer' | 'inner';
     sort_index?: number;
     path? : string; //缓存本机资源地址
     hash?: number //唯一性

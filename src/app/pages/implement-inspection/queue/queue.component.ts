@@ -88,6 +88,20 @@ export class QueueComponent implements OnInit {
 
     segmentChanged(e: Event): void {}
 
+    cancel(){
+        this.es.showAlert({
+            message:'确定要取消吗？',
+            buttons:[{
+                text:'取消',
+            },{
+                text:'确定',
+                handler:() => {
+                    this.uQueue.cancel()
+                }
+            }]
+        })
+    }
+
     ngDestroy() {
         this.destroy = true;
         this.statusSub.unsubscribe();

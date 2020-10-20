@@ -12,6 +12,7 @@ import { QueueComponent } from '../queue/queue.component';
 import { UploadQueueService } from '../upload-queue.service';
 import { debounceTime } from 'rxjs/operators';
 import { InspectCacheService } from '../inspect-cache.service';
+import { CustomTest } from '../inspect-custom-test/inspect-custom-test.component';
 
 export interface SkuUploadData {
     spotCheckNum?: number; // 抽检数量
@@ -89,6 +90,13 @@ export type ExamineStatus = 'passed' | 'notPass' | 'undetermined' | 'accord' | '
 
 export type SpeedStatus = 'high' | 'low';
 
+export interface InspectSize {
+    size_width: number;
+    size_height: number;
+    size_length: number;
+    pic: Array<string>;
+}
+
 @Component({
     selector: 'app-inspect-sku',
     templateUrl: './inspect-sku.component.html',
@@ -117,6 +125,7 @@ export class InspectSkuComponent implements OnInit {
     showProgress: boolean = false;
 
     customTestArray: Array<any> = [];
+    customOuterSize: Array<InspectSize> = [];
     constructor(
         private es: PageEffectService,
         private fb: FormBuilder,
@@ -147,6 +156,7 @@ export class InspectSkuComponent implements OnInit {
         });
         let sizeModel = null;
         if (this.data.rate_container == 1) {
+            //如果是单箱率,内箱变为外箱
             sizeModel = this.fb.group({
                 length: this.fb.group({
                     text: this.fb.control(''),
@@ -253,11 +263,11 @@ export class InspectSkuComponent implements OnInit {
                     desc: this.fb.array([]),
                     photos: this.fb.array([]),
                 }),
-                appearance: this.fb.group({
-                    desc: this.fb.array([]),
-                    photos: this.fb.array([]),
-                    videos: this.fb.array([]),
-                }),
+                // appearance: this.fb.group({
+                //     desc: this.fb.array([]),
+                //     photos: this.fb.array([]),
+                //     videos: this.fb.array([]),
+                // }),
                 function: this.fb.group({
                     desc: this.fb.array([]),
                     videos: this.fb.array([]),
@@ -268,11 +278,11 @@ export class InspectSkuComponent implements OnInit {
                     photos: this.fb.array([]),
                     videos: this.fb.array([]),
                 }),
-                waterContent: this.fb.group({
-                    desc: this.fb.array([]),
-                    photos: this.fb.array([]),
-                    videos: this.fb.array([]),
-                }),
+                // waterContent: this.fb.group({
+                //     desc: this.fb.array([]),
+                //     photos: this.fb.array([]),
+                //     videos: this.fb.array([]),
+                // }),
                 sumUp: this.fb.group({
                     textOne: this.fb.control(''),
                     textTwo: this.fb.control(''),
@@ -282,7 +292,7 @@ export class InspectSkuComponent implements OnInit {
                     prodInfo: this.fb.control('undetermined'),
                     qualityTechnology: this.fb.control('undetermined'),
                     fieldTest: this.fb.control('undetermined'),
-                    // videos: this.fb.array([])
+                    videos: this.fb.array([]),
                 }),
                 desc: this.fb.group({
                     desc: this.fb.array([]),
@@ -405,6 +415,7 @@ export class InspectSkuComponent implements OnInit {
     }
     innerCode = null;
     outerCode = null;
+
     /**
      * app-item-by-item-desc callback
      * @param e     description array
@@ -447,7 +458,6 @@ export class InspectSkuComponent implements OnInit {
     save(): Observable<any> {
         const saved = new Observable(observer => {
             //条码逻辑
-
             this.SkuInspectModel.value.inner_box_data.barCode.isTrue =
                 this.SkuInspectModel.value.inner_box_data.barCode.text ===
                 (this.barCode && this.barCode.length ? '1' : '0');
@@ -456,9 +466,22 @@ export class InspectSkuComponent implements OnInit {
                 (this.outerBarCode && this.outerBarCode.length ? '1' : '0');
 
             let postData = JSON.parse(JSON.stringify(this.SkuInspectModel.value));
+
+            //自定义外箱额外尺寸     //考虑单箱率时内箱就是外箱
+            if (this.data.rate_container > 1) {
+                postData.outer_box_data &&
+                    (postData.outer_box_data.size_other = JSON.parse(JSON.stringify(this.customOuterSize)));
+            } else {
+                postData.inner_box_data &&
+                    (postData.inner_box_data.size_other = JSON.parse(JSON.stringify(this.customOuterSize)));
+            }
             this.rateStatus == 'inner' ? delete postData.outer_box_data : delete postData.inner_box_data;
+            //内箱自定义尺寸
             postData.inner_box_data &&
-                (postData.inner_box_data.productSize = JSON.parse(JSON.stringify(this.productSize)));
+                (postData.inner_box_data.productSize = this.productSize?JSON.parse(JSON.stringify(this.productSize)):[]);
+            //内向自定义测试字段
+            postData.inner_box_data &&
+                (postData.inner_box_data.custom_test = this.customTestArray?JSON.parse(JSON.stringify(this.customTestArray)):[]);
             postData.inner_box_data && this.data.rate_container != 1 && (postData.inner_box_data.size = this.size);
 
             //此处将深拷贝的元数据的photos置空 ，影响速度
@@ -582,9 +605,11 @@ export class InspectSkuComponent implements OnInit {
      * @param sItem     size
      */
     dynamicBuildFC(ary: string[], boxType: string, item: string, type: string, sItem?: string) {
-        if (item != 'spotCheckNum' && item != 'poNo' && item != 'poNoRes') {
-            let box: FormGroup = this.SkuInspectModel.get(boxType) as FormGroup,
-                formAry: FormArray = (box.get(item) as FormGroup).get(type) as FormArray;
+        if (item !== 'spotCheckNum' && item !== 'poNo' && item !== 'poNoRes' && item !== 'inspection_require' && item !== 'custom_test') {
+          
+            let box: FormGroup = this.SkuInspectModel.get(boxType) as FormGroup;
+            if(!box.get(item)) console.log(ary,boxType,item,type,sItem);        //打印出错
+            let formAry: FormArray = (box.get(item) as FormGroup).get(type) as FormArray;
             //先清空
             if (item != 'size' || (item == 'size' && type == 'desc')) {
                 formAry && formAry.clear();
@@ -597,6 +622,27 @@ export class InspectSkuComponent implements OnInit {
                 formAry && formAry.push(new FormControl(''));
                 box = null;
             });
+        }
+        return
+        try {
+            if (item != 'spotCheckNum' && item != 'poNo' && item != 'poNoRes') {
+                let box: FormGroup = this.SkuInspectModel.get(boxType) as FormGroup,
+                    formAry: FormArray = (box.get(item) as FormGroup).get(type) as FormArray;
+                //先清空
+                if (item != 'size' || (item == 'size' && type == 'desc')) {
+                    formAry && formAry.clear();
+                } else {
+                    formAry = formAry.get(sItem) as FormArray;
+                    formAry && formAry.clear();
+                }
+                if (!ary || !(ary instanceof Array)) return;
+                ary.forEach(res => {
+                    formAry && formAry.push(new FormControl(''));
+                    box = null;
+                });
+            }
+        } catch (e) {
+            console.log(e);
         }
     }
 
@@ -626,9 +672,28 @@ export class InspectSkuComponent implements OnInit {
                 this.inspectionRequire = res[this.rateStatus + '_box_data']
                     ? res[this.rateStatus + '_box_data'].inspection_require
                     : {};
+                //外箱尺寸逻辑（单箱率时 内箱为外箱）
+                if (this.data.rate_container > 1) {
+                    this.rateStatus === 'outer' &&
+                        (this.customOuterSize =
+                            res.outer_box_data.size_other && res.outer_box_data.size_other.length
+                                ? res.outer_box_data.size_other
+                                : []);
+                } else {
+                    this.customOuterSize =
+                        res.inner_box_data.size_other && res.inner_box_data.size_other.length
+                            ? res.inner_box_data.size_other
+                            : [];
+                }
+
                 for (let key in box) {
                     let element = box[key];
-                    if (box.hasOwnProperty(key) && key != 'inspection_require' && key != 'size') {
+                    if (
+                        box.hasOwnProperty(key) &&
+                        key != 'inspection_require' &&
+                        key != 'size' &&
+                        key != 'size_other'
+                    ) {
                         if (!!element) {
                             this.dynamicBuildFC(element.desc, this.rateStatus + '_box_data', key, 'desc');
                             this.dynamicBuildFC(element.videos, this.rateStatus + '_box_data', key, 'videos');
@@ -839,9 +904,14 @@ export class InspectSkuComponent implements OnInit {
                 this.inspectionRequire = res[this.rateStatus + '_box_data']
                     ? res[this.rateStatus + '_box_data'].inspection_require
                     : {};
+                this.rateStatus === 'inner' &&
+                    (this.customTestArray =
+                        res.inner_box_data.custom_test && res.inner_box_data.custom_test.length
+                            ? res.inner_box_data.custom_test
+                            : undefined);
                 for (const key in box) {
                     const element = box[key];
-                    if (box.hasOwnProperty(key) && key != 'inspection_require') {
+                    if ((box.hasOwnProperty(key) && key !== 'inspection_require') || key !== 'custom_test') {
                         if (!!element && key != 'productSize') {
                             this.dynamicBuildFC(element.desc, this.rateStatus + '_box_data', key, 'desc');
                             this.dynamicBuildFC(element.videos, this.rateStatus + '_box_data', key, 'videos');
@@ -877,6 +947,7 @@ export class InspectSkuComponent implements OnInit {
                         }
                     }
                 }
+
                 if (this.rateStatus == 'inner') {
                     this.SkuInspectModel.patchValue({
                         spotCheckNum: res.inner_box_data.spotCheckNum,
@@ -965,16 +1036,16 @@ export class InspectSkuComponent implements OnInit {
                                 desc: res.inner_box_data.netWeight.desc ? res.inner_box_data.netWeight.desc : [],
                                 photos: res.inner_box_data.netWeight.photos ? res.inner_box_data.netWeight.photos : [],
                             },
-                            appearance: {
-                                //外观检测
-                                desc: res.inner_box_data.appearance.desc ? res.inner_box_data.appearance.desc : [],
-                                photos: res.inner_box_data.appearance.photos
-                                    ? res.inner_box_data.appearance.photos
-                                    : [],
-                                videos: res.inner_box_data.appearance.videos
-                                    ? res.inner_box_data.appearance.videos
-                                    : [],
-                            },
+                            // appearance: {
+                            //     //外观检测
+                            //     desc: res.inner_box_data.appearance.desc ? res.inner_box_data.appearance.desc : [],
+                            //     photos: res.inner_box_data.appearance.photos
+                            //         ? res.inner_box_data.appearance.photos
+                            //         : [],
+                            //     videos: res.inner_box_data.appearance.videos
+                            //         ? res.inner_box_data.appearance.videos
+                            //         : [],
+                            // },
                             function: {
                                 //功能检测
                                 desc: res.inner_box_data.function.desc ? res.inner_box_data.function.desc : [],
@@ -987,16 +1058,20 @@ export class InspectSkuComponent implements OnInit {
                                 photos: res.inner_box_data.bearing.photos ? res.inner_box_data.bearing.photos : [],
                                 videos: res.inner_box_data.bearing.videos ? res.inner_box_data.bearing.videos : [],
                             },
-                            waterContent: {
-                                //含水量检测
-                                desc: res.inner_box_data.waterContent.desc ? res.inner_box_data.waterContent.desc : [],
-                                photos: res.inner_box_data.waterContent.photos
-                                    ? res.inner_box_data.waterContent.photos
-                                    : [],
-                                videos: res.inner_box_data.waterContent.videos
-                                    ? res.inner_box_data.waterContent.videos
-                                    : [],
-                            },
+                            // waterContent: {
+                            //     //含水量检测
+                            //     desc: res.inner_box_data.waterContent.desc ? res.inner_box_data.waterContent.desc : [],
+                            //     photos: res.inner_box_data.waterContent.photos
+                            //         ? res.inner_box_data.waterContent.photos
+                            //         : [],
+                            //     videos: res.inner_box_data.waterContent.videos
+                            //         ? res.inner_box_data.waterContent.videos
+                            //         : [],
+                            // },
+                            // custom_test:
+                            //     res.inner_box_data.custom_test && res.inner_box_data.custom_test.length
+                            //         ? res.inner_box_data.custom_test
+                            //         : null,
                             sumUp: {
                                 //总结
                                 textOne: res.inner_box_data.sumUp.textOne,
@@ -1019,9 +1094,7 @@ export class InspectSkuComponent implements OnInit {
                                 fieldTest: res.inner_box_data.sumUp.fieldTest
                                     ? res.inner_box_data.sumUp.fieldTest
                                     : 'undetermined',
-                                // videos: res.inner_box_data.sumUp.videos
-                                //     ? res.inner_box_data.sumUp.videos
-                                //     : []
+                                videos: res.inner_box_data.sumUp.videos ? res.inner_box_data.sumUp.videos : [],
                             },
                             desc: {
                                 //整体描述
@@ -1053,7 +1126,7 @@ export class InspectSkuComponent implements OnInit {
                                     : 'none',
                             },
                             layout: {
-                                //摆放图
+                                //摆放图 
                                 photos: res.outer_box_data.layout.photos ? res.outer_box_data.layout.photos : [],
                                 desc: res.outer_box_data.layout.desc ? res.outer_box_data.layout.desc : [],
                             },
@@ -1063,8 +1136,6 @@ export class InspectSkuComponent implements OnInit {
             });
     }
 
-    addCustomTest() {}
-
     productSizeChange(e: any[]) {
         this.productSize = e;
     }
@@ -1073,7 +1144,21 @@ export class InspectSkuComponent implements OnInit {
         this.size = e;
     }
 
+    outerSizeChange(e: any[]) {
+        console.log(e);
+        this.customOuterSize = e;
+    }
+
     ionViewDidLeave() {
         // document.getElementsByTagName('html')[0].setAttribute('style','-webkit-filter: 0;')
+    }
+
+    customTestChange(e: Array<CustomTest>) {
+        console.log(e);
+        this.customTestArray = e;
+    }
+
+    upload(){
+        
     }
 }

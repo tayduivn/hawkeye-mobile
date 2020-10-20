@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { InspectionService } from 'src/app/services/inspection.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { PageEffectService } from 'src/app/services/page-effect.service';
+import { ReworkService } from './rework.service';
 
 @Component({
     selector: 'app-rework-inspect',
@@ -13,7 +14,6 @@ export class ReworkInspectPage implements OnInit {
     getListParams: any = {
         keywords: 'factory_name',
         value: '',
-        page: 1,
     };
     metaInspectTask: any[] = [];
     task: any[] = [];
@@ -22,20 +22,28 @@ export class ReworkInspectPage implements OnInit {
       private router: Router,
       private inspectService: InspectionService,
       private storage: StorageService,
-      private effectCtrl: PageEffectService
+      private effectCtrl: PageEffectService,
+      private reworkCtrl: ReworkService
     ) {}
 
     ngOnInit() {}
 
     ionViewWillEnter() {
         this.getListParams.page = 1;
-        this.inspectService.getReworkInspectList(this.getListParams).subscribe(res => {
-            this.metaInspectTask = res.data;
-            this.inspectTask = JSON.parse(JSON.stringify(res.data));
-            this.task = res;
-            this.getListParams.page = res.current_page + 1;
-            this.storage.set('IMPLEMENT-INSPECTION-META-DATA', this.inspectTask);
-        });
+        // this.inspectService.getReworkInspectList(this.getListParams).subscribe(res => {
+        //     this.metaInspectTask = res.data;
+        //     this.inspectTask = JSON.parse(JSON.stringify(res.data));
+        //     this.task = res;
+        //     this.getListParams.page = res.current_page + 1;
+        //     this.storage.set('IMPLEMENT-INSPECTION-META-DATA', this.inspectTask);
+        // });
+
+        this.reworkCtrl.getReworkFactoryList()
+            .subscribe(res => {
+                this.metaInspectTask = res.data
+                this.inspectTask = JSON.parse(JSON.stringify(res.data));
+                console.log(res)
+            })
     }
 
     factoryChange() { 

@@ -123,4 +123,19 @@ export class ImplementInspectService {
             params: params,
         });
     }
+
+    deleteInspectFiled(params: DelInspectFiledParams) {
+        return this.http.post({
+            url: '/task/del_custom_test_data',
+            params: params,
+        });
+    }
+}
+
+export interface DelInspectFiledParams{
+    index: number;
+    apply_inspection_no: string;
+    contract_no: string;
+    sku: string;
+    type: 'custom_test' | 'size_other'
 }

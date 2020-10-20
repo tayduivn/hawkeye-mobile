@@ -19,25 +19,42 @@ export class FeedbackComponent implements OnInit {
     @Input() contract_no: string;
 
     data: {
-      desc: string;
-      review_summary_img: string;
-      review_summary_video: string;
+        desc: any;
+        review_summary_img: string;
+        review_summary_video: string;
     } = {
-      desc: '',
-      review_summary_img: '',
-      review_summary_video: ''
-    }
-    constructor(private modal: ModalController, private es: PageEffectService, private inspectCtrl: InspectionService) {}
+        desc: '',
+        review_summary_img: '',
+        review_summary_video: '',
+    };
+    constructor(
+        private modal: ModalController,
+        private es: PageEffectService,
+        private inspectCtrl: InspectionService,
+    ) {}
 
     ngOnInit() {
-        this.inspectCtrl.getReworkTaskContent({
-            apply_inspection_no: this.apply_inspection_no,
-            sku: this.sku,
-            contract_no: this.contract_no,
-        }).subscribe(res => {
-          console.log(res)
-          this.data = res.data
-        })
+        this.inspectCtrl
+            .getReworkTaskContent({
+                apply_inspection_no: this.apply_inspection_no,
+                sku: this.sku,
+                contract_no: this.contract_no,
+            })
+            .subscribe(res => {
+                console.log(res);
+                this.data = res.data;
+                if (typeof this.data.desc == 'string') {
+                    this.data.desc = [{ text: this.data.desc, color: 'rgb(0, 0, 0)' }];
+                } else {
+                    if (this.data.desc && this.data.desc.length) {
+                        if (!this.data.desc.length) {
+                            this.data.desc = [{ text: '', color: 'rgb(0, 0, 0)' }];
+                        }
+                    } else {
+                        this.data.desc = [{ text: '', color: 'rgb(0, 0, 0)' }];
+                    }
+                }
+            });
     }
 
     close() {
@@ -45,9 +62,9 @@ export class FeedbackComponent implements OnInit {
     }
 
     play(p: string) {
-      this.es.showModal({
-          component: VideoPlayComponent,
-          componentProps: { source: p },
-      });
-  }
+        this.es.showModal({
+            component: VideoPlayComponent,
+            componentProps: { source: p },
+        });
+    }
 }

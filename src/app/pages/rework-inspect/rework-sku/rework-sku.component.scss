@@ -1,0 +1,122 @@
+ion-content {
+    --background: #f2f2f2;
+    --padding-top: 15px;
+    --padding-bottom: 15px;
+    --padding-start: 10px;
+    --padding-end: 10px;
+    .out-box {
+        padding: 5px;
+    }
+}
+ion-list {
+    margin: 10px 0;
+}
+.other-item ion-item {
+    --inner-padding-start: 0 !important;
+    --padding-start: 0 !important;
+}
+:host ::ng-deep .item-native {
+    --inner-padding-start: 0 !important;
+}
+.out-box {
+    padding: 5px;
+}
+
+.vdo-list {
+    width: 100%;
+    li {
+        float: left;
+        width: 50%;
+        video {
+            width: 100%;
+        }
+    }
+}
+
+.img-list,
+.vdo-list {
+    width: 100%;
+    li {
+        float: left;
+        width: 50%;
+        max-height: 250px;
+        overflow: hidden;
+        padding: 0.5rem;
+        padding-right: 0;
+        img,
+        video {
+            border: 1px solid #ccc;
+            height: 100%;
+            width: 100%;
+        }
+    }
+}
+
+.img-list::after {
+    content: '';
+    display: block;
+    clear: both;
+}
+
+ion-text {
+    color: #505050;
+    font-size: 14px;
+}
+
+ul {
+    padding-bottom: 10px;
+    li {
+        line-height: 18px;
+        font-size: 14px;
+        width: 100%;
+        margin-top: 5px;
+        border: 0;
+    }
+}
+
+ion-item:last-child {
+    --border-width: 0;
+    --inner-border-width: 0;
+}
+
+ion-item:not(:first-child) .global-inspect-title {
+    margin-top: 10px !important;
+}
+
+.global-inspect-title {
+    font-size: 14px;
+    color: #3880fc;
+    font-weight: bold;
+    margin: 5px 0 !important;
+    p {
+        margin: 0;
+    }
+}
+
+.gray-color {
+    color: #a2a2a2;
+}
+
+.w100 {
+    width: 100% !important;
+}
+
+.global-inspect-title + div {
+    margin-top: 10px;
+}
+
+.h-30 {
+    height: 30px;
+}
+
+.bar-code {
+    margin-bottom: 10px;
+    input {
+        outline: none;
+        border: 1px solid #e8e8e8;
+        width: 150px;
+    }
+}
+.mt-10{
+    margin-top: 10px !important;
+}

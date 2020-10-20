@@ -1,10 +1,11 @@
 .global-inspect-title {
     font-size: 14px;
-    color: #3880fc;
+    color: #000;
     font-weight: bold;
     margin: 5px 0 !important;
     padding-left: 15px;
     p {
+        text-decoration: underline;
         margin: 0;
     }
 }
@@ -12,11 +13,31 @@
 input{
     border: 1px solid #e3e3e3;
     height: 30px;
+    width: 50%;
+    outline: 0;
     border-radius: 5px;
     font-size: 14px;
     overflow: hidden;
 }
 
+.w-60{
+    width: 60%;
+}
+
 ion-item{
     margin-top: 10px;
+}
+
+.preview{
+    font-size: 14px;
+    color: #3880fc;
+    font-weight: bold;
+}
+
+.mr-20{
+    margin-right: 20px !important;
+}
+
+.w100{
+    width: 100%;
 }

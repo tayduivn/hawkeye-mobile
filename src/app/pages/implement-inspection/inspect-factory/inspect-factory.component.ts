@@ -31,7 +31,7 @@ export interface Receptionist {
 
 export interface ExamineDetail {
     img_arr: Array<string>;
-    review_summary_desc: string;
+    review_summary_desc: Array<{ text: string; color: string }>;
     video_arr: Array<string>;
 }
 
@@ -82,9 +82,9 @@ export class InspectFactoryComponent implements OnInit {
         factory_contacts: '',
     };
     currentApplyInsData: any;
-    regValid(e: any){
-        if(!/^(?!0+(?:\0+)?$)(?:[1-9]\d*|0)(?:\\d{1,2})?$/.test(e.detail.value)){
-            e.target.value = null
+    regValid(e: any) {
+        if (!/^(?!0+(?:\0+)?$)(?:[1-9]\d*|0)(?:\\d{1,2})?$/.test(e.detail.value)) {
+            e.target.value = null;
         }
     }
 
@@ -154,7 +154,9 @@ export class InspectFactoryComponent implements OnInit {
         (this.factoryModel.get('remarks') as FormArray).push(this.fb.control(''));
         console.log(this.factoryModel.get('remarks'));
     }
+
     alreadyUpProgress: boolean = this.uQueue.alreadyUpProgress;
+    
     showModal() {
         this.ec.showModal({
             component: QueueComponent,

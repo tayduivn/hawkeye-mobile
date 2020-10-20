@@ -23,7 +23,7 @@ export class InspectCacheService {
     //图片/视频路径
     cacheInspectPath(elem: any) {
         //type : ImageOther | UploadParams
-        console.log(elem)
+        //console.log(elem)
         let cache: Array<ImageOther> = JSON.parse(localStorage.getItem('CURRENT_INSPECT_META_DATA_PATH'));
         cache ? cache.push(elem) : (cache = [elem]);
         //增加用户判断 防止添加到别的用户的缓存里。

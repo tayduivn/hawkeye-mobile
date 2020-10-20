@@ -55,6 +55,7 @@ export class AppComponent implements OnInit {
             this.statusBar.styleDefault();
             this.splashScreen.hide();
             //判断版本号与线上版本是否有所差异
+            return
             this.http
                 .get(`${environment.origin}/version/get_latest_version`)
                 .toPromise()

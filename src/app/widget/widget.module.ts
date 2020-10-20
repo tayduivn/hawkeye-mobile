@@ -21,6 +21,7 @@ import { VideoEditor } from '@ionic-native/video-editor/ngx';
 import { ProductSizeComponent } from './product-size/product-size.component';
 import { BlueBirdModule } from '../blue-bird/blue-bird.module';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
+import { CustomOuterSizeComponent } from './custom-outer-size/custom-outer-size.component';
 
 @NgModule({
     declarations: [
@@ -31,6 +32,7 @@ import { LazyLoadImageModule } from 'ng-lazyload-image';
         ItemByItemDescComponent,
         VideoPlayerDirective,
         ProductSizeComponent,
+        CustomOuterSizeComponent
     ],
     imports: [
         CommonModule,
@@ -49,6 +51,7 @@ import { LazyLoadImageModule } from 'ng-lazyload-image';
         VideoPlayerDirective,
         ItemByItemDescComponent,
         ProductSizeComponent,
+        CustomOuterSizeComponent
     ],
     providers: [
         Camera,

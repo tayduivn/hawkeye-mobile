@@ -98,7 +98,7 @@ export class UploadQueueService {
             });
         });
     }
-
+    num: number = 0;
     /**
      * 向已上传队列里增加成员
      * @param ele  成员 - node
@@ -133,7 +133,7 @@ export class UploadQueueService {
         let qNode = this.queue.shift();
         if (!qNode) return;
         let node = {
-            type: qNode.type,
+            type: qNode.type, //mediaType
             size: qNode.size,
             percentage: 100,
             payload: qNode.payload,
@@ -141,7 +141,7 @@ export class UploadQueueService {
         };
         // qNode.payload.type = payload.type;
         this.alreadyUploadQueue.push(node);
-        console.log('------ 回传 -----', node.path);
+        //console.log('------ 回传 -----', node.path);
         !notEmitImg && this.alreadyUploadPayload$.next(node);
         return qNode;
     }
@@ -262,6 +262,7 @@ export class UploadQueueService {
                 formData.append('contract_no', (node as any).contract_no);
                 formData.append('sku', (node as any).sku);
                 formData.append('chunk', (node as any).chunk);
+                formData.append('chunk_total', (node as any).chunk_total);
                 formData.delete('hash');
             }
             // console.log('-----  上传之前FormData  -----');
@@ -300,15 +301,18 @@ export class UploadQueueService {
         }
         //chunkNode 是一个数组（队列里的队列）
         if (chunkNode && chunkNode.length && chunkNode[0].type == 'video') {
+            debugger;
             //先执行一维队列里的二维队列，执行完了在依次向下递归执行
             const next = await this.driveUpload(chunkNode[0]);
-            if (next === true || (next && !JSON.parse(next.data).error)) {
+            if (next.data && JSON.parse(next.data).status == 1) {
                 chunkNode.shift();
                 if (chunkNode.length) {
                     //如果还有切片则上传
                     this.upload();
                     return;
-                } else {
+                }
+                if (JSON.parse(next.data).data && JSON.parse(next.data).data.canMerge === true) {
+                    debugger;
                     //否则 则合并切片
                     const msg = await this.mergeRequest(this.front);
                     //合并完成之后 判断状态 如果成功则删除缓存 在让主队列的front出列
@@ -322,21 +326,29 @@ export class UploadQueueService {
                         } else this.status = false;
                         return;
                     }
+                } else {
+                    this.cancel();
+                    return;
                 }
+            } else {
+                this.cancel();
+                alert('上传出错，请重新上传');
             }
         }
 
+        console.log('视频上传不应该执行到这里  ');
         const next = await this.driveUpload(chunkNode[0]);
 
-        if (next === true || (next && next.data && !JSON.parse(next.data).error)) {
+        //如果next为 则直接跳过 上传下一个
+        if (next === true || (next && next.data && !JSON.parse(next.data).error) || next === 1) {
             try {
-                console.log('------ 返回值 -------', JSON.parse(next.data));
+                //console.log('------ 返回值 -------', JSON.parse(next.data));
                 this.cache.removeCache(this.front.payload);
                 //!Important  此处判断因为后台去重后返回的值status 为 already时 不pop队列 不删除缓存 继续往下执行方法
                 //再出队列 将已经上传的node的线上url发布出去 等待photograph component订阅
                 this.pop(JSON.parse(next.data).data[0], JSON.parse(next.data).status === 'already');
             } catch (e) {
-                console.log(this.front);
+                //console.log(this.front);
             }
             if (this.size && this.front) {
                 this.upload();
@@ -353,6 +365,7 @@ export class UploadQueueService {
 
     // 用闭包保存每个 chunk 的进度数据
     createProgressHandler(item: QueueNode<any>) {
+        if (!item) return;
         try {
             return (e: { loaded: number; total: number }) => {
                 if (item.type == 'img') {
@@ -385,6 +398,7 @@ export class UploadQueueService {
                     apply_inspection_no: ele.payload.apply_inspection_no,
                     contract_no: ele.payload.contract_no,
                     sku: ele.payload.sku,
+                    chunk_total: fileChunkList.length,
                     percentage: uploadedList.includes(index + '') ? 100 : 0, //每个切片的进度条
                 };
                 obj.payload = {
@@ -398,13 +412,34 @@ export class UploadQueueService {
                 return obj;
             })
             //筛选未上传的切片
-            .filter(({ payload: { hash } }, index) => !uploadedList.includes(hash));
-
+            .filter(({ payload: { hash } }) => !uploadedList.includes(hash));
         ele.already = uploadedList.length;
         ele.chunks = data;
+        /**
+         *  此地需要判断一种情况
+         *  当切片通过线上已上传的切片过滤后没有可传的切片时
+         *  此时直接进行合并操作
+         * */
+        if (fileChunkList.length === uploadedList.length) {
+            let node: QueueNode<VideoOther> = {
+                type: null,
+                size: null,
+                payload: {
+                    type: ele.type,
+                    apply_inspection_no: ele.payload.apply_inspection_no,
+                    contract_no: ele.payload.contract_no,
+                    sku: ele.payload.sku,
+                    hash: ele.payload.hash as any,
+                    sort_index: ele.payload.sort_index,
+                },
+            };
+            this.mergeRequest(node);
+            return;
+        }
         //此地先将chunks的数量存好，上传的时候是每传完一个就会删除
         ele.chunksLength = fileChunkList.length;
         ele.percentage = (ele.already / ele.chunksLength) * 100;
+
         this.push(ele); //** 此处应该在push里驱动upload
     }
 
@@ -512,7 +547,14 @@ export class UploadQueueService {
         });
         return JSON.parse(data);
     }
-    //成员回流机制
+
+    //取消上传 跳过第一个
+    cancel() {
+        this.suspend(); //暂停
+        this.cache.removeCache(this.front.payload); //删除第一个缓存
+        this.queue.shift(); //出队列
+        this.size && this.restart(); //重新开始上传
+    }
 }
 
 export function HashCode(str: string) {

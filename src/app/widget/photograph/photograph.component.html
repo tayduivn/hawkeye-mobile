@@ -12,7 +12,7 @@
             <ion-icon name="close" mode="ios" *ngIf="_photos[i].length < 1000" (click)="remove(i)"></ion-icon>
         </div>
     </li>
-    <li *ngIf="!platform.is('hybrid')"><!--  -->
+    <li ><!-- *ngIf="!platform.is('hybrid')" -->
         <input type="file" multiple="multiple" (change)="doCheckImg($event)" />
     </li>
 </ul>

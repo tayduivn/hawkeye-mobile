@@ -10,7 +10,7 @@ import { environment } from 'src/environments/environment';
 export interface Sku {
     name: string;
     isNew?: number | string;
-    return_rate: string;
+    return_rate?: string;
     Count?: number;
     detail_counts?: number;
     pic?: string;
@@ -31,18 +31,18 @@ export interface Sku {
     news_or_return_product?: any;
     logo_desc?: string;
     estimated_loading_time?: string;
-    sku_chinese_name: string;
-    quantity: number;
-    rate_container: number;
-    complete: string;
-    chinese_name: string;
-    accessory_info: any;
-    text_ture: string;
-    packing_type: string;
-    expand_desc: boolean;
-    inspection_require: InspectRequire[];
-    container_num: number;
-    inspection_task_desc: Array<string>;
+    sku_chinese_name?: string;
+    quantity?: number;
+    rate_container?: number;
+    complete?: string;
+    chinese_name?: string;
+    accessory_info?: any;
+    text_ture?: string;
+    packing_type?: string;
+    expand_desc?: boolean;
+    inspection_require?: InspectRequire[];
+    container_num?: number;
+    inspection_task_desc?: Array<string>;
     must_quantity?: number;
     is_contacked_factory?: number;
     is_inspected_factory?: number;
@@ -53,10 +53,10 @@ export interface Sku {
     is_bought_ticket?: number;
     unreasonable_inspection_task_advise?: string;
     improve_inspection_task_advise?: string;
-    accessory_code: string[];
+    accessory_code?: string[];
     chinese_description?: string;
     system_logo_desc?: string;
-    sku_appraisement: any;
+    sku_appraisement?: any;
     need_bring_back_instructor?:any;
     putImgs?: string[]; //摆放图（验po的时候）
 }

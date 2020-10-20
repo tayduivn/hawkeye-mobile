@@ -6,7 +6,7 @@ export interface Chunk {
 }
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class FileChunkService {
     SIZE: number = 30 * 1024 * 1024; //切片10M     * 1024;
@@ -17,7 +17,7 @@ export class FileChunkService {
      * 创建切片
      * @param file  整个file对象
      * @param size  切片大小
-     */ worker
+     */ 
     createFileChunk(file: any, size = this.SIZE): Chunk[] {
         const fileChunkList: Chunk[] = [];
         let cur = 0;
