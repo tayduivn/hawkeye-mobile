@@ -11,18 +11,39 @@
     <div class="flex mt-10">
         <div class="f-l pro">
             <span>完成进度：</span>
-            <span>{{alreadyUploadQueue.length + '/' + (alreadyUploadQueue.length + queue.length) }}</span>
+            <span>{{ alreadyUploadQueue.length + '/' + (alreadyUploadQueue.length + queue.length) }}</span>
+        </div>
+        <div class="f-r pro">
+            <span>当前状态：</span>
+            <span [style.color]="uQueue.status ? '#10dc60' : 'red'">{{ uQueue.status ? '上传中…' : '暂停中' }}</span>
         </div>
         <div>
-            <ion-button [hidden]='true' (click)="uQueue.suspend()" id="suspend" color="danger" fill="outline" [disabled]="isSuspend" size="small" class="f-r mr-10">
+            <ion-button
+                [hidden]="true"
+                (click)="uQueue.suspend()"
+                id="suspend"
+                color="danger"
+                fill="outline"
+                [disabled]="isSuspend"
+                size="small"
+                class="f-r mr-10"
+            >
                 暂停
             </ion-button>
-            <ion-button [hidden]='true' (click)="uQueue.restart()" id="restart" size="small" fill="outline" [disabled]="!isSuspend" class="f-r">
+            <ion-button
+                [hidden]="true"
+                (click)="uQueue.restart()"
+                id="restart"
+                size="small"
+                fill="outline"
+                [disabled]="!isSuspend"
+                class="f-r"
+            >
                 重新开始
             </ion-button>
         </div>
     </div>
-   
+
     <ion-segment scrollable (ionChange)="segmentChanged($event)" [(ngModel)]="uploadStatus">
         <ion-segment-button value="uploading">
             <ion-label>上传中</ion-label>
@@ -31,25 +52,35 @@
             <ion-label>已上传</ion-label>
         </ion-segment-button>
     </ion-segment>
+
     <ion-list mode="md">
         <ion-item class="title">
             <ion-label class="name">上传项目</ion-label>
             <ion-text class="progress">上传进度</ion-text>
             <ion-label class="size-t">文件大小</ion-label>
-            <ion-label class="do">操作</ion-label>
+            <ion-label class="do" *ngIf="uploadStatus == 'uploading'">操作</ion-label>
         </ion-item>
         <div *ngIf="uploadStatus == 'uploading'" class="content">
-            <ion-item *ngFor="let item of queue;let index = index">
+            <ion-item *ngFor="let item of queue; let index = index">
                 <ion-label class="name">{{ inspectFieldMap[item.payload.type] }}</ion-label>
                 <ion-progress-bar
                     [color]="isSuspend ? 'danger' : item.percentage < 1 ? 'success' : 'primary'"
                     class="progress"
                     value="{{ item.percentage ? item.percentage / 100 : 0 }}"
                 ></ion-progress-bar>
-                <ion-label class="size-t">{{(item.size/1024/1024).toFixed(2) + 'MB'}}</ion-label>
-                <ion-button size="small" (click)="cancel()" color="danger" class="do" *ngIf="index === 0">取消</ion-button>
+                <ion-label class="size-t">{{ (item.size / 1024 / 1024).toFixed(2) + 'MB' }}</ion-label>
+                <div class="w-10">
+                    <ion-button
+                        size="small"
+                        (click)="cancel()"
+                        color="danger"
+                        class="do"
+                        [hidden]="index !== 0 || !uQueue.status"
+                        >取消</ion-button
+                    >
+                </div>
             </ion-item>
-        </div>  
+        </div>
 
         <ng-container *ngIf="uploadStatus == 'uploaded'">
             <ion-item *ngFor="let item of alreadyUploadQueue">
@@ -59,7 +90,7 @@
                     class="progress"
                     value="{{ item.percentage / 100 }}"
                 ></ion-progress-bar>
-                <ion-label class="size-t">{{(item.size/1024/1024).toFixed(2) + 'MB'}}</ion-label>
+                <ion-label class="size-t">{{ (item.size / 1024 / 1024).toFixed(2) + 'MB' }}</ion-label>
             </ion-item>
         </ng-container>
     </ion-list>

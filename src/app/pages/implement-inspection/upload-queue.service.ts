@@ -3,11 +3,9 @@ import { RequestService } from 'src/app/blue-bird/service/request.service';
 import { environment } from 'src/environments/environment';
 import { UserInfoService } from 'src/app/services/user-info.service';
 import { PageEffectService } from 'src/app/services/page-effect.service';
-import { InspectCacheService } from './inspect-cache.service';
 import { Network } from '@ionic-native/network/ngx';
 import { ImageOther, VideoOther } from 'src/app/services/file-upload.service';
-import { from, Observable, Subscription, BehaviorSubject, zip, Subject } from 'rxjs';
-import { mergeMap, filter } from 'rxjs/operators';
+import { Observable, Subscription, BehaviorSubject, zip, Subject } from 'rxjs';
 import { File as AndroidFile } from '@ionic-native/file/ngx';
 import { VerifyResponse, UploadParams, FieldType } from 'src/app/widget/videotape/videotape.component';
 import { FileChunkService, Chunk } from 'src/app/blue-bird/service/file-chunk.service';
@@ -52,7 +50,6 @@ export class UploadQueueService {
         private request: RequestService,
         private userInfo: UserInfoService,
         private es: PageEffectService,
-        private cache: InspectCacheService,
         private network: Network,
         private file: AndroidFile,
         private fileReq: RequestService,
@@ -103,11 +100,9 @@ export class UploadQueueService {
      * 向已上传队列里增加成员
      * @param ele  成员 - node
      */
-    push(ele: QueueNode<any>, cache?: boolean) {
-        !cache && this.cache.cacheInspectPath(ele.payload); //正式进入缓存
+    push(ele: QueueNode<any>) {
         this.queue.push(ele);
         this.duplicateRemoval();
-        //此处应新增如果队列在执行则push 否则则调用run
         !this.status && this.run();
         // this.queue = this.duplicateRemoval();  TODO有问题
         return true;
@@ -193,14 +188,9 @@ export class UploadQueueService {
     }
 
     //Add 外部调用
-    add(ele: QueueNode<any>, cache?: boolean) {
+    add(ele: QueueNode<any>) {
         if (ele.type == 'img') {
-            // console.log('------ cache到队列前 -------');
-            // console.log(ele);
-            this.push(ele, cache);
-            // console.log('------ ADD到队列前 -------');
-            // console.log(this.queue);
-            !this.status && this.run();
+            this.push(ele);
         } else this.packingVideo(ele);
     }
 
@@ -317,7 +307,6 @@ export class UploadQueueService {
                     const msg = await this.mergeRequest(this.front);
                     //合并完成之后 判断状态 如果成功则删除缓存 在让主队列的front出列
                     if (msg.status === 1 && this.front) {
-                        this.cache.removeCache(this.front.payload);
                         // this.pop(msg.data);
                         this.pop(msg.data[0], msg.data.status === 'already');
                         if (this.size) {
@@ -343,7 +332,6 @@ export class UploadQueueService {
         if (next === true || (next && next.data && !JSON.parse(next.data).error) || next === 1) {
             try {
                 //console.log('------ 返回值 -------', JSON.parse(next.data));
-                this.cache.removeCache(this.front.payload);
                 //!Important  此处判断因为后台去重后返回的值status 为 already时 不pop队列 不删除缓存 继续往下执行方法
                 //再出队列 将已经上传的node的线上url发布出去 等待photograph component订阅
                 this.pop(JSON.parse(next.data).data[0], JSON.parse(next.data).status === 'already');
@@ -463,47 +451,6 @@ export class UploadQueueService {
         return await this.file.readAsArrayBuffer(dirPath, fileName);
     }
 
-    pathToBase64() {
-        let cache: Array<ImageOther> = JSON.parse(localStorage.getItem('CURRENT_INSPECT_META_DATA_PATH')),
-            imgCaches$ = cache && cache.length ? from(cache) : null;
-        if (!imgCaches$) return;
-        this.es.showToast({
-            message: '检测到你有未上传完毕文件,系统将会自动上传',
-            color: 'warning',
-        });
-
-        this.globalImgCache = zip(
-            imgCaches$.pipe(
-                filter(elem => elem.type.substr(elem.type.lastIndexOf('_') + 1, elem.type.length) == 'pic'),
-            ),
-            imgCaches$.pipe(
-                filter(elem => elem.type.substr(elem.type.lastIndexOf('_') + 1, elem.type.length) == 'pic'),
-                mergeMap(elem =>
-                    this.file.readAsDataURL(
-                        //读取图片本机地址为base64
-                        elem.path.substr(0, elem.path.lastIndexOf('/') + 1),
-                        elem.path.substr(elem.path.lastIndexOf('/') + 1),
-                    ),
-                ),
-                mergeMap(base64 => this.doWorkerGetBlob(base64)),
-            ),
-        ).subscribe(([elem, { data }]) => {
-            console.log('---------- 选择完毕 ---------');
-            console.log(elem, data);
-            this.getImgData.next({ data, elem });
-            this.add(
-                {
-                    type: 'img',
-                    size: data.size,
-                    blob: data,
-                    payload: elem,
-                    hash: HashCode(elem.type + elem.sku + elem.is_inner_box + elem.path),
-                },
-                true,
-            );
-        });
-    }
-
     //根据参数获取base64流 （每个photograph展示用）
     getCacheImagesByParams(params: ImageOther) {
         let cache: Array<ImageOther> = JSON.parse(localStorage.getItem('CURRENT_INSPECT_META_DATA_PATH'));
@@ -551,7 +498,6 @@ export class UploadQueueService {
     //取消上传 跳过第一个
     cancel() {
         this.suspend(); //暂停
-        this.cache.removeCache(this.front.payload); //删除第一个缓存
         this.queue.shift(); //出队列
         this.size && this.restart(); //重新开始上传
     }

@@ -36,3 +36,22 @@ ul:after {
     display: block;
     clear: both;
 }
+
+.add-image-file{
+    position: relative;
+    display: inline-flex !important;
+    width: 50px;
+    height: 30px;
+    overflow: hidden;
+    input{
+        position: absolute;
+        font-size: 100px;
+        top: 0;
+        left: 0;
+        opacity: 0;
+    }
+}
+
+.ml-5{
+    margin-left: 5px !important;
+}

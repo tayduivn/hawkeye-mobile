@@ -171,9 +171,9 @@
                                 </ion-row>
                             </ion-grid>
                         </div>
-                        
+
                         <div class="custom-size mt-10">
-                            <app-custom-outer-size 
+                            <app-custom-outer-size
                                 [sizes]="customOuterSize"
                                 type="size_other_pic"
                                 [contract_no]="contractNo"
@@ -192,7 +192,7 @@
                         </div>
                     </div>
                 </ion-item>
-                
+
                 <ion-item *ngIf="data.rate_container != 1">
                     <div class="w100">
                         <div class="global-inspect-title">
@@ -948,14 +948,15 @@
                     </div>
                 </ion-item> -->
 
-            <app-inspect-custom-test 
-                [contract_no]='contractNo'
-                [apply_inspection_no]='currentApplyInsData.apply_inspection_no'
-                [sku]='data.sku'
-                [box_type]='"outer"'
-                (onValueChange)="customTestChange($event)"
-                [customTestArray]='customTestArray'>
-            </app-inspect-custom-test>
+                <app-inspect-custom-test
+                    [contract_no]="contractNo"
+                    [apply_inspection_no]="currentApplyInsData.apply_inspection_no"
+                    [sku]="data.sku"
+                    [box_type]="'outer'"
+                    (onValueChange)="customTestChange($event)"
+                    [customTestArray]="customTestArray"
+                >
+                </app-inspect-custom-test>
             </ion-list>
 
             <!-- 总结 -->
@@ -1233,7 +1234,7 @@
                         </div>
 
                         <div class="custom-size mt-10">
-                            <app-custom-outer-size 
+                            <app-custom-outer-size
                                 [sizes]="customOuterSize"
                                 type="size_other_pic"
                                 [contract_no]="contractNo"
@@ -1241,9 +1242,8 @@
                                 [sku]="data.sku"
                                 (onChange)="outerSizeChange($event)"
                             ></app-custom-outer-size>
-                            
                         </div>
-                     
+
                         <div class="desc-box">
                             <app-item-by-item-desc
                                 description="备注"
@@ -1285,7 +1285,7 @@
                             </ion-button>
                         </div>
                         <app-photograph
-                            type="bar_code_pic" 
+                            type="bar_code_pic"
                             moduleType="removeSkuPic"
                             [photos]="SkuInspectModel.value.outer_box_data.barCode.photos"
                             [contract_no]="contractNo"
@@ -1494,7 +1494,7 @@
                                         <option value="n">不存在</option>
                                     </select>
                                 </div>
-                                
+
                                 <div fxLayout="row" fxLayoutAlign="start center">
                                     <p class="global-inspect-title gray-color">
                                         多箱率、超重标、易碎贴向上标识等
@@ -1522,33 +1522,33 @@
             </ion-list>
 
             <!-- 摆放图与说明书及配件包 -->
-                <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
-                    <ion-item formGroupName="layout">
-                        <div class="w100">
-                            <div class="global-inspect-title">
-                                <p>摆放图</p>
-                            </div>
-                            <app-photograph
-                                type="product_place_pic"
-                                moduleType="removeSkuPic"
-                                [photos]="SkuInspectModel.value.outer_box_data.layout.photos"
-                                [contract_no]="contractNo"
-                                [apply_inspection_no]="currentApplyInsData.apply_inspection_no"
-                                [sku]="data.sku"
-                                box_type="outer"
-                            ></app-photograph>
-                            <div class="pb-10">
-                                <div>
-                                    <app-item-by-item-desc
-                                        description="备注"
-                                        [ary]="SkuInspectModel.value.outer_box_data.layout.desc"
-                                        (onComplete)="descEnter($event, 'layout', 'outer')"
-                                    ></app-item-by-item-desc>
-                                </div>
+            <ion-list *ngIf="currentToggle.key == 'afterUnpacking'">
+                <ion-item formGroupName="layout">
+                    <div class="w100">
+                        <div class="global-inspect-title">
+                            <p>摆放图</p>
+                        </div>
+                        <app-photograph
+                            type="product_place_pic"
+                            moduleType="removeSkuPic"
+                            [photos]="SkuInspectModel.value.outer_box_data.layout.photos"
+                            [contract_no]="contractNo"
+                            [apply_inspection_no]="currentApplyInsData.apply_inspection_no"
+                            [sku]="data.sku"
+                            box_type="outer"
+                        ></app-photograph>
+                        <div class="pb-10">
+                            <div>
+                                <app-item-by-item-desc
+                                    description="备注"
+                                    [ary]="SkuInspectModel.value.outer_box_data.layout.desc"
+                                    (onComplete)="descEnter($event, 'layout', 'outer')"
+                                ></app-item-by-item-desc>
                             </div>
                         </div>
-                    </ion-item>
-                </ion-list>
+                    </div>
+                </ion-item>
+            </ion-list>
         </div>
     </form>
 </ion-content>
@@ -1563,9 +1563,9 @@
             <p>保存</p>
         </ion-fab-button>
 
-        <ion-fab-button (click)="upload()" color="primary">
+        <!-- <ion-fab-button (click)="uQueue.run()" color="primary">
             <p>上传</p>
-        </ion-fab-button>
+        </ion-fab-button> -->
     </ion-fab-list>
 
     <ion-fab-list side="top">

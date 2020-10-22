@@ -123,7 +123,6 @@ export class PhotographComponent implements OnInit {
         );
         if (_photos && _photos.length) {
             this._caches = _photos;
-            this.getPathByCache();
         }
     }
 
@@ -179,7 +178,6 @@ export class PhotographComponent implements OnInit {
                 apply_inspection_no: this.apply_inspection_no,
                 contract_no: this.contract_no,
                 sku: this.sku,
-                path: '',
                 is_inner_box: this.box_type == 'inner' ? 0 : 2,
                 sort_index: this.sort_index,
             };
@@ -188,8 +186,7 @@ export class PhotographComponent implements OnInit {
                 takeWhile(str => str && str.length),
                 tap(res => this.ec.showToast({ message: '拍摄成功', color: 'success' })),
                 mergeMap((filePath: string) => {
-                    params.path = filePath;
-                    params.hash = HashCode(params.type + params.sku + params.is_inner_box + params.path);
+                    params.hash = HashCode(params.type + params.sku + params.is_inner_box);
                     if (this.sort_index == undefined || this.sort_index == null) delete params.sort_index;
 
                     return from(
@@ -216,7 +213,7 @@ export class PhotographComponent implements OnInit {
                     size: msg.data.size,
                     blob: msg.data,
                     payload: params,
-                    hash: HashCode(params.type + params.sku + params.is_inner_box + params.path),
+                    hash: HashCode(params.type + params.sku + params.is_inner_box),
                 });
             });
     }
@@ -231,7 +228,6 @@ export class PhotographComponent implements OnInit {
                 apply_inspection_no: this.apply_inspection_no,
                 contract_no: this.contract_no,
                 sku: this.sku,
-                path: '',
                 is_inner_box: this.box_type == 'inner' ? 0 : 2,
                 sort_index: this.sort_index,
             };
@@ -252,14 +248,13 @@ export class PhotographComponent implements OnInit {
                     ),
                 ).subscribe(([elem, { data }]) => {
                     console.log('---------- 选择完毕 ---------');
-                    params.path = elem;
                     params.hash = HashCode(params.type + params.sku + params.is_inner_box + elem);
                     this.uQueue.add({
                         type: 'img',
                         size: data.size,
                         blob: data,
                         payload: params,
-                        hash: HashCode(params.type + params.sku + params.is_inner_box + params.path),
+                        hash: HashCode(params.type + params.sku + params.is_inner_box),
                     });
                 });
             });
@@ -300,22 +295,18 @@ export class PhotographComponent implements OnInit {
             is_inner_box: this.box_type == 'inner' ? 0 : 2,
             sku: this.sku,
             sort_index: this.sort_index,
-            path: '',
         };
 
         Array.prototype.map.call(e.target.files, (file: File) => {
-            params.path =
-                '../aszzzzzzzzzzzzzzsets/img/WeChatIMG143.jpeg?random=' +
-                HashCode(params.type + params.sku + params.is_inner_box + params.path);
             if (this.sort_index == undefined || this.sort_index == null) delete params.sort_index;
-            params.hash = HashCode(params.type + params.sku + params.is_inner_box + params.path);
+            params.hash = HashCode(params.type + params.sku + params.is_inner_box);
 
             this.uQueue.add({
                 type: 'img',
                 size: file.size,
                 blob: file,
                 payload: params,
-                hash: HashCode(params.type + params.sku + params.is_inner_box + params.path),
+                hash: HashCode(params.type + params.sku + params.is_inner_box),
             });
         });
     }
@@ -418,33 +409,5 @@ export class PhotographComponent implements OnInit {
             }),
         );
         return image;
-    }
-
-    /**
-     * 根据缓存里的数据获取path拿到地址展示用
-     */
-    getPathByCache() {
-        //防止重复取缓存
-        let imgCaches$: Observable<ImageOther> = from(this._caches);
-        if (!this._caches || !this._caches.length) return;
-
-        imgCaches$
-            .pipe(
-                takeWhile(res => this.platform.is('hybrid') && this._photos.indexOf(res.path) == -1),
-                mergeMap(elem => {
-                    return from(
-                        this.file.readAsDataURL(
-                            //读取图片本机地址为base64
-                            elem.path.substr(0, elem.path.lastIndexOf('/') + 1),
-                            elem.path.substr(elem.path.lastIndexOf('/') + 1),
-                        ),
-                    );
-                }),
-            )
-            .subscribe(base64 => {
-                console.log('----------------  缓存中的  --------------');
-                this._photos.push(base64);
-                this._photos = this.removal(this._photos);
-            });
     }
 }

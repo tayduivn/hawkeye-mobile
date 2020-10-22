@@ -33,7 +33,6 @@ export interface ImageOther {
     box_type?: 'outer' | 'inner';
     is_inner_box?: number;
     sort_index?: number;
-    path? : string; //缓存本机资源地址
     hash?: number //唯一性
 }
 

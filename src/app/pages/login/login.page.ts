@@ -189,10 +189,7 @@ export class LoginPage implements OnInit, AfterViewInit {
                             localStorage.setItem('HAWKEYE_ACCOUNT', JSON.stringify(this.loginInfo.company_no));
                             localStorage.setItem('HAWKEYE_PASSWORD', JSON.stringify(this.loginInfo.password));
                         
-                            //先清空队列
-                            this.uQueue.clear();
-                            this.uQueue.globalImgCache && this.uQueue.globalImgCache.unsubscribe(); //每次登录的时候先取消订阅，防止重复发布
-                            this.uQueue.pathToBase64();
+                        
                         }
                 }
                 )

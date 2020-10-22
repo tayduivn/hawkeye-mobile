@@ -132,7 +132,7 @@ export class InspectSkuComponent implements OnInit {
         private storage: StorageService,
         private activeRouter: ActivatedRoute,
         private implementService: ImplementInspectService,
-        private uQueue: UploadQueueService,
+        public uQueue: UploadQueueService,
         private inspectCache: InspectCacheService,
     ) {}
 
@@ -1159,6 +1159,6 @@ export class InspectSkuComponent implements OnInit {
     }
 
     upload(){
-        
+
     }
 }
