@@ -98,6 +98,8 @@ export class SKUInfoComponent implements OnInit {
 
     @Input() toInspectionParams?: string;
 
+    @Input() is_rework: boolean = false;
+
     screenAngle: ScreenAngle;
     random: number = Math.random();
     imgOrigin: string = environment.fileUrlPath;

@@ -15,16 +15,20 @@ export interface SkuEvaluator {
     styleUrls: ['./detail.component.scss'],
 })
 export class DetailComponent implements OnInit {
+    type: 'rework' | 'default' = 'default';
     data: any = {
         inspection_cooperation_level: 0, //验货配合度
+        reworkMark: 0, //返工痕迹
         inspection_cooperation_level_desc: '', //验货配合度描述
         storage_condition_appraisement: '', //仓储条件
         storage_condition_desc: '',
+        rework_mark_level:0,
         production_type: '', //产品情况
         remaining_storage_space_condition: 0, //剩余仓储情况
         factory_situation: '', //工厂情况
         sku_appraisement: [], //sku评价列表
     };
+
     sku_appraisement: SkuEvaluator[] = [];
     storage_condition_ary: any[] = [
         {
@@ -65,7 +69,7 @@ export class DetailComponent implements OnInit {
         });
         let data = this.storage.get('EVALUATE_DETAIL_SKU');
         data &&
-            data.forEach(elem => {
+            data.forEach((elem: any) => {
                 this.sku_appraisement.push({ sku: elem, desc: [{ text: '', level: '' }] });
             });
         if (!this.inspection_appraisement_id) return;
@@ -74,11 +78,16 @@ export class DetailComponent implements OnInit {
 
     getData() {
         this.evalService.getEvaluateById(this.inspection_appraisement_id).subscribe(res => {
+          
             if (!res.status) return;
-            this.data = res.data;
-            this.storage_condition_ary.forEach((elem, i) => {
-                this.data.storage_condition.indexOf(i) != -1 && (this.storage_condition_ary[i].value = 1);
-            });
+            this.type = res.data.is_rework ? 'rework' : 'default';
+            this.data =JSON.parse(JSON.stringify(res.data)) ;
+            console.log(this.data )
+            if (this.data.storage_condition) {
+                this.storage_condition_ary.forEach((elem, i) => {
+                    this.data.storage_condition.indexOf(i) != -1 && (this.storage_condition_ary[i].value = 1);
+                });
+            }
 
             if (this.data.sku_appraisement && this.data.sku_appraisement.length)
                 this.sku_appraisement = this.data.sku_appraisement;

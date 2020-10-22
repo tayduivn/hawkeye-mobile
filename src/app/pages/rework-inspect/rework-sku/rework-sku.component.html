@@ -11,7 +11,7 @@
 </ion-header>
 
 <ion-content [formGroup]="skuInspectModel">
-    <app-sku-info [sku]="skuInfo" type="implement"></app-sku-info>
+    <app-sku-info [sku]="skuInfo" type="implement" is_rework='true'></app-sku-info>
     <ion-list>
         <ion-item>
             <div class="w100">
@@ -26,7 +26,7 @@
                             cancelText="取消"
                             doneText="确定"
                             displayFormat="YYYY-MM-DD"
-                            formGroupName="inspectionDate"
+                            formControlName="inspectionDate"
                             value="2012-12-15T13:47:20.789"
                         >
                         </ion-datetime>
@@ -37,7 +37,7 @@
                             (ionChange)="numChange($event)"
                             placeholder="输入拆箱数量"
                             type="number"
-                            formGroupName="unpackingNum"
+                            formControlName="unpackingNum"
                         ></ion-input>
                     </ion-item>
                     <ion-item>

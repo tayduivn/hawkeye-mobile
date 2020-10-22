@@ -29,25 +29,25 @@
                     <ion-col size="8" Chipboard class="chip-text"
                         ><span class="label">中文名: </span> {{ sku.sku_chinese_name }}</ion-col
                     >
-                    <ion-col size="4" Chipboard class="chip-text" *ngIf="type == 'task'"
+                    <ion-col size="4" Chipboard class="chip-text" *ngIf="type == 'task' && !is_rework"
                         ><span class="label">验货产品数: </span> <span class="red">{{ sku.quantity }}</span></ion-col
                     >
                 </ion-row>
 
                 <ion-row>
-                    <ion-col size="4" Chipboard class="chip-text" *ngIf="type == 'task'"
+                    <ion-col size="4" Chipboard class="chip-text" *ngIf="type == 'task' && !is_rework"
                         ><span class="label">箱率: </span> <span class="red">{{ sku.rate_container }}</span></ion-col
                     >
-                    <ion-col size="4" Chipboard class="chip-text" *ngIf="type == 'task'"
+                    <ion-col size="4" Chipboard class="chip-text" *ngIf="type == 'task' && !is_rework"
                         ><span class="label">客诉率: </span>
                         <span class="red">{{ sku.return_rate + '%' }}</span></ion-col
                     >
-                    <ion-col size="4" Chipboard class="chip-text" *ngIf="type == 'task'"
+                    <ion-col size="4" Chipboard class="chip-text" *ngIf="type == 'task' && !is_rework"
                         ><span class="label">外箱数: </span> <span class="red">{{ sku.container_num }}</span></ion-col
                     >
                 </ion-row>
 
-                <ion-row>
+                <ion-row *ngIf="!is_rework">
                     <ion-col size="4" Chipboard class="chip-text"
                         ><span class="label">新品/返单: </span>
                         {{
@@ -62,7 +62,7 @@
                     >
                 </ion-row>
 
-                <ion-row>
+                <ion-row *ngIf="!is_rework">
                     <ion-col size="4" Chipboard class="chip-text"
                         ><span class="label">是否寄样: </span> {{ sku.is_need_sample == 1 ? '是' : '否' }}</ion-col
                     >
@@ -72,7 +72,7 @@
                     
                 </ion-row>
 
-                <ion-row>
+                <ion-row *ngIf="!is_rework">
                     <ion-col size="12" *ngIf="type == 'task'" Chipboard class="chip-text">
                         <span class="label">大货进度: </span>
                         {{ sku.complete ? sku.complete : '暂无' }}</ion-col
@@ -82,7 +82,7 @@
                         {{ sku.temporary_description ? sku.temporary_description : '暂无' }}</ion-col
                     >
                 </ion-row>
-                <ion-row>
+                <ion-row *ngIf="!is_rework">
                     <ion-col size="12" Chipboard class="chip-text"
                     ><span class="label">是否需要带回说明书: </span> {{ sku.need_bring_back_instructor ==1 ? '是' : '否' }}</ion-col
                 >
@@ -91,7 +91,7 @@
         </div>
     </div>
 
-    <div class="desc">
+    <div class="desc" *ngIf="!is_rework">
         <ion-grid class="sku-desc mt-0">
             <ion-row class="no-border-top">
                 <ion-col size="1.8" class="label">系统LOGO:</ion-col>
@@ -102,7 +102,7 @@
         </ion-grid>
     </div>
 
-    <div class="desc">
+    <div class="desc" *ngIf="!is_rework">
         <ion-grid class="sku-desc mt-0">
             <ion-row class="no-border-top">
                 <ion-col size="1.8" class="label">货号备注:</ion-col>
@@ -118,7 +118,7 @@
         </ion-grid>
     </div>
 
-    <div class="desc" *ngIf="type == 'task'">
+    <div class="desc" *ngIf="type == 'task' && !is_rework">
         <ion-grid class="sku-desc mt-0">
             <ion-row Chipboard class="chip-text no-border-top">
                 <ion-col [size]="1.8" class="label">中文描述</ion-col>
@@ -129,7 +129,7 @@
         </ion-grid>
     </div>
 
-    <div *ngIf="type == 'task'" class="desc">
+    <div *ngIf="type == 'task' && !is_rework" class="desc">
         <ion-grid class="sku-desc">
             <ion-row Chipboard class="chip-text ">
                 <ion-col [size]="1.8" class="label">描述</ion-col>

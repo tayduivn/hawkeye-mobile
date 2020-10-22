@@ -60,6 +60,7 @@ export class ItemByItemDescComponent implements OnInit {
             {
                 component: DescriptionComponent,
                 cssClass: 'description-modal',
+                backdropDismiss:false,
                 componentProps: {
                     desc: {
                         text: type == 'add' ? '' : this.data[i].text,

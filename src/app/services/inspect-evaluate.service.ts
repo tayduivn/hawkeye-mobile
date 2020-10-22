@@ -18,7 +18,9 @@ export interface InspectEvaluate {
     storage_condition_desc: string; //储存条件备注
     storage_condition_appraisement: number; //储存条件评价（1,1,2对应---优秀、一般、不合格）
     storage_condition: Array<number>;
-    production_type: string;
+    is_rework?: 0|1;
+    rework_mark_level?:0|1|2;
+    production_type: string; 
     factory_situation: string;
     created_at: string;
     updated_at: string;

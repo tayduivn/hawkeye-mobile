@@ -101,7 +101,6 @@ export class ReworkSkuComponent implements OnInit {
                 this.skuInfo = res.data.sku_info;
                 this.question = (res.data as any).rework_desc;
                 this.dynamicCreateDescForm(res.data.sku_info.barCode.desc, 'barCode');
-
                 this.skuInspectModel.patchValue({
                     inspectionDate: res.data.sku_info.inspectionDate,
                     unpackingNum: res.data.sku_info.unpackingNum,
@@ -139,8 +138,10 @@ export class ReworkSkuComponent implements OnInit {
         this.skuInspectModel.patchValue({
           sku: this.sku,
           apply_inspection_no: this.apply_inspection_no,
-          contract_no: this.contract_no
+          contract_no: this.contract_no,
+          unpackingPercent: this.unpackingPercent
         })
+        console.log(this.skuInspectModel.value)
         this.reworkCtrl.submitReworkSku(this.skuInspectModel.value).subscribe(res => {
             console.log(res);
             this.es.showToast({

@@ -45,7 +45,7 @@ const routes: Routes = [
         component: EvaluationComponent,
     },
     {
-        path: 'inspect-parts',
+        path: 'inspect-parts/:contract_no',
         component: InspectPartsComponent
     },
     {

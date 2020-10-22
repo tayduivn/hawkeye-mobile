@@ -5,7 +5,6 @@
         </ion-buttons>
         <ion-title>评价详情</ion-title>
         <ion-buttons slot="end">
-            <!-- <ion-back-button defaultHref='/evaluate' text="返回" color="white" mode="md"></ion-back-button> -->
             <ion-button [routerLink]="['/evaluate']">返回</ion-button>
         </ion-buttons>
     </ion-toolbar>
@@ -18,13 +17,44 @@
                 <ion-card-title color="primary">工厂情况评价</ion-card-title>
             </ion-card-header>
 
+            <ng-template *ngIf="type == 'rework'">
+                <ion-radio-group
+                [(ngModel)]="data.rework_mark_level"
+                [value]="data.rework_mark_level"
+             
+            >
+                <ion-list-header>
+                    <ion-label>1.返工痕迹 <span class="must-text">*</span></ion-label>
+                </ion-list-header>
+
+                <ion-item>
+                    <ion-label>明显</ion-label>
+                    <ion-radio slot="end" value="0" [checked]="data.rework_mark_level == 0"></ion-radio>
+                </ion-item>
+
+                <ion-item>
+                    <ion-label>细微</ion-label>
+                    <ion-radio slot="end" value="1" [checked]="data.rework_mark_level == 1"></ion-radio>
+                </ion-item>
+
+                <ion-item>
+                    <ion-label>无</ion-label>
+                    <ion-radio slot="end" value="2" [checked]="data.rework_mark_level == 2"></ion-radio>
+                </ion-item>
+
+                <ion-item>
+                    <ion-textarea [(ngModel)]="data.rework_mark_level_desc" placeholder="请描述具体表现"></ion-textarea>
+                </ion-item>
+            </ion-radio-group>
+            </ng-template>
+           
+
             <ion-radio-group
                 [(ngModel)]="data.inspection_cooperation_level"
                 [value]="data.inspection_cooperation_level"
             >
                 <ion-list-header>
-                    <ion-label >1.验货配合度   <span class="must-text">*</span></ion-label>
-                 
+                    <ion-label>1.验货配合度 <span class="must-text">*</span></ion-label>
                 </ion-list-header>
 
                 <ion-item>
@@ -45,37 +75,41 @@
                 <ion-item>
                     <!-- *ngIf="data.inspection_cooperation_level != 1" -->
                     <ion-textarea
-                     
                         [(ngModel)]="data.inspection_cooperation_level_desc"
                         placeholder="请描述具体表现"
                     ></ion-textarea>
                 </ion-item>
             </ion-radio-group>
 
-            <ion-radio-group>
-                <ion-list-header>
-                    <ion-label>2.工厂的仓储条件 <span class="must-text">*</span></ion-label>
-                </ion-list-header>
+            <ng-template *ngIf="type == 'default'">
+                <ion-radio-group >
+                    <ion-list-header>
+                        <ion-label>2.工厂的仓储条件 <span class="must-text">*</span></ion-label>
+                    </ion-list-header>
+    
+                    <ion-item *ngFor="let item of storage_condition_ary">
+                        <ion-label>{{ item.key }}</ion-label>
+                        <ion-checkbox [(ngModel)]="item.value"></ion-checkbox>
+                    </ion-item>
+    
+                    <ion-item>
+                        <ion-label>其他</ion-label>
+                        <ion-checkbox [(ngModel)]="other"></ion-checkbox>
+                    </ion-item>
+    
+                    <ion-item>
+                        <ion-textarea placeholder="请描述具体表现" [(ngModel)]="data.storage_condition_desc"></ion-textarea>
+                        <!-- *ngIf="other" -->
+                    </ion-item>
+                </ion-radio-group>
+            </ng-template>
+          
 
-                <ion-item *ngFor="let item of storage_condition_ary">
-                    <ion-label>{{ item.key }}</ion-label>
-                    <ion-checkbox [(ngModel)]="item.value"></ion-checkbox>
-                </ion-item>
-
-                <ion-item>
-                    <ion-label>其他</ion-label>
-                    <ion-checkbox [(ngModel)]="other"></ion-checkbox>
-                </ion-item>
-
-                <ion-item>
-                    <ion-textarea placeholder="请描述具体表现" [(ngModel)]="data.storage_condition_desc"></ion-textarea>
-                    <!-- *ngIf="other" -->
-                </ion-item>
-            </ion-radio-group>
-
-            <ion-radio-group
+            <ng-template  *ngIf="type == 'default'">
+                <ion-radio-group
                 [(ngModel)]="data.storage_condition_appraisement"
                 [value]="data.storage_condition_appraisement"
+               
             >
                 <ion-list-header>
                     <ion-label>3.工厂的仓储条件等级 <span class="must-text">*</span></ion-label>
@@ -95,10 +129,13 @@
                     <ion-radio slot="end" value="2" [checked]="data.storage_condition_appraisement == 2"></ion-radio>
                 </ion-item>
             </ion-radio-group>
-
-            <ion-radio-group
+            </ng-template>
+          
+            <ng-template *ngIf="type == 'default'">
+                <ion-radio-group
                 [(ngModel)]="data.remaining_storage_space_condition"
                 [value]="data.remaining_storage_space_condition"
+             
             >
                 <ion-list-header>
                     <ion-label>4.剩余仓储情况 <span class="must-text">*</span></ion-label>
@@ -119,8 +156,10 @@
                     <ion-radio slot="end" value="2" [checked]="data.remaining_storage_space_condition == 2"></ion-radio>
                 </ion-item>
             </ion-radio-group>
+            </ng-template>
+          
 
-            <div>
+            <div *ngIf="type == 'default'">
                 <div>
                     <ion-list-header>
                         <ion-label>5.工厂生产的主要产品类型</ion-label>

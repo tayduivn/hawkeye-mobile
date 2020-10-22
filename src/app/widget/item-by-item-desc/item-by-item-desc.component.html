@@ -1,7 +1,7 @@
 <ul>
     <!-- <label>逐个添加备注</label> -->
     <li *ngFor="let item of data; let i = index">
-        <p class="item " (click)="addDesc(i, 'modify')" [ngClass]="[item.level]"  *ngIf="item.text">
+        <p class="item " (click)="addDesc(i, 'modify')" [ngClass]="[item.level ? item.level: '']"  *ngIf="item.text">
             <span>{{ i }}</span>:
             <span>{{item.text }}</span>
         </p>

@@ -44,6 +44,7 @@ export class PageEffectService {
             component: option.component,
             cssClass: option.cssClass,
             componentProps: option.componentProps,
+            backdropDismiss: option.backdropDismiss===false?option.backdropDismiss:true
         });
         await modal.present();
         const { data } = await modal.onDidDismiss();
