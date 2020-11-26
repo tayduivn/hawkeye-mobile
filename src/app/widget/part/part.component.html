@@ -1,0 +1,39 @@
+<div mode="ios" class="sku_cabinet">
+    <div class="top" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="gappx">
+        <div class="img-box pos-r" imgGallery>
+            <ng-container *ngIf="_part.pic && _part.pic.length; else notImg"></ng-container>
+            <img
+                [hidden]="i > 3"
+                [ngClass]="{ thumbnail: i == 0 }"
+                *ngFor="let img of _part.pic; let i = index"
+                [src]="imgOrigin + img"
+                [alt]="imgOrigin + img"
+            />
+            <span class="pos-a">暂无图片</span>
+        </div>
+        <div class="content-box">
+            <div class="title" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="gappx">
+                <span Chipboard class="chip-text"><span class="label">配件编号: </span> {{ _part.AccessoryCode }}</span>
+            </div>
+            <ion-grid>
+                <ion-row>
+                    <ion-col size="12" Chipboard class="chip-text"
+                        ><span class="label">中文名: </span> {{ _part.AccessoryName }}</ion-col
+                    >
+                </ion-row>
+                <ion-row>
+                    <ion-col size="5" Chipboard class="chip-text">
+                        <span class="label">数量: </span> <span class="red">{{ _part.StockDetailNum }}</span>
+                    </ion-col>
+                    <ion-col size="7" Chipboard class="chip-text">
+                        <span class="label">条码: </span> <span>{{ _part.BarCode }}</span>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+        </div>
+    </div>
+</div>
+
+<ng-template #notImg>
+    <img src="../../../assets/img/no-data.png" alt="" class="w100 h100" />
+</ng-template>

@@ -5,13 +5,14 @@
         </ion-buttons>
         <ion-title>{{ sku }}</ion-title>
         <ion-buttons slot="end">
+            <ion-button (click)="showModal()" [disabled]="alreadyUpProgress">上传进度</ion-button>
             <ion-back-button text="返回" color="white" mode="md"></ion-back-button>
         </ion-buttons>
     </ion-toolbar>
 </ion-header>
 
 <ion-content [formGroup]="skuInspectModel">
-    <app-sku-info [sku]="skuInfo" type="implement" is_rework='true'></app-sku-info>
+    <app-sku-info [sku]="skuInfo" type="implement" is_rework="true"></app-sku-info>
     <ion-list>
         <ion-item>
             <div class="w100">
@@ -36,6 +37,7 @@
                         <ion-input
                             (ionChange)="numChange($event)"
                             placeholder="输入拆箱数量"
+                            [(ngModel)]="unpackingNum"
                             type="number"
                             formControlName="unpackingNum"
                         ></ion-input>
@@ -56,22 +58,29 @@
                     <p>条码</p>
                 </div>
                 <div class="bar-code" fxLayout="row" fxLayoutAlign="start center">
-                    <input class="h-30" placeholder="请输入条码" formControlName="text" />
+                    <input class="h-30" type="number" placeholder="请输入条码" formControlName="text" />
                     <ion-button fill="clear">{{ barCode }}</ion-button>
-                    <ion-button fill="clear" (click)="scan('inner')">
-                        扫码
-                    </ion-button>
+                    <ion-button fill="clear" (click)="scan()"> 扫码 </ion-button>
                     <ion-button
                         color="success"
                         size="small"
                         fill="clear"
-                        *ngIf="barCode === skuInspectModel.get('barCode').get('text')"
+                        *ngIf="barCode == skuInspectModel.value.barCode.text || skuInspectModel.value.barCode.isTrue"
                     >
                         扫码已通过
                     </ion-button>
+                    <!-- <ion-button
+                        color="danger"
+                        size="small"
+                        fill="clear"
+                        *ngIf="(barCode && skuInspectModel.value.barCode.text && barCode != skuInspectModel.value.barCode.text) && !skuInspectModel.value.barCode.isTrue|| !skuInspectModel.value.barCode.isTrue"
+                    >
+                        扫码未通过
+                    </ion-button> -->
                 </div>
+
                 <app-photograph
-                    type="bar_code_pic"
+                    type="rework_bar_code_pic"
                     moduleType="removeSkuPic"
                     [photos]="skuInspectModel.value.barCode.photos"
                     [contract_no]="contract_no"
@@ -113,7 +122,7 @@
                     <ion-icon name="image" slot="start"></ion-icon>
                     <ul class="img-list" *ngIf="skuInfo && question.review_summary_img; else noData" imgGallery>
                         <li *ngFor="let item of question.review_summary_img">
-                            <img [src]="imgOrigin + item" alt="" />
+                            <img [src]="imgOriginUs + item" alt="" />
                         </li>
                     </ul>
                 </ion-item>
@@ -122,10 +131,39 @@
                     <ion-icon name="videocam" slot="start"></ion-icon>
                     <ul class="vdo-list" *ngIf="skuInfo && question.review_summary_video; else noData">
                         <li *ngFor="let item of question.review_summary_video" (click)="play(item)">
-                            <video [src]="imgOrigin + item" poster=""></video>
+                            <video [src]="imgOriginUs + item" poster="" controls></video>
                         </li>
                     </ul>
                 </ion-item>
+            </div>
+        </ion-item>
+    </ion-list>
+
+    <!-- 总结 -->
+    <ion-list>
+        <ion-item formGroupName="sumUp" class="sum-up">
+            <div class="w100">
+                <div class="global-inspect-title">
+                    <p>总结</p>
+                </div>
+                <div>
+                    <textarea rows="6" formControlName="desc" placeholder="请输入总结"></textarea>
+                </div>
+                <app-photograph
+                    type="rework_summary_pic"
+                    moduleType="removeSkuPic"
+                    [photos]="skuInspectModel.value.sumUp.photos"
+                    [contract_no]="contract_no"
+                    [apply_inspection_no]="apply_inspection_no"
+                    [sku]="skuInfo.sku"
+                ></app-photograph>
+                <app-videotape
+                    type="rework_summary_video"
+                    [videos]="skuInspectModel.value.sumUp.videos"
+                    [contract_no]="contract_no"
+                    [apply_inspection_no]="apply_inspection_no"
+                    [sku]="skuInfo.sku"
+                ></app-videotape>
             </div>
         </ion-item>
     </ion-list>

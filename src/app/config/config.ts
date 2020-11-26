@@ -73,4 +73,4 @@ export const upLoadMaxImgLength: number = 5; //图片上传限量
 export const renewInitRequestTime: number = 100000;
 export const maxRenewInitRequest: number = 3;
 
-export const AppVersion: string = 'hawkeye_1.0.7';
+export const AppVersion: string = 'hawkeye_1.0.9';

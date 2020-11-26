@@ -33,7 +33,11 @@
                         ><span class="label">验货产品数: </span> <span class="red">{{ sku.quantity }}</span></ion-col
                     >
                 </ion-row>
-
+                <ion-row *ngIf="is_rework">
+                    <ion-col size="12" class="chinese_description">
+                        {{ sku.chinese_description }}
+                    </ion-col>
+                </ion-row>
                 <ion-row>
                     <ion-col size="4" Chipboard class="chip-text" *ngIf="type == 'task' && !is_rework"
                         ><span class="label">箱率: </span> <span class="red">{{ sku.rate_container }}</span></ion-col
@@ -55,7 +59,7 @@
                         }}</ion-col
                     >
                     <ion-col size="4" Chipboard class="chip-text"
-                        ><span class="label"> 是否摔箱: </span> {{ sku.is_need_drop_test  == 1 ? '是' : '否' }}</ion-col
+                        ><span class="label"> 是否摔箱: </span> {{ sku.is_need_drop_test == 1 ? '是' : '否' }}</ion-col
                     >
                     <ion-col size="4" Chipboard class="chip-text"
                         ><span class="label"> 有无打包带: </span> {{ sku.has_strap == 1 ? '是' : '否' }}</ion-col
@@ -69,7 +73,6 @@
                     <ion-col size="8" Chipboard class="chip-text"
                         ><span class="label">LOGO: </span> {{ sku.logo_desc }}</ion-col
                     >
-                    
                 </ion-row>
 
                 <ion-row *ngIf="!is_rework">
@@ -84,8 +87,9 @@
                 </ion-row>
                 <ion-row *ngIf="!is_rework">
                     <ion-col size="12" Chipboard class="chip-text"
-                    ><span class="label">是否需要带回说明书: </span> {{ sku.need_bring_back_instructor ==1 ? '是' : '否' }}</ion-col
-                >
+                        ><span class="label">是否需要带回说明书: </span>
+                        {{ sku.need_bring_back_instructor == 1 ? '是' : '否' }}</ion-col
+                    >
                 </ion-row>
             </ion-grid>
         </div>
@@ -144,6 +148,36 @@
                             : '')
                 }}</ion-col>
             </ion-row>
+
+            <!-- 配件 start -->
+            <ion-row Chipboard class="chip-text " *ngIf="sku.accessory_info">
+                <ion-col [size]="12" class="label text-c fw-bold" align-self-center>配件信息</ion-col>
+            </ion-row>
+
+            <ion-row Chipboard class="chip-text " *ngIf="sku.accessory_info">
+                <ion-col [size]="2" class="label text-c" align-self-center>配件编号</ion-col>
+                <ion-col [size]="2" class="label text-c" align-self-center>中文品名</ion-col>
+                <ion-col [size]="2.7" class="label text-c" align-self-center>描述</ion-col>
+                <ion-col [size]="3" class="label text-c" align-self-center>包装</ion-col>
+                <ion-col [size]="1.4" class="label text-c" align-self-center>条形码</ion-col>
+                <ion-col [size]="0.9" class="label text-c" align-self-center>数量</ion-col>
+            </ion-row>
+
+            <ion-row Chipboard class="chip-text " *ngIf="sku.accessory_info">
+                <ng-container *ngFor="let accessory of $any(sku).accessory_arr">
+                    <ion-col [size]="2" class="label text-c" align-self-center>{{ accessory.accessory_code }}</ion-col>
+                    <ion-col [size]="2" class="label text-c" align-self-center>{{ accessory.accessory_name }}</ion-col>
+                    <ion-col [size]="2.7" class="label text-c" align-self-center>{{
+                        accessory.accessory_description?accessory.accessory_description:'暂无信息'
+                    }}</ion-col>
+                    <ion-col [size]="3" class="label text-c" align-self-center>{{ accessory.packing_type?accessory.packing_type:'暂无信息' }}</ion-col>
+                    <ion-col [size]="1.4" class="label text-c" align-self-center>{{ accessory.bar_code }}</ion-col>
+                    <ion-col [size]="0.9" class="label text-c" align-self-center>{{ accessory.accessory_num }}</ion-col>
+                </ng-container>
+            </ion-row>
+
+            <!-- 配件 end -->
+
             <ion-row Chipboard class="chip-text ">
                 <ion-col [size]="1.8" class="label">材质</ion-col>
                 <ion-col class="content" [size]="10.2">{{ sku.text_ture }}</ion-col>
@@ -170,7 +204,7 @@
                     <ion-col size=".9">
                         <div class="img-box desc" *ngIf="item.pic && item.pic.length" imgGallery>
                             <ng-container *ngFor="let item of item.pic; let i = index">
-                                <img alt="" *ngIf="i == 0"  [src]="imgOrigin + item" />
+                                <img alt="" *ngIf="i == 0" [src]="imgOrigin + item" />
                             </ng-container>
                         </div>
                         <ion-text class="danger" *ngIf="!item.pic.length">暂无</ion-text>

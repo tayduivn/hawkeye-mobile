@@ -64,8 +64,8 @@ export interface ReworkSku {
 export class ReworkService {
     constructor(private http: HttpService) {}
 
-    getReworkFactoryList(): Observable<CustomResponse<Array<ReworkFactory>>> {
-        return this.http.get({ url: '/task/inspection_task_list_rework2' });
+    getReworkFactoryList(params?: {keywords: string;value:string}): Observable<CustomResponse<Array<ReworkFactory>>> {
+        return this.http.get({ url: '/task/inspection_task_list_rework2',params });
     }
 
     getReworkContractForApplyId(apply_inspection_no: string): Observable<CustomResponse<Array<ReworkContract>>> {

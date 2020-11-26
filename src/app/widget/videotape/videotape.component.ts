@@ -181,7 +181,6 @@ export class VideotapeComponent implements OnInit {
                     blob: blob,
                     payload: params,
                 });
-
                 //this.handleFile(blob, url);
             });
         } else {
@@ -247,7 +246,6 @@ export class VideotapeComponent implements OnInit {
             filename: file.name,
             path: 'jeiiwenwomdasdmasm',
         };
-        debugger
         this.uQueue.add({
             type: 'video',
             size: file.size,

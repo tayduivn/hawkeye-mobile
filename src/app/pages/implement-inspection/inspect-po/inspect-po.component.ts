@@ -43,7 +43,7 @@ export class InspectPoComponent implements OnInit {
     imgOrigin: string = environment.fileUrlPath;
     metaData: any = this.storage.get('IMPLEMENT-INSPECTION-META-DATA');
     currentSku: Sku = null;
-    apply_inspect_no = '';
+    public apply_inspect_no = '';
     currentApplyInsData: any;
     data: any = {
         contract: {
@@ -166,13 +166,24 @@ export class InspectPoComponent implements OnInit {
         });
     }
 
+    toInspectPart(p: any, sku: any) {
+        if (sku.is_appraise) {
+            this.es.showToast({
+                message: '已评价不能验配件！',
+                color: 'danger',
+            });
+            return;
+        }
+        this.router.navigate(['/inspect-parts', p.contract_no, this.apply_inspect_no]);
+    }
+
     toInspectSku(p: any, sku: any, type?: 'go' | 'save') {
-        if(sku.is_appraise){
+        if (sku.is_appraise) {
             this.es.showToast({
                 message: '已评价不能验货！',
-                color:'danger'
-            })
-            return
+                color: 'danger',
+            });
+            return;
         }
         this.currentSku = this.currentApplyInsData.data.find(res => res.sku === sku.sku);
 

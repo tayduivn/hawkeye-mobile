@@ -81,6 +81,7 @@ export class DetailComponent implements OnInit {
           
             if (!res.status) return;
             this.type = res.data.is_rework ? 'rework' : 'default';
+            console.log(this.type)
             this.data =JSON.parse(JSON.stringify(res.data)) ;
             console.log(this.data )
             if (this.data.storage_condition) {

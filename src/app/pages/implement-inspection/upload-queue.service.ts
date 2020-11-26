@@ -166,6 +166,7 @@ export class UploadQueueService {
         if (!this.requestList || !this.requestList.length) return;
         this.requestList[0].abort();
         this.isSuspend = true;
+        this.status = false;
         this.onChangeUploadStatus.next(this.isSuspend);
     }
 
@@ -174,6 +175,7 @@ export class UploadQueueService {
         this.queue = [...this.queue];
         this.requestList = [];
         this.isSuspend = false;
+        this.status = true;
         this.upload();
         this.onChangeUploadStatus.next(this.isSuspend);
     }
@@ -183,6 +185,7 @@ export class UploadQueueService {
      */
     run() {
         this.status = true;
+        this.onChangeUploadStatus.next(false);
         if (!this.networkLogic()) return;
         this.upload();
     }
@@ -291,7 +294,6 @@ export class UploadQueueService {
         }
         //chunkNode 是一个数组（队列里的队列）
         if (chunkNode && chunkNode.length && chunkNode[0].type == 'video') {
-            debugger;
             //先执行一维队列里的二维队列，执行完了在依次向下递归执行
             const next = await this.driveUpload(chunkNode[0]);
             if (next.data && JSON.parse(next.data).status == 1) {
@@ -302,7 +304,6 @@ export class UploadQueueService {
                     return;
                 }
                 if (JSON.parse(next.data).data && JSON.parse(next.data).data.canMerge === true) {
-                    debugger;
                     //否则 则合并切片
                     const msg = await this.mergeRequest(this.front);
                     //合并完成之后 判断状态 如果成功则删除缓存 在让主队列的front出列
@@ -410,10 +411,10 @@ export class UploadQueueService {
          * */
         if (fileChunkList.length === uploadedList.length) {
             let node: QueueNode<VideoOther> = {
-                type: null,
+                type: 'video',
                 size: null,
                 payload: {
-                    type: ele.type,
+                    type: ele.payload.type,
                     apply_inspection_no: ele.payload.apply_inspection_no,
                     contract_no: ele.payload.contract_no,
                     sku: ele.payload.sku,
@@ -421,7 +422,18 @@ export class UploadQueueService {
                     sort_index: ele.payload.sort_index,
                 },
             };
-            this.mergeRequest(node);
+            const msg = await this.mergeRequest(node);
+
+            //合并完成之后 判断状态 如果成功则删除缓存 在让主队列的front出列
+            if (msg.status === 1) {
+                (node as any).path = msg.data[0].path;
+                this.alreadyUploadPayload$.next(node as any);
+                if (this.size) {
+                    this.upload();
+                    //此处判断如果一维队列没有queue可传 则将总状态（status）置为false
+                } else this.status = false;
+                return;
+            }
             return;
         }
         //此地先将chunks的数量存好，上传的时候是每传完一个就会删除

@@ -172,6 +172,13 @@ export class PhotographComponent implements OnInit {
      * 原生拍照
      */
     graph() {
+        if (this.disabled) {
+            this.ec.showToast({
+                message: '已评价不能验配件！',
+                color: 'danger',
+            });
+            return;
+        }
         const getImage$ = from(this.camera.getPicture(this.options)),
             params: ImageOther = {
                 type: this.type,
@@ -288,6 +295,13 @@ export class PhotographComponent implements OnInit {
     }
 
     doCheckImg(e: any) {
+        if (this.disabled) {
+            this.ec.showToast({
+                message: this.errorInfo ? this.errorInfo : '未知原因造成不能上传',
+                color: 'danger',
+            });
+            return;
+        }
         let params: ImageOther = {
             type: this.type,
             apply_inspection_no: this.apply_inspection_no,
@@ -377,6 +391,7 @@ export class PhotographComponent implements OnInit {
             sku: this.sku,
             sort_index: this.sort_index,
         };
+        !params.sku && delete params.sku; //有些传图片的地方不需要传sku
         this.uploadService.uploadImage(params).subscribe(res => {
             if (res.status) {
                 this._photos = this._photos.concat(res.data.map(item => this.imgOrigin + item));
@@ -394,7 +409,6 @@ export class PhotographComponent implements OnInit {
      * @param file file对象
      */
     getCompressionImage(file: File): Observable<Blob> {
-        let that = this;
         let image = from(
             this.Compressor.compress(file, {
                 quality: 1,

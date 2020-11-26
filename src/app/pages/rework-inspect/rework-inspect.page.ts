@@ -29,15 +29,6 @@ export class ReworkInspectPage implements OnInit {
     ngOnInit() {}
 
     ionViewWillEnter() {
-        this.getListParams.page = 1;
-        // this.inspectService.getReworkInspectList(this.getListParams).subscribe(res => {
-        //     this.metaInspectTask = res.data;
-        //     this.inspectTask = JSON.parse(JSON.stringify(res.data));
-        //     this.task = res;
-        //     this.getListParams.page = res.current_page + 1;
-        //     this.storage.set('IMPLEMENT-INSPECTION-META-DATA', this.inspectTask);
-        // });
-
         this.reworkCtrl.getReworkFactoryList()
             .subscribe(res => {
                 this.metaInspectTask = res.data
@@ -47,14 +38,12 @@ export class ReworkInspectPage implements OnInit {
     }
 
     factoryChange() { 
-        this.getListParams.page = 1;
-        this.inspectService.getReworkInspectList(this.getListParams).subscribe(res => {
+        this.reworkCtrl.getReworkFactoryList(this.getListParams).subscribe(res => {
             if (res.data && res.data.length) {
-                this.inspectTask = res.data;
-                this.getListParams.page = res.current_page + 1;
-                this.storage.set('IMPLEMENT-INSPECTION-META-DATA', this.inspectTask);
+                this.metaInspectTask = res.data
+                this.inspectTask = JSON.parse(JSON.stringify(res.data));
             } else {
-                this.inspectTask = [];
+                this.metaInspectTask = this.inspectTask = [];
             }
         });
     }
@@ -64,7 +53,7 @@ export class ReworkInspectPage implements OnInit {
         this.router.navigate(['/inspect-factory', contractNo, inspectId]);
     }
     
-    loadData(event) {
+    loadData(event) { 
       this.inspectService.getReworkInspectList(this.getListParams).subscribe(res => {
           if (res.data && res.data.length) {
               this.inspectTask = this.inspectTask.concat(res.data);

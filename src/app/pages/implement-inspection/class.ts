@@ -35,4 +35,13 @@ export const InspectField = {
     factory_environment_pic: '工厂环境图片',
     factory_sample_room_pic: '工厂环境图片',
     factory_other_pic: '工厂其他图片',
+    accessory_bar_code_pic: '配件条码',
+    accessory_mark_pic: '配件唛头',
+    accessory_num_pic: '配件数量',
+    accessory_details_pic: '配件箱细节图',
+    accessory_shipping_mark_pic:'配件箱唛头',
+    accessory_size_pic_length:'配件箱长度',
+    accessory_size_pic_width:'配件箱宽度',
+    accessory_size_pic_height:'配件箱高度',
+    accessory_gross_weight_pic:'配件箱毛重'
 };

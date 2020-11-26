@@ -97,7 +97,6 @@ export class AppComponent implements OnInit {
         const fileTransfer: FileTransferObject = this.transfer.create();
         fileTransfer.download(encodeURI(url), `${this.file.externalDataDirectory}${version}.apk`, true).then(
             entry => {
-                // console.log(entry);
                 this.fileOpener
                     .open(
                         `${this.file.externalDataDirectory.toString()}${version}.apk`,
@@ -110,7 +109,6 @@ export class AppComponent implements OnInit {
                     });
             },
             err => {
-                console.log(err);
                 this.effectCtrl.loadCtrl.dismiss();
             },
         );

@@ -17,7 +17,7 @@
                 <ion-card-title color="primary">工厂情况评价</ion-card-title>
             </ion-card-header>
 
-            <ng-template *ngIf="type == 'rework'">
+            <div *ngIf="type == 'rework'">
                 <ion-radio-group
                 [(ngModel)]="data.rework_mark_level"
                 [value]="data.rework_mark_level"
@@ -46,7 +46,7 @@
                     <ion-textarea [(ngModel)]="data.rework_mark_level_desc" placeholder="请描述具体表现"></ion-textarea>
                 </ion-item>
             </ion-radio-group>
-            </ng-template>
+            </div>
            
 
             <ion-radio-group
@@ -81,7 +81,7 @@
                 </ion-item>
             </ion-radio-group>
 
-            <ng-template *ngIf="type == 'default'">
+            <div *ngIf="type == 'default'">
                 <ion-radio-group >
                     <ion-list-header>
                         <ion-label>2.工厂的仓储条件 <span class="must-text">*</span></ion-label>
@@ -102,10 +102,10 @@
                         <!-- *ngIf="other" -->
                     </ion-item>
                 </ion-radio-group>
-            </ng-template>
+            </div>
           
 
-            <ng-template  *ngIf="type == 'default'">
+            <div  *ngIf="type == 'default'">
                 <ion-radio-group
                 [(ngModel)]="data.storage_condition_appraisement"
                 [value]="data.storage_condition_appraisement"
@@ -129,9 +129,9 @@
                     <ion-radio slot="end" value="2" [checked]="data.storage_condition_appraisement == 2"></ion-radio>
                 </ion-item>
             </ion-radio-group>
-            </ng-template>
+            </div>
           
-            <ng-template *ngIf="type == 'default'">
+            <div *ngIf="type == 'default'">
                 <ion-radio-group
                 [(ngModel)]="data.remaining_storage_space_condition"
                 [value]="data.remaining_storage_space_condition"
@@ -156,7 +156,7 @@
                     <ion-radio slot="end" value="2" [checked]="data.remaining_storage_space_condition == 2"></ion-radio>
                 </ion-item>
             </ion-radio-group>
-            </ng-template>
+            </div>
           
 
             <div *ngIf="type == 'default'">

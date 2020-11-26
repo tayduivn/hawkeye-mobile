@@ -5,6 +5,7 @@
         </ion-buttons>
         <ion-title>{{ list && list.length && $any(list[0]).factory_name }}</ion-title>
         <ion-buttons slot="end">
+            <ion-button (click)="showModal()" [disabled]="alreadyUpProgress">上传进度</ion-button>
             <ion-back-button text="返回" color="white" mode="md"></ion-back-button>
         </ion-buttons>
     </ion-toolbar>
@@ -59,12 +60,8 @@
                                 fill="clear"
                                 size="small"
                                 class="f-l"
-                                [routerLink]="[
-                                    '/rework-inspect/rework-sku',
-                                    apply_inspect_no,
-                                    item.contract_no,
-                                    sItem.sku
-                                ]"
+                                (click)="toReworkSku(item, sItem)"
+                              
                                 >去验货
                             </ion-button>
                         </div>

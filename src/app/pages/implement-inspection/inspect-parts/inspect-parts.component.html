@@ -3,7 +3,7 @@
         <ion-buttons slot="start">
             <ion-menu-button></ion-menu-button>
         </ion-buttons>
-        <ion-title>合同号</ion-title>
+        <ion-title>配件 - 合同号:{{ contract_no }}</ion-title>
 
         <ion-buttons slot="end" class="tops">
             <ion-button (click)="showModal()" [disabled]="alreadyUpProgress">上传进度</ion-button>
@@ -15,154 +15,177 @@
     </ion-toolbar>
 </ion-header>
 
-<ion-content>
-    <ion-list>
-        <ion-item>
-            <div class="w100">
-                <div class="global-inspect-title">
-                    <p>唛头(照相需六面)</p>
-                </div>
-                <app-photograph
-                    type="outer_box_pic"
-                    moduleType="removeSkuPic"
-                    [photos]="[]"
-                    [contract_no]=""
-                    [apply_inspection_no]=""
-                    [sku]=""
-                    box_type="inner"
-                ></app-photograph>
-                <div class="desc-box">
-                    <app-item-by-item-desc
-                        description="备注"
-                        [ary]=""
-                        (onComplete)="descEnter($event, 'shippingMarks', 'inner')"
-                    ></app-item-by-item-desc>
-                </div>
-            </div>
-        </ion-item>
-    </ion-list>
-    <ion-list>
-        <ion-item>
-            <div class="w100">
-                <div class="global-inspect-title">
-                    <p>配件箱尺寸（单位：CM）</p>
-                </div>
+<ion-content [formGroup]="partsModal" #content>
+    <ng-container formGroupName="box_data">
+        <ion-list>
+            <ion-item>
                 <div class="w100">
+                    <div class="global-inspect-title">
+                        <p>唛头(照相需六面)</p>
+                    </div>
+                    <app-photograph
+                        type="accessory_shipping_mark_pic"
+                        moduleType="removeContractPic"
+                        [photos]="partsModal.value.box_data.accessory_shipping_mark.pic"
+                        [contract_no]="contract_no"
+                        [apply_inspection_no]="apply_inspection_no"
+                    ></app-photograph>
+                    <div class="desc-box">
+                        <app-item-by-item-desc
+                            description="备注"
+                            [ary]="partsModal.value.box_data.accessory_shipping_mark.desc"
+                            (onComplete)="descEnter($event, 'accessory_shipping_mark')"
+                        ></app-item-by-item-desc>
+                    </div>
+                </div>
+            </ion-item>
+        </ion-list>
+        <ion-list>
+            <ion-item>
+                <div class="w100">
+                    <div class="global-inspect-title">
+                        <p>配件箱尺寸（单位：CM）</p>
+                    </div>
+                    <div class="w100">
+                        <ion-grid class="size-grid" formGroupName="accessory_size">
+                            <ion-row align-items-center>
+                                <ion-col size="6">尺寸</ion-col>
+                                <ion-col size="6">照片上传</ion-col>
+                            </ion-row>
+                            <ion-row align-items-center formGroupName="size_length">
+                                <ion-col size="6">
+                                    <input type="number" placeholder="长" formControlName="text" />
+                                </ion-col>
+                                <ion-col size="6">
+                                    <app-photograph
+                                        type="accessory_size_pic_length"
+                                        moduleType="removeContractPic"
+                                        [photos]="partsModal.value.box_data.accessory_size.size_length.pic"
+                                        [contract_no]="contract_no"
+                                        [apply_inspection_no]="apply_inspection_no"
+                                        [sku]=""
+                                        box_type="inner"
+                                    ></app-photograph>
+                                </ion-col>
+                            </ion-row>
+                            <ion-row align-items-center formGroupName="size_width">
+                                <ion-col size="6">
+                                    <input type="number" placeholder="宽" formControlName="text" />
+                                </ion-col>
+                                <ion-col size="6">
+                                    <app-photograph
+                                        type="accessory_size_pic_width"
+                                        moduleType="removeContractPic"
+                                        [photos]="partsModal.value.box_data.accessory_size.size_width.pic"
+                                        [contract_no]="contract_no"
+                                        [apply_inspection_no]="apply_inspection_no"
+                                    ></app-photograph>
+                                </ion-col>
+                            </ion-row>
+                            <ion-row align-items-center formGroupName="size_height">
+                                <ion-col size="6">
+                                    <input type="number" placeholder="高" formControlName="text" />
+                                </ion-col>
+                                <ion-col size="6">
+                                    <app-photograph
+                                        type="accessory_size_pic_height"
+                                        moduleType="removeContractPic"
+                                        [photos]="partsModal.value.box_data.accessory_size.size_height.pic"
+                                        [contract_no]="contract_no"
+                                        [apply_inspection_no]="apply_inspection_no"
+                                    ></app-photograph>
+                                </ion-col>
+                            </ion-row>
+                        </ion-grid>
+                    </div>
+                    <div class="desc-box">
+                        <app-item-by-item-desc
+                            description="备注"
+                            [ary]="partsModal.value.box_data.accessory_size.desc"
+                            (onComplete)="descEnter($event, 'accessory_size')"
+                        ></app-item-by-item-desc>
+                    </div>
+                </div>
+            </ion-item>
+        </ion-list>
+        <ion-list>
+            <ion-item formGroupName="accessory_gross_weight">
+                <div class="w100">
+                    <div class="global-inspect-title">
+                        <p>配件箱毛重(单位：KG)</p>
+                    </div>
+                    <input type="number" placeholder="输入毛重" formControlName="text" />
+                    <app-photograph
+                        type="accessory_gross_weight_pic"
+                        moduleType="removeContractPic"
+                        [photos]="partsModal.value.box_data.accessory_gross_weight.pic"
+                        [contract_no]="contract_no"
+                        [apply_inspection_no]="apply_inspection_no"
+                        box_type="inner"
+                    ></app-photograph>
+                    <div class="desc-box">
+                        <app-item-by-item-desc
+                            description="备注"
+                            [ary]="partsModal.value.box_data.accessory_gross_weight.desc"
+                            (onComplete)="descEnter($event, 'accessory_gross_weight')"
+                        ></app-item-by-item-desc>
+                    </div>
+                </div>
+            </ion-item>
+        </ion-list>
+        <ion-list>
+            <ion-item>
+                <div class="w100">
+                    <div class="global-inspect-title">
+                        <p>清单</p>
+                    </div>
+
                     <ion-grid class="size-grid">
                         <ion-row align-items-center>
-                            <ion-col size="6">尺寸</ion-col>
-                            <ion-col size="6">照片上传</ion-col>
+                            <ion-col size="3">配件编号</ion-col>
+                            <ion-col size="5">中文名</ion-col>
+                            <ion-col size="2">数量</ion-col>
+                            <ion-col size="2">操作</ion-col>
                         </ion-row>
-                        <ion-row align-items-center>
-                            <ion-col size="6">
-                                <input type="number" placeholder="长" />
-                            </ion-col>
-                            <ion-col size="6">
-                                <app-photograph
-                                    type="size_pic_length"
-                                    moduleType="removeSkuPic"
-                                    [photos]=""
-                                    [contract_no]=""
-                                    [apply_inspection_no]=""
-                                    [sku]=""
-                                    box_type="inner"
-                                ></app-photograph>
-                            </ion-col>
-                        </ion-row>
-                        <ion-row align-items-center>
-                            <ion-col size="6">
-                                <input type="number" placeholder="宽" />
-                            </ion-col>
-                            <ion-col size="6">
-                                <app-photograph
-                                    type="size_pic_length"
-                                    moduleType="removeSkuPic"
-                                    [photos]=""
-                                    [contract_no]=""
-                                    [apply_inspection_no]=""
-                                    [sku]=""
-                                    box_type="inner"
-                                ></app-photograph>
-                            </ion-col>
-                        </ion-row>
-                        <ion-row align-items-center>
-                            <ion-col size="6">
-                                <input type="number" placeholder="高" />
-                            </ion-col>
-                            <ion-col size="6">
-                                <app-photograph
-                                    type="size_pic_length"
-                                    moduleType="removeSkuPic"
-                                    [photos]=""
-                                    [contract_no]=""
-                                    [apply_inspection_no]=""
-                                    [sku]=""
-                                    box_type="inner"
-                                ></app-photograph>
+                        <ion-row class="text-content" align-items-center *ngFor="let item of metadata.accessory_list">
+                            <ion-col size="3">{{ item.AccessoryCode }}</ion-col>
+                            <ion-col size="5">{{ item.AccessoryName }}</ion-col>
+                            <ion-col size="2">{{ item.StockDetailNum }}</ion-col>
+                            <ion-col size="2">
+                                <ion-button
+                                    fill="clear"
+                                    size="small"
+                                    [routerLink]="[
+                                        '/inspect-check',
+                                        contract_no,
+                                        apply_inspection_no,
+                                        item.AccessoryCode
+                                    ]"
+                                    >查验</ion-button
+                                >
                             </ion-col>
                         </ion-row>
                     </ion-grid>
                 </div>
-                <div class="desc-box">
-                    <app-item-by-item-desc
-                        description="备注"
-                        [ary]=""
-                        (onComplete)="descEnter($event, 'size', 'inner')"
-                    ></app-item-by-item-desc>
-                </div>
-            </div>
-        </ion-item>
-    </ion-list>
-    <ion-list>
-        <ion-item>
-            <div class="w100">
-                <div class="global-inspect-title">
-                    <p>配件箱毛重(单位：KG)</p>
-                </div>
-                <input type="number" placeholder="输入毛重" />
-                <app-photograph
-                    type="outer_box_pic"
-                    moduleType="removeSkuPic"
-                    [photos]="[]"
-                    [contract_no]=""
-                    [apply_inspection_no]=""
-                    [sku]=""
-                    box_type="inner"
-                ></app-photograph>
-                <div class="desc-box">
-                    <app-item-by-item-desc
-                        description="备注"
-                        [ary]=""
-                        (onComplete)="descEnter($event, 'shippingMarks', 'inner')"
-                    ></app-item-by-item-desc>
-                </div>
-            </div>
-        </ion-item>
-    </ion-list>
-    <ion-list>
-        <ion-item>
-            <div class="w100">
-                <div class="global-inspect-title">
-                    <p>清单</p>
-                </div>
+            </ion-item>
+        </ion-list>
+    </ng-container>
 
-                <ion-grid class="size-grid">
-                    <ion-row align-items-center>
-                        <ion-col size="3">配件编号</ion-col>
-                        <ion-col size="5">中文名</ion-col>
-                        <ion-col size="2">数量</ion-col>
-                        <ion-col size="2">操作</ion-col>
-                    </ion-row>
-                    <ion-row align-items-center>
-                        <ion-col size="3">32423423</ion-col>
-                        <ion-col size="5">中文名</ion-col>
-                        <ion-col size="2">3</ion-col>
-                        <ion-col size="2">
-                            <ion-button fill="clear" size="small" [routerLink]="['/inspect-check']">查验</ion-button>
-                        </ion-col>
-                    </ion-row>
-                </ion-grid>
-            </div>
-        </ion-item>
-    </ion-list>
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+        <ion-fab-button color="secondary">
+            <ion-icon name="add"></ion-icon>
+        </ion-fab-button>
+
+        <ion-fab-list side="start">
+            <ion-fab-button (click)="save().subscribe()" color="danger">
+                <p>保存</p>
+            </ion-fab-button>
+        </ion-fab-list>
+
+        <ion-fab-list side="top">
+            <ion-fab-button (click)="content.scrollToTop()" color="primary">
+                <p>顶部</p>
+            </ion-fab-button>
+        </ion-fab-list>
+    </ion-fab>
 </ion-content>

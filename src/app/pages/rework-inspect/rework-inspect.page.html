@@ -74,8 +74,8 @@
         </ion-card-content>
     </ion-card>
 
-    <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+    <!-- <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
         <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="正在加载"> </ion-infinite-scroll-content>
-    </ion-infinite-scroll>
+    </ion-infinite-scroll> -->
     <p *ngIf="!inspectTask.length" class="text-c ">暂无数据</p>
 </ion-content>

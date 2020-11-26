@@ -45,11 +45,11 @@ const routes: Routes = [
         component: EvaluationComponent,
     },
     {
-        path: 'inspect-parts/:contract_no',
+        path: 'inspect-parts/:contract_no/:apply_inspection_no',
         component: InspectPartsComponent
     },
     {
-        path: 'inspect-check',
+        path: 'inspect-check/:contract_no/:apply_inspection_no/:sku',
         component: InspectCheckComponent
     }
 ];

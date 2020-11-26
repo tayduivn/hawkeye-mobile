@@ -15,7 +15,6 @@ export class RequestService {
     constructor(private userInfo: UserInfoService) {}
 
     request({ url, method = 'post', data, headers, onProgress = e => e, requestList = [] }): Promise<any> {
-        //console.log('-------    请求    -------')
         return new Promise(resolve => {
             headers.Authorization = this.userInfo.info ? `Bearer ${this.userInfo.info.api_token}` : undefined;
             const xhr: XMLHttpRequest = new XMLHttpRequest();
@@ -32,7 +31,6 @@ export class RequestService {
                 if (requestList) {
                     const xhrIndex = requestList.findIndex(item => item === xhr);
                     requestList.splice(xhrIndex, 1);
-                    
                 }
                 //此地增加status不为200的逻辑
                 //要是不为200，则通知queue不pop。暂停上传

@@ -136,7 +136,7 @@ export class InspectSkuComponent implements OnInit {
         private inspectCache: InspectCacheService,
     ) {}
 
-    SkuInspectModel: FormGroup;
+    SkuInspectModel: FormGroup; 
 
     alreadyUpProgress: boolean = this.uQueue.alreadyUpProgress;
     showModal() {

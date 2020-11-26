@@ -1,0 +1,125 @@
+<ion-header mode="ios">
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>评价详情</ion-title>
+        <ion-buttons slot="end">
+            <ion-button [routerLink]="['/evaluate']">返回</ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content class="evaluate-detail">
+    <div class="factory-eval">
+        <ion-card mode="ios" class="factory">
+            <ion-card-header>
+                <ion-card-title color="primary">工厂情况评价</ion-card-title>
+            </ion-card-header>
+
+            <div >
+                <ion-radio-group [(ngModel)]="data.rework_mark_level" [value]="data.rework_mark_level">
+                    <ion-list-header>
+                        <ion-label>1.返工痕迹 <span class="must-text">*</span></ion-label>
+                    </ion-list-header>
+
+                    <ion-item>
+                        <ion-label>明显</ion-label>
+                        <ion-radio slot="end" value="0" [checked]="data.rework_mark_level == 0"></ion-radio>
+                    </ion-item>
+
+                    <ion-item>
+                        <ion-label>细微</ion-label>
+                        <ion-radio slot="end" value="1" [checked]="data.rework_mark_level == 1"></ion-radio>
+                    </ion-item>
+
+                    <ion-item>
+                        <ion-label>无</ion-label>
+                        <ion-radio slot="end" value="2" [checked]="data.rework_mark_level == 2"></ion-radio>
+                    </ion-item>
+
+                    <ion-item>
+                        <ion-textarea
+                            [(ngModel)]="data.rework_mark_level_desc"
+                            placeholder="请描述具体表现"
+                        ></ion-textarea>
+                    </ion-item>
+                </ion-radio-group>
+            </div>
+
+            <ion-radio-group
+                [(ngModel)]="data.inspection_cooperation_level"
+                [value]="data.inspection_cooperation_level"
+            >
+                <ion-list-header>
+                    <ion-label>1.验货配合度 <span class="must-text">*</span></ion-label>
+                </ion-list-header>
+
+                <ion-item>
+                    <ion-label>高</ion-label>
+                    <ion-radio slot="end" value="0" [checked]="data.inspection_cooperation_level == 0"></ion-radio>
+                </ion-item>
+
+                <ion-item>
+                    <ion-label>一般</ion-label>
+                    <ion-radio slot="end" value="1" [checked]="data.inspection_cooperation_level == 1"></ion-radio>
+                </ion-item>
+
+                <ion-item>
+                    <ion-label>低</ion-label>
+                    <ion-radio slot="end" value="2" [checked]="data.inspection_cooperation_level == 2"></ion-radio>
+                </ion-item>
+
+                <ion-item>
+                    <ion-textarea
+                        [(ngModel)]="data.inspection_cooperation_level_desc"
+                        placeholder="请描述具体表现"
+                    ></ion-textarea>
+                </ion-item>
+            </ion-radio-group>
+        </ion-card>
+    </div>
+
+    <div class="sku-eval">
+        <ion-card mode="ios" class="factory">
+            <ion-card-header>
+                <ion-card-title color="primary">货号</ion-card-title>
+            </ion-card-header>
+
+            <ng-container *ngFor="let item of sku_appraisement; let i = index">
+                <ion-radio-group (ionChange)="skuAppraisementChange($event, i)">
+                    <ion-list-header>
+                        <ion-label>{{ i + 1 + '.' + item.sku }}</ion-label>
+                    </ion-list-header>
+
+                    <ion-item>
+                        <ion-label>通过</ion-label>
+                        <ion-radio slot="end" value="0" [checked]="item.appraisement == '0'"></ion-radio>
+                    </ion-item>
+
+                    <ion-item>
+                        <ion-label>待定</ion-label>
+                        <ion-radio slot="end" value="1" [checked]="item.appraisement == '1'"></ion-radio>
+                    </ion-item>
+
+                    <ion-item>
+                        <ion-label>不通过</ion-label>
+                        <ion-radio slot="end" value="2" [checked]="item.appraisement == '2'"></ion-radio>
+                    </ion-item>
+
+                    <ion-item>
+                        <app-item-by-item-desc
+                            description="备注"
+                            [ary]="item.desc"
+                            (onComplete)="descEnter($event, i)"
+                        ></app-item-by-item-desc>
+                    </ion-item>
+                </ion-radio-group>
+            </ng-container>
+        </ion-card>
+    </div>
+
+    <div class="submit">
+        <ion-button expand="block" (click)="submit()" class="mb-20">提交</ion-button>
+    </div>
+</ion-content>

@@ -1,5 +1,9 @@
 <div class="pd-15">
-    <h3>请输入备注</h3>
+    <div class="dis-flex">
+        <h3>请输入备注</h3>
+        <ion-button size="small" color="danger" (click)="modal.dismiss()">关闭</ion-button>
+    </div>
+
     <div class="content">
         <ion-textarea [(ngModel)]="_desc.text"></ion-textarea>
         <ion-radio-group [(ngModel)]="_desc.level">

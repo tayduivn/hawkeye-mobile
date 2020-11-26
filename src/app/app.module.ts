@@ -40,7 +40,8 @@ import { DirectiveModule } from './directives/directive.module';
         VideoPlayComponent,
         DescriptionComponent,
         QueueComponent,
-        FeedbackComponent
+        FeedbackComponent,
+        PartsComponent
     ],
     entryComponents: [
         InspectSettingBoxComponent,
@@ -49,7 +50,8 @@ import { DirectiveModule } from './directives/directive.module';
         VideoPlayComponent,
         DescriptionComponent,
         QueueComponent,
-        FeedbackComponent
+        FeedbackComponent,
+        PartsComponent
     ],
     imports: [
         BrowserModule,

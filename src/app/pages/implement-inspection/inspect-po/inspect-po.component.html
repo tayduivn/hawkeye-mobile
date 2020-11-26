@@ -123,10 +123,18 @@
                                 >问题描述</ion-button
                             >
 
-                            <!-- *ngIf="item.data && item.data.length > 1" -->
-                            <ion-button class="f-r" size="small" color="danger" (click)="copy(item, sItem)"
-                                >复制SKU</ion-button
+                            <ion-button
+                                class="f-r"
+                                size="small"
+                                color="primary"
+                                *ngIf="item.has_accessory === 1"
+                                (click)="toInspectPart(item,sItem)"
+                            
+                                >配件</ion-button
                             >
+                            <!-- <ion-button class="f-r" size="small" color="danger" (click)="copy(item, sItem)"
+                                >复制SKU</ion-button
+                            > -->
                         </div>
                         <app-photograph
                             [disabled]="sItem.is_appraise"

@@ -3,7 +3,7 @@
         <ion-buttons slot="start">
             <ion-menu-button></ion-menu-button>
         </ion-buttons>
-        <ion-title>合同号</ion-title>
+        <ion-title>配件详情</ion-title>
 
         <ion-buttons slot="end" class="tops">
             <ion-button (click)="showModal()" [disabled]="alreadyUpProgress">上传进度</ion-button>
@@ -15,124 +15,148 @@
     </ion-toolbar>
 </ion-header>
 
-<ion-content [formGroup]="skuInspectModel">
-    <app-sku-info [sku]="skuInfo" type="implement"></app-sku-info>
-    <ion-list>
-      <!--  formGroupName="barCode" -->
-        <ion-item> 
-            <div class="w100">
-                <div class="global-inspect-title">
-                    <p>条码</p>
-                </div>
-                <div class="bar-code" fxLayout="row" fxLayoutAlign="start center">
-                    <input class="h-30" placeholder="请输入条码" /> <!--formControlName="text" -->
-                    <ion-button fill="clear">{{ barCode }}</ion-button>
-                    <ion-button fill="clear" (click)="scan('inner')">
-                        扫码
-                    </ion-button>
-                    <ion-button
-                        color="success"
-                        size="small"
-                        fill="clear"
-                        *ngIf="true"
-                    >
-                        扫码已通过
-                    </ion-button>
-                </div>
-                <app-photograph
-                    type="bar_code_pic"
-                    moduleType="removeSkuPic"
-                    [photos]="[]"
-                    [contract_no]="contract_no"
-                    [apply_inspection_no]="apply_inspection_no"
-                    [sku]="skuInfo.sku"
-                    box_type="inner"
-                ></app-photograph>
-                <div class="desc-box mt-10">
-                    <app-item-by-item-desc
-                        description="备注"
-                        [ary]="[]"
-                        (onComplete)="descEnter($event, 'barCode')"
-                    ></app-item-by-item-desc>
-                </div>
-            </div>
-        </ion-item>
+<ion-content [formGroup]="skuInspectModel" #content>
+    <app-part [part]="metaData"></app-part>
 
-        <ion-item>
-            <div class="w100">
-                <div class="global-inspect-title">
-                    <p>配件唛头(照相需六面)</p>
+    <ng-container formGroupName="box_data">
+        <ion-list>
+            <!--  formGroupName="barCode" -->
+            <ion-item formGroupName="accessory_bar_code">
+                <div class="w100">
+                    <div class="global-inspect-title">
+                        <p>条码</p>
+                    </div>
+                    <div class="bar-code" fxLayout="row" fxLayoutAlign="start center">
+                        <input class="h-30 w200" placeholder="请输入条码" formControlName="text" />
+                        <!--formControlName="text" -->
+                        <ion-button fill="clear">{{ barCode }}</ion-button>
+                        <ion-button
+                            color="success"
+                            size="small"
+                            fill="clear"
+                            *ngIf="
+                                (barCode !== '' &&
+                                    barCode === skuInspectModel.value.box_data.accessory_bar_code.text) ||
+                                skuInspectModel.value.box_data.accessory_bar_code.isTrue === 1
+                            "
+                        >
+                            扫码已通过
+                        </ion-button>
+                        <ion-button [fill]="'clear'" (click)="scan()">
+                            扫码
+                        </ion-button>
+                    </div>
+                    <app-photograph
+                        type="accessory_bar_code_pic"
+                        moduleType="removeSkuPic"
+                        [photos]="skuInspectModel.value.box_data.accessory_bar_code.pic"
+                        [contract_no]="contract_no"
+                        [apply_inspection_no]="apply_inspection_no"
+                        [sku]="sku"
+                    ></app-photograph>
+                    <div class="desc-box mt-10">
+                        <app-item-by-item-desc
+                            description="备注"
+                            [ary]="skuInspectModel.value.box_data.accessory_bar_code.desc"
+                            (onComplete)="descEnter($event, 'accessory_bar_code')"
+                        ></app-item-by-item-desc>
+                    </div>
                 </div>
-                <app-photograph
-                    type="outer_box_pic"
-                    moduleType="removeSkuPic"
-                    [photos]="[]"
-                    [contract_no]=""
-                    [apply_inspection_no]=""
-                    [sku]=""
-                    box_type="inner"
-                ></app-photograph>
-                <div class="desc-box">
-                    <app-item-by-item-desc
-                        description="备注"
-                        [ary]=""
-                        (onComplete)="descEnter($event, 'shippingMarks', 'inner')"
-                    ></app-item-by-item-desc>
-                </div>
-            </div>
-        </ion-item>
-    </ion-list>
+            </ion-item>
 
-    <ion-list>
-        <ion-item>
-            <div class="w100">
-                <div class="global-inspect-title">
-                    <p>配件数量</p>
+            <ion-item formGroupName="accessory_mark">
+                <div class="w100">
+                    <div class="global-inspect-title">
+                        <p>配件唛头(照相需六面)</p>
+                    </div>
+                    <app-photograph
+                        type="accessory_mark_pic"
+                        moduleType="removeSkuPic"
+                        [photos]="skuInspectModel.value.box_data.accessory_mark.pic"
+                        [contract_no]="contract_no"
+                        [apply_inspection_no]="apply_inspection_no"
+                        [sku]="sku"
+                        box_type="inner"
+                    ></app-photograph>
+                    <div class="desc-box">
+                        <app-item-by-item-desc
+                            description="备注"
+                            [ary]="skuInspectModel.value.box_data.accessory_mark.desc"
+                            (onComplete)="descEnter($event, 'accessory_mark')"
+                        ></app-item-by-item-desc>
+                    </div>
                 </div>
-                <input type="number" placeholder="输入数量" />
-                <app-photograph
-                    type="outer_box_pic"
-                    moduleType="removeSkuPic"
-                    [photos]="[]"
-                    [contract_no]=""
-                    [apply_inspection_no]=""
-                    [sku]=""
-                    box_type="inner"
-                ></app-photograph>
-                <div class="desc-box">
-                    <app-item-by-item-desc
-                        description="备注"
-                        [ary]=""
-                        (onComplete)="descEnter($event, 'shippingMarks', 'inner')"
-                    ></app-item-by-item-desc>
-                </div>
-            </div>
-        </ion-item>
-    </ion-list>
+            </ion-item>
+        </ion-list>
 
-    <ion-list>
-        <ion-item>
-            <div class="w100">
-                <div class="global-inspect-title">
-                    <p>配件细节图</p>
+        <ion-list>
+            <ion-item formGroupName="accessory_num">
+                <div class="w100">
+                    <div class="global-inspect-title">
+                        <p>配件数量</p>
+                    </div>
+                    <input type="number" placeholder="输入数量" formControlName="text" />
+                    <app-photograph
+                        type="accessory_num_pic"
+                        moduleType="removeSkuPic"
+                        [photos]="skuInspectModel.value.box_data.accessory_num.pic"
+                        [contract_no]="contract_no"
+                        [apply_inspection_no]="apply_inspection_no"
+                        [sku]="sku"
+                        box_type="inner"
+                    ></app-photograph>
+                    <div class="desc-box">
+                        <app-item-by-item-desc
+                            description="备注"
+                            [ary]="skuInspectModel.value.box_data.accessory_num.desc"
+                            (onComplete)="descEnter($event, 'accessory_num')"
+                        ></app-item-by-item-desc>
+                    </div>
                 </div>
-                <app-photograph
-                    type="outer_box_pic"
-                    moduleType="removeSkuPic"
-                    [photos]="[]"
-                    [contract_no]=""
-                    [apply_inspection_no]=""
-                    [sku]=""
-                    box_type="inner"
-                ></app-photograph>
-                <div class="desc-box">
-                    <app-item-by-item-desc
-                        description="备注"
-                        [ary]=""
-                        (onComplete)="descEnter($event, 'shippingMarks', 'inner')"
-                    ></app-item-by-item-desc>
+            </ion-item>
+        </ion-list>
+
+        <ion-list>
+            <ion-item formGroupName="accessory_details">
+                <div class="w100">
+                    <div class="global-inspect-title">
+                        <p>配件细节图</p>
+                    </div>
+                    <app-photograph
+                        type="accessory_details_pic"
+                        moduleType="removeSkuPic"
+                        [photos]="skuInspectModel.value.box_data.accessory_details.pic"
+                        [contract_no]="contract_no"
+                        [apply_inspection_no]="apply_inspection_no"
+                        [sku]="sku"
+                    ></app-photograph>
+                    <div class="desc-box">
+                        <app-item-by-item-desc
+                            description="备注"
+                            [ary]="skuInspectModel.value.box_data.accessory_details.desc"
+                            (onComplete)="descEnter($event, 'accessory_details')"
+                        ></app-item-by-item-desc>
+                    </div>
                 </div>
-            </div>
-        </ion-item>
-    </ion-list>
+            </ion-item>
+        </ion-list>
+    </ng-container>
+
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+        <ion-fab-button color="secondary">
+            <ion-icon name="add"></ion-icon>
+        </ion-fab-button>
+
+        <ion-fab-list side="start">
+            <ion-fab-button (click)="save().subscribe()" color="danger">
+                <p>保存</p>
+            </ion-fab-button>
+        </ion-fab-list>
+
+        <ion-fab-list side="top">
+            <ion-fab-button (click)="content.scrollToTop()" color="primary">
+                <p>顶部</p>
+            </ion-fab-button>
+        </ion-fab-list>
+    </ion-fab>
 </ion-content>

@@ -54,6 +54,7 @@ ion-content {
     }
 
     .content-box {
+        width: calc(100% - 140px);
         flex-grow: 1;
         font-size: 14px;
         .red {
@@ -191,4 +192,12 @@ ion-row:last-child {
         justify-content: space-between;
         width: 100%;
     }
+}
+
+.text-c{
+    text-align: center !important;
+}
+
+.fw-bold{
+    font-weight: bold;
 }

@@ -14,7 +14,7 @@ export class DescriptionComponent implements OnInit {
     @Input() type: 'add' | 'modify';
 
     _desc: Description;
-    constructor(private modal: ModalController) {}
+    constructor(public modal: ModalController) {}
 
     ngOnInit() {}
 
