@@ -41,8 +41,12 @@
 }
 .title-factory {
     .title-factory-item {
+        display: flex;
+        justify-content: center;
+        align-items: center;
         color: rgb(138, 136, 136);
         background-color: #ededed;
+        font-weight: bold;
     }
 }
 .title3 {

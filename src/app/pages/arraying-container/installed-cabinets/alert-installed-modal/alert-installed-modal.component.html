@@ -95,7 +95,7 @@
                 SKU
               </ion-col>
               <ion-col align-self-center [size]="2" class="title-first-item">
-                合同抬头<span class="star">*</span>
+                合同抬头
               </ion-col>
               <ion-col align-self-center [size]="4" class="title-first-item">
                 中文名
@@ -115,7 +115,7 @@
                 {{item.sku}}
               </ion-col>
               <ion-col align-self-center [size]="2" class="title-item">
-                <ion-input type="number" class="ipt" placeholder="合同抬头" [(ngModel)]="item.contract_title"
+                <ion-input type="text" class="ipt" placeholder="合同抬头" [(ngModel)]="item.contract_title"
                   [ngModelOptions]="{standalone: true}" (ionChange)="onItemChanged()">
                 </ion-input>
               </ion-col>

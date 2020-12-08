@@ -40,6 +40,9 @@
 }
 .header-row {
     .title-first-item {
+        display: flex;
+        justify-content: center;
+        align-items: center;
         background-color: #ededed;
     }
 }

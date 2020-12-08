@@ -38,7 +38,7 @@ export class AlertModalComponent implements OnInit {
             this.arraying.postArrayingContainerData(this.data).subscribe(res => {
                 // 关闭弹出层
                 this.modal.dismiss('已关闭');
-                this.es.showAlert({
+                this.es.showToast({
                     message: '提单成功',
                 });
             });

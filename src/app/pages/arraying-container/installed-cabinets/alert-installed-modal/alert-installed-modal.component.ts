@@ -4,7 +4,6 @@ import { ModalController } from '@ionic/angular';
 import { ArrayingService } from 'src/app/services/arraying.service';
 import { PageEffectService } from 'src/app/services/page-effect.service';
 
-
 @Component({
     selector: 'app-alert-installed-modal',
     templateUrl: './alert-installed-modal.component.html',
@@ -94,15 +93,13 @@ export class AlertInstalledModalComponent implements OnInit {
     // 每次改变都判断
     onItemChanged() {
         const flag = this.currentData.every(item => item.truly_arraying_container_num);
-        const flag1 = this.currentData.every(item => item.contract_title);
         console.log(flag);
         this.installData.truely_loading_time &&
         this.installData.on_board_date &&
         this.installData.estimated_arrival_time &&
         this.installData.seal_no.trim() &&
         this.installData.container_no.trim() &&
-        flag &&
-        flag1
+        flag
             ? (this.isBtnDisabled = true)
             : (this.isBtnDisabled = false);
     }
