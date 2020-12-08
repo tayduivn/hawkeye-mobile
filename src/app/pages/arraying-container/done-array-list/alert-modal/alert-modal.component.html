@@ -1,0 +1,122 @@
+<ion-header mode="ios">
+  <ion-toolbar>
+    <ion-title>开始提单</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">关闭</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="content-container">
+    <div>
+      <ion-item>
+        <ion-card-title color="primary" class="card-title">提单: {{item.name}}</ion-card-title>
+      </ion-item>
+      <ion-card-content>
+        <ion-grid>
+          <!-- 表单验证 -->
+          <form>
+            <ion-row class="title">
+              <ion-col align-self-center [size]="3" class="title-first-item">
+                发货仓库名称<span class="star">*</span> :
+              </ion-col>
+              <ion-col align-self-center [size]="4">
+              </ion-col>
+              <ion-col align-self-center [size]="5">
+                <!-- 这里是下拉选择器 -->
+                <ion-select class="select" placeholder="请选择仓库" [(ngModel)]="data.shipping_room"
+                  [ngModelOptions]="{standalone: true}" (ionChange)="isBtnDisabled()" okText="确认" cancelText="取消">
+                  <ion-select-option [value]="item.id" *ngFor="let item of shipping_room">{{item.name}}
+                  </ion-select-option>
+                </ion-select>
+              </ion-col>
+            </ion-row>
+
+            <ion-row class="title">
+              <ion-col align-self-center [size]="3" class="title-first-item">
+                预计装柜时间<span class="star">*</span> :
+              </ion-col>
+              <ion-col align-self-center [size]="4" class="title-first-item">
+              </ion-col>
+              <ion-col align-self-center [size]="5" class="dateCol">
+                <ion-datetime class="Formatdate" doneText="完成" cancelText="取消" max="2050-12-30" placeholder="请输入日期"
+                  [(ngModel)]="data.estimate_loading_time" [ngModelOptions]="{standalone: true}"
+                  displayFormat="YYYY/MM/DD" (ionChange)="isBtnDisabled()">
+                </ion-datetime>
+                <div class="iconfont icon-ziyuan"></div>
+              </ion-col>
+            </ion-row>
+
+            <ion-row class="title-factory">
+              <ion-col align-self-center [size]="5" class="title-factory-item">
+                工厂
+              </ion-col>
+              <ion-col align-self-center [size]="2" class="title-factory-item">
+                工厂代码
+              </ion-col>
+              <ion-col align-self-center [size]="2" class="title-factory-item">
+                工厂费用<span class="star">*</span>
+              </ion-col>
+              <ion-col align-self-center [size]="3" class="title-factory-item">
+                费用备注<span class="star">*</span>
+              </ion-col>
+            </ion-row>
+
+            <ion-row class="title3" *ngFor="let item of data.charges">
+              <ion-col align-self-center [size]="5" class="title3-item">
+                <div>{{item.factory_name}}</div>
+              </ion-col>
+              <ion-col align-self-center [size]="2" class="title3-item">
+                <div>{{item.factory_code?item.factory_code:'暂无'}}</div>
+              </ion-col>
+              <ion-col align-self-center [size]="2" class="title3-item">
+                <div>
+                  <ion-input type="number" class="ipt1" [(ngModel)]="item.charge" [ngModelOptions]="{standalone: true}" (ionChange)="isBtnDisabled()" (ionBlur)="onBlur($event,item)">
+                  </ion-input>
+                </div>
+              </ion-col>
+              <ion-col align-self-center [size]="3" class="title3-item">
+                <div>
+                  <ion-input type="text" class="ipt1" [(ngModel)]="item.desc" [ngModelOptions]="{standalone: true}" (ionChange)="isBtnDisabled()">
+                  </ion-input>
+                </div>
+              </ion-col>
+            </ion-row>
+
+            <ion-row class="title">
+              <ion-col align-self-center [size]="12" class="title-first-item">
+                提单号<span class="star">*</span> :
+              </ion-col>
+            </ion-row>
+            <!-- 提单号输入框 -->
+            <ion-row class="title">
+              <ion-col align-self-center [size]="12">
+                <ion-input type="text" class="ipt" placeholder="提单号" [(ngModel)]="data.bl_no"
+                  [ngModelOptions]="{standalone: true}" (ionChange)="isBtnDisabled()" clearInput="true"></ion-input>
+              </ion-col>
+            </ion-row>
+
+
+            <ion-row class="title">
+              <ion-col align-self-center [size]="12" class="title-first-item">
+                备注 :
+              </ion-col>
+            </ion-row>
+            <!-- 备注输入框 -->
+            <ion-row class="title">
+              <ion-col align-self-center [size]="12">
+                <textarea rows="4" [(ngModel)]="data.desc" [ngModelOptions]="{standalone: true}" clearInput="true"
+                  class="textArea"></textarea>
+              </ion-col>
+            </ion-row>
+            <ion-row class="title onSubmit">
+              <ion-button class="ml-20" size="small" (click)="onSubmit()" [disabled]="!controlBtnIsabled">确认提单
+              </ion-button>
+            </ion-row>
+          </form>
+        </ion-grid>
+      </ion-card-content>
+    </div>
+  </div>
+</ion-content>

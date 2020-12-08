@@ -6,11 +6,9 @@ import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
-
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
-
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
@@ -24,13 +22,17 @@ import { DescriptionComponent } from './widget/description/description.component
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 import { SecureStorage } from '@ionic-native/secure-storage/ngx';
 import { QueueComponent } from './pages/implement-inspection/queue/queue.component';
+import { AlertModalComponent } from './pages/arraying-container/done-array-list/alert-modal/alert-modal.component';
+import { AlertInstalledModalComponent } from './pages/arraying-container/installed-cabinets/alert-installed-modal/alert-installed-modal.component';
+import { AlertStatisticsModalComponent } from './pages/arraying-container/alert-statistics-modal/alert-statistics-modal.component';
 import { BackgroundMode } from '@ionic-native/background-mode/ngx';
 import { Network } from '@ionic-native/network/ngx';
 import { File } from '@ionic-native/file/ngx';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { FeedbackComponent } from './pages/rework-inspect/feedback/feedback.component';
 import { DirectiveModule } from './directives/directive.module';
-
+import { AlertThisBatchDetailsComponent } from './pages/arraying-container/done-array-list/alert-this-batch-details/alert-this-batch-details.component';
+import { DetailsModelComponent } from './pages/arraying-container/installed-cabinets/details-model/details-model.component';
 @NgModule({
     declarations: [
         AppComponent,
@@ -41,7 +43,12 @@ import { DirectiveModule } from './directives/directive.module';
         DescriptionComponent,
         QueueComponent,
         FeedbackComponent,
-        PartsComponent
+        PartsComponent,
+        AlertModalComponent,
+        AlertInstalledModalComponent,
+        AlertStatisticsModalComponent,
+        AlertThisBatchDetailsComponent,
+        DetailsModelComponent,
     ],
     entryComponents: [
         InspectSettingBoxComponent,
@@ -51,7 +58,12 @@ import { DirectiveModule } from './directives/directive.module';
         DescriptionComponent,
         QueueComponent,
         FeedbackComponent,
-        PartsComponent
+        PartsComponent,
+        AlertModalComponent,
+        AlertInstalledModalComponent,
+        AlertStatisticsModalComponent,
+        AlertThisBatchDetailsComponent,
+        DetailsModelComponent
     ],
     imports: [
         BrowserModule,
@@ -60,7 +72,7 @@ import { DirectiveModule } from './directives/directive.module';
         FormsModule,
         BrowserAnimationsModule,
         HttpClientModule,
-        DirectiveModule
+        DirectiveModule,
     ],
     providers: [
         Camera,
@@ -76,7 +88,7 @@ import { DirectiveModule } from './directives/directive.module';
         BackgroundMode,
         File,
         Network,
-        FileOpener
+        FileOpener,
     ],
     bootstrap: [AppComponent],
 })

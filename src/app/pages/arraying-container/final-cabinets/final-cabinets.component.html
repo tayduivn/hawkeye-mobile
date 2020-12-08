@@ -1,0 +1,56 @@
+<ion-content>
+  <div class="content-container">
+      <div class="search-btn-container">
+        <ion-searchbar animated clearInput mode="ios" placeholder="输入工厂名检索" class="my-searchBar" [(ngModel)]="queryParams.search_value" (ionChange)="handler()"></ion-searchbar>
+      </div>
+    <ion-card mode="ios" class="formatCard first-card" *ngFor="let item of data">
+      <ion-item>
+        <div class="submit-container">
+          <ion-card-title color="primary" class="card-title">最终列表</ion-card-title>
+          <div>
+            <ion-button class="ml-20" size="small" (click)="onRemove(item)" color="danger" class="btn">撤销
+            </ion-button>
+          </div>
+        </div>
+      </ion-item>
+      <ion-card-content>
+        <ion-grid>
+          <ion-row class="title header-row">
+            <ion-col align-self-center [size]="3" class="title-first-item">
+              批次号
+            </ion-col>
+            <ion-col align-self-center [size]="4" class="title-first-item">
+              合同号
+            </ion-col>
+            <ion-col align-self-center [size]="4" class="title-first-item">
+              SKU
+            </ion-col>
+            <ion-col align-self-center [size]="1" class="title-first-item">
+              详情
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="title1">
+            <ion-col align-self-center [size]="3" class="title-first-item2">
+              <div>{{item.name}}</div>
+            </ion-col>
+
+            <ion-col align-self-center [size]="4" class="multiple-item">
+              <div *ngFor="let item1 of item.arraying_container_sku">{{item1.contract_no}}</div>
+            </ion-col>
+
+            <ion-col align-self-center [size]="4" class="multiple-item">
+              <div *ngFor="let item1 of item.arraying_container_sku">{{item1.sku}}</div>
+            </ion-col>
+
+            <ion-col align-self-center [size]="1" class="btns-container">
+              <div class="operation-container" *ngFor="let item1 of item.arraying_container_sku">
+                <ion-button fill="clear" size="medium" (click)="lookDetails(item,item1)">详情</ion-button>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

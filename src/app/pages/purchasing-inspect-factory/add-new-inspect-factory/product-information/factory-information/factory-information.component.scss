@@ -1,0 +1,19 @@
+.ipt {
+  height: 20px;
+  border: 1px solid rgb(230, 227, 227);
+}
+.header-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.textArea {
+  width: 100%;
+  margin-left: 5px;
+  border: 1px solid rgb(230, 227, 227);
+}
+.card-title {
+  font-weight: bold;
+}

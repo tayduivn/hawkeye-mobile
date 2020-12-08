@@ -1,0 +1,48 @@
+<ion-header mode="ios">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>排柜 - {{ currentPage.title }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <!-- 上方的tab栏的区域 -->
+  <ion-tabs class="tab">
+    <ion-tab-bar slot="top" class="tab-container">
+      <ion-tab-button [routerLink]="['/arraying-container']"
+        [class]="activeIndex===0?'ios tab-has-label tab-has-icon tab-layout-icon-top ion-activatable ion-selectable ion-focusable hydrated tab-selected':'ios tab-has-label tab-has-icon tab-layout-icon-top ion-activatable ion-selectable ion-focusable hydrated'"
+        (click)="activeChange(0)">
+        <ion-icon name="hammer"></ion-icon>
+        <ion-label>待排柜</ion-label>
+      </ion-tab-button>
+
+      <ion-tab-button [routerLink]="['/arraying-container/done-array-list']"
+        [class]="activeIndex===1?'ios tab-has-label tab-has-icon tab-layout-icon-top ion-activatable ion-selectable ion-focusable hydrated tab-selected':'ios tab-has-label tab-has-icon tab-layout-icon-top ion-activatable ion-selectable ion-focusable hydrated'"
+        (click)="activeChange(1)">
+        <ion-icon name="calendar"></ion-icon>
+        <ion-label>已排柜</ion-label>
+      </ion-tab-button>
+
+      <ion-tab-button [routerLink]="['/arraying-container/installed-cabinets']"
+        [class]="activeIndex===2?'ios tab-has-label tab-has-icon tab-layout-icon-top ion-activatable ion-selectable ion-focusable hydrated tab-selected':'ios tab-has-label tab-has-icon tab-layout-icon-top ion-activatable ion-selectable ion-focusable hydrated'"
+        (click)="activeChange(2)">
+        <ion-icon name="map"></ion-icon>
+        <ion-label>待装柜</ion-label>
+      </ion-tab-button>
+
+      <ion-tab-button [routerLink]="['/arraying-container/final-cabinets']"
+        [class]="activeIndex===3?'ios tab-has-label tab-has-icon tab-layout-icon-top ion-activatable ion-selectable ion-focusable hydrated tab-selected':'ios tab-has-label tab-has-icon tab-layout-icon-top ion-activatable ion-selectable ion-focusable hydrated'"
+        (click)="activeChange(3)">
+        <ion-icon name="information-circle"></ion-icon>
+        <ion-label>最终列表</ion-label>
+      </ion-tab-button>
+    </ion-tab-bar>
+
+  </ion-tabs>
+
+  <router-outlet></router-outlet>
+
+</ion-content>

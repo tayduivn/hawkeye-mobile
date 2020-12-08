@@ -1,0 +1,61 @@
+.sc-ion-searchbar-ios-h {
+    width: 100%;
+    padding: 0;
+}
+.card-header {
+    padding: 0;
+}
+.card-container {
+    padding: 16px;
+}
+.grid-body {
+    padding: 5px 0;
+}
+
+.title-first-item {
+    font-weight: bold;
+    font-size: 15px;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.header-row {
+    .title-first-item {
+        background-color: #ededed;
+    }
+}
+.multiple-item {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    div {
+        width: 100%;
+        height: 35px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-top: 1px solid #ededed;
+        border-left: 1px solid #ededed;
+        &:first-child {
+            border-top: none;
+        }
+    }
+}
+.title-first-item2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.title1 {
+    border: 1px solid #ededed;
+    border-top: none;
+}
+.done-assess{
+  color: rgb(91, 246, 106);
+}
+.not-assess{
+  color: #C00000;
+}
+//ok

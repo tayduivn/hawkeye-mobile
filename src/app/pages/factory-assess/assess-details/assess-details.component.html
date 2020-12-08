@@ -1,0 +1,55 @@
+<ion-header mode="ios">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>评估详情</ion-title>
+    <ion-buttons slot="end">
+      <ion-button>上传进度</ion-button>
+      <ion-back-button text="返回" color="white" mode="md"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card mode="ios">
+    <ion-card-content>
+      <ion-grid>
+        <ion-row class="title">
+          <ion-col align-self-center [size]="12">
+            <span class="factory-text">工厂合作意愿</span> <span class="star">*</span> :
+          </ion-col>
+        </ion-row>
+        <ion-row class="title">
+          <ion-col align-self-center [size]="12">
+            <textarea rows="4" class="textArea"></textarea>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="title">
+          <ion-col align-self-center [size]="12">
+            <span class="factory-text">合作前景判断</span> <span class="star">*</span> :
+          </ion-col>
+        </ion-row>
+        <ion-row class="title">
+          <ion-col align-self-center [size]="12">
+            <textarea rows="4" class="textArea"></textarea>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="title">
+          <ion-col align-self-center [size]="12">
+            <span class="factory-text">建议补充</span> :
+          </ion-col>
+        </ion-row>
+        <ion-row class="title">
+          <ion-col align-self-center [size]="12">
+            <textarea rows="4" class="textArea"></textarea>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+
+  </ion-card>
+  <ion-button class="nextStepBtn" size="small" (click)='onSubmit()'>提 交</ion-button>
+</ion-content>

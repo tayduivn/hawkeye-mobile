@@ -1,0 +1,60 @@
+<ion-header mode="ios">
+  <ion-toolbar>
+    <ion-title>本批次详情</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">关闭</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="content-container">
+    <div>
+      <ion-item>
+        <ion-card-title color="primary" class="card-title">本批次详情</ion-card-title>
+      </ion-item>
+      <ion-card-content>
+        <ion-grid>
+          <!-- 表单验证 -->
+          <form>
+            <ion-row class="title">
+              <ion-col align-self-center [size]="2" class="title-first-item title-first-item1">
+                总箱数
+              </ion-col>
+              <ion-col align-self-center [size]="2" class="title-first-item title-first-item1">
+                总产品数量
+              </ion-col>
+              <ion-col align-self-center [size]="3" class="title-first-item title-first-item1">
+                总毛重
+              </ion-col>
+              <ion-col align-self-center [size]="3" class="title-first-item title-first-item1">
+                总净重
+              </ion-col>
+              <ion-col align-self-center [size]="2" class="title-first-item title-first-item1">
+                总体积
+              </ion-col>
+            </ion-row>
+
+            <ion-row class="title">
+              <ion-col align-self-center [size]="2" class="title-first-item">
+                {{item.arraying_container_num_total}}
+              </ion-col>
+              <ion-col align-self-center [size]="2" class="title-first-item">
+                {{item.product_num_total}}
+              </ion-col>
+              <ion-col align-self-center [size]="3" class="title-first-item">
+                {{item.gross_weight_total}}
+              </ion-col>
+              <ion-col align-self-center [size]="3" class="title-first-item">
+                {{item.net_weight_total}}
+              </ion-col>
+              <ion-col align-self-center [size]="2" class="title-first-item">
+                {{item.size_volume_total}}
+              </ion-col>
+            </ion-row>
+          </form>
+        </ion-grid>
+      </ion-card-content>
+    </div>
+  </div>
+</ion-content>

@@ -1,0 +1,237 @@
+<ion-header mode="ios">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>排柜详情</ion-title>
+    <ion-buttons slot="end">
+      <ion-button>上传进度</ion-button>
+      <ion-back-button text="返回" color="white" mode="md"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card mode="ios">
+    <ion-item>
+      <div>
+        <ion-card-title color="primary">待排柜详情</ion-card-title>
+      </div>
+    </ion-item>
+    <ion-card-content>
+      <ion-grid>
+        <!-- 第一行 -->
+        <ion-row class="title">
+          <ion-col align-self-center [size]="3" class="first-col">
+            流水号 :
+          </ion-col>
+          <ion-col align-self-center [size]="6">
+          </ion-col>
+          <ion-col align-self-center [size]="3">
+            <span>{{initObject.apply_inspection_no?initObject.apply_inspection_no:'暂无'}}</span>
+          </ion-col>
+        </ion-row>
+
+
+        <ion-row class="title">
+          <ion-col align-self-center [size]="3" class="first-col">
+            合同号 :
+          </ion-col>
+          <ion-col align-self-center [size]="6">
+          </ion-col>
+          <ion-col align-self-center [size]="3">
+            <span>{{initObject.contract_no?initObject.contract_no:'暂无'}}</span>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="title">
+          <ion-col align-self-center [size]="3" class="first-col">
+            SKU :
+          </ion-col>
+          <ion-col align-self-center [size]="6">
+          </ion-col>
+          <ion-col align-self-center [size]="3">
+            <span>{{initObject.sku?initObject.sku:'暂无'}}</span>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="title">
+          <ion-col align-self-center [size]="3" class="first-col">
+            最大排柜箱数 :
+          </ion-col>
+          <ion-col align-self-center [size]="6">
+          </ion-col>
+          <ion-col align-self-center [size]="3">
+            <span>{{initObject.able_container_num?initObject.able_container_num:'暂无'}}</span>
+          </ion-col>
+        </ion-row>
+
+
+        <ion-row class="title">
+          <ion-col align-self-center [size]="3" class="first-col">
+            工厂名 :
+          </ion-col>
+          <ion-col align-self-center [size]="6">
+          </ion-col>
+          <ion-col align-self-center [size]="3">
+            <span>{{initObject.manufacturer?initObject.manufacturer:'暂无'}}</span>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="title">
+          <ion-col align-self-center [size]="3" class="first-col">
+            工厂地址 :
+          </ion-col>
+          <ion-col align-self-center [size]="6">
+          </ion-col>
+          <ion-col align-self-center [size]="3">
+            <span>{{initObject.manufacturer_address?initObject.manufacturer_address:'暂无'}}</span>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="title">
+          <ion-col align-self-center [size]="3" class="first-col">
+            工厂联系人 :
+          </ion-col>
+          <ion-col align-self-center [size]="6">
+          </ion-col>
+          <ion-col align-self-center [size]="3">
+            <span>{{initObject.factory_contacts?initObject.factory_contacts:'暂无'}}</span>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="title">
+          <ion-col align-self-center [size]="3" class="first-col">
+            联系电话 :
+          </ion-col>
+          <ion-col align-self-center [size]="6">
+          </ion-col>
+          <ion-col align-self-center [size]="3">
+            <span>{{initObject.mobil_phone?initObject.mobil_phone:'暂无'}}</span>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="title">
+          <ion-col align-self-center [size]="3" class="first-col">
+            跟单人 :
+          </ion-col>
+          <ion-col align-self-center [size]="6">
+          </ion-col>
+          <ion-col align-self-center [size]="3">
+            <span>{{initObject.schedule_user_name?initObject.schedule_user_name:'暂无'}}</span>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="title">
+          <ion-col align-self-center [size]="3" class="first-col">
+            条码 :
+          </ion-col>
+          <ion-col align-self-center [size]="6">
+          </ion-col>
+          <ion-col align-self-center [size]="3">
+            <span>{{initObject.bar_code?initObject.bar_code:'暂无'}}</span>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="title">
+          <ion-col align-self-center [size]="3" class="first-col">
+            毛重 :
+          </ion-col>
+          <ion-col align-self-center [size]="6">
+          </ion-col>
+          <ion-col align-self-center [size]="3">
+            <span>{{initObject.gross_weight?initObject.gross_weight:'暂无'}}</span>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="title">
+          <ion-col align-self-center [size]="3" class="first-col">
+            尺寸(长宽高) :
+          </ion-col>
+          <ion-col align-self-center [size]="6">
+          </ion-col>
+          <ion-col align-self-center [size]="3">
+            <span>{{initObject.size?initObject.size:'暂无'}}</span>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="title">
+          <ion-col align-self-center [size]="3" class="first-col">
+            净重 :
+          </ion-col>
+          <ion-col align-self-center [size]="6">
+          </ion-col>
+          <ion-col align-self-center [size]="3">
+            <span>{{initObject.net_weight?initObject.net_weight:'暂无'}}</span>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="title">
+          <ion-col align-self-center [size]="3" class="first-col">
+            箱数 :
+          </ion-col>
+          <ion-col align-self-center [size]="6">
+          </ion-col>
+          <ion-col align-self-center [size]="3">
+            <span>{{initObject.container_num?initObject.container_num:'暂无'}}</span>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="title">
+          <ion-col align-self-center [size]="3" class="first-col">
+            箱率 :
+          </ion-col>
+          <ion-col align-self-center [size]="6">
+          </ion-col>
+          <ion-col align-self-center [size]="3">
+            <span>{{initObject.rate_container?initObject.rate_container:'暂无'}}</span>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="title">
+          <ion-col align-self-center [size]="3" class="first-col">
+            产品数 :
+          </ion-col>
+          <ion-col align-self-center [size]="6">
+          </ion-col>
+          <ion-col align-self-center [size]="3">
+            <span>{{initObject.product_num?initObject.product_num:'暂无'}}</span>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="title">
+          <ion-col align-self-center [size]="3" class="first-col">
+            总净重 :
+          </ion-col>
+          <ion-col align-self-center [size]="6">
+          </ion-col>
+          <ion-col align-self-center [size]="3">
+            <span>{{initObject.net_weight_total?initObject.net_weight_total:'暂无'}}</span>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="title">
+          <ion-col align-self-center [size]="3" class="first-col">
+            总毛重 :
+          </ion-col>
+          <ion-col align-self-center [size]="6">
+          </ion-col>
+          <ion-col align-self-center [size]="3">
+            <span>{{initObject.gross_weight_total?initObject.gross_weight_total:'暂无'}}</span>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="title">
+          <ion-col align-self-center [size]="3" class="first-col">
+            产品体积 :
+          </ion-col>
+          <ion-col align-self-center [size]="6">
+          </ion-col>
+          <ion-col align-self-center [size]="3">
+            <span>{{initObject.size_volume?initObject.size_volume:'暂无'}}</span>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

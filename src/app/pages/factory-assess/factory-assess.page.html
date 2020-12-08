@@ -1,0 +1,72 @@
+<!-- 标题区域 -->
+<ion-header mode="ios">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>工厂考察</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<!-- 内容区域 -->
+<ion-content>
+  <!-- 内容的头部区域 -->
+  <ion-card mode="ios" class="card-container">
+    <ion-card-header class="card-header">
+      <ion-card-title color="primary" class="card-title">工厂列表</ion-card-title>
+      <div class="search-btn-container">
+        <ion-searchbar animated clearInput mode="ios" placeholder="输入工厂名检索" class="my-searchBar"></ion-searchbar>
+      </div>
+    </ion-card-header>
+    <!-- 内容的表格区域 -->
+    <ion-grid class="grid-body">
+      <!-- 表头区域 -->
+      <ion-row class="title header-row">
+        <ion-col align-self-center [size]="8" class="title-first-item">
+          公司名称
+        </ion-col>
+        <ion-col align-self-center [size]="2" class="title-first-item">
+          时间
+        </ion-col>
+        <ion-col align-self-center [size]="2" class="title-first-item">
+          状态
+        </ion-col>
+      </ion-row>
+
+
+      <ion-row class="title1">
+        <ion-col align-self-center [size]="8" class="title-first-item2">
+          <div>平湖市唯海车业有限公司</div>
+        </ion-col>
+
+        <ion-col align-self-center [size]="2" class="multiple-item">
+          <div>2020.10.20</div>
+        </ion-col>
+
+        <ion-col align-self-center [size]="2" class="multiple-item">
+          <div>
+            <ion-button fill="clear" size="medium" [color]="'已评估'==='已评估'?'success':'danger'" class="text-btn" (click)="btnItemClicked('已评估')">已评估
+            </ion-button>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="title1">
+        <ion-col align-self-center [size]="8" class="title-first-item2">
+          <div>平湖市唯海车业有限公司</div>
+        </ion-col>
+
+        <ion-col align-self-center [size]="2" class="multiple-item">
+          <div>2020.10.20</div>
+        </ion-col>
+
+        <ion-col align-self-center [size]="2" class="multiple-item">
+          <div>
+            <ion-button fill="clear" size="medium" [color]="'待评估'==='待评估'?'danger':'success'" class="text-btn" (click)="btnItemClicked('待评估')">待评估
+            </ion-button>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-card>
+</ion-content>

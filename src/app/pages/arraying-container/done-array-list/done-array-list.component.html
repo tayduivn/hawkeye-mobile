@@ -1,0 +1,65 @@
+<ion-content>
+  <div class="content-container">
+    <ion-card mode="ios" class="formatCard first-card" *ngFor="let item of list">
+      <ion-item>
+        <div class="submit-container">
+          <ion-card-title color="primary" class="card-title">已排柜</ion-card-title>
+          <div>
+            <ion-button class="ml-20" size="small" (click)="gotoThisbatchDetails(item)">批次详情</ion-button>
+            <ion-button class="ml-20" size="small" (click)="onSubmit(item.id)">提单</ion-button>
+          </div>
+        </div>
+      </ion-item>
+      <ion-card-content>
+        <ion-grid>
+          <ion-row class="title header-row">
+            <ion-col align-self-center [size]="3" class="title-first-item">
+              批次号
+            </ion-col>
+            <ion-col align-self-center [size]="3" class="title-first-item">
+              合同号
+            </ion-col>
+            <ion-col align-self-center [size]="2" class="title-first-item">
+              SKU
+            </ion-col>
+            <ion-col align-self-center [size]="2" class="title-first-item">
+              排柜箱数
+            </ion-col>
+            <ion-col align-self-center [size]="2" class="title-first-item">
+              操作
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="title1">
+            <ion-col align-self-center [size]="3" class="title-first-item2">
+              <div>{{item.name}}</div>
+            </ion-col>
+
+            <ion-col align-self-center [size]="3" class="multiple-item">
+              <div *ngFor="let item1 of item.arraying_container_sku">{{item1.contract_no}}</div>
+            </ion-col>
+
+            <ion-col align-self-center [size]="2" class="multiple-item">
+              <div *ngFor="let item1 of item.arraying_container_sku">{{item1.sku}}</div>
+            </ion-col>
+
+            <ion-col align-self-center [size]="2" class="multiple-item">
+              <div *ngFor="let item1 of item.arraying_container_sku">{{item1.arraying_container_num}}</div>
+            </ion-col>
+
+            <ion-col align-self-center [size]="2" class="btns-container">
+              <div class="operation-container" *ngFor="let item1 of item.arraying_container_sku">
+                <ion-button fill="clear" size="medium" (click)="onRemove(item1,item)" color="danger" class="text-btn">撤销
+                </ion-button>
+                <ion-button fill="clear" size="medium" (click)="lookDetails(item,item1)" class="text-btn">详情
+                </ion-button>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+
+
+  </div>
+</ion-content>

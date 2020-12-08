@@ -31,7 +31,6 @@ const routes: Routes = [
         canActivate: [LoginGuard],
         loadChildren: () => import('./pages/home/home.module').then(m => m.HomePageModule),
     },
-
     {
         path: '',
         loadChildren: () =>
@@ -59,6 +58,23 @@ const routes: Routes = [
         path: '',
         loadChildren: () => import('./pages/data-contrast/data-contrast.module').then(m => m.DataContrastPageModule),
         canActivate: [LoginGuard],
+    },
+    {
+        path: '',
+        loadChildren: () =>
+            import('./pages/purchasing-inspect-factory/purchasing-inspect-factory.module').then(
+                m => m.PurchasingInspectFactoryPageModule,
+            ),
+    },
+    {
+        path: '',
+        loadChildren: () =>
+            import('./pages/arraying-container/arraying-container.module').then(m => m.ArrayingContainerPageModule),
+    },
+    {
+        path: '',
+        loadChildren: () =>
+            import('./pages/factory-assess/factory-assess.module').then(m => m.FactoryAssessPageModule),
     },
     {
         path: '**',

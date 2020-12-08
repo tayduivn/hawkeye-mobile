@@ -1,0 +1,67 @@
+.FormatCol1 {
+    display: flex;
+    justify-content: center;
+}
+.ipt {
+    height: 20px;
+    border: 1px solid rgb(230, 227, 227);
+}
+.Formatdate {
+    border: 1px solid rgb(230, 227, 227);
+}
+.select {
+    width: 100%;
+    border: 1px solid rgb(230, 227, 227);
+}
+.lastRow {
+    border-top: 1px solid #ededed;
+}
+
+.icon-ziyuan {
+    font-size: 30px;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.factoryAddress {
+    position: relative;
+}
+.addFactoryAddress {
+    font-size: 20px;
+    position: absolute;
+    right: -35px;
+    top: -10px;
+}
+.dateCol {
+    position: relative;
+}
+.card-title {
+    font-weight: bold;
+}
+.tabs {
+    height: 40px;
+    display: flex;
+    margin: 0 15px;
+    div {
+        height: 100%;
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid #ededed;
+        font-weight: bold;
+        color: rgb(56, 128, 255);
+        span {
+            margin-left: 8px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+    }
+}
+.bacColor {
+    background-color: rgb(56, 128, 255);
+}
+.textColor {
+    color: #fff !important;
+}

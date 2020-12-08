@@ -1,0 +1,88 @@
+<ion-header mode="ios">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>考察记录</ion-title>
+    <ion-buttons slot="end">
+      <ion-button>上传进度</ion-button>
+      <ion-back-button text="返回" color="white" mode="md"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- 基本信息卡片视图区 start -->
+  <ion-card mode="ios">
+    <ion-item class="card-header">
+      <ion-card-title color="primary" class="card-title">基本信息</ion-card-title>
+    </ion-item>
+    <ion-card-content>
+      <ion-grid>
+        <ion-row class="title">
+          <ion-col align-self-center [size]="3">
+            考察人员 :
+          </ion-col>
+          <ion-col align-self-center [size]="6">
+          </ion-col>
+          <ion-col align-self-center [size]="3" class="FormatCol1">
+            测试者
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col align-self-center [size]="3">
+            考察日期 :
+          </ion-col>
+          <ion-col align-self-center [size]="6">
+          </ion-col>
+          <ion-col align-self-center [size]="3" class="dateCol">
+            <ion-datetime class="Formatdate" displayFormat="YYYY-MM-DD" doneText="完成" cancelText="取消" max="2050-12-30"
+              placeholder="请输入日期">
+            </ion-datetime>
+            <div class="iconfont icon-ziyuan"></div>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="title">
+          <ion-col align-self-center [size]="3">
+            考察对象 :
+          </ion-col>
+          <ion-col align-self-center [size]="6">
+          </ion-col>
+          <ion-col align-self-center [size]="3">
+            <ion-input type="text" class="ipt"></ion-input>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+  <!-- tab栏切换区域 -->
+
+  <div class="tabs">
+    <div (click)="tabsItemClicked(0)" [class]="activeIndex===0?'bacColor textColor':''"
+      [routerLink]="['/add-new-inspect-factory']">
+      <ion-icon name="journal"></ion-icon>
+      <span>工厂基本信息</span>
+    </div>
+    <div (click)="tabsItemClicked(1)" [class]="activeIndex===1?'bacColor textColor':''"
+      [routerLink]="['/add-new-inspect-factory/factory-general-situation']">
+      <ion-icon name="grid"></ion-icon>
+      <span>工厂概况</span>
+
+    </div>
+    <div (click)="tabsItemClicked(2)" [class]="activeIndex===2?'bacColor textColor':''"
+      [routerLink]="['/add-new-inspect-factory/product-information']">
+      <ion-icon name="hammer"></ion-icon>
+      <span>产品信息</span>
+    </div>
+    <div (click)="tabsItemClicked(3)" [class]="activeIndex===3?'bacColor textColor':''"
+      [routerLink]="['/add-new-inspect-factory/specimen-information']">
+      <ion-icon name="film"></ion-icon>
+      <span>样品情况</span>
+    </div>
+  </div>
+
+  <!-- 下面放路由插座 -->
+  <router-outlet></router-outlet>
+</ion-content>

@@ -1,0 +1,66 @@
+.title-first-item {
+    font-weight: bold;
+    font-size: 15px;
+    color: rgb(138, 136, 136);
+}
+.content-container {
+    margin-top: 30px;
+}
+.onSubmit {
+    display: flex;
+    justify-content: flex-end;
+}
+.ipt {
+    height: 30px;
+    border: 1px solid rgb(230, 227, 227);
+}
+.Formatdate {
+    border: 1px solid rgb(230, 227, 227);
+}
+.icon-ziyuan {
+    font-size: 30px;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.dateCol {
+    position: relative;
+}
+.select {
+    width: 100%;
+    border: 1px solid rgb(230, 227, 227);
+}
+.textArea {
+    width: 100%;
+    border: 1px solid rgb(230, 227, 227);
+}
+.ipt1 {
+    height: 20px;
+    border: 1px solid rgb(230, 227, 227);
+}
+.title-factory {
+    .title-factory-item {
+        color: rgb(138, 136, 136);
+        background-color: #ededed;
+    }
+}
+.title3 {
+    width: 100%;
+    height: 100%;
+    border: 1px solid #ededed;
+    border-top: none;
+    .title3-item {
+        border-right: 1px solid #ededed;
+        &:last-child {
+            border: none;
+        }
+    }
+    div {
+        color: rgb(138, 136, 136);
+    }
+}
+.star {
+    color: #C00000;
+}
+//ok

@@ -59,7 +59,6 @@ export class PhotographComponent implements OnInit {
         this.Compressor = new ImageCompressor(); //原生压缩
     }
     imgOrigin: string = environment.usFileUrl; //图片显示域名
-
     @Output() onPhotograph: EventEmitter<string[]> = new EventEmitter<string[]>(); //拍完照回调
     _photos: string[] = []; //显示图片数组
     metaPhotos: string[] = []; //显示图片源数据

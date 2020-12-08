@@ -1,0 +1,144 @@
+<ion-header mode="ios">
+  <ion-toolbar>
+    <ion-title>开始装柜</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">关闭</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="content-container">
+    <div>
+      <ion-item>
+        <ion-card-title color="primary" class="card-title">装柜: {{item.name}}</ion-card-title>
+      </ion-item>
+      <ion-card-content>
+        <ion-grid>
+          <!-- 表单验证 -->
+          <form>
+            <ion-row class="title">
+              <ion-col align-self-center [size]="12" class="title-first-item">
+                柜号<span class="star">*</span> :
+              </ion-col>
+            </ion-row>
+            <!-- 提单号输入框 -->
+            <ion-row class="title">
+              <ion-col align-self-center [size]="12">
+                <!-- 双向绑定 -->
+                <ion-input type="text" class="ipt" placeholder="柜号" [(ngModel)]="installData.container_no"
+                  [ngModelOptions]="{standalone: true}" (ionChange)="onItemChanged()" clearInput="true"></ion-input>
+              </ion-col>
+            </ion-row>
+
+            <ion-row class="title">
+              <ion-col align-self-center [size]="12" class="title-first-item">
+                铅封号<span class="star">*</span> :
+              </ion-col>
+            </ion-row>
+            <!-- 输入框 -->
+            <ion-row class="title">
+              <ion-col align-self-center [size]="12">
+                <ion-input type="text" class="ipt" placeholder="铅封号" [(ngModel)]="installData.seal_no"
+                  [ngModelOptions]="{standalone: true}" (ionChange)="onItemChanged()" clearInput="true"></ion-input>
+              </ion-col>
+            </ion-row>
+
+            <ion-row class="title">
+              <ion-col align-self-center [size]="3" class="title-first-item">
+                实际装柜时间<span class="star">*</span> :
+              </ion-col>
+              <ion-col align-self-center [size]="4" class="title-first-item">
+              </ion-col>
+              <ion-col align-self-center [size]="5" class="dateCol">
+                <ion-datetime class="Formatdate" displayFormat="YYYY/MM/DD" doneText="完成" cancelText="取消"
+                  max="2050-12-30" placeholder="请输入日期" [(ngModel)]="installData.truely_loading_time"
+                  [ngModelOptions]="{standalone: true}" (ionChange)="onItemChanged()">
+                </ion-datetime>
+                <div class="iconfont icon-ziyuan"></div>
+              </ion-col>
+            </ion-row>
+
+            <ion-row class="title">
+              <ion-col align-self-center [size]="3" class="title-first-item">
+                开船日期<span class="star">*</span> :
+              </ion-col>
+              <ion-col align-self-center [size]="4" class="title-first-item">
+              </ion-col>
+              <ion-col align-self-center [size]="5" class="dateCol">
+                <ion-datetime class="Formatdate" displayFormat="YYYY/MM/DD" doneText="完成" cancelText="取消"
+                  max="2050-12-30" placeholder="请输入日期" [(ngModel)]="installData.on_board_date"
+                  [ngModelOptions]="{standalone: true}" (ionChange)="onItemChanged()">
+                </ion-datetime>
+                <div class="iconfont icon-ziyuan"></div>
+              </ion-col>
+            </ion-row>
+
+            <ion-row class="title">
+              <ion-col align-self-center [size]="3" class="title-first-item">
+                预计到港时间<span class="star">*</span> :
+              </ion-col>
+              <ion-col align-self-center [size]="4" class="title-first-item">
+              </ion-col>
+              <ion-col align-self-center [size]="5" class="dateCol">
+                <ion-datetime class="Formatdate" displayFormat="YYYY/MM/DD" doneText="完成" cancelText="取消"
+                  max="2050-12-30" placeholder="请输入日期" [(ngModel)]="installData.estimated_arrival_time"
+                  [ngModelOptions]="{standalone: true}" (ionChange)="onItemChanged()">
+                </ion-datetime>
+                <div class="iconfont icon-ziyuan"></div>
+              </ion-col>
+            </ion-row>
+            <!-- 表格区域 -->
+
+            <ion-row class="title header-row">
+              <ion-col align-self-center [size]="2" class="title-first-item">
+                SKU
+              </ion-col>
+              <ion-col align-self-center [size]="2" class="title-first-item">
+                合同抬头<span class="star">*</span>
+              </ion-col>
+              <ion-col align-self-center [size]="4" class="title-first-item">
+                中文名
+              </ion-col>
+              <ion-col align-self-center [size]="2" class="title-first-item">
+                计划箱数
+              </ion-col>
+              <ion-col align-self-center [size]="2" class="title-first-item">
+                装柜箱数<span class="star">*</span>
+              </ion-col>
+            </ion-row>
+
+            <!-- 循环生成列表  有几个生成几个 -->
+
+            <ion-row class="title title1" *ngFor="let item of currentData">
+              <ion-col align-self-center [size]="2" class="title-item">
+                {{item.sku}}
+              </ion-col>
+              <ion-col align-self-center [size]="2" class="title-item">
+                <ion-input type="number" class="ipt" placeholder="合同抬头" [(ngModel)]="item.contract_title"
+                  [ngModelOptions]="{standalone: true}" (ionChange)="onItemChanged()">
+                </ion-input>
+              </ion-col>
+              <ion-col align-self-center [size]="4" class="title-item">
+                {{item.sku_chinese_name}}
+              </ion-col>
+              <ion-col align-self-center [size]="2" class="title-item">
+                {{item.arraying_container_num}}
+              </ion-col>
+              <ion-col align-self-center [size]="2" class="title-item">
+                <ion-input type="number" class="ipt" placeholder="装柜箱数" [(ngModel)]="item.truly_arraying_container_num"
+                  [ngModelOptions]="{standalone: true}" (ionChange)="onItemChanged()" (ionBlur)="onBlur($event,item)">
+                </ion-input>
+              </ion-col>
+            </ion-row>
+
+
+            <ion-row class="title onSubmit">
+              <ion-button class="ml-20" size="small" (click)="onSubmit()" [disabled]="!isBtnDisabled">确认装柜</ion-button>
+            </ion-row>
+          </form>
+        </ion-grid>
+      </ion-card-content>
+    </div>
+  </div>
+</ion-content>

@@ -1,0 +1,201 @@
+<!-- 工厂基本信息卡片视图区 start-->
+<ion-card mode="ios">
+  <ion-item class="card-header">
+    <ion-card-title color="primary" class="card-title">工厂概况</ion-card-title>
+  </ion-item>
+  <ion-card-content>
+    <ion-grid>
+      <ion-row class="title">
+        <ion-col align-self-center [size]="3">
+          工厂面积(m²)<span class="star">*</span> :
+        </ion-col>
+        <ion-col align-self-center [size]="6">
+        </ion-col>
+        <ion-col align-self-center [size]="3">
+          <ion-input type="text" class="ipt" clearInput="true"></ion-input>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="title">
+        <ion-col align-self-center [size]="3">
+          工厂人数<span class="star">*</span> :
+        </ion-col>
+        <ion-col align-self-center [size]="6">
+        </ion-col>
+        <ion-col align-self-center [size]="3">
+          <ion-input type="text" class="ipt" clearInput="true"></ion-input>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="title">
+        <ion-col align-self-center [size]="12">
+          人员组成<span class="star">*</span> :
+        </ion-col>
+      </ion-row>
+      <ion-row class="title">
+        <ion-col align-self-center [size]="12">
+          <ion-input type="text" class="ipt bigipt" clearInput="true"></ion-input>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="title">
+        <ion-col align-self-center [size]="12">
+          部门组成<span class="star">*</span> :
+        </ion-col>
+      </ion-row>
+      <ion-row class="title">
+        <ion-col align-self-center [size]="12">
+          <ion-input type="text" class="ipt bigipt" clearInput="true"></ion-input>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="title">
+        <ion-col align-self-center [size]="3">
+          生产设备<span class="star">*</span> :
+        </ion-col>
+        <ion-col align-self-center [size]="6">
+        </ion-col>
+        <ion-col align-self-center [size]="3">
+          <ion-input type="text" class="ipt" clearInput="true"></ion-input>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="title">
+        <ion-col align-self-center [size]="3">
+          生产能力<span class="star">*</span> :
+        </ion-col>
+        <ion-col align-self-center [size]="6">
+        </ion-col>
+        <ion-col align-self-center [size]="3">
+          <!-- 下拉框 -->
+          <!-- 这里是下拉选择器 -->
+          <ion-select class="select" placeholder="请选择" okText="确认" cancelText="取消">
+            <ion-select-option [value]="1">好</ion-select-option>
+            <ion-select-option [value]="2">一般</ion-select-option>
+            <ion-select-option [value]="3">差</ion-select-option>
+          </ion-select>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="title">
+        <ion-col align-self-center [size]="3">
+          研发&质检能力 :
+        </ion-col>
+        <ion-col align-self-center [size]="6">
+        </ion-col>
+        <ion-col align-self-center [size]="3">
+          <!-- 下拉框 -->
+          <ion-select class="select" placeholder="请选择" okText="确认" cancelText="取消">
+            <ion-select-option [value]="1">好</ion-select-option>
+            <ion-select-option [value]="2">一般</ion-select-option>
+            <ion-select-option [value]="3">差</ion-select-option>
+          </ion-select>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="title">
+        <ion-col align-self-center [size]="3">
+          生产周期<span class="star">*</span> :
+        </ion-col>
+        <ion-col align-self-center [size]="6">
+        </ion-col>
+        <ion-col align-self-center [size]="3">
+          <ion-input type="text" class="ipt" clearInput="true"></ion-input>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="title">
+        <ion-col align-self-center [size]="3">
+          主要销售市场<span class="star">*</span> :
+        </ion-col>
+        <ion-col align-self-center [size]="6">
+        </ion-col>
+        <ion-col align-self-center [size]="3">
+          <ion-input type="text" class="ipt" clearInput="true"></ion-input>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="title">
+        <ion-col align-self-center [size]="3">
+          主要客户 :
+        </ion-col>
+        <ion-col align-self-center [size]="6">
+        </ion-col>
+        <ion-col align-self-center [size]="3">
+          <ion-input type="text" class="ipt" clearInput="true"></ion-input>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="title">
+        <ion-col align-self-center [size]="3">
+          产品相关认证 :
+        </ion-col>
+        <ion-col align-self-center [size]="6">
+        </ion-col>
+        <ion-col align-self-center [size]="3">
+          <ion-input type="text" class="ipt" clearInput="true"></ion-input>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="title">
+        <ion-col align-self-center [size]="3">
+          工厂付款方式<span class="star">*</span> :
+        </ion-col>
+        <ion-col align-self-center [size]="6">
+        </ion-col>
+        <ion-col align-self-center [size]="3">
+          <ion-input type="text" class="ipt" clearInput="true"></ion-input>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="title">
+        <ion-col align-self-center [size]="3" class="noWrap">
+          工厂是否接受过第三方验厂<span class="star">*</span> :
+        </ion-col>
+        <ion-col align-self-center [size]="6">
+        </ion-col>
+        <ion-col align-self-center [size]="3">
+          <!-- 下拉框 -->
+          <ion-select class="select" placeholder="请选择" okText="确认" cancelText="取消">
+            <ion-select-option [value]="0">否</ion-select-option>
+            <ion-select-option [value]="1">是</ion-select-option>
+          </ion-select>
+        </ion-col>
+      </ion-row>
+
+      <!-- 条件渲染 -->
+      <!-- <ion-row class="title">
+        <ion-col align-self-center [size]="12">
+          <ion-input type="text" class="ipt"></ion-input>
+        </ion-col>
+      </ion-row> -->
+
+      <ion-row class="title border-row" >
+        <ion-col align-self-center [size]="3">
+          工厂外观照片<span class="star">*</span> :
+        </ion-col>
+        <ion-col align-self-center [size]="6">
+        </ion-col>
+        <ion-col align-self-center [size]="3">
+          <app-photograph></app-photograph>
+          <app-videotape></app-videotape>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="title border-row">
+        <ion-col align-self-center [size]="3" class="noWrap">
+          生产车间照片(设备，生产线等)<span class="star">*</span> :
+        </ion-col>
+        <ion-col align-self-center [size]="6">
+        </ion-col>
+        <ion-col align-self-center [size]="3">
+          <app-photograph></app-photograph>
+          <app-videotape></app-videotape>
+        </ion-col>
+      </ion-row>
+
+    </ion-grid>
+  </ion-card-content>
+</ion-card>
+<ion-button class="nextStepBtn" size="small">保存</ion-button>
+<!-- 工厂基本信息卡片视图区 end-->

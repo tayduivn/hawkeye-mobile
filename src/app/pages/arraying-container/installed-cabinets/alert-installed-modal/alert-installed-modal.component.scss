@@ -1,0 +1,49 @@
+.content-container {
+    margin-top: 30px;
+}
+.title-first-item {
+    font-weight: bold;
+    font-size: 15px;
+    color: rgb(138, 136, 136);;
+}
+
+.onSubmit {
+    display: flex;
+    justify-content: flex-end;
+}
+.ipt {
+    height: 30px;
+    border: 1px solid rgb(230, 227, 227);
+}
+.Formatdate {
+    border: 1px solid rgb(230, 227, 227);
+}
+.icon-ziyuan {
+    font-size: 30px;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.dateCol {
+    position: relative;
+}
+
+.title1 {
+    .title-item {
+        display: flex;
+        height: 40px;
+        border: 1px solid #ededed;
+        align-items: center;
+        color: #999;
+    }
+}
+.header-row {
+    .title-first-item {
+        background-color: #ededed;
+    }
+}
+.star {
+    color: #C00000;
+}
+//ok

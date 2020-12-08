@@ -1,0 +1,139 @@
+<ion-header mode="ios">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>已排柜详情</ion-title>
+    <ion-buttons slot="end">
+      <ion-button>上传进度</ion-button>
+      <ion-back-button text="返回" color="white" mode="md"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card mode="ios">
+    <ion-item>
+      <div>
+        <ion-card-title color="primary">已排柜详情</ion-card-title>
+      </div>
+    </ion-item>
+    <ion-card-content>
+      <ion-grid>
+        <!-- 第一行 -->
+        <ion-row class="title">
+          <ion-col align-self-center [size]="3" class="first-col">
+            批次号 :
+          </ion-col>
+          <ion-col align-self-center [size]="6">
+          </ion-col>
+          <ion-col align-self-center [size]="3">
+            <span>{{initObject.name}}</span>
+          </ion-col>
+        </ion-row>
+
+
+        <ion-row class="title">
+          <ion-col align-self-center [size]="3" class="first-col">
+            合同号 :
+          </ion-col>
+          <ion-col align-self-center [size]="6">
+          </ion-col>
+          <ion-col align-self-center [size]="3" >
+            <span>{{initObject.currentItem.contract_no?initObject.currentItem.contract_no:'暂无'}}</span>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="title">
+          <ion-col align-self-center [size]="3" class="first-col">
+            SKU :
+          </ion-col>
+          <ion-col align-self-center [size]="6">
+          </ion-col>
+          <ion-col align-self-center [size]="3" >
+            <span>{{initObject.currentItem.sku?initObject.currentItem.sku:'暂无'}}</span>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="title">
+          <ion-col align-self-center [size]="3" class="first-col">
+            箱数 :
+          </ion-col>
+          <ion-col align-self-center [size]="6">
+          </ion-col>
+          <ion-col align-self-center [size]="3" >
+            <span>{{initObject.currentItem.arraying_container_num?initObject.currentItem.arraying_container_num:'暂无'}}</span>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="title">
+          <ion-col align-self-center [size]="3" class="first-col">
+            采购人 :
+          </ion-col>
+          <ion-col align-self-center [size]="6">
+          </ion-col>
+          <ion-col align-self-center [size]="3" >
+            <span>{{initObject.currentItem.purchaser_user_name?initObject.currentItem.purchaser_user_name:'暂无'}}</span>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="title">
+          <ion-col align-self-center [size]="3" class="first-col">
+            工厂名 :
+          </ion-col>
+          <ion-col align-self-center [size]="6">
+          </ion-col>
+          <ion-col align-self-center [size]="3" >
+            <span>{{initObject.currentItem.manufacturer?initObject.currentItem.manufacturer:'暂无'}}</span>
+          </ion-col>
+        </ion-row>
+
+
+        <ion-row class="title">
+          <ion-col align-self-center [size]="3" class="first-col">
+            工厂地址 :
+          </ion-col>
+          <ion-col align-self-center [size]="6">
+          </ion-col>
+          <ion-col align-self-center [size]="3" >
+            <span>{{initObject.currentItem.manufacturer_address?initObject.currentItem.manufacturer_address:'暂无'}}</span>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="title">
+          <ion-col align-self-center [size]="3" class="first-col">
+            工厂联系人 :
+          </ion-col>
+          <ion-col align-self-center [size]="6">
+          </ion-col>
+          <ion-col align-self-center [size]="3" >
+            <span>{{initObject.currentItem.factory_contact?initObject.currentItem.factory_contacts:'暂无'}}</span>
+          </ion-col>
+        </ion-row>
+
+
+        <ion-row class="title">
+          <ion-col align-self-center [size]="3" class="first-col">
+            联系电话 :
+          </ion-col>
+          <ion-col align-self-center [size]="6">
+          </ion-col>
+          <ion-col align-self-center [size]="3" >
+            <span>{{initObject.currentItem.mobil_phone?initObject.currentItem.mobil_phone:'暂无'}}</span>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="title">
+          <ion-col align-self-center [size]="3" class="first-col">
+            跟单人 :
+          </ion-col>
+          <ion-col align-self-center [size]="6">
+          </ion-col>
+          <ion-col align-self-center [size]="3" >
+            <span>{{initObject.currentItem.schedule_user_name?initObject.currentItem.schedule_user_name:'暂无'}}</span>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
