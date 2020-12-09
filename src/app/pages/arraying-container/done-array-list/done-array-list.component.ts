@@ -18,6 +18,10 @@ export class DoneArrayListComponent implements OnInit {
         arraying_container_sku_id: '', //sku id
         name: '', //批次号
     };
+    queryInfo: any = {
+        page: 1,
+    };
+    controllShow: boolean = true;
     constructor(
         private router: Router,
         private es: PageEffectService,
@@ -66,7 +70,7 @@ export class DoneArrayListComponent implements OnInit {
     }
     init() {
         this.arraying
-            .getAlreadyContainerData()
+            .getAlreadyContainerData(this.queryInfo)
             .pipe(
                 tap(res => {}),
                 map(res => res.data.data),
@@ -131,5 +135,33 @@ export class DoneArrayListComponent implements OnInit {
     gotoThisbatchDetails(item: any) {
         console.log(item);
         this.onshowModal2(item);
+    }
+
+    loadData(event) {
+        this.controllShow = true;
+        this.queryInfo.page++;
+        this.arraying
+            .getAlreadyContainerData(this.queryInfo)
+            .pipe(
+                tap(res => {}),
+                map(res => res.data),
+            )
+            .subscribe(res => {
+                console.log(res);
+                console.log(this.queryInfo.page);
+                if (res.data.length == 0) {
+                    this.controllShow = false;
+                }
+                if (res.data && res.data.length) {
+                    this.list = this.list.concat(res.data);
+                } else {
+                    this.queryInfo.page--;
+                    this.es.showToast({
+                        message: '别刷了，没有数据啦！',
+                        color: 'danger',
+                    });
+                }
+                event.target.complete();
+            });
     }
 }

@@ -18,6 +18,10 @@ export class ArrayingContainerPage implements OnInit {
     countData: any = {
         arraying_container_sku_arr: [],
     };
+    queryInfo: any = {
+        page: 1,
+    };
+    controllShow: boolean = true;
     constructor(
         private arraying: ArrayingService,
         private router: Router,
@@ -62,7 +66,7 @@ export class ArrayingContainerPage implements OnInit {
 
     init() {
         this.arraying
-            .getWaitingContainerData()
+            .getWaitingContainerData(this.queryInfo)
             .pipe(
                 tap(res => {
                     console.log(res);
@@ -101,18 +105,6 @@ export class ArrayingContainerPage implements OnInit {
             }
         }
     }
-
-    // refreshStatus() {
-    //     // this.isAllDisplayDataChecked = this.mapOfCheckedId[id];
-    //     console.log(this.mapOfCheckedId);
-    //     let flag = true;
-    //     for (const key in this.mapOfCheckedId) {
-    //         if (!this.mapOfCheckedId[key]) {
-    //             flag = false;
-    //         }
-    //     }
-    //     this.isAllDisplayDataChecked = flag;
-    // }
 
     gotoDoneList() {
         this.router.navigate(['/done-array-list']);
@@ -193,5 +185,28 @@ export class ArrayingContainerPage implements OnInit {
                 }
             },
         );
+    }
+
+    loadData(event) {
+        this.controllShow = true;
+        this.queryInfo.page++;
+        this.arraying.getWaitingContainerData(this.queryInfo).subscribe(res => {
+            console.log(res);
+            if (res.data.length == 0) {
+                this.controllShow = false;
+            }
+            // console.log(this.controllShow.length);
+
+            if (res.data && res.data.length) {
+                this.arrayingList = this.arrayingList.concat(res.data);
+            } else {
+                this.queryInfo.page--;
+                this.es.showToast({
+                    message: '别刷了，没有数据啦！',
+                    color: 'danger',
+                });
+            }
+            event.target.complete();
+        });
     }
 }

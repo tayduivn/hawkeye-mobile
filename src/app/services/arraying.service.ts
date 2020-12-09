@@ -68,9 +68,9 @@ export class ArrayingService {
      * 获得待排柜sku列表
      */
 
-    getWaitingContainerData(): Observable<Paging<any[]>> {
+    getWaitingContainerData(data): Observable<Paging<any[]>> {
         return this.http
-            .get({ url: '/arrayingContainer/get_waiting_distribution_container_data' })
+            .get({ url: `/arrayingContainer/get_waiting_distribution_container_data`, params: data })
             .pipe(map(res => res.data));
     }
 
@@ -87,9 +87,9 @@ export class ArrayingService {
     /**
      * 获得已排柜数据
      */
-    getAlreadyContainerData(): Observable<AlreadyArrayingData> {
+    getAlreadyContainerData(data): Observable<AlreadyArrayingData> {
         return this.http
-            .get({ url: '/arrayingContainer/get_distribution_container_data',  })
+            .get({ url: '/arrayingContainer/get_distribution_container_data', params: data })
             .pipe(map(res => res.data));
     }
 
@@ -103,10 +103,8 @@ export class ArrayingService {
     /**
      * 待装柜列表
      */
-    getLoadingData(): Observable<Paging<ArrayingItem[]>> {
-        return this.http
-            .get({ url: '/arrayingContainer/get_loading_data' })
-            .pipe(map(res => res.data));
+    getLoadingData(data): Observable<Paging<ArrayingItem[]>> {
+        return this.http.get({ url: '/arrayingContainer/get_loading_data', params: data }).pipe(map(res => res.data));
     }
 
     /**提交装柜数据 */

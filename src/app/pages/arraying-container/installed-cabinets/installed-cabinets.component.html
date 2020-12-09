@@ -3,7 +3,7 @@
     <ion-card mode="ios" class="formatCard first-card" *ngFor="let item of data">
       <ion-item>
         <div class="submit-container">
-          <ion-card-title color="primary" class="card-title">待装柜</ion-card-title>
+          <ion-card-title color="primary" class="card-title">批次号: {{item.name}}</ion-card-title>
           <div>
             <ion-button class="ml-20" size="small" (click)="onshowDetailsModal(item)">批次详情</ion-button>
             <ion-button class="ml-20" size="small" (click)="onshowInstalledModal(item)">装柜</ion-button>
@@ -15,34 +15,27 @@
       <ion-card-content>
         <ion-grid>
           <ion-row class="title header-row">
-            <ion-col align-self-center [size]="3" class="title-first-item">
-              批次号
-            </ion-col>
-            <ion-col align-self-center [size]="4" class="title-first-item">
+            <ion-col align-self-center [size]="5" class="title-first-item">
               合同号
             </ion-col>
-            <ion-col align-self-center [size]="4" class="title-first-item">
+            <ion-col align-self-center [size]="5" class="title-first-item">
               SKU
             </ion-col>
-            <ion-col align-self-center [size]="1" class="title-first-item">
-              详情
+            <ion-col align-self-center [size]="2" class="title-first-item">
+              操作
             </ion-col>
           </ion-row>
 
           <ion-row class="title1">
-            <ion-col align-self-center [size]="3" class="title-first-item2">
-              <div>{{item.name}}</div>
-            </ion-col>
-
-            <ion-col align-self-center [size]="4" class="multiple-item">
+            <ion-col align-self-center [size]="5" class="multiple-item">
               <div *ngFor="let item1 of item.arraying_container_sku">{{item1.contract_no}}</div>
             </ion-col>
 
-            <ion-col align-self-center [size]="4" class="multiple-item">
+            <ion-col align-self-center [size]="5" class="multiple-item">
               <div *ngFor="let item1 of item.arraying_container_sku">{{item1.sku}}</div>
             </ion-col>
 
-            <ion-col align-self-center [size]="1" class="btns-container">
+            <ion-col align-self-center [size]="2" class="btns-container">
               <div class="operation-container" *ngFor="let item1 of item.arraying_container_sku">
                 <ion-button fill="clear" size="medium" (click)="lookDetails(item,item1)">详情</ion-button>
               </div>
@@ -52,6 +45,11 @@
       </ion-card-content>
     </ion-card>
 
+    <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+      <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="正在加载"> </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+
+    <p *ngIf="!controllShow" class="text-c">没有更多数据了</p>
 
   </div>
 </ion-content>

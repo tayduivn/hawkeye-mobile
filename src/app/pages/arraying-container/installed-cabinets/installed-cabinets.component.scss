@@ -37,7 +37,7 @@
 }
 .operation-container {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
 }
 .btns-container {
     padding: 0;
@@ -63,5 +63,8 @@
     .title-first-item {
         background-color: #ededed;
     }
+}
+.text-c {
+    color: rgb(138, 136, 136);
 }
 //ok

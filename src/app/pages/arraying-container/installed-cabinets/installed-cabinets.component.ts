@@ -25,6 +25,10 @@ export class InstalledCabinetsComponent implements OnInit {
     paramsData: any = {
         name: '',
     };
+    queryInfo: any = {
+        page: 1,
+    };
+    controllShow: boolean = true;
     constructor(
         private router: Router,
         private es: PageEffectService,
@@ -46,7 +50,7 @@ export class InstalledCabinetsComponent implements OnInit {
     }
     onshowModal(item) {
         console.log(item);
-        
+
         this.es.showModal(
             {
                 component: AlertInstalledModalComponent,
@@ -113,10 +117,9 @@ export class InstalledCabinetsComponent implements OnInit {
     }
     // 获取初始化数据
     init() {
-        this.arraying.getLoadingData().subscribe(res => {
+        this.arraying.getLoadingData(this.queryInfo).subscribe(res => {
             const { data } = res;
             console.log(res);
-
             this.data = data;
             console.log(this.data);
         });
@@ -129,6 +132,27 @@ export class InstalledCabinetsComponent implements OnInit {
         this.es.showModal({
             component: DetailsModelComponent,
             componentProps: { item },
+        });
+    }
+
+    loadData(event) {
+        this.controllShow = true;
+        this.queryInfo.page++;
+        this.arraying.getLoadingData(this.queryInfo).subscribe(res => {
+            console.log(res);
+            if (res.data.length === 0) {
+                this.controllShow = false;
+            }
+            if (res.data && res.data.length) {
+                this.data = this.data.concat(res.data);
+            } else {
+                this.queryInfo.page--;
+                this.es.showToast({
+                    message: '别刷了，没有数据啦！',
+                    color: 'danger',
+                });
+            }
+            event.target.complete();
         });
     }
 }

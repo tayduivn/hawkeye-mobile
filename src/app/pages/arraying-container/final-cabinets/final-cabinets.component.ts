@@ -13,9 +13,11 @@ export class FinalCabinetsComponent implements OnInit {
     data: ArrayingItem[] = [];
     // 定义查询参数
     queryParams: any = {
+        page: 1,
         search_key: 'factory_name',
         search_value: '',
     };
+    controllShow: boolean = true;
     constructor(
         private router: Router,
         private arraying: ArrayingService,
@@ -124,5 +126,29 @@ export class FinalCabinetsComponent implements OnInit {
         // const currentData=_.cloneDeep(currentObj)
         currentObj.currentItem = JSON.stringify(currentObj.currentItem);
         this.router.navigate(['/final-cabinets-details'], { queryParams: currentObj });
+    }
+
+    loadData(event) {
+        this.controllShow = true;
+        this.queryParams.page++;
+        this.arraying.getFinalData(this.queryParams).subscribe(res => {
+            console.log(res);
+            console.log(this.queryParams.page);
+            console.log(res.data);
+
+            if (res.data.length == 0) {
+                this.controllShow = false;
+            }
+            if (res.data && res.data.length) {
+                this.data = this.data.concat(res.data);
+            } else {
+                this.queryParams.page--;
+                this.es.showToast({
+                    message: '别刷了，没有数据啦！',
+                    color: 'danger',
+                });
+            }
+            event.target.complete();
+        });
     }
 }
