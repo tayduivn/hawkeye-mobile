@@ -17,7 +17,6 @@ export class FinalCabinetsComponent implements OnInit {
         search_key: 'factory_name',
         search_value: '',
     };
-    controllShow: boolean = true;
     constructor(
         private router: Router,
         private arraying: ArrayingService,
@@ -129,16 +128,8 @@ export class FinalCabinetsComponent implements OnInit {
     }
 
     loadData(event) {
-        this.controllShow = true;
         this.queryParams.page++;
         this.arraying.getFinalData(this.queryParams).subscribe(res => {
-            console.log(res);
-            console.log(this.queryParams.page);
-            console.log(res.data);
-
-            if (res.data.length == 0) {
-                this.controllShow = false;
-            }
             if (res.data && res.data.length) {
                 this.data = this.data.concat(res.data);
             } else {

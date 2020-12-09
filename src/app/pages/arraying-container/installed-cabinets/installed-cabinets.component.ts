@@ -28,7 +28,6 @@ export class InstalledCabinetsComponent implements OnInit {
     queryInfo: any = {
         page: 1,
     };
-    controllShow: boolean = true;
     constructor(
         private router: Router,
         private es: PageEffectService,
@@ -136,13 +135,8 @@ export class InstalledCabinetsComponent implements OnInit {
     }
 
     loadData(event) {
-        this.controllShow = true;
         this.queryInfo.page++;
         this.arraying.getLoadingData(this.queryInfo).subscribe(res => {
-            console.log(res);
-            if (res.data.length === 0) {
-                this.controllShow = false;
-            }
             if (res.data && res.data.length) {
                 this.data = this.data.concat(res.data);
             } else {

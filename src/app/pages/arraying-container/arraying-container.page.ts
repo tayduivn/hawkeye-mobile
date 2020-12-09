@@ -21,7 +21,6 @@ export class ArrayingContainerPage implements OnInit {
     queryInfo: any = {
         page: 1,
     };
-    controllShow: boolean = true;
     constructor(
         private arraying: ArrayingService,
         private router: Router,
@@ -188,15 +187,8 @@ export class ArrayingContainerPage implements OnInit {
     }
 
     loadData(event) {
-        this.controllShow = true;
         this.queryInfo.page++;
         this.arraying.getWaitingContainerData(this.queryInfo).subscribe(res => {
-            console.log(res);
-            if (res.data.length == 0) {
-                this.controllShow = false;
-            }
-            // console.log(this.controllShow.length);
-
             if (res.data && res.data.length) {
                 this.arrayingList = this.arrayingList.concat(res.data);
             } else {

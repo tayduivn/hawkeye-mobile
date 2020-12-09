@@ -21,7 +21,6 @@ export class DoneArrayListComponent implements OnInit {
     queryInfo: any = {
         page: 1,
     };
-    controllShow: boolean = true;
     constructor(
         private router: Router,
         private es: PageEffectService,
@@ -138,7 +137,6 @@ export class DoneArrayListComponent implements OnInit {
     }
 
     loadData(event) {
-        this.controllShow = true;
         this.queryInfo.page++;
         this.arraying
             .getAlreadyContainerData(this.queryInfo)
@@ -147,11 +145,6 @@ export class DoneArrayListComponent implements OnInit {
                 map(res => res.data),
             )
             .subscribe(res => {
-                console.log(res);
-                console.log(this.queryInfo.page);
-                if (res.data.length == 0) {
-                    this.controllShow = false;
-                }
                 if (res.data && res.data.length) {
                     this.list = this.list.concat(res.data);
                 } else {
