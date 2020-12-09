@@ -63,12 +63,12 @@ const appPages: Array<menuItem> = [
     //     active: false,
     // },
     {
-        title:'排柜',
-        url:'/arraying-container',
-        type:'link',
-        limit:'arraying-container',
-        icon:'list',
-        active:false,
+        title: '排柜',
+        url: '/arraying-container',
+        type: 'link',
+        limit: 'arraying-container',
+        icon: 'list',
+        active: false,
     },
     {
         title: '退出',

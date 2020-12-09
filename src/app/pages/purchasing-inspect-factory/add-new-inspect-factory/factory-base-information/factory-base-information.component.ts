@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PageEffectService } from 'src/app/services/page-effect.service';
 import _ from 'loadsh';
 @Component({
@@ -21,8 +21,15 @@ export class FactoryBaseInformationComponent implements OnInit {
     };
     notFilled: any[] = [];
     toolsObj: any = {};
-    constructor(private route: Router, private es: PageEffectService) {}
-    ngOnInit() {}
+    constructor(private route: Router, private es: PageEffectService, private activatedRoute: ActivatedRoute) {}
+    ngOnInit() {
+        this.getInitQueryParams();
+    }
+    getInitQueryParams() {
+        this.activatedRoute.queryParams.subscribe(queryParam => {
+            console.log(queryParam); //flag等于0不做任何操作  等于1那么回填加禁用编辑  等于2那么回填可编辑
+        });
+    }
     // 点击保存的时候判断必填项是否有值
     saveInfomation() {
         this.notFilled = [];
@@ -77,10 +84,10 @@ export class FactoryBaseInformationComponent implements OnInit {
         } else {
             flag = true;
         }
-        if(flag){
-            return true
-        }else {
-            return false
+        if (flag) {
+            return true;
+        } else {
+            return false;
         }
     }
 }

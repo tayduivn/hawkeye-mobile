@@ -5,7 +5,7 @@
     </ion-buttons>
     <ion-title>最终列表详情</ion-title>
     <ion-buttons slot="end">
-      <ion-button>上传进度</ion-button>
+      <ion-button (click)="showModal()" [disabled]="alreadyUpProgress">上传进度</ion-button>
       <ion-back-button text="返回" color="white" mode="md"></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
