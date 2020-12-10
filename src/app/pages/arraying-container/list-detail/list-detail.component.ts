@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { PageEffectService } from 'src/app/services/page-effect.service';
+import { QueueComponent } from '../../implement-inspection/queue/queue.component';
+import { UploadQueueService } from '../../implement-inspection/upload-queue.service';
 
 @Component({
     selector: 'app-list-detail',
@@ -7,7 +10,7 @@ import { ActivatedRoute } from '@angular/router';
     styleUrls: ['./list-detail.component.scss'],
 })
 export class ListDetailComponent implements OnInit {
-    initObject: any={
+    initObject: any = {
         able_container_num: '',
         apply_inspection_no: '',
         bar_code: '',
@@ -29,7 +32,11 @@ export class ListDetailComponent implements OnInit {
         size_volume: '',
         sku: '',
     };
-    constructor(private activatedRoute: ActivatedRoute) {}
+    constructor(
+        private activatedRoute: ActivatedRoute,
+        private es: PageEffectService,
+        private uQueue: UploadQueueService,
+    ) {}
     ngOnInit() {
         this.getInitQueryParams();
     }

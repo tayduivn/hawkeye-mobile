@@ -25,6 +25,9 @@ export class InstalledCabinetsComponent implements OnInit {
     paramsData: any = {
         name: '',
     };
+    queryInfo: any = {
+        page: 1,
+    };
     constructor(
         private router: Router,
         private es: PageEffectService,
@@ -46,7 +49,7 @@ export class InstalledCabinetsComponent implements OnInit {
     }
     onshowModal(item) {
         console.log(item);
-        
+
         this.es.showModal(
             {
                 component: AlertInstalledModalComponent,
@@ -80,11 +83,17 @@ export class InstalledCabinetsComponent implements OnInit {
                             console.log(res);
                             if (res.status === 1) {
                                 this.es.showToast({
+                                    color: 'success',
+                                    duration: 2000,
                                     message: '撤销成功',
                                 });
-                                this.init();
+                                setTimeout(() => {
+                                    this.init();
+                                }, 1000);
                             } else {
                                 this.es.showToast({
+                                    color: 'danger',
+                                    duration: 2000,
                                     message: '撤销失败',
                                 });
                             }
@@ -113,10 +122,9 @@ export class InstalledCabinetsComponent implements OnInit {
     }
     // 获取初始化数据
     init() {
-        this.arraying.getLoadingData().subscribe(res => {
+        this.arraying.getLoadingData(this.queryInfo).subscribe(res => {
             const { data } = res;
             console.log(res);
-
             this.data = data;
             console.log(this.data);
         });
@@ -129,6 +137,22 @@ export class InstalledCabinetsComponent implements OnInit {
         this.es.showModal({
             component: DetailsModelComponent,
             componentProps: { item },
+        });
+    }
+
+    loadData(event) {
+        this.queryInfo.page++;
+        this.arraying.getLoadingData(this.queryInfo).subscribe(res => {
+            if (res.data && res.data.length) {
+                this.data = this.data.concat(res.data);
+            } else {
+                this.queryInfo.page--;
+                this.es.showToast({
+                    message: '别刷了，没有数据啦！',
+                    color: 'danger',
+                });
+            }
+            event.target.complete();
         });
     }
 }

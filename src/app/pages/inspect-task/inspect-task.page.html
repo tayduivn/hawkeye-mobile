@@ -7,17 +7,12 @@
     </ion-toolbar>
 </ion-header>
 
-<ion-content> 
-    <ion-searchbar 
-        animated
-        clearInput
-        mode="ios"
-        placeholder="输入工厂名检索"
-        (ionChange)="factoryChange()"
-        [(ngModel)]="getListParams.value"
-    ></ion-searchbar>
+<ion-content>
+    <ion-searchbar animated clearInput mode="ios" placeholder="输入工厂名检索" (ionChange)="factoryChange()"
+        [(ngModel)]="getListParams.value"></ion-searchbar>
 
-    <ion-button fill='clear' expand="full" *ngIf="!inspectGroup || !inspectGroup.length" (click)="ionViewWillEnter()">重新获取</ion-button>
+    <ion-button fill='clear' expand="full" *ngIf="!inspectGroup || !inspectGroup.length" (click)="ionViewWillEnter()">
+        重新获取</ion-button>
 
     <ion-card *ngFor="let item of inspectGroup" mode="ios">
         <ion-item class="card-header">
@@ -27,8 +22,7 @@
         </ion-item>
 
         <ion-card-content>
-            <ion-label class="text-r pl-5"
-                >时间段： {{ (item.probable_inspection_date_range.start | date: "MM月-dd日") + " — " +
+            <ion-label class="text-r pl-5">时间段： {{ (item.probable_inspection_date_range.start | date: "MM月-dd日") + " — " +
                 (item.probable_inspection_date_range.end ? (item.probable_inspection_date_range.end | date: "MM月-dd日")
                 : "") }}
             </ion-label>
@@ -59,13 +53,8 @@
                     <ion-col align-self-center [size]="2.2">
                         {{ sItem.sku_count }}
                     </ion-col>
-                    <ion-col
-                        align-self-center
-                        [size]="1.7"
-                        class="ion-col-no-pad"
-                        fxLayout="row"
-                        fxLayoutAlign="start center"
-                    >
+                    <ion-col align-self-center [size]="1.7" class="ion-col-no-pad" fxLayout="row"
+                        fxLayoutAlign="start center">
                         <ion-button fill="clear" size="small" (click)="toContract(sItem.data)">详情</ion-button>
                         <ion-button fill="clear" size="small" (click)="inspectOp(sItem,item)">验货员</ion-button>
                     </ion-col>
@@ -139,13 +128,8 @@
                     <ion-col align-self-center [size]="1.35">
                         {{ sItem.data[0].mobil_phone ? sItem.data[0].mobil_phone : "暂无" }}
                     </ion-col>
-                    <ion-col
-                        align-self-center
-                        [size]="0.95"
-                        class="ion-col-no-pad"
-                        fxLayout="row"
-                        fxLayoutAlign="start start"
-                    >
+                    <ion-col align-self-center [size]="0.95" class="ion-col-no-pad" fxLayout="row"
+                        fxLayoutAlign="start start">
                         <ion-button fill="clear" size="small" (click)="toContract(sItem.data)">详情</ion-button>
                         <ion-button fill="clear" size="small" (click)="inspectOp(sItem,item)">验货员</ion-button>
                     </ion-col>

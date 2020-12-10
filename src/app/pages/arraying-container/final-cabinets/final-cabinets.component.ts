@@ -13,6 +13,7 @@ export class FinalCabinetsComponent implements OnInit {
     data: ArrayingItem[] = [];
     // 定义查询参数
     queryParams: any = {
+        page: 1,
         search_key: 'factory_name',
         search_value: '',
     };
@@ -48,6 +49,8 @@ export class FinalCabinetsComponent implements OnInit {
                 console.log(res);
             } else {
                 this.es.showToast({
+                    color: 'danger',
+                    duration: 2000,
                     message: '请求数据失败',
                 });
             }
@@ -64,6 +67,8 @@ export class FinalCabinetsComponent implements OnInit {
                 console.log(res);
             } else {
                 this.es.showToast({
+                    color: 'danger',
+                    duration: 2000,
                     message: '请求数据失败',
                 });
             }
@@ -87,6 +92,8 @@ export class FinalCabinetsComponent implements OnInit {
                         this.arraying.postRevocationFinalCabnets(data).subscribe(res => {
                             if (res.status === 1) {
                                 this.es.showToast({
+                                    color: 'success',
+                                    duration: 2000,
                                     message: res.message,
                                 });
                                 setTimeout(() => {
@@ -94,6 +101,8 @@ export class FinalCabinetsComponent implements OnInit {
                                 }, 1000);
                             } else {
                                 this.es.showToast({
+                                    color: 'danger',
+                                    duration: 2000,
                                     message: res.message,
                                 });
                             }
@@ -124,5 +133,21 @@ export class FinalCabinetsComponent implements OnInit {
         // const currentData=_.cloneDeep(currentObj)
         currentObj.currentItem = JSON.stringify(currentObj.currentItem);
         this.router.navigate(['/final-cabinets-details'], { queryParams: currentObj });
+    }
+
+    loadData(event) {
+        this.queryParams.page++;
+        this.arraying.getFinalData(this.queryParams).subscribe(res => {
+            if (res.data && res.data.length) {
+                this.data = this.data.concat(res.data);
+            } else {
+                this.queryParams.page--;
+                this.es.showToast({
+                    message: '别刷了，没有数据啦！',
+                    color: 'danger',
+                });
+            }
+            event.target.complete();
+        });
     }
 }

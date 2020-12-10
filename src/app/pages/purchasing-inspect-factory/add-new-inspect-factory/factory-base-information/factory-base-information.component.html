@@ -12,7 +12,8 @@
         <ion-col align-self-center [size]="6">
         </ion-col>
         <ion-col align-self-center [size]="3" class="factoryAddress">
-          <ion-input type="text" class="ipt" [(ngModel)]="originObject.address" (ionChange)="inputChanged()">
+          <ion-input type="text" class="ipt" [(ngModel)]="originObject.address" (ionChange)="inputChanged()"
+            [disabled]="isDisabled">
           </ion-input>
           <ion-button fill="clear" size="small" class="addFactoryAddress">+</ion-button>
         </ion-col>
@@ -26,7 +27,7 @@
         </ion-col>
         <ion-col align-self-center [size]="3">
           <ion-input type="text" class="ipt" clearInput="true" [(ngModel)]="originObject.contact"
-            (ionChange)="inputChanged()"></ion-input>
+            (ionChange)="inputChanged()" [disabled]="isDisabled"></ion-input>
         </ion-col>
       </ion-row>
 
@@ -38,7 +39,7 @@
         </ion-col>
         <ion-col align-self-center [size]="3">
           <ion-input type="text" class="ipt" clearInput="true" [(ngModel)]="originObject.position"
-            (ionChange)="inputChanged()"></ion-input>
+            (ionChange)="inputChanged()" [disabled]="isDisabled"></ion-input>
         </ion-col>
       </ion-row>
 
@@ -49,7 +50,7 @@
         <ion-col align-self-center [size]="6">
         </ion-col>
         <ion-col align-self-center [size]="3">
-          <ion-input type="text" class="ipt" clearInput="true"></ion-input>
+          <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"></ion-input>
         </ion-col>
       </ion-row>
 
@@ -60,7 +61,7 @@
         <ion-col align-self-center [size]="6">
         </ion-col>
         <ion-col align-self-center [size]="3">
-          <ion-input type="text" class="ipt" clearInput="true"></ion-input>
+          <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"></ion-input>
         </ion-col>
       </ion-row>
 
@@ -72,7 +73,7 @@
         </ion-col>
         <ion-col align-self-center [size]="3" class="dateCol">
           <ion-datetime class="Formatdate" displayFormat="YYYY-MM-DD" doneText="完成" cancelText="取消" max="2050-12-30"
-            placeholder="请输入日期">
+            placeholder="请输入日期" [disabled]="isDisabled">
           </ion-datetime>
           <div class="iconfont icon-ziyuan"></div>
         </ion-col>
@@ -85,7 +86,7 @@
         <ion-col align-self-center [size]="6">
         </ion-col>
         <ion-col align-self-center [size]="3">
-          <ion-input type="text" class="ipt" clearInput="true"></ion-input>
+          <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"></ion-input>
         </ion-col>
       </ion-row>
 
@@ -96,7 +97,7 @@
         <ion-col align-self-center [size]="6">
         </ion-col>
         <ion-col align-self-center [size]="3">
-          <ion-input type="text" class="ipt" clearInput="true"></ion-input>
+          <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"></ion-input>
         </ion-col>
       </ion-row>
 
@@ -107,7 +108,7 @@
         <ion-col align-self-center [size]="6">
         </ion-col>
         <ion-col align-self-center [size]="3">
-          <ion-input type="text" class="ipt" clearInput="true"></ion-input>
+          <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"></ion-input>
         </ion-col>
       </ion-row>
 
@@ -118,7 +119,7 @@
         <ion-col align-self-center [size]="6">
         </ion-col>
         <ion-col align-self-center [size]="3">
-          <ion-input type="text" class="ipt" clearInput="true"></ion-input>
+          <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"></ion-input>
         </ion-col>
       </ion-row>
 

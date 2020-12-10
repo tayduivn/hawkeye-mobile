@@ -61,23 +61,23 @@
 
   <div class="tabs">
     <div (click)="tabsItemClicked(0)" [class]="activeIndex===0?'bacColor textColor':''"
-      [routerLink]="['/add-new-inspect-factory']">
+      [routerLink]="['/add-new-inspect-factory']" [queryParams]="{flag:flag1}">
       <ion-icon name="journal"></ion-icon>
       <span>工厂基本信息</span>
     </div>
     <div (click)="tabsItemClicked(1)" [class]="activeIndex===1?'bacColor textColor':''"
-      [routerLink]="['/add-new-inspect-factory/factory-general-situation']">
+      [routerLink]="['/add-new-inspect-factory/factory-general-situation']" [queryParams]="{flag:flag1}">
       <ion-icon name="grid"></ion-icon>
       <span>工厂概况</span>
 
     </div>
     <div (click)="tabsItemClicked(2)" [class]="activeIndex===2?'bacColor textColor':''"
-      [routerLink]="['/add-new-inspect-factory/product-information']">
+      [routerLink]="['/add-new-inspect-factory/product-information']" [queryParams]="{flag:flag1}">
       <ion-icon name="hammer"></ion-icon>
       <span>产品信息</span>
     </div>
     <div (click)="tabsItemClicked(3)" [class]="activeIndex===3?'bacColor textColor':''"
-      [routerLink]="['/add-new-inspect-factory/specimen-information']">
+      [routerLink]="['/add-new-inspect-factory/specimen-information']" [queryParams]="{flag:flag1}">
       <ion-icon name="film"></ion-icon>
       <span>样品情况</span>
     </div>

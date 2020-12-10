@@ -5,7 +5,6 @@
     </ion-buttons>
     <ion-title>最终列表详情</ion-title>
     <ion-buttons slot="end">
-      <ion-button>上传进度</ion-button>
       <ion-back-button text="返回" color="white" mode="md"></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
@@ -28,7 +27,7 @@
           <ion-col align-self-center [size]="6">
           </ion-col>
           <ion-col align-self-center [size]="3">
-            <span>{{initObject.name?initObject.name:'暂无'}}</span>
+            <div>{{initObject.name?initObject.name:'暂无'}}</div>
           </ion-col>
         </ion-row>
 
@@ -40,7 +39,18 @@
           <ion-col align-self-center [size]="6">
           </ion-col>
           <ion-col align-self-center [size]="3" class="multiple-item">
-            <span>{{initObject.currentItem.contract_no?initObject.currentItem.contract_no:'暂无'}}</span>
+            <div>{{initObject.currentItem.contract_no?initObject.currentItem.contract_no:'暂无'}}</div>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="title">
+          <ion-col align-self-center [size]="3" class="first-col">
+            合同抬头 :
+          </ion-col>
+          <ion-col align-self-center [size]="6">
+          </ion-col>
+          <ion-col align-self-center [size]="3" class="multiple-item">
+            <div>{{initObject.currentItem.contract_title?initObject.currentItem.contract_title:'暂无'}}</div>
           </ion-col>
         </ion-row>
 
@@ -51,7 +61,7 @@
           <ion-col align-self-center [size]="6">
           </ion-col>
           <ion-col align-self-center [size]="3" class="multiple-item">
-            <span>{{initObject.currentItem.sku?initObject.currentItem.sku:'暂无'}}</span>
+            <div>{{initObject.currentItem.sku?initObject.currentItem.sku:'暂无'}}</div>
           </ion-col>
         </ion-row>
 
@@ -62,7 +72,8 @@
           <ion-col align-self-center [size]="6">
           </ion-col>
           <ion-col align-self-center [size]="3" class="multiple-item">
-            <span>{{initObject.currentItem.manufacturer?initObject.currentItem.manufacturer:'暂无'}}</span>
+            <div class="factory-name">{{initObject.currentItem.manufacturer?initObject.currentItem.manufacturer:'暂无'}}
+            </div>
           </ion-col>
         </ion-row>
 
@@ -73,7 +84,7 @@
           <ion-col align-self-center [size]="6">
           </ion-col>
           <ion-col align-self-center [size]="3" class="multiple-item">
-            <span>{{initObject.currentItem.charges?initObject.currentItem.charges:'暂无'}}</span>
+            <div>{{initObject.currentItem.charges?initObject.currentItem.charges:'暂无'}}</div>
           </ion-col>
         </ion-row>
 
@@ -84,19 +95,36 @@
           <ion-col align-self-center [size]="6">
           </ion-col>
           <ion-col align-self-center [size]="3" class="multiple-item">
-            <span>{{initObject.currentItem.charges_desc?initObject.currentItem.charges_desc:'暂无'}}</span>
+            <div>{{initObject.currentItem.charges_desc?initObject.currentItem.charges_desc:'暂无'}}</div>
           </ion-col>
         </ion-row>
 
-
         <ion-row class="title">
           <ion-col align-self-center [size]="3" class="first-col">
-            装柜箱数 :
+            计划装柜箱数 :
           </ion-col>
           <ion-col align-self-center [size]="6">
           </ion-col>
           <ion-col align-self-center [size]="3" class="multiple-item">
-            <span>{{initObject.currentItem.truly_arraying_container_num?initObject.currentItem.truly_arraying_container_num:'暂无'}}</span>
+<<<<<<< Updated upstream
+            <div>{{initObject.currentItem.arraying_container_num?initObject.currentItem.arraying_container_num:'暂无'}}
+            </div>
+=======
+            <span>{{initObject.currentItem.arraying_container_num?initObject.currentItem.arraying_container_num:'暂无'}}</span>
+>>>>>>> Stashed changes
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="title">
+          <ion-col align-self-center [size]="3" class="first-col">
+            实际装柜箱数 :
+          </ion-col>
+          <ion-col align-self-center [size]="6">
+          </ion-col>
+          <ion-col align-self-center [size]="3" class="multiple-item">
+            <div>
+              {{initObject.currentItem.truly_arraying_container_num?initObject.currentItem.truly_arraying_container_num:'暂无'}}
+            </div>
           </ion-col>
         </ion-row>
 
@@ -107,7 +135,7 @@
           <ion-col align-self-center [size]="6">
           </ion-col>
           <ion-col align-self-center [size]="3" class="multiple-item">
-            <span>{{initObject.currentItem.mobil_phone?initObject.currentItem.mobil_phone:'暂无'}}</span>
+            <div>{{initObject.currentItem.mobil_phone?initObject.currentItem.mobil_phone:'暂无'}}</div>
           </ion-col>
         </ion-row>
 
@@ -119,7 +147,7 @@
           <ion-col align-self-center [size]="6">
           </ion-col>
           <ion-col align-self-center [size]="3" class="multiple-item">
-            <span>{{initObject.currentItem.schedule_user_name?initObject.currentItem.schedule_user_name:'暂无'}}</span>
+            <div>{{initObject.currentItem.schedule_user_name?initObject.currentItem.schedule_user_name:'暂无'}}</div>
           </ion-col>
         </ion-row>
 
@@ -130,7 +158,7 @@
           <ion-col align-self-center [size]="6">
           </ion-col>
           <ion-col align-self-center [size]="3">
-            <span>{{initObject.shipping_room?initObject.shipping_room:'暂无'}}</span>
+            <div>{{initObject.shipping_room?initObject.shipping_room:'暂无'}}</div>
           </ion-col>
         </ion-row>
 
@@ -141,7 +169,7 @@
           <ion-col align-self-center [size]="6">
           </ion-col>
           <ion-col align-self-center [size]="3">
-            <span>{{initObject.estimate_loading_time?initObject.estimate_loading_time:'暂无'}}</span>
+            <div>{{initObject.estimate_loading_time?initObject.estimate_loading_time:'暂无'}}</div>
           </ion-col>
         </ion-row>
 
@@ -153,7 +181,7 @@
           <ion-col align-self-center [size]="6">
           </ion-col>
           <ion-col align-self-center [size]="3">
-            <span>{{initObject.bl_no?initObject.bl_no:'暂无'}}</span>
+            <div>{{initObject.bl_no?initObject.bl_no:'暂无'}}</div>
           </ion-col>
         </ion-row>
 
@@ -164,7 +192,7 @@
           <ion-col align-self-center [size]="6">
           </ion-col>
           <ion-col align-self-center [size]="3">
-            <span>{{initObject.container_no?initObject.container_no:'暂无'}}</span>
+            <div>{{initObject.container_no?initObject.container_no:'暂无'}}</div>
           </ion-col>
         </ion-row>
 
@@ -175,7 +203,7 @@
           <ion-col align-self-center [size]="6">
           </ion-col>
           <ion-col align-self-center [size]="3">
-            <span>{{initObject.seal_no?initObject.seal_no:'暂无'}}</span>
+            <div>{{initObject.seal_no?initObject.seal_no:'暂无'}}</div>
           </ion-col>
         </ion-row>
 
@@ -186,7 +214,7 @@
           <ion-col align-self-center [size]="6">
           </ion-col>
           <ion-col align-self-center [size]="3">
-            <span>{{initObject.truely_loading_time?initObject.truely_loading_time:'暂无'}}</span>
+            <div>{{initObject.truely_loading_time?initObject.truely_loading_time:'暂无'}}</div>
           </ion-col>
         </ion-row>
 
@@ -197,7 +225,7 @@
           <ion-col align-self-center [size]="6">
           </ion-col>
           <ion-col align-self-center [size]="3">
-            <span>{{initObject.on_board_date?initObject.on_board_date:'暂无'}}</span>
+            <div>{{initObject.on_board_date?initObject.on_board_date:'暂无'}}</div>
           </ion-col>
         </ion-row>
 
@@ -208,7 +236,7 @@
           <ion-col align-self-center [size]="6">
           </ion-col>
           <ion-col align-self-center [size]="3">
-            <span>{{initObject.estimated_arrival_time?initObject.estimated_arrival_time:'暂无'}}</span>
+            <div>{{initObject.estimated_arrival_time?initObject.estimated_arrival_time:'暂无'}}</div>
           </ion-col>
         </ion-row>
       </ion-grid>

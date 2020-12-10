@@ -18,6 +18,9 @@ export class ArrayingContainerPage implements OnInit {
     countData: any = {
         arraying_container_sku_arr: [],
     };
+    queryInfo: any = {
+        page: 1,
+    };
     constructor(
         private arraying: ArrayingService,
         private router: Router,
@@ -26,6 +29,7 @@ export class ArrayingContainerPage implements OnInit {
     ) {}
     ngOnInit() {
         this.activatedRoute.url.subscribe(res => {
+            window.localStorage.setItem('isPai', null);
             this.init();
             this.isAllDisplayDataChecked = false;
         });
@@ -62,7 +66,7 @@ export class ArrayingContainerPage implements OnInit {
 
     init() {
         this.arraying
-            .getWaitingContainerData()
+            .getWaitingContainerData(this.queryInfo)
             .pipe(
                 tap(res => {
                     console.log(res);
@@ -72,25 +76,50 @@ export class ArrayingContainerPage implements OnInit {
             .subscribe(res => {
                 this.arrayingList = res;
                 // console.log(res);
-
                 res.map(sku => {
+                    console.log(sku.id);
+
                     this.mapOfCheckedId[sku.id] = false;
                 });
             });
     }
 
     onBlur(e: Event, data: any) {
-        console.log(data);
-        if ((e.target as any).value > data.able_container_num) {
+        console.log('xian');
+        console.log((e.target as any).value - 0);
+        console.log(this.mapOfCheckedId[data.id]);
+        if ((e.target as any).value - 0 > data.able_container_num) {
             this.es.showToast({
-                message: '不能大于最大装柜数量，请重试',
+                color: 'danger',
+                duration: 2000,
+                message: '不能大于最大排柜数量，请重试',
             });
-            (e.target as any).value = null;
-        } else if (data.arraying_container_num === 0) {
+            window.localStorage.setItem('isPai', 'big');
+            (e.target as any).value = '';
+        } else if (data.arraying_container_num <= 0) {
             this.es.showToast({
+                color: 'danger',
+                duration: 2000,
                 message: '输入的数量必须大于0',
             });
-            (e.target as any).value = null;
+            (e.target as any).value = '';
+            window.localStorage.setItem('isPai', 'No0');
+        } else if (Math.round(data.arraying_container_num) !== data.arraying_container_num) {
+            this.es.showToast({
+                color: 'danger',
+                duration: 2000,
+                message: '输入的数量必须是整数',
+            });
+            (e.target as any).value = '';
+            window.localStorage.setItem('isPai', 'NoZ');
+        } else {
+            window.localStorage.setItem('isPai', null);
+            
+            setTimeout(() => {
+                if (!this.mapOfCheckedId[data.id]) {
+                    (e.target as any).value = '';
+                }
+            }, 0);
         }
     }
 
@@ -101,18 +130,6 @@ export class ArrayingContainerPage implements OnInit {
             }
         }
     }
-
-    // refreshStatus() {
-    //     // this.isAllDisplayDataChecked = this.mapOfCheckedId[id];
-    //     console.log(this.mapOfCheckedId);
-    //     let flag = true;
-    //     for (const key in this.mapOfCheckedId) {
-    //         if (!this.mapOfCheckedId[key]) {
-    //             flag = false;
-    //         }
-    //     }
-    //     this.isAllDisplayDataChecked = flag;
-    // }
 
     gotoDoneList() {
         this.router.navigate(['/done-array-list']);
@@ -129,17 +146,50 @@ export class ArrayingContainerPage implements OnInit {
         item && this.router.navigate(['/list-detail'], { queryParams: item });
     }
     onSort() {
+        console.log('hou');
+        const result = window.localStorage.getItem('isPai');
+        if (result === 'big') {
+            this.es.showToast({
+                color: 'danger',
+                duration: 2000,
+                message: '不能大于最大排柜数量，请重试',
+            });
+            window.localStorage.setItem('isPai', null);
+            return;
+        } else if (result === 'No0') {
+            this.es.showToast({
+                color: 'danger',
+                duration: 2000,
+                message: '请输入合法的排柜数量',
+            });
+            window.localStorage.setItem('isPai', null);
+            return;
+        } else if (result === 'NoZ') {
+            this.es.showToast({
+                color: 'danger',
+                duration: 2000,
+                message: '输入的数量必须是整数',
+            });
+            window.localStorage.setItem('isPai', null);
+            return;
+        }
         // 点击的时候先判断输入数字没有
+        console.log(this.mapOfCheckedId);
+        this.checkedboxArray = [];
         for (let key in this.mapOfCheckedId) {
             if (this.mapOfCheckedId[key]) {
                 this.checkedboxArray.push(key);
             }
         }
+        console.log(this.checkedboxArray);
+
         const flag = this.checkedboxArray.some(key => {
             const item = this.arrayingList.find(item => item.id + '' === key);
             if (!item.arraying_container_num) {
                 this.es.showToast({
-                    message: '请输入排柜数量',
+                    message: '请输入合法的排柜数量',
+                    duration: 2000,
+                    color: 'danger',
                 });
                 return true;
             }
@@ -160,10 +210,6 @@ export class ArrayingContainerPage implements OnInit {
                 if (res.status === 1) {
                     const { data } = res;
                     this.onShowModal(data);
-                } else {
-                    this.es.showToast({
-                        message: '数据获取失败',
-                    });
                 }
             });
         }
@@ -185,13 +231,45 @@ export class ArrayingContainerPage implements OnInit {
                     // 开始排柜
                     this.arraying.postContainerData(this.skuIds).subscribe(res => {
                         this.es.showToast({
+                            color: 'success',
+                            duration: 2000,
                             message: res.message,
                         });
-                        this.router.navigate(['/arraying-container/done-array-list']);
-                        window.localStorage.setItem('active', '1');
+                        setTimeout(() => {
+                            this.router.navigate(['/arraying-container/done-array-list']);
+                            window.localStorage.setItem('active', '1');
+                        }, 1500);
                     });
                 }
             },
         );
+    }
+
+    loadData(event) {
+        this.queryInfo.page++;
+        this.arraying.getWaitingContainerData(this.queryInfo).subscribe(res => {
+            if (res.data && res.data.length) {
+                this.arrayingList = this.arrayingList.concat(res.data);
+            } else {
+                this.queryInfo.page--;
+                this.es.showToast({
+                    message: '别刷了，没有数据啦！',
+                    color: 'danger',
+                    duration: 2000,
+                });
+            }
+            event.target.complete();
+        });
+    }
+
+    onclick(bool: boolean) {
+        console.log(bool);
+        if (!bool) {
+            this.es.showToast({
+                color: 'danger',
+                duration: 2000,
+                message: '请先勾选复选框再输入排柜数量',
+            });
+        }
     }
 }

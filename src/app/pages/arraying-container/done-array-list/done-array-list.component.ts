@@ -18,6 +18,9 @@ export class DoneArrayListComponent implements OnInit {
         arraying_container_sku_id: '', //sku id
         name: '', //批次号
     };
+    queryInfo: any = {
+        page: 1,
+    };
     constructor(
         private router: Router,
         private es: PageEffectService,
@@ -51,8 +54,10 @@ export class DoneArrayListComponent implements OnInit {
             res => {
                 // 回调函数 重新加载页面
                 // 跳转到待装柜
-                this.router.navigate(['/arraying-container/installed-cabinets']);
-                window.localStorage.setItem('active', '2');
+                setTimeout(() => {
+                    this.router.navigate(['/arraying-container/installed-cabinets']);
+                    window.localStorage.setItem('active', '2');
+                }, 1500);
             },
         );
     }
@@ -66,7 +71,7 @@ export class DoneArrayListComponent implements OnInit {
     }
     init() {
         this.arraying
-            .getAlreadyContainerData()
+            .getAlreadyContainerData(this.queryInfo)
             .pipe(
                 tap(res => {}),
                 map(res => res.data.data),
@@ -110,11 +115,17 @@ export class DoneArrayListComponent implements OnInit {
                             console.log(res);
                             if (res.status === 1) {
                                 this.es.showToast({
+                                    color: 'success',
+                                    duration: 2000,
                                     message: '撤销成功',
                                 });
-                                this.init();
+                                setTimeout(() => {
+                                    this.init();
+                                }, 1000);
                             } else {
                                 this.es.showToast({
+                                    color: 'danger',
+                                    duration: 2000,
                                     message: '撤销失败',
                                 });
                             }
@@ -131,5 +142,27 @@ export class DoneArrayListComponent implements OnInit {
     gotoThisbatchDetails(item: any) {
         console.log(item);
         this.onshowModal2(item);
+    }
+
+    loadData(event) {
+        this.queryInfo.page++;
+        this.arraying
+            .getAlreadyContainerData(this.queryInfo)
+            .pipe(
+                tap(res => {}),
+                map(res => res.data),
+            )
+            .subscribe(res => {
+                if (res.data && res.data.length) {
+                    this.list = this.list.concat(res.data);
+                } else {
+                    this.queryInfo.page--;
+                    this.es.showToast({
+                        message: '别刷了，没有数据啦！',
+                        color: 'danger',
+                    });
+                }
+                event.target.complete();
+            });
     }
 }

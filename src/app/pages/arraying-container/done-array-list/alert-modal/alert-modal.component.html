@@ -59,7 +59,7 @@
                 工厂费用<span class="star">*</span>
               </ion-col>
               <ion-col align-self-center [size]="3" class="title-factory-item">
-                费用备注<span class="star">*</span>
+                费用备注
               </ion-col>
             </ion-row>
 
@@ -72,13 +72,15 @@
               </ion-col>
               <ion-col align-self-center [size]="2" class="title3-item">
                 <div>
-                  <ion-input type="number" class="ipt1" [(ngModel)]="item.charge" [ngModelOptions]="{standalone: true}" (ionChange)="isBtnDisabled()" (ionBlur)="onBlur($event,item)">
+                  <ion-input type="number" class="ipt1" [(ngModel)]="item.charge" [ngModelOptions]="{standalone: true}"
+                    (ionChange)="isBtnDisabled()" (ionBlur)="onBlur($event,item)">
                   </ion-input>
                 </div>
               </ion-col>
               <ion-col align-self-center [size]="3" class="title3-item">
                 <div>
-                  <ion-input type="text" class="ipt1" [(ngModel)]="item.desc" [ngModelOptions]="{standalone: true}" (ionChange)="isBtnDisabled()">
+                  <ion-input type="text" class="ipt1" [(ngModel)]="item.desc" [ngModelOptions]="{standalone: true}"
+                    (ionChange)="isBtnDisabled()">
                   </ion-input>
                 </div>
               </ion-col>

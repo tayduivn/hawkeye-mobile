@@ -17,7 +17,7 @@
         <ion-col align-self-center [size]="3">
           <!-- 下拉输入位置 -->
           <!-- 这里是下拉选择器   存在联动的效果-->
-          <ion-select class="select" placeholder="请选择" okText="确认" cancelText="取消">
+          <ion-select class="select" placeholder="请选择" okText="确认" cancelText="取消" [disabled]="isDisabled">
             <ion-select-option [value]="0">否</ion-select-option>
             <ion-select-option [value]="1">是</ion-select-option>
           </ion-select>
@@ -32,7 +32,7 @@
         </ion-col>
         <ion-col align-self-center [size]="3" class="dateCol">
           <!-- 这里是下拉选择器   存在联动的效果-->
-          <ion-select class="select" placeholder="请选择" okText="确认" cancelText="取消">
+          <ion-select class="select" placeholder="请选择" okText="确认" cancelText="取消" [disabled]="isDisabled">
             <ion-select-option [value]="0">否</ion-select-option>
             <ion-select-option [value]="1">是</ion-select-option>
           </ion-select>
@@ -46,7 +46,7 @@
         <ion-col align-self-center [size]="6">
         </ion-col>
         <ion-col align-self-center [size]="3">
-          <ion-input type="text" class="ipt" clearInput="true"></ion-input>
+          <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"></ion-input>
         </ion-col>
       </ion-row>
 
@@ -57,7 +57,7 @@
         <ion-col align-self-center [size]="6">
         </ion-col>
         <ion-col align-self-center [size]="3">
-          <ion-input type="text" class="ipt" clearInput="true"></ion-input>
+          <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"></ion-input>
         </ion-col>
       </ion-row>
 
@@ -68,7 +68,7 @@
         <ion-col align-self-center [size]="6">
         </ion-col>
         <ion-col align-self-center [size]="3">
-          <ion-input type="text" class="ipt" clearInput="true"></ion-input>
+          <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"></ion-input>
         </ion-col>
       </ion-row>
 
