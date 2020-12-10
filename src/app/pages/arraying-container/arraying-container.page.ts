@@ -102,7 +102,7 @@ export class ArrayingContainerPage implements OnInit {
                 this.es.showToast({
                     color: 'danger',
                     duration: 2000,
-                    message: '输入的数量必须大于0',
+                    message: '请输入合法的排柜数量',
                 });
                 (e.target as any).value = '';
                 window.localStorage.setItem('isPai', 'No0');
@@ -157,7 +157,7 @@ export class ArrayingContainerPage implements OnInit {
             this.es.showToast({
                 color: 'danger',
                 duration: 2000,
-                message: '输入的数量必须大于0',
+                message: '请输入合法的排柜数量',
             });
             window.localStorage.setItem('isPai', null);
             return;
@@ -184,7 +184,7 @@ export class ArrayingContainerPage implements OnInit {
             const item = this.arrayingList.find(item => item.id + '' === key);
             if (!item.arraying_container_num) {
                 this.es.showToast({
-                    message: '请输入排柜数量',
+                    message: '请输入合法的排柜数量',
                     duration: 2000,
                     color: 'danger',
                 });
