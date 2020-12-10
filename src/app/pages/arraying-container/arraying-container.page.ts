@@ -88,35 +88,37 @@ export class ArrayingContainerPage implements OnInit {
         console.log('xian');
         console.log((e.target as any).value - 0);
         console.log(this.mapOfCheckedId[data.id]);
-
-        if (this.mapOfCheckedId[data.id]) {
-            if ((e.target as any).value - 0 > data.able_container_num) {
-                this.es.showToast({
-                    color: 'danger',
-                    duration: 2000,
-                    message: '不能大于最大排柜数量，请重试',
-                });
-                window.localStorage.setItem('isPai', 'big');
-                (e.target as any).value = '';
-            } else if ((e.target as any).value - 0 <= 0) {
-                this.es.showToast({
-                    color: 'danger',
-                    duration: 2000,
-                    message: '请输入合法的排柜数量',
-                });
-                (e.target as any).value = '';
-                window.localStorage.setItem('isPai', 'No0');
-            } else if (Math.round((e.target as any).value - 0) !== (e.target as any).value - 0) {
-                this.es.showToast({
-                    color: 'danger',
-                    duration: 2000,
-                    message: '输入的数量必须是整数',
-                });
-                (e.target as any).value = '';
-                window.localStorage.setItem('isPai', 'NoZ');
-            } else {
-                window.localStorage.setItem('isPai', null);
-            }
+        if ((e.target as any).value - 0 > data.able_container_num) {
+            this.es.showToast({
+                color: 'danger',
+                duration: 2000,
+                message: '不能大于最大排柜数量，请重试',
+            });
+            window.localStorage.setItem('isPai', 'big');
+            (e.target as any).value = '';
+        } else if ((e.target as any).value - 0 <= 0) {
+            this.es.showToast({
+                color: 'danger',
+                duration: 2000,
+                message: '请输入合法的排柜数量',
+            });
+            (e.target as any).value = '';
+            window.localStorage.setItem('isPai', 'No0');
+        } else if (Math.round((e.target as any).value - 0) !== (e.target as any).value - 0) {
+            this.es.showToast({
+                color: 'danger',
+                duration: 2000,
+                message: '输入的数量必须是整数',
+            });
+            (e.target as any).value = '';
+            window.localStorage.setItem('isPai', 'NoZ');
+        } else {
+            window.localStorage.setItem('isPai', null);
+            setTimeout(() => {
+                if (!this.mapOfCheckedId[data.id]) {
+                    (e.target as any).value = '';
+                }
+            }, 0);
         }
     }
 
