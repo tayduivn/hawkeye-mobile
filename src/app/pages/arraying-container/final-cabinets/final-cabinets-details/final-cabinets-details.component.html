@@ -5,7 +5,6 @@
     </ion-buttons>
     <ion-title>最终列表详情</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="showModal()" [disabled]="alreadyUpProgress">上传进度</ion-button>
       <ion-back-button text="返回" color="white" mode="md"></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
@@ -88,10 +87,20 @@
           </ion-col>
         </ion-row>
 
+        <ion-row class="title">
+          <ion-col align-self-center [size]="3" class="first-col">
+            计划装柜箱数 :
+          </ion-col>
+          <ion-col align-self-center [size]="6">
+          </ion-col>
+          <ion-col align-self-center [size]="3" class="multiple-item">
+            <span>{{initObject.currentItem.arraying_container_num?initObject.currentItem.arraying_container_num:'暂无'}}</span>
+          </ion-col>
+        </ion-row>
 
         <ion-row class="title">
           <ion-col align-self-center [size]="3" class="first-col">
-            装柜箱数 :
+            实际装柜箱数 :
           </ion-col>
           <ion-col align-self-center [size]="6">
           </ion-col>

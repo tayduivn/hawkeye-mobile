@@ -16,7 +16,6 @@ export class FinalCabinetsDetailsComponent implements OnInit {
         private es: PageEffectService,
         private uQueue: UploadQueueService,
     ) {}
-    alreadyUpProgress: boolean = this.uQueue.alreadyUpProgress;
     ngOnInit() {
         this.getInitQueryParams();
     }
@@ -24,14 +23,12 @@ export class FinalCabinetsDetailsComponent implements OnInit {
         this.activatedRoute.queryParams.subscribe(queryParam => {
             const currentObj = _.cloneDeep(queryParam);
             currentObj.currentItem = JSON.parse(currentObj.currentItem);
+            currentObj.estimate_loading_time = currentObj.estimate_loading_time.split(' ')[0];
+            currentObj.estimated_arrival_time = currentObj.estimated_arrival_time.split(' ')[0];
+            currentObj.on_board_date = currentObj.on_board_date.split(' ')[0];
+            currentObj.truely_loading_time = currentObj.truely_loading_time.split(' ')[0];
             this.initObject = currentObj;
             console.log(this.initObject);
         });
-    }
-    showModal() {
-        this.es.showModal({
-            component: QueueComponent,
-        });
-        this.uQueue.alreadyUpProgress = true;
     }
 }

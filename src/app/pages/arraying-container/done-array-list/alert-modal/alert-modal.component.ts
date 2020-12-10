@@ -31,6 +31,28 @@ export class AlertModalComponent implements OnInit {
     }
     onSubmit() {
         if (this.flag) {
+            console.log(this.data.estimate_loading_time);
+
+            console.log(this.data.estimate_loading_time.split('T')[0]);
+
+            function getDate(): string {
+                var date = new Date();
+                var year = date.getFullYear();
+                var month = date.getMonth() + 1;
+                var day = date.getDate();
+                return `${year}-${month}-${day}`;
+            }
+            const dateStr = getDate();
+            console.log(dateStr);
+            if (this.data.estimate_loading_time.split('T')[0] === dateStr) {
+            } else if (+new Date(this.data.estimate_loading_time) < +new Date()) {
+                this.es.showToast({
+                    message: '预计装柜时间不可小于当前时间',
+                    duration: 2000,
+                    color: 'danger',
+                });
+                return;
+            }
             // 点击了提单
             this.data.id = this.id;
             console.log(this.data);
@@ -39,6 +61,8 @@ export class AlertModalComponent implements OnInit {
                 // 关闭弹出层
                 this.modal.dismiss('已关闭');
                 this.es.showToast({
+                    color: 'success',
+                    duration: 2000,
                     message: '提单成功',
                 });
             });
@@ -58,10 +82,14 @@ export class AlertModalComponent implements OnInit {
     }
     // 定义提交按钮禁用和不禁用的方法  每当按钮改变的时候判断有没有值 有值说明选择了
     isBtnDisabled() {
+        console.log(this.data.charges);
+
         let flag;
         let num = 0;
         this.data.charges.forEach(item => {
-            if (item.charge !== null && item.desc.trim() !== '' && item.factory_name.trim() !== '') {
+            console.log(item.charge);
+
+            if (item.charge !== '' && item.charge !== null) {
                 num++;
             }
         });
@@ -92,14 +120,17 @@ export class AlertModalComponent implements OnInit {
         }, 0);
     }
     onBlur(e: Event, data: any) {
-        console.log(data);
+        // console.log(this.data.charges);
         console.log(e);
+
         if (data.charge < 0) {
             this.es.showToast({
-                message: '输入的数量必须大于等于0',
+                color: 'danger',
+                duration: 2000,
+                message: '输入的费用必须大于等于0',
             });
             this.flag = false;
-            (e.target as any).value = null;
+            (e.target as any).value = '';
         } else {
             this.flag = true;
         }

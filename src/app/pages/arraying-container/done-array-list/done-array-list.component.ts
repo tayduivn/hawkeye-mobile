@@ -54,8 +54,10 @@ export class DoneArrayListComponent implements OnInit {
             res => {
                 // 回调函数 重新加载页面
                 // 跳转到待装柜
-                this.router.navigate(['/arraying-container/installed-cabinets']);
-                window.localStorage.setItem('active', '2');
+                setTimeout(() => {
+                    this.router.navigate(['/arraying-container/installed-cabinets']);
+                    window.localStorage.setItem('active', '2');
+                }, 1500);
             },
         );
     }
@@ -113,11 +115,17 @@ export class DoneArrayListComponent implements OnInit {
                             console.log(res);
                             if (res.status === 1) {
                                 this.es.showToast({
+                                    color: 'success',
+                                    duration: 2000,
                                     message: '撤销成功',
                                 });
-                                this.init();
+                                setTimeout(() => {
+                                    this.init();
+                                }, 1000);
                             } else {
                                 this.es.showToast({
+                                    color: 'danger',
+                                    duration: 2000,
                                     message: '撤销失败',
                                 });
                             }

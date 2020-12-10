@@ -21,6 +21,7 @@ export class FactoryBaseInformationComponent implements OnInit {
     };
     notFilled: any[] = [];
     toolsObj: any = {};
+    isDisabled: boolean;
     constructor(private route: Router, private es: PageEffectService, private activatedRoute: ActivatedRoute) {}
     ngOnInit() {
         this.getInitQueryParams();
@@ -28,6 +29,13 @@ export class FactoryBaseInformationComponent implements OnInit {
     getInitQueryParams() {
         this.activatedRoute.queryParams.subscribe(queryParam => {
             console.log(queryParam); //flag等于0不做任何操作  等于1那么回填加禁用编辑  等于2那么回填可编辑
+            if (queryParam.flag === '0') {
+                this.isDisabled = false;
+            } else if (queryParam.flag === '1') {
+                this.isDisabled = true;
+            } else {
+                this.isDisabled = false;
+            }
         });
     }
     // 点击保存的时候判断必填项是否有值
@@ -68,26 +76,30 @@ export class FactoryBaseInformationComponent implements OnInit {
     }
 
     confirm() {
-        let flag = true;
-        if (window.localStorage.getItem('flag') !== '已保存') {
-            for (let key in this.originObject) {
-                if (this.originObject[key].trim() !== '') {
-                    flag = false;
-                }
-            }
-        } else if (window.localStorage.getItem('flag') === '已保存') {
-            for (let key in this.originObject) {
-                if (this.originObject[key] !== this.toolsObj[key]) {
-                    flag = false;
-                }
-            }
-        } else {
-            flag = true;
-        }
-        if (flag) {
+        if (this.isDisabled) {
             return true;
         } else {
-            return false;
+            let flag = true;
+            if (window.localStorage.getItem('flag') !== '已保存') {
+                for (let key in this.originObject) {
+                    if (this.originObject[key].trim() !== '') {
+                        flag = false;
+                    }
+                }
+            } else if (window.localStorage.getItem('flag') === '已保存') {
+                for (let key in this.originObject) {
+                    if (this.originObject[key] !== this.toolsObj[key]) {
+                        flag = false;
+                    }
+                }
+            } else {
+                flag = true;
+            }
+            if (flag) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 }

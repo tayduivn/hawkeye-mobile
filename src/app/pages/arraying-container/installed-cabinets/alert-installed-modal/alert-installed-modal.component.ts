@@ -13,11 +13,11 @@ export class AlertInstalledModalComponent implements OnInit {
     @Input() item: any;
     installData: any = {
         id: null,
-        truely_loading_time: '',
-        on_board_date: '',
+        truely_loading_time: '', //实际装柜时间
+        on_board_date: '', //开船日期
         seal_no: '',
         container_no: '',
-        estimated_arrival_time: '',
+        estimated_arrival_time: '', //预计到港时间
         sku_data: [],
     };
     flag: Boolean = true;
@@ -32,10 +32,24 @@ export class AlertInstalledModalComponent implements OnInit {
     ) {}
     onSubmit() {
         if (this.flag) {
+            if (+new Date(this.installData.on_board_date) < +new Date(this.installData.truely_loading_time)) {
+                this.es.showToast({
+                    color: 'danger',
+                    duration: 2000,
+                    message: '开船时间不可小于实际装柜日期',
+                });
+                return;
+            } else if (+new Date(this.installData.estimated_arrival_time) < +new Date(this.installData.on_board_date)) {
+                this.es.showToast({
+                    color: 'danger',
+                    duration: 2000,
+                    message: '预计到港时间不可小于开船时间',
+                });
+                return;
+            }
             this.installData.id = this.current.id;
             this.installData.sku_data = this.currentData;
             console.log(this.installData);
-
             this.arraying.postLoadingData(this.installData).subscribe(res => {
                 console.log(res);
                 if (res.status === 1) {
@@ -43,13 +57,19 @@ export class AlertInstalledModalComponent implements OnInit {
                     this.modal.dismiss('关闭了弹窗');
                     // 弹出提示框
                     this.es.showToast({
+                        color: 'success',
+                        duration: 2000,
                         message: res.message,
                     });
-                    this.router.navigate(['/arraying-container/final-cabinets']);
-                    window.localStorage.setItem('active', '3');
+                    setTimeout(() => {
+                        this.router.navigate(['/arraying-container/final-cabinets']);
+                        window.localStorage.setItem('active', '3');
+                    }, 1500);
                 } else {
                     // 不关闭弹框
                     this.es.showToast({
+                        color: 'danger',
+                        duration: 2000,
                         message: res.message,
                     });
                 }
@@ -64,6 +84,8 @@ export class AlertInstalledModalComponent implements OnInit {
         console.log(e);
         if (data.truly_arraying_container_num <= 0) {
             this.es.showToast({
+                color: 'danger',
+                duration: 2000,
                 message: '输入的数量必须大于0',
             });
             this.flag = false;

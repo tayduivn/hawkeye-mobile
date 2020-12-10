@@ -87,7 +87,7 @@ export class ArrayingService {
     /**
      * 获得已排柜数据
      */
-    getAlreadyContainerData(data): Observable<AlreadyArrayingData> {
+    getAlreadyContainerData(data?): Observable<AlreadyArrayingData> {
         return this.http
             .get({ url: '/arrayingContainer/get_distribution_container_data', params: data })
             .pipe(map(res => res.data));

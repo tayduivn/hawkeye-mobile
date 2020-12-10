@@ -19,7 +19,6 @@ export class DoneArrayListDetailsComponent implements OnInit {
     ngOnInit() {
         this.getInitQueryParams();
     }
-    alreadyUpProgress: boolean = this.uQueue.alreadyUpProgress;
     getInitQueryParams() {
         this.activatedRoute.queryParams.subscribe(queryParam => {
             let currentObj = _.cloneDeep(queryParam);
@@ -27,11 +26,5 @@ export class DoneArrayListDetailsComponent implements OnInit {
             this.initObject = currentObj;
             console.log(currentObj);
         });
-    }
-    showModal() {
-        this.es.showModal({
-            component: QueueComponent,
-        });
-        this.uQueue.alreadyUpProgress = true;
     }
 }

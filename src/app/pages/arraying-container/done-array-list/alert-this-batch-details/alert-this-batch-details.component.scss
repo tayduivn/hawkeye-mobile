@@ -1,12 +1,14 @@
 .title-first-item {
-  border: 1px solid #ededed;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: rgb(138, 136, 136);
+    border: 1px solid #ededed;
+    color: rgb(138, 136, 136);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+    text-align: center;
 }
 .title-first-item1 {
-  font-weight: bold;
-  background-color: #ededed;
+    font-weight: bold;
+    background-color: #ededed;
 }
 //ok

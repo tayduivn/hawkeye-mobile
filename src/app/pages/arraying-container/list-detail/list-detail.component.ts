@@ -32,7 +32,6 @@ export class ListDetailComponent implements OnInit {
         size_volume: '',
         sku: '',
     };
-    alreadyUpProgress: boolean = this.uQueue.alreadyUpProgress;
     constructor(
         private activatedRoute: ActivatedRoute,
         private es: PageEffectService,
@@ -40,12 +39,6 @@ export class ListDetailComponent implements OnInit {
     ) {}
     ngOnInit() {
         this.getInitQueryParams();
-    }
-    showModal() {
-        this.es.showModal({
-            component: QueueComponent,
-        });
-        this.uQueue.alreadyUpProgress = true;
     }
     getInitQueryParams() {
         this.activatedRoute.queryParams.subscribe(queryParam => {

@@ -83,11 +83,17 @@ export class InstalledCabinetsComponent implements OnInit {
                             console.log(res);
                             if (res.status === 1) {
                                 this.es.showToast({
+                                    color: 'success',
+                                    duration: 2000,
                                     message: '撤销成功',
                                 });
-                                this.init();
+                                setTimeout(() => {
+                                    this.init();
+                                }, 1000);
                             } else {
                                 this.es.showToast({
+                                    color: 'danger',
+                                    duration: 2000,
                                     message: '撤销失败',
                                 });
                             }

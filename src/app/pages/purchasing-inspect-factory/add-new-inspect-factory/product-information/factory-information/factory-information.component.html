@@ -20,7 +20,7 @@
           <ion-col align-self-center [size]="6">
           </ion-col>
           <ion-col align-self-center [size]="3">
-            <ion-input type="text" class="ipt"></ion-input>
+            <ion-input type="text" class="ipt" [disabled]="isDisabled"></ion-input>
           </ion-col>
         </ion-row>
 
@@ -31,7 +31,7 @@
           <ion-col align-self-center [size]="6">
           </ion-col>
           <ion-col align-self-center [size]="3" class="dateCol">
-            <ion-input type="text" class="ipt"></ion-input>
+            <ion-input type="text" class="ipt" [disabled]="isDisabled"></ion-input>
           </ion-col>
         </ion-row>
 
@@ -43,7 +43,7 @@
         <ion-row class="title">
           <ion-col align-self-center [size]="12">
             <!-- 输入域 -->
-            <textarea rows="4" class="textArea"></textarea>
+            <textarea rows="4" class="textArea" [disabled]="isDisabled"></textarea>
           </ion-col>
         </ion-row>
 
@@ -55,7 +55,7 @@
         <ion-row class="title">
           <ion-col align-self-center [size]="12">
             <!-- 输入域 -->
-            <textarea rows="4" class="textArea"></textarea>
+            <textarea rows="4" class="textArea" [disabled]="isDisabled"></textarea>
           </ion-col>
         </ion-row>
 

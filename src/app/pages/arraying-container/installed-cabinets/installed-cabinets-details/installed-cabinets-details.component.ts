@@ -20,19 +20,14 @@ export class InstalledCabinetsDetailsComponent implements OnInit {
     ngOnInit() {
         this.getInitQueryParams();
     }
-    alreadyUpProgress: boolean = this.uQueue.alreadyUpProgress;
+
     getInitQueryParams() {
         this.activatedRoute.queryParams.subscribe(queryParam => {
             let currentObj = _.cloneDeep(queryParam);
             currentObj.currentItem = JSON.parse(currentObj.currentItem);
+            currentObj.estimate_loading_time = currentObj.estimate_loading_time.split(' ')[0];
             this.initObject = currentObj;
             console.log(currentObj);
         });
-    }
-    showModal() {
-        this.es.showModal({
-            component: QueueComponent,
-        });
-        this.uQueue.alreadyUpProgress = true;
     }
 }

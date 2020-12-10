@@ -37,6 +37,7 @@ export class AddNewInspectFactoryComponent implements OnInit {
             const { flag } = queryParam;
             console.log(flag);
             this.flag1 = flag;
+            // 这里面的flag的值代表的是是从哪里进来的  应该调用哪一个接口  从详情和编辑过来的  就获取数据  然后定义一个变量保存起来传递给几个子组件，子组件回填  如果是新增进来的  那么就什么也不传
         });
     }
     tabsItemClicked(i: any) {

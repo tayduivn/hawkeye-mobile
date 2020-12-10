@@ -49,6 +49,8 @@ export class FinalCabinetsComponent implements OnInit {
                 console.log(res);
             } else {
                 this.es.showToast({
+                    color: 'danger',
+                    duration: 2000,
                     message: '请求数据失败',
                 });
             }
@@ -65,6 +67,8 @@ export class FinalCabinetsComponent implements OnInit {
                 console.log(res);
             } else {
                 this.es.showToast({
+                    color: 'danger',
+                    duration: 2000,
                     message: '请求数据失败',
                 });
             }
@@ -88,6 +92,8 @@ export class FinalCabinetsComponent implements OnInit {
                         this.arraying.postRevocationFinalCabnets(data).subscribe(res => {
                             if (res.status === 1) {
                                 this.es.showToast({
+                                    color: 'success',
+                                    duration: 2000,
                                     message: res.message,
                                 });
                                 setTimeout(() => {
@@ -95,6 +101,8 @@ export class FinalCabinetsComponent implements OnInit {
                                 }, 1000);
                             } else {
                                 this.es.showToast({
+                                    color: 'danger',
+                                    duration: 2000,
                                     message: res.message,
                                 });
                             }
