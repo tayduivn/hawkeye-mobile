@@ -86,32 +86,37 @@ export class ArrayingContainerPage implements OnInit {
 
     onBlur(e: Event, data: any) {
         console.log('xian');
-        if ((e.target as any).value > data.able_container_num) {
-            this.es.showToast({
-                color: 'danger',
-                duration: 2000,
-                message: '不能大于最大排柜数量，请重试',
-            });
-            window.localStorage.setItem('isPai', 'big');
-            (e.target as any).value = '';
-        } else if (data.arraying_container_num <= 0) {
-            this.es.showToast({
-                color: 'danger',
-                duration: 2000,
-                message: '输入的数量必须大于0',
-            });
-            (e.target as any).value = '';
-            window.localStorage.setItem('isPai', 'No0');
-        } else if (Math.round(data.arraying_container_num) !== data.arraying_container_num) {
-            this.es.showToast({
-                color: 'danger',
-                duration: 2000,
-                message: '输入的数量必须是整数',
-            });
-            (e.target as any).value = '';
-            window.localStorage.setItem('isPai', 'NoZ');
-        } else {
-            window.localStorage.setItem('isPai', null);
+        console.log((e.target as any).value - 0);
+        console.log(this.mapOfCheckedId[data.id]);
+
+        if (this.mapOfCheckedId[data.id]) {
+            if ((e.target as any).value - 0 > data.able_container_num) {
+                this.es.showToast({
+                    color: 'danger',
+                    duration: 2000,
+                    message: '不能大于最大排柜数量，请重试',
+                });
+                window.localStorage.setItem('isPai', 'big');
+                (e.target as any).value = '';
+            } else if ((e.target as any).value - 0 <= 0) {
+                this.es.showToast({
+                    color: 'danger',
+                    duration: 2000,
+                    message: '输入的数量必须大于0',
+                });
+                (e.target as any).value = '';
+                window.localStorage.setItem('isPai', 'No0');
+            } else if (Math.round((e.target as any).value - 0) !== (e.target as any).value - 0) {
+                this.es.showToast({
+                    color: 'danger',
+                    duration: 2000,
+                    message: '输入的数量必须是整数',
+                });
+                (e.target as any).value = '';
+                window.localStorage.setItem('isPai', 'NoZ');
+            } else {
+                window.localStorage.setItem('isPai', null);
+            }
         }
     }
 
@@ -252,5 +257,16 @@ export class ArrayingContainerPage implements OnInit {
             }
             event.target.complete();
         });
+    }
+
+    onclick(bool: boolean) {
+        console.log(bool);
+        if (!bool) {
+            this.es.showToast({
+                color: 'danger',
+                duration: 2000,
+                message: '请先勾选复选框再输入排柜数量',
+            });
+        }
     }
 }

@@ -48,7 +48,9 @@
             <ion-col align-self-center [size]="3" class="multiple-item">
               <div class="ipt-container">
                 <ion-input type="number" class="ipt" (ionBlur)="onBlur($event,item)" [max]="item.able_container_num"
-                  [(ngModel)]="item.arraying_container_num"></ion-input>
+                  [(ngModel)]="item.arraying_container_num" [disabled]="!mapOfCheckedId[item.id]"
+                  (click)="onclick(mapOfCheckedId[item.id])">
+                </ion-input>
               </div>
             </ion-col>
 

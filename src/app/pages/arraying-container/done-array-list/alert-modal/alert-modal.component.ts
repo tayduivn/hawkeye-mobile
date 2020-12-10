@@ -29,20 +29,18 @@ export class AlertModalComponent implements OnInit {
     close() {
         this.modal.dismiss();
     }
+    getDate(): string {
+        var date = new Date();
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        return `${year}-${month}-${day}`;
+    }
     onSubmit() {
         if (this.flag) {
             console.log(this.data.estimate_loading_time);
-
             console.log(this.data.estimate_loading_time.split('T')[0]);
-
-            function getDate(): string {
-                var date = new Date();
-                var year = date.getFullYear();
-                var month = date.getMonth() + 1;
-                var day = date.getDate();
-                return `${year}-${month}-${day}`;
-            }
-            const dateStr = getDate();
+            const dateStr = this.getDate();
             console.log(dateStr);
             if (this.data.estimate_loading_time.split('T')[0] === dateStr) {
             } else if (+new Date(this.data.estimate_loading_time) < +new Date()) {
