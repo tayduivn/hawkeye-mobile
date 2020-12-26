@@ -1,14 +1,36 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { FactoryListQueryInfo, inspectingService } from 'src/app/services/inspecting.service';
 @Component({
     selector: 'app-purchasing-inspect-factory',
     templateUrl: './purchasing-inspect-factory.page.html',
     styleUrls: ['./purchasing-inspect-factory.page.scss'],
 })
 export class PurchasingInspectFactoryPage implements OnInit {
-    constructor(private router: Router) {}
-    ngOnInit() {}
-    // 跳转新增页面，信息部回填
+    // 查询参数
+    queryInfo: FactoryListQueryInfo = {
+        page: 1,
+    };
+    searchQueryInfo: FactoryListQueryInfo = {
+        name: null,
+    };
+    constructor(private router: Router, private inspecting: inspectingService) {}
+    ngOnInit() {
+        // 一开始就获取列表获取到的列表进行渲染
+        this.getList(this.queryInfo);
+    }
+    // 获取列表
+    getList(params: FactoryListQueryInfo) {
+        this.inspecting.getFactoryList(params).subscribe(res => {
+            console.log(res);
+        });
+    }
+    ngOnDestroy(): void {
+        //Called once, before the instance is destroyed.
+        //Add 'implements OnDestroy' to the class.
+        console.log('purchasing销毁');
+    }
+    // 跳转新增页面，信息不回填
     toAddNew() {
         // 如果没有任何的标志位那么就不回填不禁用
         this.router.navigate(['/add-new-inspect-factory'], { queryParams: { flag: 0 } });

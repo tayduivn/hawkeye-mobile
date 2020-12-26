@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ResolveEnd, Router } from '@angular/router';
+import { Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { TabStatusService } from '../tab-status.service';
+import { EmitService } from './emit.service';
+
 @Component({
     selector: 'app-add-new-inspect-factory',
     templateUrl: './add-new-inspect-factory.component.html',
@@ -18,14 +21,16 @@ export class AddNewInspectFactoryComponent implements OnInit {
         private router: Router,
         private route: Router,
         private tab: TabStatusService,
+        private infoCtrl: EmitService,
     ) {}
     ngOnInit() {
         this.getInitQueryParams();
         this.activatedRoute.url.subscribe(res => {
-            this.activeIndex = window.localStorage.getItem('index')
-                ? (window.localStorage.getItem('index') as any) - 0
+            this.activeIndex = window.sessionStorage.getItem('index')
+                ? (window.sessionStorage.getItem('index') as any) - 0
                 : 0;
         });
+        // window.sessionStorage.setItem('index', '0');
         // 在这里进行订阅流（服务）那边发送服务  这边订阅服务;
         this.tab.canClick$.subscribe(res => {
             // 如果res时true则允许切换
@@ -44,15 +49,19 @@ export class AddNewInspectFactoryComponent implements OnInit {
         setTimeout(() => {
             if (this.flag) {
                 this.activeIndex = i;
-                window.localStorage.setItem('index', `${i}`);
-                // console.log(this.activeIndex);
+                window.sessionStorage.setItem('index', `${i}`);
             }
         }, 0);
     }
     ngAfterViewInit() {}
+
     ngOnDestroy() {
-        window.localStorage.setItem('index', '0');
+        window.sessionStorage.setItem('index', '0');
     }
     // 在这个页面可以获取到所有的信息  所有的信息获取到后路由跳转的时候传到子组件
     getData() {}
+
+    saveInformation() {
+        this.infoCtrl.info$.next('这是头部的信息');
+    }
 }

@@ -38,7 +38,7 @@
           </ion-col>
           <ion-col align-self-center [size]="3" class="dateCol">
             <ion-datetime class="Formatdate" displayFormat="YYYY-MM-DD" doneText="完成" cancelText="取消" max="2050-12-30"
-              placeholder="请输入日期">
+              placeholder="请输入日期" [disabled]="flag1-0==1">
             </ion-datetime>
             <div class="iconfont icon-ziyuan"></div>
           </ion-col>
@@ -51,7 +51,7 @@
           <ion-col align-self-center [size]="6">
           </ion-col>
           <ion-col align-self-center [size]="3">
-            <ion-input type="text" class="ipt"></ion-input>
+            <ion-input type="text" class="ipt" [disabled]="flag1-0==1"></ion-input>
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -85,4 +85,6 @@
 
   <!-- 下面放路由插座 -->
   <router-outlet></router-outlet>
+
+  <ion-button class="nextStepBtn" size="small" [disabled]="!flag1" (click)="saveInformation()">保存</ion-button>
 </ion-content>

@@ -12,7 +12,8 @@
         <ion-col align-self-center [size]="6">
         </ion-col>
         <ion-col align-self-center [size]="3">
-          <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"></ion-input>
+          <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"
+            [(ngModel)]="originObject.acreage"></ion-input>
         </ion-col>
       </ion-row>
 
@@ -23,7 +24,8 @@
         <ion-col align-self-center [size]="6">
         </ion-col>
         <ion-col align-self-center [size]="3">
-          <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"></ion-input>
+          <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"
+            [(ngModel)]="originObject.people_num"></ion-input>
         </ion-col>
       </ion-row>
 
@@ -34,7 +36,8 @@
       </ion-row>
       <ion-row class="title">
         <ion-col align-self-center [size]="12">
-          <ion-input type="text" class="ipt bigipt" clearInput="true" [disabled]="isDisabled"></ion-input>
+          <ion-input type="text" class="ipt bigipt" clearInput="true" [disabled]="isDisabled"
+            [(ngModel)]="originObject.manning"></ion-input>
         </ion-col>
       </ion-row>
 
@@ -45,7 +48,8 @@
       </ion-row>
       <ion-row class="title">
         <ion-col align-self-center [size]="12">
-          <ion-input type="text" class="ipt bigipt" clearInput="true" [disabled]="isDisabled"></ion-input>
+          <ion-input type="text" class="ipt bigipt" clearInput="true" [disabled]="isDisabled"
+            [(ngModel)]="originObject.department"></ion-input>
         </ion-col>
       </ion-row>
 
@@ -56,7 +60,8 @@
         <ion-col align-self-center [size]="6">
         </ion-col>
         <ion-col align-self-center [size]="3">
-          <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"></ion-input>
+          <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"
+            [(ngModel)]="originObject.production_equipment"></ion-input>
         </ion-col>
       </ion-row>
 
@@ -69,7 +74,8 @@
         <ion-col align-self-center [size]="3">
           <!-- 下拉框 -->
           <!-- 这里是下拉选择器 -->
-          <ion-select class="select" placeholder="请选择" okText="确认" cancelText="取消" [disabled]="isDisabled">
+          <ion-select class="select" placeholder="请选择" okText="确认" cancelText="取消" [disabled]="isDisabled"
+            [(ngModel)]="originObject.production_capacity">
             <ion-select-option [value]="1">好</ion-select-option>
             <ion-select-option [value]="2">一般</ion-select-option>
             <ion-select-option [value]="3">差</ion-select-option>
@@ -85,7 +91,8 @@
         </ion-col>
         <ion-col align-self-center [size]="3">
           <!-- 下拉框 -->
-          <ion-select class="select" placeholder="请选择" okText="确认" cancelText="取消" [disabled]="isDisabled">
+          <ion-select class="select" placeholder="请选择" okText="确认" cancelText="取消" [disabled]="isDisabled"
+            [(ngModel)]="normal.quality">
             <ion-select-option [value]="1">好</ion-select-option>
             <ion-select-option [value]="2">一般</ion-select-option>
             <ion-select-option [value]="3">差</ion-select-option>
@@ -100,7 +107,9 @@
         <ion-col align-self-center [size]="6">
         </ion-col>
         <ion-col align-self-center [size]="3">
-          <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"></ion-input>
+          <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"
+            [(ngModel)]="originObject.production_cycle">
+          </ion-input>
         </ion-col>
       </ion-row>
 
@@ -111,7 +120,8 @@
         <ion-col align-self-center [size]="6">
         </ion-col>
         <ion-col align-self-center [size]="3">
-          <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"></ion-input>
+          <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"
+            [(ngModel)]="originObject.sales_market"></ion-input>
         </ion-col>
       </ion-row>
 
@@ -122,7 +132,8 @@
         <ion-col align-self-center [size]="6">
         </ion-col>
         <ion-col align-self-center [size]="3">
-          <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"></ion-input>
+          <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled" [(ngModel)]="normal.customer">
+          </ion-input>
         </ion-col>
       </ion-row>
 
@@ -133,7 +144,9 @@
         <ion-col align-self-center [size]="6">
         </ion-col>
         <ion-col align-self-center [size]="3">
-          <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"></ion-input>
+          <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"
+            [(ngModel)]="normal.authentication">
+          </ion-input>
         </ion-col>
       </ion-row>
 
@@ -144,7 +157,8 @@
         <ion-col align-self-center [size]="6">
         </ion-col>
         <ion-col align-self-center [size]="3">
-          <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"></ion-input>
+          <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"
+            [(ngModel)]="originObject.pay_type"></ion-input>
         </ion-col>
       </ion-row>
 
@@ -156,7 +170,8 @@
         </ion-col>
         <ion-col align-self-center [size]="3">
           <!-- 下拉框 -->
-          <ion-select class="select" placeholder="请选择" okText="确认" cancelText="取消" [disabled]="isDisabled">
+          <ion-select class="select" placeholder="请选择" okText="确认" cancelText="取消" [disabled]="isDisabled"
+            [(ngModel)]="originObject.third_party">
             <ion-select-option [value]="0">否</ion-select-option>
             <ion-select-option [value]="1">是</ion-select-option>
           </ion-select>
@@ -164,11 +179,13 @@
       </ion-row>
 
       <!-- 条件渲染 -->
-      <!-- <ion-row class="title">
+      <ion-row class="title">
         <ion-col align-self-center [size]="12">
-          <ion-input type="text" class="ipt"></ion-input>
+          <ion-input type="text" class="ipt third" [(ngModel)]="normal.third_name" placeholder="请输入第三方的名称"
+            *ngIf="originObject.third_party===1">
+          </ion-input>
         </ion-col>
-      </ion-row> -->
+      </ion-row>
 
       <ion-row class="title border-row">
         <ion-col align-self-center [size]="3">
@@ -197,5 +214,5 @@
     </ion-grid>
   </ion-card-content>
 </ion-card>
-<ion-button class="nextStepBtn" size="small">保存</ion-button>
+
 <!-- 工厂基本信息卡片视图区 end-->

@@ -1,3 +1,128 @@
-<app-factory-information [isDisabled]="isDisabled"></app-factory-information>
+<!-- <app-factory-information [isDisabled]="isDisabled"></app-factory-information>
 <app-factory-cooperation-product [isDisabled]="isDisabled"></app-factory-cooperation-product>
-<ion-button class="nextStepBtn" size="small">保存</ion-button>
+<ion-button class="nextStepBtn" size="small">保存</ion-button> -->
+
+<ion-card-content>
+  <!-- 产品信息卡片视图区 start -->
+  <ion-card mode="ios" *ngFor="let item of normal.productInformation;let i=index">
+    <ion-item class="card-header">
+      <div class="header-container">
+        <ion-card-title color="primary" class="card-title">产品信息({{i+1}})</ion-card-title>
+        <div class="btns-container">
+          <ion-button class="ml-20" size="small" (click)="addProduct()">添加</ion-button>
+          <ion-button class="ml-20" size="small" color="danger" *ngIf="i>0" (click)="deleteProduct(i)">删除
+          </ion-button>
+        </div>
+      </div>
+    </ion-item>
+    <ion-card-content>
+      <ion-grid>
+        <!-- 第一行 -->
+        <ion-row class="title">
+          <ion-col align-self-center [size]="3">
+            产品名称 :
+          </ion-col>
+          <ion-col align-self-center [size]="6">
+          </ion-col>
+          <ion-col align-self-center [size]="3">
+            <ion-input type="text" class="ipt" [disabled]="isDisabled" [(ngModel)]="item.productname"></ion-input>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col align-self-center [size]="3">
+            主要材料 :
+          </ion-col>
+          <ion-col align-self-center [size]="6">
+          </ion-col>
+          <ion-col align-self-center [size]="3" class="dateCol">
+            <ion-input type="text" class="ipt" [disabled]="isDisabled" [(ngModel)]="item.materials"></ion-input>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="title">
+          <ion-col align-self-center [size]="12">
+            主要工艺 :
+          </ion-col>
+        </ion-row>
+        <ion-row class="title">
+          <ion-col align-self-center [size]="12">
+            <!-- 输入域 -->
+            <textarea rows="4" class="textArea" [disabled]="isDisabled" [(ngModel)]="item.craft"></textarea>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="title">
+          <ion-col align-self-center [size]="12">
+            外协工厂处理的工艺或材料 :
+          </ion-col>
+        </ion-row>
+        <ion-row class="title">
+          <ion-col align-self-center [size]="12">
+            <!-- 输入域 -->
+            <textarea rows="4" class="textArea" [disabled]="isDisabled" [(ngModel)]="item.gyhcl"></textarea>
+          </ion-col>
+        </ion-row>
+
+
+        <ion-row class="title">
+          <ion-col align-self-center [size]="3">
+            产品照片 :
+          </ion-col>
+          <ion-col align-self-center [size]="6">
+          </ion-col>
+          <ion-col align-self-center [size]="3">
+            <app-photograph></app-photograph>
+            <app-videotape></app-videotape>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+  <!-- 产品信息卡片视图区 end -->
+
+
+  <!-- 拟合作产品卡片视图区 start-->
+  <ion-card mode="ios" *ngFor="let item of normal.cooperationProduct;let i=index">
+    <ion-item class="card-header">
+      <div class="header-container">
+        <ion-card-title color="primary" class="card-title">拟合作产品({{i+1}})</ion-card-title>
+        <div class="btns-container">
+          <ion-button class="ml-20" size="small" (click)="addCooperationProduct()">添加</ion-button>
+          <ion-button class="ml-20" size="small" color="danger" *ngIf="i>0" (click)="deleteCooperationProduct(i)">删除
+          </ion-button>
+        </div>
+      </div>
+    </ion-item>
+    <ion-card-content>
+      <ion-grid>
+        <!-- 第一行 -->
+        <ion-row class="title">
+          <ion-col align-self-center [size]="3">
+            产品名称 :
+          </ion-col>
+          <ion-col align-self-center [size]="6">
+          </ion-col>
+          <ion-col align-self-center [size]="3" class="goodsname">
+            <ion-input type="text" class="ipt" [disabled]="isDisabled" [(ngModel)]="item.name"></ion-input>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="title">
+          <ion-col align-self-center [size]="12">
+            合作注意点 :
+          </ion-col>
+        </ion-row>
+        <ion-row class="title">
+          <ion-col align-self-center [size]="12">
+            <!-- 输入域 -->
+            <textarea rows="4" class="textArea" [disabled]="isDisabled" [(ngModel)]="item.notice"></textarea>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+  <!-- 拟合作产品卡片视图区  end-->
+
+
+</ion-card-content>
