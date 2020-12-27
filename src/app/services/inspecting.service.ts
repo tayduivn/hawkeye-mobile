@@ -29,12 +29,29 @@ export class inspectingService {
             params,
         });
     }
+
+    // 获取工厂详情
+    getFactoryXQ(params: GetFactoryDetails): Observable<any> {
+        return this.http.get({
+            url: '/factory/factory-inspect-by-id',
+            params,
+        });
+    }
+
+    // 保存产品的信息接口
+    saveProductInfomation(params): Observable<any> {
+        return this.http.post({
+            url: '/factory/add-factory-inspect-product',
+            params,
+        });
+    }
 }
 export interface FactoryListQueryInfo {
     page?: number;
     name?: string;
 }
 export interface SaveFactoryInfo {
+    factory_id?: number; //工厂id
     user_id: number; //用户编号（考察人员）
     name: string; //工厂名称（考察对象）
     add_time: string; //创建时间（考察日期）
@@ -49,4 +66,8 @@ export interface SaveFactoryInfo {
     company_nature: string; //公司性质
     create_time?: string; //成立时间
     product_type: string; //产品类型
+}
+
+export interface GetFactoryDetails {
+    factory_id: number;
 }

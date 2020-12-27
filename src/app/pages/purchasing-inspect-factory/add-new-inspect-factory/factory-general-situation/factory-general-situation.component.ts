@@ -63,7 +63,35 @@ export class FactoryGeneralSituationComponent implements OnInit {
     }
     getInitQueryParams() {
         this.activatedRoute.queryParams.subscribe(queryParam => {
-            console.log(queryParam); //flag等于0不做任何操作  等于1那么回填加禁用编辑  等于2那么回填可编辑
+            // console.log(queryParam); //flag等于0不做任何操作  等于1那么回填加禁用编辑  等于2那么回填可编辑
+            const { details } = queryParam;
+            // console.log(details);
+            if (details) {
+                const DETAILS = JSON.parse(details);
+                this.originObject.acreage = DETAILS.acreage;
+                this.originObject.people_num = DETAILS.people_num;
+                this.originObject.manning = DETAILS.manning;
+                this.originObject.department = DETAILS.department;
+                this.originObject.production_equipment = DETAILS.production_equipment;
+                this.originObject.production_capacity = DETAILS.production_capacity - 0;
+                this.originObject.production_cycle = DETAILS.production_cycle;
+                this.originObject.sales_market = DETAILS.sales_market;
+                this.originObject.pay_type = DETAILS.pay_type;
+                this.originObject.third_party = DETAILS.third_party - 0;
+
+                this.normal.quality = DETAILS.quality - 0;
+                this.normal.customer = DETAILS.customer;
+                this.normal.authentication = DETAILS.authentication;
+                this.normal.third_name = DETAILS.third_name;
+                if (queryParam.flag === '2') {
+                    // 编辑刚进来设置为已经保存
+                    window.localStorage.setItem('flag', '已保存');
+                    const newOriginObj = _.cloneDeep(this.originObject);
+                    const newNormalObj = _.cloneDeep(this.normal);
+                    Object.assign(newOriginObj, newNormalObj);
+                    this.toolsObj = newOriginObj;
+                }
+            }
             if (queryParam.flag === '0') {
                 this.isDisabled = false;
             } else if (queryParam.flag === '1') {
@@ -91,7 +119,7 @@ export class FactoryGeneralSituationComponent implements OnInit {
             this.notFilled.forEach(item => {
                 str += this.obj[item] + ' ';
             });
-            console.log(str + '是必填项');
+            // console.log(str + '是必填项');
             this.es.showToast({
                 message: str + '是必填项',
                 duration: 1500,
@@ -139,7 +167,7 @@ export class FactoryGeneralSituationComponent implements OnInit {
                 }
             } else if (window.localStorage.getItem('flag') === '已保存') {
                 for (let key in newOriginObj) {
-                    if (newOriginObj[key] !== this.toolsObj[key]) {
+                    if (newOriginObj[key] != this.toolsObj[key]) {
                         flag = false;
                     }
                 }

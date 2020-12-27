@@ -20,8 +20,8 @@ export class SpecimenInformationComponent implements OnInit {
         amount: '', //样品费情况
         readiness_time: '', //准备时间
         payment: '', //付款情况
-        isTalk: '', //是否谈到样品
-        isProvide: '', //是否愿意提供样品
+        have_sample: '', //是否谈到样品
+        will_supply: '', //是否愿意提供样品
     };
     destroy = false;
     ngOnInit() {
@@ -33,7 +33,25 @@ export class SpecimenInformationComponent implements OnInit {
     }
     getInitQueryParams() {
         this.activatedRoute.queryParams.subscribe(queryParam => {
-            console.log(queryParam); //flag等于0不做任何操作  等于1那么回填加禁用编辑  等于2那么回填可编辑
+            // console.log(queryParam); //flag等于0不做任何操作  等于1那么回填加禁用编辑  等于2那么回填可编辑
+            const { details } = queryParam;
+            if (details) {
+                const DETAILS = JSON.parse(details);
+                this.normal.have_sample = DETAILS.have_sample - 0;
+                this.normal.will_supply = DETAILS.will_supply - 0;
+                this.normal.amount = DETAILS.sample.amount;
+                this.normal.readiness_time = DETAILS.sample.readiness_time;
+                this.normal.payment = DETAILS.sample.payment;
+                // console.log(this.normal);
+                if (queryParam.flag === '2') {
+                    // 编辑刚进来设置为已经保存
+                    window.localStorage.setItem('flag', '已保存');
+                    const newOriginObj = _.cloneDeep(this.originObject);
+                    const newNormalObj = _.cloneDeep(this.normal);
+                    Object.assign(newOriginObj, newNormalObj);
+                    this.toolsObj = newOriginObj;
+                }
+            }
             if (queryParam.flag === '0') {
                 this.isDisabled = false;
             } else if (queryParam.flag === '1') {
@@ -71,6 +89,9 @@ export class SpecimenInformationComponent implements OnInit {
         const newOriginObj = _.cloneDeep(this.originObject);
         const newNormalObj = _.cloneDeep(this.normal);
         Object.assign(newOriginObj, newNormalObj);
+        // console.log(newOriginObj);
+        // console.log(this.toolsObj);
+
         if (this.isDisabled) {
             return true;
         } else {
@@ -83,7 +104,7 @@ export class SpecimenInformationComponent implements OnInit {
                 }
             } else if (window.localStorage.getItem('flag') === '已保存') {
                 for (let key in newOriginObj) {
-                    if (newOriginObj[key] !== this.toolsObj[key]) {
+                    if (newOriginObj[key] != this.toolsObj[key]) {
                         flag = false;
                     }
                 }

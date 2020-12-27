@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import _ from 'loadsh';
 import { takeWhile } from 'rxjs/operators';
+import { inspectingService } from 'src/app/services/inspecting.service';
 import { PageEffectService } from 'src/app/services/page-effect.service';
 import { EmitService } from '../emit.service';
 @Component({
@@ -10,26 +11,32 @@ import { EmitService } from '../emit.service';
     styleUrls: ['./product-information.component.scss'],
 })
 export class ProductInformationComponent implements OnInit {
-    constructor(private activatedRoute: ActivatedRoute, private es: PageEffectService, private infoCtrl: EmitService) {}
+    constructor(
+        private activatedRoute: ActivatedRoute,
+        private es: PageEffectService,
+        private infoCtrl: EmitService,
+        private inspecting: inspectingService,
+    ) {}
     isDisabled: boolean;
     // 定义一个必填项的双向绑定的对象
     originObject: any = {};
     toolsObj: any = {};
     normal: any = {
+        factory_id: 1,
         //产品信息的数组
-        productInformation: [
+        products: [
             {
-                productname: '', //产品名称
-                materials: '', //主要材料
+                name: '', //产品名称
+                material: '', //主要材料
                 craft: '', //主要工艺
-                gyhcl: '', //工艺或材料
+                third_mc: '', //工艺或材料
             },
         ],
         //拟合作产品的数组
-        cooperationProduct: [
+        simulation_products: [
             {
                 name: '', //产品名称
-                notice: '', //合作注意点
+                lime_light: '', //合作注意点
             },
         ],
     };
@@ -46,7 +53,23 @@ export class ProductInformationComponent implements OnInit {
     }
     getInitQueryParams() {
         this.activatedRoute.queryParams.subscribe(queryParam => {
-            console.log(queryParam); //flag等于0不做任何操作  等于1那么回填加禁用编辑  等于2那么回填可编辑
+            // console.log(queryParam); //flag等于0不做任何操作  等于1那么回填加禁用编辑  等于2那么回填可编辑
+            const { details } = queryParam;
+            // console.log(details);
+            // 如果是详情页过来的就赋值
+            if (details) {
+                const Details = JSON.parse(details);
+                this.normal.products = Details.product;
+                this.normal.simulation_products = Details.simulation;
+                if (queryParam.flag === '2') {
+                    // 编辑刚进来设置为已经保存
+                    window.localStorage.setItem('flag', '已保存');
+                    const newOriginObj = _.cloneDeep(this.originObject);
+                    const newNormalObj = _.cloneDeep(this.normal);
+                    Object.assign(newOriginObj, newNormalObj);
+                    this.toolsObj = newOriginObj;
+                }
+            }
             if (queryParam.flag === '0') {
                 this.isDisabled = false;
             } else if (queryParam.flag === '1') {
@@ -68,8 +91,12 @@ export class ProductInformationComponent implements OnInit {
 
         this.toolsObj = newNormalObj;
         window.localStorage.setItem('flag', '已保存');
-        console.log(this.normal);
-        console.log(this.toolsObj);
+        // console.log(this.normal);
+        // console.log(this.toolsObj);
+
+        this.inspecting.saveProductInfomation(this.normal).subscribe(res => {
+            // console.log(res);
+        });
     }
 
     ngOnDestroy(): void {
@@ -78,10 +105,12 @@ export class ProductInformationComponent implements OnInit {
     }
 
     confirm() {
+        // 此处的逻辑：  当时未保存的时候，判断输入框里面有东西就跳转失败  已经保存了  判断保存的和双向绑定对象是否一样，不一样跳转失败  return false跳转失败
         const newOriginObj = _.cloneDeep(this.originObject);
         const newNormalObj = _.cloneDeep(this.normal);
         Object.assign(newOriginObj, newNormalObj);
-        console.log(newOriginObj);
+        // console.log(newOriginObj);
+        // console.log(this.toolsObj);
 
         if (this.isDisabled) {
             return true;
@@ -89,24 +118,36 @@ export class ProductInformationComponent implements OnInit {
             let flag = true;
             if (window.localStorage.getItem('flag') !== '已保存') {
                 for (let key in newOriginObj) {
-                    newOriginObj[key].forEach(item => {
-                        for (let key in item) {
-                            if (item[key].trim() !== '') {
-                                flag = false;
+                    if (typeof newOriginObj[key] == 'object') {
+                        newOriginObj[key].forEach(item => {
+                            for (let key in item) {
+                                if (item[key] !== '') {
+                                    flag = false;
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
                 }
             } else if (window.localStorage.getItem('flag') === '已保存') {
-                for (let key1 in newOriginObj) {
-                    newOriginObj[key1].forEach((item, index) => {
-                        for (let key in item) {
-                            console.log(this.toolsObj);
-                            if (item[key] !== this.toolsObj[key1][index][key]) {
-                                flag = false;
-                            }
+                if (
+                    newOriginObj.products.length != this.toolsObj.products.length ||
+                    newOriginObj.simulation_products.length != this.toolsObj.simulation_products.length
+                ) {
+                    flag = false;
+                } else {
+                    for (let key1 in newOriginObj) {
+                        if (typeof newOriginObj[key1] == 'object') {
+                            newOriginObj[key1].forEach((item, index) => {
+                                for (let key in item) {
+                                    if (typeof item[key] != 'object') {
+                                        if (item[key] != this.toolsObj[key1][index][key]) {
+                                            flag = false;
+                                        }
+                                    }
+                                }
+                            });
                         }
-                    });
+                    }
                 }
             } else {
                 flag = true;
@@ -120,27 +161,27 @@ export class ProductInformationComponent implements OnInit {
     }
     // 点击添加商品的信息
     addProduct() {
-        this.normal.productInformation.push({
-            productname: '', //产品名称
-            materials: '', //主要材料
+        this.normal.products.push({
+            name: '', //产品名称
+            material: '', //主要材料
             craft: '', //主要工艺
-            gyhcl: '', //工艺或材料
+            third_mc: '', //工艺或材料
         });
     }
     // 删除产品的信息
     deleteProduct(index: number) {
-        this.normal.productInformation.splice(index, 1);
+        this.normal.products.splice(index, 1);
     }
 
     // 添加拟合作产品
     addCooperationProduct() {
-        this.normal.cooperationProduct.push({
+        this.normal.simulation_products.push({
             name: '', //产品名称
-            notice: '', //合作注意点
+            lime_light: '', //合作注意点
         });
     }
     // 删除拟合作产品
     deleteCooperationProduct(index: number) {
-        this.normal.cooperationProduct.splice(index, 1);
+        this.normal.simulation_products.splice(index, 1);
     }
 }

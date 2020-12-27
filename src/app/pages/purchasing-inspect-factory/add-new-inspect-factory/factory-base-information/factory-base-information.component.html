@@ -29,7 +29,8 @@
           <ion-input type="text" class="ipt" [(ngModel)]="normal.address_two" (ionChange)="inputChanged()"
             [disabled]="isDisabled">
           </ion-input>
-          <ion-button fill="clear" size="small" class="deleFactoryAddress" (click)="deleAddressClicked()">x</ion-button>
+          <ion-button fill="clear" size="small" class="deleFactoryAddress" (click)="deleAddressClicked()"
+            [disabled]="isDisabled">x</ion-button>
         </ion-col>
       </ion-row>
 

@@ -182,7 +182,7 @@
       <ion-row class="title">
         <ion-col align-self-center [size]="12">
           <ion-input type="text" class="ipt third" [(ngModel)]="normal.third_name" placeholder="请输入第三方的名称"
-            *ngIf="originObject.third_party===1">
+            *ngIf="originObject.third_party===1" [disabled]="isDisabled">
           </ion-input>
         </ion-col>
       </ion-row>

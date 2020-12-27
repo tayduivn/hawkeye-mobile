@@ -23,10 +23,10 @@
           <ion-col align-self-center [size]="3">
             考察人员 :
           </ion-col>
-          <ion-col align-self-center [size]="6">
+          <ion-col align-self-center [size]="4">
           </ion-col>
-          <ion-col align-self-center [size]="3" class="FormatCol1">
-            测试者
+          <ion-col align-self-center [size]="5" class="FormatCol1">
+            {{factoryDetails.user_name}}
           </ion-col>
         </ion-row>
 
@@ -34,11 +34,11 @@
           <ion-col align-self-center [size]="3">
             考察日期 :
           </ion-col>
-          <ion-col align-self-center [size]="6">
+          <ion-col align-self-center [size]="4">
           </ion-col>
-          <ion-col align-self-center [size]="3" class="dateCol">
+          <ion-col align-self-center [size]="5" class="dateCol">
             <ion-datetime class="Formatdate" displayFormat="YYYY-MM-DD" doneText="完成" cancelText="取消" max="2050-12-30"
-              placeholder="请输入日期" [disabled]="flag1-0==1">
+              placeholder="请输入日期" [disabled]="flag1-0==1" [(ngModel)]="factoryDetails.add_time">
             </ion-datetime>
             <div class="iconfont icon-ziyuan"></div>
           </ion-col>
@@ -48,10 +48,10 @@
           <ion-col align-self-center [size]="3">
             考察对象 :
           </ion-col>
-          <ion-col align-self-center [size]="6">
+          <ion-col align-self-center [size]="4">
           </ion-col>
-          <ion-col align-self-center [size]="3">
-            <ion-input type="text" class="ipt" [disabled]="flag1-0==1"></ion-input>
+          <ion-col align-self-center [size]="5">
+            <ion-input type="text" class="ipt" [disabled]="flag1-0==1" [(ngModel)]="factoryDetails.name"></ion-input>
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -61,23 +61,26 @@
 
   <div class="tabs">
     <div (click)="tabsItemClicked(0)" [class]="activeIndex===0?'bacColor textColor':''"
-      [routerLink]="['/add-new-inspect-factory']" [queryParams]="{flag:flag1}">
+      [routerLink]="['/add-new-inspect-factory']" [queryParams]="{flag:flag1,details:factoryDetailsStr}">
       <ion-icon name="journal"></ion-icon>
       <span>工厂基本信息</span>
     </div>
     <div (click)="tabsItemClicked(1)" [class]="activeIndex===1?'bacColor textColor':''"
-      [routerLink]="['/add-new-inspect-factory/factory-general-situation']" [queryParams]="{flag:flag1}">
+      [routerLink]="['/add-new-inspect-factory/factory-general-situation']"
+      [queryParams]="{flag:flag1,details:factoryDetailsStr}">
       <ion-icon name="grid"></ion-icon>
       <span>工厂概况</span>
 
     </div>
     <div (click)="tabsItemClicked(2)" [class]="activeIndex===2?'bacColor textColor':''"
-      [routerLink]="['/add-new-inspect-factory/product-information']" [queryParams]="{flag:flag1}">
+      [routerLink]="['/add-new-inspect-factory/product-information']"
+      [queryParams]="{flag:flag1,details:factoryDetailsStr}">
       <ion-icon name="hammer"></ion-icon>
       <span>产品信息</span>
     </div>
     <div (click)="tabsItemClicked(3)" [class]="activeIndex===3?'bacColor textColor':''"
-      [routerLink]="['/add-new-inspect-factory/specimen-information']" [queryParams]="{flag:flag1}">
+      [routerLink]="['/add-new-inspect-factory/specimen-information']"
+      [queryParams]="{flag:flag1,details:factoryDetailsStr}">
       <ion-icon name="film"></ion-icon>
       <span>样品情况</span>
     </div>
@@ -86,5 +89,5 @@
   <!-- 下面放路由插座 -->
   <router-outlet></router-outlet>
 
-  <ion-button class="nextStepBtn" size="small" [disabled]="!flag1" (click)="saveInformation()">保存</ion-button>
+  <ion-button class="nextStepBtn" size="small" [disabled]="flag1==1" (click)="saveInformation()">保存</ion-button>
 </ion-content>
