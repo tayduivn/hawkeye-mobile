@@ -208,7 +208,32 @@ export class FactoryGeneralSituationComponent implements OnInit {
             });
         }
     }
-
+    // 输入域失去焦点的时候触发
+    onBlur(e) {
+        console.log((e.target.value as any) - 0);
+        if ((e.target.value as any) - 0 <= 0) {
+            this.es.showToast({
+                message: '请输入大于0的数',
+                color: 'danger',
+                duration: 1500,
+            });
+            e.target.value = '';
+        }
+    }
+    // 人数输入框失焦
+    onBlur1(e) {
+        if (
+            (e.target.value as any) - 0 <= 0 ||
+            Math.round((e.target as any).value - 0) !== (e.target as any).value - 0
+        ) {
+            this.es.showToast({
+                message: '请输入大于0的整数',
+                color: 'danger',
+                duration: 1500,
+            });
+            e.target.value = '';
+        }
+    }
     ngOnDestroy(): void {
         window.localStorage.setItem('flag', '未保存');
         this.destroy = true;

@@ -45,7 +45,6 @@ export class ProductInformationComponent implements OnInit {
     DETAILS: any = {};
     ngOnInit() {
         window.localStorage.setItem('flag', '未保存');
-
         this.getInitQueryParams();
         this.infoCtrl.info$.pipe(takeWhile(() => !this.destroy)).subscribe(res => {
             // console.log(res); //这里可以拿到头部的信息  那么拿到后在这里面调用保存的方法

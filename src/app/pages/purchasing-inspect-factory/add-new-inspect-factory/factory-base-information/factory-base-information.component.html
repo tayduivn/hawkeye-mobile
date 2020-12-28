@@ -104,7 +104,7 @@
         </ion-col>
         <ion-col align-self-center [size]="3">
           <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"
-            [(ngModel)]="normal.registered_capital"></ion-input>
+            [(ngModel)]="normal.registered_capital" (ionBlur)="onBlur($event)"></ion-input>
         </ion-col>
       </ion-row>
 
@@ -115,8 +115,8 @@
         <ion-col align-self-center [size]="6">
         </ion-col>
         <ion-col align-self-center [size]="3">
-          <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"
-            [(ngModel)]="normal.annual_sales"></ion-input>
+          <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled" [(ngModel)]="normal.annual_sales"
+            (ionBlur)="onBlur($event)"></ion-input>
         </ion-col>
       </ion-row>
 

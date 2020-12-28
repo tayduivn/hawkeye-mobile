@@ -191,6 +191,16 @@ export class FactoryBaseInformationComponent implements OnInit {
             // console.log(params);
         }
     }
+    onBlur(e) {
+        if ((e.target.value as any) - 0 <= 0) {
+            this.es.showToast({
+                message: '请输入大于0的数',
+                color: 'danger',
+                duration: 1500,
+            });
+            e.target.value = '';
+        }
+    }
     inputChanged() {}
 
     destroy: boolean = false;

@@ -13,7 +13,7 @@
         </ion-col>
         <ion-col align-self-center [size]="3">
           <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"
-            [(ngModel)]="originObject.acreage"></ion-input>
+            [(ngModel)]="originObject.acreage" (ionBlur)="onBlur($event)"></ion-input>
         </ion-col>
       </ion-row>
 
@@ -25,7 +25,7 @@
         </ion-col>
         <ion-col align-self-center [size]="3">
           <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"
-            [(ngModel)]="originObject.people_num"></ion-input>
+            [(ngModel)]="originObject.people_num" (ionBlur)="onBlur1($event)"></ion-input>
         </ion-col>
       </ion-row>
 

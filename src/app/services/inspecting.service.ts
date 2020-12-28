@@ -45,6 +45,14 @@ export class inspectingService {
             params,
         });
     }
+
+    // 保存样品信息的接口
+    saveSpecimenInformation(params: saveSpecimenInformation): Observable<any> {
+        return this.http.post({
+            url: '/factory/add-factory-inspect-sample',
+            params,
+        });
+    }
 }
 export interface FactoryListQueryInfo {
     page?: number;
@@ -89,4 +97,13 @@ export interface saveGeneralInformation {
     pay_type: string; //付款方式
     third_party: number; //是否接受过第三方验厂
     third_name?: string; //第三方名称
+}
+
+// 保存样品信息的接口
+export interface saveSpecimenInformation {
+    factory_id: number;
+    amount?: any;
+    readiness_time?: any;
+    payment?: any;
+    will_supply?: any;
 }
