@@ -23,7 +23,7 @@ export class inspectingService {
     }
 
     // 保存工厂概况的信息
-    saveGeneralInfomation(params): Observable<any> {
+    saveGeneralInformation(params: saveGeneralInformation): Observable<any> {
         return this.http.post({
             url: '/factory/add-factory-inspect-info',
             params,
@@ -39,7 +39,7 @@ export class inspectingService {
     }
 
     // 保存产品的信息接口
-    saveProductInfomation(params): Observable<any> {
+    saveProductInformation(params): Observable<any> {
         return this.http.post({
             url: '/factory/add-factory-inspect-product',
             params,
@@ -70,4 +70,23 @@ export interface SaveFactoryInfo {
 
 export interface GetFactoryDetails {
     factory_id: number;
+}
+
+// 保存工厂基本信息的接口
+export interface saveGeneralInformation {
+    factory_id?: number; //工厂 的id
+    acreage: number; //工厂面积
+    people_num: number; //工厂人数
+    manning: string; //人员组成
+    department: string; //部门组成
+    production_equipment: string; //生产设备
+    production_capacity: number; //生产能力
+    quality?: number; //研发质检能力
+    production_cycle: string; //生产周期
+    sales_market: string; //主要销售市场
+    customer?: string; //主要客户
+    authentication?: string; //产品想换认证
+    pay_type: string; //付款方式
+    third_party: number; //是否接受过第三方验厂
+    third_name?: string; //第三方名称
 }

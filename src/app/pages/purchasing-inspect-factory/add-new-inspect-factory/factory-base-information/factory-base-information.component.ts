@@ -63,7 +63,7 @@ export class FactoryBaseInformationComponent implements OnInit {
             console.log(res); //这里可以拿到头部的信息  那么拿到后在这里面调用保存的方法
             // user_id  user_name  add_time
             console.log(this.flag);
-            // 此时是编辑的时候  编辑的时候需要传递的有工厂的id
+            // 此时是编辑的时候  编辑的时候需要传递的有工厂的id(只在这个页面是这个样子)
             if (this.flag == '2') {
                 const newOriginObj = _.cloneDeep(this.originObject);
                 const newNormalObj = _.cloneDeep(this.normal);
@@ -171,7 +171,10 @@ export class FactoryBaseInformationComponent implements OnInit {
             this.inspecting.saveFactoryBaseInformation(params).subscribe(res => {
                 console.log(res);
                 console.log(params);
-
+                // 如果存在id那么说明是新增  把新增的工厂id存起来
+                if (res.data.factory_id) {
+                    window.sessionStorage.setItem('FACTORY_ID', res.data.factory_id);
+                }
                 if (res.status !== 1)
                     return this.es.showToast({
                         message: '保存失败',

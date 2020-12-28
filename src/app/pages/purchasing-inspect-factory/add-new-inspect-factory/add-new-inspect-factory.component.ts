@@ -18,7 +18,11 @@ export class AddNewInspectFactoryComponent implements OnInit {
     flag1: number;
     //   IOC  依赖注入  控制反转   VueX  private insCtrl: InspectionService
     // factory_id: number; //工厂的id
-
+    // 本地存储的考察人员的信息
+    // user_info: any = {
+    //     name: '',
+    //     id: '',
+    // };
     factoryDetails: any = {};
     factoryDetailsStr: string;
     constructor(
@@ -48,9 +52,17 @@ export class AddNewInspectFactoryComponent implements OnInit {
             console.log(queryParam);
             const { flag, details } = queryParam;
             if (details) {
+                //如果是详情和编辑进去的
                 this.factoryDetails = _.cloneDeep(JSON.parse(details));
                 this.factoryDetailsStr = details;
+            } else {
+                //如果是新增页面进去的从本地存储获取考察人员的id和名字
+                const USER_INFO = window.sessionStorage.getItem('USER_INFO');
+                console.log(JSON.parse(USER_INFO));
+                this.factoryDetails.user_name = JSON.parse(USER_INFO).name;
+                this.factoryDetails.user_id = JSON.parse(USER_INFO).id;
             }
+
             this.flag1 = flag - 0;
             console.log(this.flag1);
 
@@ -70,6 +82,7 @@ export class AddNewInspectFactoryComponent implements OnInit {
 
     ngOnDestroy() {
         window.sessionStorage.setItem('index', '0');
+        window.sessionStorage.setItem('FACTORY_ID', undefined);
     }
     // 在这个页面可以获取到所有的信息  所有的信息获取到后路由跳转的时候传到子组件
     getData() {}
