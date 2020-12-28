@@ -339,7 +339,7 @@ export class VideotapeComponent implements OnInit {
 
     // 用闭包保存每个 chunk 的进度数据
     createProgressHandler(item: any) {
-        return e => {
+        return (e: { loaded: number; total: number; }) => {
             item.percentage = parseInt(String((e.loaded / e.total) * 100));
         };
     }

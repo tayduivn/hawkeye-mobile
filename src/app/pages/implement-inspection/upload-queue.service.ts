@@ -303,6 +303,8 @@ export class UploadQueueService {
                     this.upload();
                     return;
                 }
+                console.log('此时最后一次切片的respose',next);
+                
                 if (JSON.parse(next.data).data && JSON.parse(next.data).data.canMerge === true) {
                     //否则 则合并切片
                     const msg = await this.mergeRequest(this.front);
