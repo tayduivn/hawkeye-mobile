@@ -12,6 +12,7 @@ export class PurchasingInspectFactoryPage implements OnInit {
     // 查询参数
     queryInfo: FactoryListQueryInfo = {
         page: 1,
+        paginate: 25,
     };
     searchQueryInfo: FactoryListQueryInfo = {
         name: null,
@@ -100,5 +101,33 @@ export class PurchasingInspectFactoryPage implements OnInit {
                 });
             });
         }
+    }
+    loadData(event) {
+        this.queryInfo.page++;
+        let newObj = {};
+        if (Boolean(this.searchQueryInfo.name) == true) {
+            // 如果有东西  那么就要和并查询参数
+            const QUERY = _.cloneDeep(this.queryInfo);
+            const SEARCH = _.cloneDeep(this.searchQueryInfo);
+            newObj = Object.assign(QUERY, SEARCH);
+        } else {
+            newObj = _.cloneDeep(this.queryInfo);
+        }
+        this.inspecting.getFactoryList(newObj).subscribe(res => {
+            console.log(res);
+            // 如果还存在data.factory以及res.data.factory.length不等于0  那么就继续拼接获取到的数据
+            if (res.data.factory && res.data.factory.length) {
+                this.factoryList = this.factoryList.concat(res.data.factory);
+                console.log(this.factoryList);
+            } else {
+                this.queryInfo.page--;
+                this.es.showToast({
+                    message: '别刷了，没有数据啦！',
+                    color: 'danger',
+                    duration: 1500,
+                });
+            }
+            event.target.complete();
+        });
     }
 }

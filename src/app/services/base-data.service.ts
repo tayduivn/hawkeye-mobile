@@ -2,9 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { config } from '../config';
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-// import { SwiperConfigInterface } from 'ngx-swiper-wrapper';
 import { jurdnInfo } from './jurdn.service';
- import { environment } from 'src/environments/environment';
+import { environment } from 'src/environments/environment';
 import { menu, menuItem } from './menu';
 
 @Injectable({
@@ -44,7 +43,7 @@ export class BaseDataService {
 
         formatData(params: any) {
             let arr: Array<any> = [];
-            Object.keys(params).forEach((el) => {
+            Object.keys(params).forEach(el => {
                 arr.push(`${el}=${params[el]}`);
             });
             return arr.join('&');

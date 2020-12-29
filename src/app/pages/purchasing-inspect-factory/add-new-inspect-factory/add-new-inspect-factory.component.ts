@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, ResolveEnd, Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { filter } from 'rxjs/operators';
-import { GetFactoryDetails, inspectingService } from 'src/app/services/inspecting.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { inspectingService } from 'src/app/services/inspecting.service';
 import { TabStatusService } from '../tab-status.service';
 import { EmitService } from './emit.service';
 import _ from 'loadsh';
+
 @Component({
     selector: 'app-add-new-inspect-factory',
     templateUrl: './add-new-inspect-factory.component.html',
@@ -40,8 +39,8 @@ export class AddNewInspectFactoryComponent implements OnInit {
                 ? (window.sessionStorage.getItem('index') as any) - 0
                 : 0;
         });
-        // window.sessionStorage.setItem('index', '0');
-        // 在这里进行订阅流（服务）那边发送服务  这边订阅服务;
+        window.sessionStorage.setItem('index', '0');
+        //在这里进行订阅流（服务）那边发送服务  这边订阅服务;
         this.tab.canClick$.subscribe(res => {
             // 如果res时true则允许切换
             this.flag = res;

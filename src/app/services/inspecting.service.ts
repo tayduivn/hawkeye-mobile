@@ -57,6 +57,7 @@ export class inspectingService {
 export interface FactoryListQueryInfo {
     page?: number;
     name?: string;
+    paginate?: number;
 }
 export interface SaveFactoryInfo {
     factory_id?: number; //工厂id

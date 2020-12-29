@@ -36,14 +36,12 @@ export class SpecimenInformationComponent implements OnInit {
         this.getInitQueryParams();
         this.infoCtrl.info$.pipe(takeWhile(() => !this.destroy)).subscribe(res => {
             // console.log(res); //这里可以拿到头部的信息  那么拿到后在这里面调用保存的方法
-            // this.saveInformation();
             if (this.flag == '2') {
                 // 如果是编辑的话传递的工厂id应该就是点击编辑传递进来的详情的id
                 const newOriginObj = _.cloneDeep(this.originObject);
                 const newNormalObj = _.cloneDeep(this.normal);
                 Object.assign(newOriginObj, newNormalObj);
                 newOriginObj.factory_id = this.DETAILS.id;
-                // console.log(this.DETAILS.id);
                 this.saveInformation(newOriginObj);
                 console.log(newOriginObj);
             } else {
@@ -89,12 +87,11 @@ export class SpecimenInformationComponent implements OnInit {
                 // 把传递进来的详情数据存一份
                 this.DETAILS = JSON.parse(details);
                 const DETAILS = JSON.parse(details);
-                this.normal.have_sample = DETAILS.have_sample - 0;
-                this.normal.will_supply = DETAILS.will_supply - 0;
+                this.normal.have_sample = DETAILS.have_sample;
+                this.normal.will_supply = DETAILS.will_supply;
                 this.normal.amount = DETAILS.sample.amount;
                 this.normal.readiness_time = DETAILS.sample.readiness_time;
                 this.normal.payment = DETAILS.sample.payment;
-                // console.log(this.normal);
                 if (queryParam.flag === '2') {
                     // 编辑刚进来设置为已经保存
                     window.localStorage.setItem('flag', '已保存');
@@ -114,6 +111,12 @@ export class SpecimenInformationComponent implements OnInit {
         });
     }
     saveInformation(params) {
+        console.log(params.have_sample);
+        if (params.have_sample || params.will_supply) {
+            params.amount = '';
+            params.payment = '';
+            params.readiness_time = null;
+        }
         const newOriginObj = _.cloneDeep(this.originObject);
         const newNormalObj = _.cloneDeep(this.normal);
         Object.assign(newOriginObj, newNormalObj);
@@ -145,9 +148,6 @@ export class SpecimenInformationComponent implements OnInit {
         const newOriginObj = _.cloneDeep(this.originObject);
         const newNormalObj = _.cloneDeep(this.normal);
         Object.assign(newOriginObj, newNormalObj);
-        // console.log(newOriginObj);
-        // console.log(this.toolsObj);
-
         if (this.isDisabled) {
             return true;
         } else {

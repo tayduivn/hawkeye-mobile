@@ -17,15 +17,20 @@
         <ion-col align-self-center [size]="3">
           <!-- 下拉输入位置 -->
           <!-- 这里是下拉选择器   存在联动的效果-->
-          <ion-select class="select" placeholder="请选择" okText="确认" cancelText="取消" [disabled]="isDisabled"
+          <!-- <ion-select class="select" placeholder="请选择" okText="确认" cancelText="取消" [disabled]="isDisabled"
             [(ngModel)]="normal.have_sample">
             <ion-select-option [value]="0">否</ion-select-option>
             <ion-select-option [value]="1">是</ion-select-option>
-          </ion-select>
+          </ion-select> -->
+          <select [(ngModel)]="normal.have_sample" class="select" [disabled]="isDisabled">
+            <option value=""></option>
+            <option [value]="0">否</option>
+            <option [value]="1">是</option>
+          </select>
         </ion-col>
       </ion-row>
 
-      <ion-row *ngIf="normal.have_sample===1">
+      <ion-row *ngIf="normal.have_sample==='1'">
         <ion-col align-self-center [size]="3">
           是否愿意提供样品? :
         </ion-col>
@@ -33,15 +38,21 @@
         </ion-col>
         <ion-col align-self-center [size]="3" class="dateCol">
           <!-- 这里是下拉选择器   存在联动的效果-->
-          <ion-select class="select" placeholder="请选择" okText="确认" cancelText="取消" [disabled]="isDisabled"
+          <!-- <ion-select class="select" placeholder="请选择" okText="确认" cancelText="取消" [disabled]="isDisabled"
             [(ngModel)]="normal.will_supply">
             <ion-select-option [value]="0">否</ion-select-option>
             <ion-select-option [value]="1">是</ion-select-option>
-          </ion-select>
+          </ion-select> -->
+
+          <select [(ngModel)]="normal.will_supply" class="select" [disabled]="isDisabled">
+            <option value=""></option>
+            <option [value]="0">否</option>
+            <option [value]="1">是</option>
+          </select>
         </ion-col>
       </ion-row>
 
-      <ion-row class="title" *ngIf="normal.will_supply===1">
+      <ion-row class="title" *ngIf="normal.will_supply==='1'&&normal.have_sample=='1'">
         <ion-col align-self-center [size]="3">
           样品费情况 :
         </ion-col>
@@ -53,7 +64,7 @@
         </ion-col>
       </ion-row>
 
-      <ion-row class="title" *ngIf="normal.will_supply===1">
+      <ion-row class="title" *ngIf="normal.will_supply==='1'&&normal.have_sample=='1'">
         <ion-col align-self-center [size]="3">
           样品准备时间 :
         </ion-col>
@@ -66,7 +77,7 @@
         </ion-col>
       </ion-row>
 
-      <ion-row class="title" *ngIf="normal.will_supply===1">
+      <ion-row class="title" *ngIf="normal.will_supply==='1'&&normal.have_sample=='1'">
         <ion-col align-self-center [size]="3">
           付款情况 :
         </ion-col>
@@ -78,7 +89,7 @@
         </ion-col>
       </ion-row>
 
-      <ion-row class="title border-row" *ngIf="normal.will_supply===1">
+      <ion-row class="title border-row" *ngIf="normal.will_supply==='1'&&normal.have_sample=='1'">
         <ion-col align-self-center [size]="3">
           样品间环境照片 :
         </ion-col>

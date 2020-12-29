@@ -74,12 +74,18 @@
         <ion-col align-self-center [size]="3">
           <!-- 下拉框 -->
           <!-- 这里是下拉选择器 -->
-          <ion-select class="select" placeholder="请选择" okText="确认" cancelText="取消" [disabled]="isDisabled"
+          <!-- <ion-select class="select" placeholder="请选择" okText="确认" cancelText="取消" [disabled]="isDisabled"
             [(ngModel)]="originObject.production_capacity">
             <ion-select-option [value]="1">好</ion-select-option>
             <ion-select-option [value]="2">一般</ion-select-option>
             <ion-select-option [value]="3">差</ion-select-option>
-          </ion-select>
+          </ion-select> -->
+          <select [(ngModel)]="originObject.production_capacity" class="select" [disabled]="isDisabled">
+            <option value=""></option>
+            <option [value]="1">好</option>
+            <option [value]="2">一般</option>
+            <option [value]="3">差</option>
+          </select>
         </ion-col>
       </ion-row>
 
@@ -91,12 +97,12 @@
         </ion-col>
         <ion-col align-self-center [size]="3">
           <!-- 下拉框 -->
-          <ion-select class="select" placeholder="请选择" okText="确认" cancelText="取消" [disabled]="isDisabled"
-            [(ngModel)]="normal.quality">
-            <ion-select-option [value]="1">好</ion-select-option>
-            <ion-select-option [value]="2">一般</ion-select-option>
-            <ion-select-option [value]="3">差</ion-select-option>
-          </ion-select>
+          <select [(ngModel)]="normal.quality" class="select" [disabled]="isDisabled">
+            <option value=""></option>
+            <option [value]="1">好</option>
+            <option [value]="2">一般</option>
+            <option [value]="3">差</option>
+          </select>
         </ion-col>
       </ion-row>
 
@@ -169,12 +175,11 @@
         <ion-col align-self-center [size]="6">
         </ion-col>
         <ion-col align-self-center [size]="3">
-          <!-- 下拉框 -->
-          <ion-select class="select" placeholder="请选择" okText="确认" cancelText="取消" [disabled]="isDisabled"
-            [(ngModel)]="originObject.third_party">
-            <ion-select-option [value]="0">否</ion-select-option>
-            <ion-select-option [value]="1">是</ion-select-option>
-          </ion-select>
+          <select [(ngModel)]="originObject.third_party" class="select" [disabled]="isDisabled">
+            <option value=""></option>
+            <option [value]="0">否</option>
+            <option [value]="1">是</option>
+          </select>
         </ion-col>
       </ion-row>
 
@@ -182,7 +187,7 @@
       <ion-row class="title">
         <ion-col align-self-center [size]="12">
           <ion-input type="text" class="ipt third" [(ngModel)]="normal.third_name" placeholder="请输入第三方的名称"
-            *ngIf="originObject.third_party===1" [disabled]="isDisabled">
+            *ngIf="originObject.third_party==='1'" [disabled]="isDisabled">
           </ion-input>
         </ion-col>
       </ion-row>

@@ -211,7 +211,7 @@ export class FactoryGeneralSituationComponent implements OnInit {
     // 输入域失去焦点的时候触发
     onBlur(e) {
         console.log((e.target.value as any) - 0);
-        if ((e.target.value as any) - 0 <= 0) {
+        if ((e.target.value as any) - 0 <= 0 && (e.target.value as any) != '') {
             this.es.showToast({
                 message: '请输入大于0的数',
                 color: 'danger',
@@ -223,8 +223,9 @@ export class FactoryGeneralSituationComponent implements OnInit {
     // 人数输入框失焦
     onBlur1(e) {
         if (
-            (e.target.value as any) - 0 <= 0 ||
-            Math.round((e.target as any).value - 0) !== (e.target as any).value - 0
+            ((e.target.value as any) - 0 <= 0 ||
+                Math.round((e.target as any).value - 0) !== (e.target as any).value - 0) &&
+            (e.target.value as any) != ''
         ) {
             this.es.showToast({
                 message: '请输入大于0的整数',

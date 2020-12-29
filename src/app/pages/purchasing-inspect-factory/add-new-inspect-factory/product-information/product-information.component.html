@@ -5,9 +5,10 @@
       <div class="header-container">
         <ion-card-title color="primary" class="card-title">产品信息({{i+1}})</ion-card-title>
         <div class="btns-container">
-          <ion-button class="ml-20" size="small" (click)="addProduct()" [disabled]="isDisabled">添加</ion-button>
-          <ion-button class="ml-20" size="small" color="danger" *ngIf="i>0" (click)="deleteProduct(i)"
-            [disabled]="isDisabled">删除
+          <ion-button class="ml-20" size="small" (click)="addProduct()" [disabled]="isDisabled"
+            *ngIf="i==normal.products.length-1">添加</ion-button>
+          <ion-button class="ml-20" size="small" color="danger" *ngIf="normal.products.length!=1"
+            (click)="deleteProduct(i)" [disabled]="isDisabled">删除
           </ion-button>
         </div>
       </div>
@@ -85,10 +86,11 @@
       <div class="header-container">
         <ion-card-title color="primary" class="card-title">拟合作产品({{i+1}})</ion-card-title>
         <div class="btns-container">
-          <ion-button class="ml-20" size="small" (click)="addCooperationProduct()" [disabled]="isDisabled">添加
+          <ion-button class="ml-20" size="small" (click)="addCooperationProduct()" [disabled]="isDisabled"
+            *ngIf="i==normal.simulation_products.length-1">添加
           </ion-button>
-          <ion-button class="ml-20" size="small" color="danger" *ngIf="i>0" (click)="deleteCooperationProduct(i)"
-            [disabled]="isDisabled">删除
+          <ion-button class="ml-20" size="small" color="danger" (click)="deleteCooperationProduct(i)"
+            [disabled]="isDisabled" *ngIf="normal.simulation_products.length!=1">删除
           </ion-button>
         </div>
       </div>

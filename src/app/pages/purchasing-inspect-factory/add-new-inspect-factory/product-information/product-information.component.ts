@@ -141,6 +141,8 @@ export class ProductInformationComponent implements OnInit {
         this.toolsObj = newNormalObj;
 
         this.inspecting.saveProductInformation(params).subscribe(res => {
+            console.log(res);
+
             if (res.status !== 1)
                 return this.es.showToast({
                     message: '保存失败',
@@ -187,8 +189,10 @@ export class ProductInformationComponent implements OnInit {
                 }
             } else if (window.localStorage.getItem('flag') === '已保存') {
                 if (
-                    newOriginObj.products.length != this.toolsObj.products.length ||
-                    newOriginObj.simulation_products.length != this.toolsObj.simulation_products.length
+                    newOriginObj.products &&
+                    newOriginObj.simulation_products &&
+                    (newOriginObj.products.length != this.toolsObj.products.length ||
+                        newOriginObj.simulation_products.length != this.toolsObj.simulation_products.length)
                 ) {
                     flag = false;
                 } else {

@@ -20,6 +20,7 @@ import { SpecimenInformationComponent } from './add-new-inspect-factory/specimen
 // 导入路由钩子函数
 import { LeaveGuard1, LeaveGuard2, LeaveGuard3, LeaveGuard4 } from './guard/leaveGuard';
 import { EmitService } from './add-new-inspect-factory/emit.service';
+
 const routes: Routes = [
     {
         path: 'purchasing-factory',

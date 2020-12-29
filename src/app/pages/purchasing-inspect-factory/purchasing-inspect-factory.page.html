@@ -45,7 +45,7 @@
           <div>{{item.name}}</div>
         </ion-col>
         <ion-col align-self-center [size]="3" class="multiple-item">
-          <div>{{item.create_time}}</div>
+          <div>{{item.add_time}}</div>
         </ion-col>
         <ion-col align-self-center [size]="2" class="btns-container">
           <div class="operation-container">
@@ -56,4 +56,8 @@
       </ion-row>
     </ion-grid>
   </ion-card>
+
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="正在加载"> </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </ion-content>
