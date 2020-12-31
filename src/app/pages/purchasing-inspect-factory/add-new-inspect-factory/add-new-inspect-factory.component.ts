@@ -15,23 +15,9 @@ export class AddNewInspectFactoryComponent implements OnInit {
     flag: Boolean = true;
     // 控制禁用还是不禁用  1代表禁用回填  0代表不做操作 2代表回填不禁用
     flag1: number;
-    //   IOC  依赖注入  控制反转   VueX  private insCtrl: InspectionService
-    // factory_id: number; //工厂的id
-    // 本地存储的考察人员的信息
-    // user_info: any = {
-    //     name: '',
-    //     id: '',
-    // };
     factoryDetails: any = {};
     factoryDetailsStr: string;
-    constructor(
-        private activatedRoute: ActivatedRoute,
-        private router: Router,
-        private route: Router,
-        private tab: TabStatusService,
-        private infoCtrl: EmitService,
-        private inspecting: inspectingService,
-    ) {}
+    constructor(private activatedRoute: ActivatedRoute, private tab: TabStatusService, private infoCtrl: EmitService) {}
     ngOnInit() {
         this.getInitQueryParams();
         this.activatedRoute.url.subscribe(res => {
@@ -68,7 +54,6 @@ export class AddNewInspectFactoryComponent implements OnInit {
             // 这里面的flag的值代表的是是从哪里进来的  应该调用哪一个接口  从详情和编辑过来的  就获取数据  然后定义一个变量保存起来传递给几个子组件，子组件回填  如果是新增进来的  那么就什么也不传
         });
     }
-
     tabsItemClicked(i: any) {
         setTimeout(() => {
             if (this.flag) {
@@ -77,15 +62,11 @@ export class AddNewInspectFactoryComponent implements OnInit {
             }
         }, 0);
     }
-    ngAfterViewInit() {}
-
     ngOnDestroy() {
         window.sessionStorage.setItem('index', '0');
         window.sessionStorage.setItem('FACTORY_ID', undefined);
     }
     // 在这个页面可以获取到所有的信息  所有的信息获取到后路由跳转的时候传到子组件
-    getData() {}
-
     saveInformation() {
         const currentObj = _.cloneDeep(this.factoryDetails);
         this.infoCtrl.info$.next(currentObj);

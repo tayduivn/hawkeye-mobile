@@ -13,7 +13,11 @@ import { EmitService } from '../emit.service';
 export class FactoryBaseInformationComponent implements OnInit {
     // 定义一个必填项的双向绑定的对象
     originObject: any = {
-        address: [''],
+        addresses: [
+            {
+                address: '',
+            },
+        ],
         contacts: '',
         position: '',
         phone: '',
@@ -97,7 +101,7 @@ export class FactoryBaseInformationComponent implements OnInit {
                 const DETAILS = JSON.parse(details);
                 console.log(DETAILS);
                 //拿到地址的数组进行赋值
-                this.originObject.address = DETAILS.address_list;
+                this.originObject.addresses = DETAILS.address_list;
                 this.originObject.contacts = DETAILS.contacts;
                 this.originObject.position = DETAILS.position;
                 this.originObject.phone = DETAILS.phone;
@@ -128,8 +132,6 @@ export class FactoryBaseInformationComponent implements OnInit {
 
     // 点击保存的时候判断必填项是否有值
     saveInformation(params) {
-        console.log(this.originObject.address);
-
         this.notFilled = [];
         let str1 = '';
         if (this.inspectObj == undefined) {
@@ -139,7 +141,7 @@ export class FactoryBaseInformationComponent implements OnInit {
             // 遍历的时候如果是数组
             if (this.originObject[key] instanceof Array) {
                 this.originObject[key].forEach((item, index) => {
-                    if (item == '') {
+                    if (item.address == '') {
                         str1 += `工厂地址(${index + 1}) `;
                     }
                 });
@@ -239,7 +241,7 @@ export class FactoryBaseInformationComponent implements OnInit {
                     }
                 }
             } else if (window.localStorage.getItem('flag') === '已保存') {
-                if (newOriginObj.address.length != this.toolsObj.address.length) {
+                if (newOriginObj.addresses && newOriginObj.addresses.length != this.toolsObj.addresses.length) {
                     flag = false;
                 } else {
                     for (let key1 in newOriginObj) {
@@ -267,9 +269,11 @@ export class FactoryBaseInformationComponent implements OnInit {
         }
     }
     addAddressClicked() {
-        this.originObject.address.push('');
+        this.originObject.addresses.push({
+            address: '',
+        });
     }
     deleAddressClicked(index) {
-        this.originObject.address.splice(index, 1);
+        this.originObject.addresses.splice(index, 1);
     }
 }

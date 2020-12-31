@@ -124,6 +124,23 @@
     </ion-card-content>
   </ion-card>
   <!-- 拟合作产品卡片视图区  end-->
+  <!-- 当没有产品的时候显示这个卡片 -->
+  <ion-card mode="ios" *ngIf="flag!=0&&normal.products.length==0">
+    <ion-item class="card-header">
+      <div class="add-wrap">
+        <span class="red">暂无产品信息,点击新增 新增产品信息！！！</span>
+        <ion-button class="ml-20" size="small" (click)="addProduct()" [disabled]="isDisabled">新增</ion-button>
+      </div>
+    </ion-item>
+  </ion-card>
 
 
+  <ion-card mode="ios" *ngIf="flag!=0&&normal.simulation_products.length==0">
+    <ion-item class="card-header">
+      <div class="add-wrap">
+        <span class="red">暂无拟合作产品信息,点击新增 新增拟合作产品信息！！！</span>
+        <ion-button class="ml-20" size="small" (click)="addCooperationProduct()" [disabled]="isDisabled">新增</ion-button>
+      </div>
+    </ion-item>
+  </ion-card>
 </ion-card-content>

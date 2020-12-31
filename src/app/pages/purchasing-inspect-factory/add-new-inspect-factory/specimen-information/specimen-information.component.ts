@@ -35,7 +35,7 @@ export class SpecimenInformationComponent implements OnInit {
     ngOnInit() {
         this.getInitQueryParams();
         this.infoCtrl.info$.pipe(takeWhile(() => !this.destroy)).subscribe(res => {
-            // console.log(res); //这里可以拿到头部的信息  那么拿到后在这里面调用保存的方法
+            //这里可以拿到头部的信息  那么拿到后在这里面调用保存的方法
             if (this.flag == '2') {
                 // 如果是编辑的话传递的工厂id应该就是点击编辑传递进来的详情的id
                 const newOriginObj = _.cloneDeep(this.originObject);
@@ -87,8 +87,8 @@ export class SpecimenInformationComponent implements OnInit {
                 // 把传递进来的详情数据存一份
                 this.DETAILS = JSON.parse(details);
                 const DETAILS = JSON.parse(details);
-                this.normal.have_sample = DETAILS.have_sample;
-                this.normal.will_supply = DETAILS.will_supply;
+                this.normal.have_sample = DETAILS.sample.have_sample - 0;
+                this.normal.will_supply = DETAILS.sample.will_supply - 0;
                 this.normal.amount = DETAILS.sample.amount;
                 this.normal.readiness_time = DETAILS.sample.readiness_time;
                 this.normal.payment = DETAILS.sample.payment;
@@ -99,6 +99,7 @@ export class SpecimenInformationComponent implements OnInit {
                     const newNormalObj = _.cloneDeep(this.normal);
                     Object.assign(newOriginObj, newNormalObj);
                     this.toolsObj = newOriginObj;
+                    console.log(this.toolsObj);
                 }
             }
             if (queryParam.flag === '0') {
@@ -112,9 +113,9 @@ export class SpecimenInformationComponent implements OnInit {
     }
     saveInformation(params) {
         console.log(params.have_sample);
-        if (params.have_sample || params.will_supply) {
-            params.amount = '';
-            params.payment = '';
+        if (params.have_sample == '0' || params.will_supply == '0') {
+            params.amount = null;
+            params.payment = null;
             params.readiness_time = null;
         }
         const newOriginObj = _.cloneDeep(this.originObject);
@@ -148,17 +149,24 @@ export class SpecimenInformationComponent implements OnInit {
         const newOriginObj = _.cloneDeep(this.originObject);
         const newNormalObj = _.cloneDeep(this.normal);
         Object.assign(newOriginObj, newNormalObj);
+        console.log(newNormalObj);
+        console.log(this.toolsObj);
+
         if (this.isDisabled) {
             return true;
         } else {
             let flag = true;
             if (window.localStorage.getItem('flag') !== '已保存') {
                 for (let key in newOriginObj) {
-                    if (newOriginObj[key] !== '') {
+                    if (newOriginObj[key] != '' && newOriginObj[key] != null) {
                         flag = false;
                     }
                 }
             } else if (window.localStorage.getItem('flag') === '已保存') {
+                newOriginObj.have_sample = newOriginObj.have_sample - 0;
+                newOriginObj.will_supply = newOriginObj.will_supply - 0;
+                this.toolsObj.have_sample = this.toolsObj.have_sample - 0;
+                this.toolsObj.will_supply = this.toolsObj.will_supply - 0;
                 for (let key in newOriginObj) {
                     if (newOriginObj[key] != this.toolsObj[key]) {
                         flag = false;
@@ -173,5 +181,24 @@ export class SpecimenInformationComponent implements OnInit {
                 return false;
             }
         }
+    }
+
+    selectChange1() {
+        if (this.normal.have_sample == '' || this.normal.have_sample == '0' || this.normal.have_sample == null) {
+            this.normal.amount = null;
+            this.normal.readiness_time = null;
+            this.normal.payment = null;
+            this.normal.will_supply = null;
+        }
+        console.log(this.normal);
+        console.log(this.toolsObj);
+    }
+    selectChange2() {
+        if (this.normal.will_supply == '' || this.normal.will_supply == '0' || this.normal.will_supply == null) {
+            this.normal.amount = null;
+            this.normal.readiness_time = null;
+            this.normal.payment = null;
+        }
+        console.log(this.normal);
     }
 }

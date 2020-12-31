@@ -18,7 +18,6 @@ export class PurchasingInspectFactoryPage implements OnInit {
         name: null,
     };
     factoryList: any[] = [];
-    // factoryDetailsStr: string;
     constructor(private router: Router, private inspecting: inspectingService, private es: PageEffectService) {}
     ngOnInit() {
         // 一开始就获取列表获取到的列表进行渲染

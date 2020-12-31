@@ -5,19 +5,19 @@
   </ion-item>
   <ion-card-content>
     <ion-grid>
-      <ion-row class="title" *ngFor="let item of originObject.address;let i=index">
+      <ion-row class="title" *ngFor="let item of originObject.addresses;let i=index">
         <ion-col align-self-center [size]="3">
           工厂地址 ({{i+1}})<span class="star">*</span> :
         </ion-col>
         <ion-col align-self-center [size]="5">
         </ion-col>
         <ion-col align-self-center [size]="3" class="factoryAddress">
-          <ion-input type="text" class="ipt" [(ngModel)]="item" [disabled]="isDisabled">
+          <ion-input type="text" class="ipt" [(ngModel)]="item.address" [disabled]="isDisabled">
           </ion-input>
           <ion-button fill="clear" size="small" class="addFactoryAddress" (click)="addAddressClicked()"
-            [disabled]="isDisabled" *ngIf="i==originObject.address.length-1&&flag!=1">+</ion-button>
+            [disabled]="isDisabled" *ngIf="i==originObject.addresses.length-1&&flag!=1">+</ion-button>
           <ion-button fill="clear" size="small" class="deleFactoryAddress" (click)="deleAddressClicked(i)"
-            [disabled]="isDisabled" *ngIf="originObject.address.length!=1&&flag!=1">x</ion-button>
+            [disabled]="isDisabled" *ngIf="originObject.addresses.length!=1&&flag!=1">x</ion-button>
         </ion-col>
       </ion-row>
       <ion-row class="title">

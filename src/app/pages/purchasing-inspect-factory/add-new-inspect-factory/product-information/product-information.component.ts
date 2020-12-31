@@ -138,11 +138,16 @@ export class ProductInformationComponent implements OnInit {
 
     saveInformation(params) {
         const newNormalObj = _.cloneDeep(this.normal);
+        if (newNormalObj.products.length == 0 && newNormalObj.simulation_products.length == 0) {
+            return this.es.showToast({
+                message: '请先添加产品信息',
+                color: 'danger',
+                duration: 1500,
+            });
+        }
         this.toolsObj = newNormalObj;
-
         this.inspecting.saveProductInformation(params).subscribe(res => {
             console.log(res);
-
             if (res.status !== 1)
                 return this.es.showToast({
                     message: '保存失败',
