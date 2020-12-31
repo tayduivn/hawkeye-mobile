@@ -26,7 +26,7 @@
         </ion-col>
       </ion-row>
 
-      <ion-row *ngIf="normal.have_sample==='1'">
+      <ion-row *ngIf="normal.have_sample==='1'||normal.have_sample===1">
         <ion-col align-self-center [size]="3">
           是否愿意提供样品? :
         </ion-col>
@@ -43,7 +43,8 @@
         </ion-col>
       </ion-row>
 
-      <ion-row class="title" *ngIf="normal.will_supply==='1'&&normal.have_sample=='1'">
+      <ion-row class="title"
+        *ngIf="(normal.will_supply==='1'||normal.will_supply===1)&&(normal.have_sample=='1'||normal.have_sample==1)">
         <ion-col align-self-center [size]="3">
           样品费情况 :
         </ion-col>
@@ -55,7 +56,8 @@
         </ion-col>
       </ion-row>
 
-      <ion-row class="title" *ngIf="normal.will_supply==='1'&&normal.have_sample=='1'">
+      <ion-row class="title"
+        *ngIf="(normal.will_supply==='1'||normal.will_supply===1)&&(normal.have_sample=='1'||normal.have_sample==1)">
         <ion-col align-self-center [size]="3">
           样品准备时间 :
         </ion-col>
@@ -68,7 +70,8 @@
         </ion-col>
       </ion-row>
 
-      <ion-row class="title" *ngIf="normal.will_supply==='1'&&normal.have_sample=='1'">
+      <ion-row class="title"
+        *ngIf="(normal.will_supply==='1'||normal.will_supply===1)&&(normal.have_sample=='1'||normal.have_sample==1)">
         <ion-col align-self-center [size]="3">
           付款情况 :
         </ion-col>
@@ -80,7 +83,8 @@
         </ion-col>
       </ion-row>
 
-      <ion-row class="title border-row" *ngIf="normal.will_supply==='1'&&normal.have_sample=='1'">
+      <ion-row class="title border-row"
+        *ngIf="(normal.will_supply==='1'||normal.will_supply===1)&&(normal.have_sample=='1'||normal.have_sample==1)">
         <ion-col align-self-center [size]="3">
           样品间环境照片 :
         </ion-col>
