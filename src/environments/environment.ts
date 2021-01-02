@@ -4,7 +4,12 @@
 
 export const environment = {
     production: false,
-    // apiUrl: 'http://192.168.3.8/api/v1',
+    // apiUrl: 'http://192.168.3.18/api/v1',
+    // fileUrlPath: 'http://keyi.xdrlgroup.com',
+    // usFileUrl: 'http://192.168.3.18/storage/',
+    // origin: 'http://192.168.3.18',
+
+    // apiUrl: 'http://192.168.1.103/api/v1',
     // fileUrlPath: 'http://keyi.xdrlgroup.com',
     // usFileUrl: 'http://192.168.3.8/',
     // origin:'http://192.168.3.8'

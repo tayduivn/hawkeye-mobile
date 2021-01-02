@@ -6,8 +6,6 @@ import { IonicModule } from '@ionic/angular';
 import { PurchasingInspectFactoryPage } from './purchasing-inspect-factory.page';
 import { AddNewInspectFactoryComponent } from './add-new-inspect-factory/add-new-inspect-factory.component';
 import { WidgetModule } from 'src/app/widget/widget.module';
-import { FactoryInformationComponent } from './add-new-inspect-factory/product-information/factory-information/factory-information.component';
-import { FactoryCooperationProductComponent } from './add-new-inspect-factory/product-information/factory-cooperation-product/factory-cooperation-product.component';
 
 // 导入四个子组件
 // 工厂基本信息组件
@@ -20,7 +18,8 @@ import { ProductInformationComponent } from './add-new-inspect-factory/product-i
 import { SpecimenInformationComponent } from './add-new-inspect-factory/specimen-information/specimen-information.component';
 
 // 导入路由钩子函数
-import { LeaveGuard1 } from './guard/leaveGuard';
+import { LeaveGuard1, LeaveGuard2, LeaveGuard3, LeaveGuard4 } from './guard/leaveGuard';
+import { EmitService } from './add-new-inspect-factory/emit.service';
 const routes: Routes = [
     {
         path: 'purchasing-factory',
@@ -38,14 +37,17 @@ const routes: Routes = [
             {
                 path: 'factory-general-situation',
                 component: FactoryGeneralSituationComponent,
+                canDeactivate: [LeaveGuard2],
             },
             {
                 path: 'product-information',
                 component: ProductInformationComponent,
+                canDeactivate: [LeaveGuard3],
             },
             {
                 path: 'specimen-information',
                 component: SpecimenInformationComponent,
+                canDeactivate: [LeaveGuard4],
             },
         ],
     },
@@ -56,12 +58,11 @@ const routes: Routes = [
     declarations: [
         PurchasingInspectFactoryPage,
         AddNewInspectFactoryComponent,
-        FactoryInformationComponent,
-        FactoryCooperationProductComponent,
         FactoryBaseInformationComponent,
         FactoryGeneralSituationComponent,
         ProductInformationComponent,
         SpecimenInformationComponent,
     ],
+    providers: [LeaveGuard2, LeaveGuard3, LeaveGuard4, EmitService],
 })
 export class PurchasingInspectFactoryPageModule {}

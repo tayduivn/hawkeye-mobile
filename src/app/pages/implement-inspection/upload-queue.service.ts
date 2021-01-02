@@ -5,7 +5,7 @@ import { UserInfoService } from 'src/app/services/user-info.service';
 import { PageEffectService } from 'src/app/services/page-effect.service';
 import { Network } from '@ionic-native/network/ngx';
 import { ImageOther, VideoOther } from 'src/app/services/file-upload.service';
-import { Observable, Subscription, BehaviorSubject, zip, Subject } from 'rxjs';
+import { Observable, Subscription, BehaviorSubject, Subject } from 'rxjs';
 import { File as AndroidFile } from '@ionic-native/file/ngx';
 import { VerifyResponse, UploadParams, FieldType } from 'src/app/widget/videotape/videotape.component';
 import { FileChunkService, Chunk } from 'src/app/blue-bird/service/file-chunk.service';
@@ -58,6 +58,7 @@ export class UploadQueueService {
         private http: HttpService,
     ) {
         network.onChange().subscribe(res => {
+            // alert("在uploadQueue service");
             // console.log('---- 重新进入 ----')
             let msg: string = '',
                 color: string = 'success';
@@ -72,7 +73,7 @@ export class UploadQueueService {
                     msg = `当前网络环境为3g,系统判定暂停上传任务。`;
                     color = 'warning';
                     this.suspend();
-                    break;
+                    break; 
                 case '4g':
                     msg = `当前网络环境为4g,上传任务自动进行。`;
                     color = 'success';
@@ -186,7 +187,7 @@ export class UploadQueueService {
     run() {
         this.status = true;
         this.onChangeUploadStatus.next(false);
-        if (!this.networkLogic()) return;
+        // if (!this.networkLogic()) return;
         this.upload();
     }
 

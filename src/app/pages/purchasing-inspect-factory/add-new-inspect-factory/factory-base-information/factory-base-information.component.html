@@ -12,10 +12,25 @@
         <ion-col align-self-center [size]="6">
         </ion-col>
         <ion-col align-self-center [size]="3" class="factoryAddress">
-          <ion-input type="text" class="ipt" [(ngModel)]="originObject.address" (ionChange)="inputChanged()"
+          <ion-input type="text" class="ipt" [(ngModel)]="originObject.address_one" (ionChange)="inputChanged()"
             [disabled]="isDisabled">
           </ion-input>
-          <ion-button fill="clear" size="small" class="addFactoryAddress">+</ion-button>
+          <ion-button fill="clear" size="small" class="addFactoryAddress" (click)="addAddressClicked()"
+            [disabled]="isDisabled">+</ion-button>
+        </ion-col>
+      </ion-row>
+      <ion-row class="title" *ngIf="controlAdressShow">
+        <ion-col align-self-center [size]="3">
+          工厂地址 (2)<span class="star">*</span> :
+        </ion-col>
+        <ion-col align-self-center [size]="6">
+        </ion-col>
+        <ion-col align-self-center [size]="3" class="factoryAddress">
+          <ion-input type="text" class="ipt" [(ngModel)]="normal.address_two" (ionChange)="inputChanged()"
+            [disabled]="isDisabled">
+          </ion-input>
+          <ion-button fill="clear" size="small" class="deleFactoryAddress" (click)="deleAddressClicked()"
+            [disabled]="isDisabled">x</ion-button>
         </ion-col>
       </ion-row>
 
@@ -26,7 +41,7 @@
         <ion-col align-self-center [size]="6">
         </ion-col>
         <ion-col align-self-center [size]="3">
-          <ion-input type="text" class="ipt" clearInput="true" [(ngModel)]="originObject.contact"
+          <ion-input type="text" class="ipt" clearInput="true" [(ngModel)]="originObject.contacts"
             (ionChange)="inputChanged()" [disabled]="isDisabled"></ion-input>
         </ion-col>
       </ion-row>
@@ -50,7 +65,8 @@
         <ion-col align-self-center [size]="6">
         </ion-col>
         <ion-col align-self-center [size]="3">
-          <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"></ion-input>
+          <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled" [(ngModel)]="originObject.phone">
+          </ion-input>
         </ion-col>
       </ion-row>
 
@@ -61,7 +77,8 @@
         <ion-col align-self-center [size]="6">
         </ion-col>
         <ion-col align-self-center [size]="3">
-          <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"></ion-input>
+          <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"
+            [(ngModel)]="originObject.legaler"></ion-input>
         </ion-col>
       </ion-row>
 
@@ -73,7 +90,7 @@
         </ion-col>
         <ion-col align-self-center [size]="3" class="dateCol">
           <ion-datetime class="Formatdate" displayFormat="YYYY-MM-DD" doneText="完成" cancelText="取消" max="2050-12-30"
-            placeholder="请输入日期" [disabled]="isDisabled">
+            placeholder="请输入日期" [disabled]="isDisabled" [(ngModel)]="normal.create_time">
           </ion-datetime>
           <div class="iconfont icon-ziyuan"></div>
         </ion-col>
@@ -86,7 +103,8 @@
         <ion-col align-self-center [size]="6">
         </ion-col>
         <ion-col align-self-center [size]="3">
-          <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"></ion-input>
+          <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"
+            [(ngModel)]="normal.registered_capital" (ionBlur)="onBlur($event)"></ion-input>
         </ion-col>
       </ion-row>
 
@@ -97,7 +115,8 @@
         <ion-col align-self-center [size]="6">
         </ion-col>
         <ion-col align-self-center [size]="3">
-          <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"></ion-input>
+          <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled" [(ngModel)]="normal.annual_sales"
+            (ionBlur)="onBlur($event)"></ion-input>
         </ion-col>
       </ion-row>
 
@@ -108,7 +127,8 @@
         <ion-col align-self-center [size]="6">
         </ion-col>
         <ion-col align-self-center [size]="3">
-          <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"></ion-input>
+          <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"
+            [(ngModel)]="originObject.company_nature"></ion-input>
         </ion-col>
       </ion-row>
 
@@ -119,7 +139,8 @@
         <ion-col align-self-center [size]="6">
         </ion-col>
         <ion-col align-self-center [size]="3">
-          <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"></ion-input>
+          <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"
+            [(ngModel)]="originObject.product_type"></ion-input>
         </ion-col>
       </ion-row>
 
@@ -137,5 +158,5 @@
     </ion-grid>
   </ion-card-content>
 </ion-card>
-<ion-button class="nextStepBtn" size="small" (click)="saveInfomation()">保存</ion-button>
+
 <!-- 工厂基本信息卡片视图区 end-->

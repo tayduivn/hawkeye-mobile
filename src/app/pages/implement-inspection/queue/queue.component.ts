@@ -35,46 +35,46 @@ export class QueueComponent implements OnInit {
             this.isSuspend = res;
         });
         //网络变化的时候触发
-        network.onChange().subscribe(res => {
-            // console.log('---- 重新进入 ----')
-            let msg: string = '',
-                color: string = 'success';
-            if (!this.queue || !this.queue.length) return;
+        // network.onChange().subscribe(res => {
+        //     alert("在queue组件进入");
+        //     let msg: string = '',
+        //         color: string = 'success';
+        //     if (!this.queue || !this.queue.length) return;
 
-            switch (network.type) {
-                case '2g':
-                    msg = `当前网络环境为2g,系统判定暂停上传任务。`;
-                    color = 'warning';
-                    document.getElementById('suspend').click();
-                    break;
-                case '3g':
-                    msg = `当前网络环境为3g,系统判定暂停上传任务。`;
-                    color = 'warning';
-                    document.getElementById('suspend').click();
-                    break;
-                case '4g':
-                    msg = `当前网络环境为4g,上传任务自动进行。`;
-                    color = 'success';
-                    document.getElementById('restart').click();
-                    this.queue = uQueue.queue;
-                    break;
-                case 'wifi':
-                    msg = `当前网络环境为wifi,上传任务自动进行。`;
-                    color = 'success';
-                    document.getElementById('restart').click();
-                    this.queue = uQueue.queue;
-                    break;
-                default: {
-                    msg = `当前没有网络连接,系统暂停上传任务。`;
-                    color = 'danger';
-                    document.getElementById('suspend').click();
-                }
-            }
-            this.es.showToast({
-                message: msg,
-                color: color,
-            });
-        });
+        //     switch (network.type) {
+        //         case '2g':
+        //             msg = `当前网络环境为2g,系统判定暂停上传任务。`;
+        //             color = 'warning';
+        //             document.getElementById('suspend').click();
+        //             break;
+        //         case '3g':
+        //             msg = `当前网络环境为3g,系统判定暂停上传任务。`;
+        //             color = 'warning';
+        //             document.getElementById('suspend').click();
+        //             break;
+        //         case '4g':
+        //             msg = `当前网络环境为4g,上传任务自动进行。`;
+        //             color = 'success';
+        //             document.getElementById('restart').click();
+        //             this.queue = uQueue.queue;
+        //             break;
+        //         case 'wifi':
+        //             msg = `当前网络环境为wifi,上传任务自动进行。`;
+        //             color = 'success';
+        //             document.getElementById('restart').click();
+        //             this.queue = uQueue.queue;
+        //             break;
+        //         default: {
+        //             msg = `当前没有网络连接,系统暂停上传任务。`;
+        //             color = 'danger';
+        //             document.getElementById('suspend').click();
+        //         }
+        //     }
+        //     this.es.showToast({
+        //         message: msg,
+        //         color: color,
+        //     });
+        // });
     }
 
     close() {
