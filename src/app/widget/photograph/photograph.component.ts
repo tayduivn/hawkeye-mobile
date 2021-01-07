@@ -46,15 +46,15 @@ export class PhotographComponent implements OnInit {
     random: number = Math.random();
 
     constructor(
-        private camera: Camera,
-        private ec: PageEffectService,
-        private imagePicker: ImagePicker,
-        private uploadService: FileUploadService,
-        private implement: ImplementInspectService,
+        public camera: Camera,
+        public ec: PageEffectService,
+        public imagePicker: ImagePicker,
+        public uploadService: FileUploadService,
+        public implement: ImplementInspectService,
         public platform: Platform,
-        private file: androidFile,
+        public file: androidFile,
         public uQueue: UploadQueueService,
-        private inspectCache: InspectCacheService,
+        protected inspectCache: InspectCacheService,
     ) {
         this.Compressor = new ImageCompressor(); //原生压缩
     }

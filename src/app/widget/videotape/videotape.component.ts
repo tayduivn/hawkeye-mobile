@@ -217,7 +217,6 @@ export class VideotapeComponent implements OnInit {
                     blob: blob,
                     payload: params,
                 });
-                //this.handleFile(blob, mediaFiles[0].fullPath);
             });
         } else {
             this.ec.showToast({
@@ -235,8 +234,6 @@ export class VideotapeComponent implements OnInit {
 
     testHandle(e: any) {
         const file = e.target.files[0];
-        // this.handleFile(file);
-        // return
         let params: any = {
             sort_index: this.sort_index,
             type: this.type,

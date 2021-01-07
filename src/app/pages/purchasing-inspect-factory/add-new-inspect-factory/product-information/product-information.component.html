@@ -5,10 +5,10 @@
       <div class="header-container">
         <ion-card-title color="primary" class="card-title">产品信息({{i+1}})</ion-card-title>
         <div class="btns-container">
-          <ion-button class="ml-20" size="small" (click)="addProduct()" [disabled]="isDisabled"
+          <ion-button class="ml-20" size="small" (click)="addProduct(i)" [disabled]="isDisabled"
             *ngIf="i==normal.products.length-1">添加</ion-button>
           <ion-button class="ml-20" size="small" color="danger" *ngIf="normal.products.length!=1"
-            (click)="deleteProduct(i)" [disabled]="isDisabled">删除
+            (click)="deleteProduct(i,normal.products[i].apply_inspection_no)" [disabled]="isDisabled">删除
           </ion-button>
         </div>
       </div>
@@ -70,8 +70,15 @@
           <ion-col align-self-center [size]="6">
           </ion-col>
           <ion-col align-self-center [size]="3">
-            <app-photograph></app-photograph>
-            <app-videotape></app-videotape>
+            <app-photo-mini [type]="'product_pic'" [apply_inspection]="item.apply_inspection_no"
+              [photos]="DETAILS.product[i].hash_arr" *ngIf="flag==2||flag==1" [suoyin]="i">
+            </app-photo-mini>
+            <app-photo-mini [type]="'product_pic'" [apply_inspection]="item.apply_inspection_no" *ngIf="flag==0"
+              [suoyin]="i">
+            </app-photo-mini>
+            <app-video-mini [type]="'inspect_product_video'" [apply_inspection]="item.apply_inspection_no"
+              [videos]="DETAILS.product[i].inspect_product_video">
+            </app-video-mini>
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -89,7 +96,8 @@
           <ion-button class="ml-20" size="small" (click)="addCooperationProduct()" [disabled]="isDisabled"
             *ngIf="i==normal.simulation_products.length-1">添加
           </ion-button>
-          <ion-button class="ml-20" size="small" color="danger" (click)="deleteCooperationProduct(i)"
+          <ion-button class="ml-20" size="small" color="danger"
+            (click)="deleteCooperationProduct(i,normal.simulation_products[i].apply_inspection_no)"
             [disabled]="isDisabled" *ngIf="normal.simulation_products.length!=1">删除
           </ion-button>
         </div>

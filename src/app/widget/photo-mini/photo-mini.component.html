@@ -1,0 +1,21 @@
+<ul class="img-list">
+  <li *ngFor="let item of _photos; index as i" class="image-list pos-r">
+    <img imgGallery alt="" [defaultImage]="'../assets/img/image-loading.jpg'" *ngIf="item && item.length < 10000"
+      [lazyLoad]="item" offset="10" />
+    <img [src]="item" *ngIf="item && item.length > 10000" alt="" />
+    <div class="pos-a">
+      <ion-icon name="close" mode="ios" *ngIf="_photos[i].length < 1000" (click)="remove(i)"></ion-icon>
+    </div>
+  </li>
+</ul>
+
+<div class="add-image-small" fxLayout="row" (click)="graph()" fxLayoutAlign="start center">
+  <ion-icon name="camera" mode="ios"></ion-icon>
+  <p>拍照</p>
+</div>
+
+<div class="add-image-small add-image-file ml-5" fxLayout="row" fxLayoutAlign="start center">
+  <ion-icon name="folder"></ion-icon>
+  <input type="file" multiple="multiple" [disabled]="flag" accept="image/*" (change)="doCheckImg($event)" />
+  <p>选择</p>
+</div>

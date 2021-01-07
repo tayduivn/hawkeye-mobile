@@ -12,6 +12,11 @@ import { FileChunkService, Chunk } from 'src/app/blue-bird/service/file-chunk.se
 import { FileHashService } from 'src/app/blue-bird/service/file-hash.service';
 import { HttpService } from 'src/app/services/http.service';
 
+export enum UploadVideoNamespace {
+    inspector_inspect = '/task/add_inspection_task_video',
+    factory_inspect = '/factory/add_factory_inspect_video',
+}
+
 export interface QueueNode<T> {
     type: 'img' | 'video' | 'file';
     size: number; //blob的size
@@ -136,6 +141,7 @@ export class UploadQueueService {
         };
         // qNode.payload.type = payload.type;
         this.alreadyUploadQueue.push(node);
+        // debugger;
         //console.log('------ 回传 -----', node.path);
         !notEmitImg && this.alreadyUploadPayload$.next(node);
         return qNode;
@@ -190,8 +196,10 @@ export class UploadQueueService {
         this.upload();
     }
 
+    uploadVideoNameSpace: UploadVideoNamespace = UploadVideoNamespace.inspector_inspect;
     //Add 外部调用
-    add(ele: QueueNode<any>) {
+    add(ele: QueueNode<any>, t?: UploadVideoNamespace) {
+        t && (this.uploadVideoNameSpace = t);
         if (ele.type == 'img') {
             this.push(ele);
         } else this.packingVideo(ele);
@@ -250,13 +258,18 @@ export class UploadQueueService {
                 formData.append(key, node.payload[key]);
             }
             if (node.type == 'video') {
-                formData.append('sort_index', (node as any).sort_index as any);
-                formData.append('apply_inspection_no', (node as any).apply_inspection_no);
-                formData.append('contract_no', (node as any).contract_no);
-                formData.append('sku', (node as any).sku);
                 formData.append('chunk', (node as any).chunk);
                 formData.append('chunk_total', (node as any).chunk_total);
-                formData.delete('hash');
+                if (this.uploadVideoNameSpace === UploadVideoNamespace.inspector_inspect) {
+                    formData.append('sort_index', (node as any).sort_index as any);
+                    formData.append('apply_inspection_no', (node as any).apply_inspection_no);
+                    formData.append('contract_no', (node as any).contract_no);
+                    formData.append('sku', (node as any).sku);
+                    formData.delete('hash');
+                } else {
+                    formData.append('factory_inspect_no', (node as any).factory_inspect_no);
+                    formData.append('factory_id', (node as any).factory_id);
+                }
             }
             // console.log('-----  上传之前FormData  -----');
             // console.log(node.payload)
@@ -267,7 +280,7 @@ export class UploadQueueService {
         //将结果返回
         return await this.request.request({
             url: `${environment.apiUrl}${
-                node.type == 'img' ? '/task/add_inspection_task_img2' : '/task/add_inspection_task_video'
+                node.type == 'img' ? '/task/add_inspection_task_img2' : this.uploadVideoNameSpace
             }`,
             requestList: this.requestList,
             onProgress: this.createProgressHandler(this.front), //此处优化 闭包
@@ -378,6 +391,7 @@ export class UploadQueueService {
         //Push到上传队列
         const data: QueueNode<UploadParams>[] = fileChunkList
             //组装为切片
+
             .map(({ file }, index) => {
                 let obj = {
                     chunk: file,
@@ -389,6 +403,9 @@ export class UploadQueueService {
                     sku: ele.payload.sku,
                     chunk_total: fileChunkList.length,
                     percentage: uploadedList.includes(index + '') ? 100 : 0, //每个切片的进度条
+                    //采购验厂
+                    factory_id: (ele.payload as any).factory_id,
+                    factory_inspect_no: (ele.payload as any).factory_inspect_no,
                 };
                 obj.payload = {
                     cut_num: index,
@@ -427,6 +444,7 @@ export class UploadQueueService {
             //合并完成之后 判断状态 如果成功则删除缓存 在让主队列的front出列
             if (msg.status === 1) {
                 (node as any).path = msg.data[0].path;
+                // debugger;
                 this.alreadyUploadPayload$.next(node as any);
                 if (this.size) {
                     this.upload();
@@ -439,7 +457,6 @@ export class UploadQueueService {
         //此地先将chunks的数量存好，上传的时候是每传完一个就会删除
         ele.chunksLength = fileChunkList.length;
         ele.percentage = (ele.already / ele.chunksLength) * 100;
-
         this.push(ele); //** 此处应该在push里驱动upload
     }
 
@@ -452,9 +469,16 @@ export class UploadQueueService {
             sku: node.payload.sku,
             upload_type: 'merge',
             sort_index: node.payload.sort_index,
+            factory_id: (node.payload as any).factory_id,
+            factory_inspect_no: (node.payload as any).factory_inspect_no,
         };
+        for (const key in data) {
+            if (!data[key]) {
+                delete data[key];
+            }
+        }
         !node.payload.sort_index && delete data.sort_index;
-        return this.http.post({ url: '/task/add_inspection_task_video', params: data }).toPromise();
+        return this.http.post({ url: this.uploadVideoNameSpace, params: data }).toPromise();
     }
 
     async getFileEntry(url: string): Promise<any> {
@@ -489,20 +513,29 @@ export class UploadQueueService {
      * @param filePath
      */
     async verifyUpload(fileHash: string, filePath: string, params: UploadParams): Promise<VerifyResponse> {
+        let payload = {
+            factory_id: (params as any).factory_id,
+            factory_inspect_no: (params as any).factory_inspect_no,
+            filehash: fileHash,
+            filepath: filePath,
+            type: params.type,
+            apply_inspection_no: params.apply_inspection_no,
+            contract_no: params.contract_no,
+            sku: params.sku,
+            upload_type: 'fileVerify',
+        };
+
+        for (const key in payload) {
+            if (!payload[key]) {
+                delete payload[key];
+            }
+        }
         const { data } = await this.fileReq.request({
-            url: `${environment.apiUrl}/task/add_inspection_task_video`,
+            url: `${environment.apiUrl + this.uploadVideoNameSpace}`,
             headers: {
                 'content-type': 'application/json',
             },
-            data: JSON.stringify({
-                filehash: fileHash,
-                filepath: filePath,
-                type: params.type,
-                apply_inspection_no: params.apply_inspection_no,
-                contract_no: params.contract_no,
-                sku: params.sku,
-                upload_type: 'fileVerify',
-            }),
+            data: JSON.stringify(payload),
         });
         return JSON.parse(data);
     }

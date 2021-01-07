@@ -2,8 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import _ from 'loadsh';
 import { takeWhile } from 'rxjs/operators';
+import { RequestService } from 'src/app/blue-bird/service/request.service';
 import { inspectingService } from 'src/app/services/inspecting.service';
 import { PageEffectService } from 'src/app/services/page-effect.service';
+import { UserInfoService } from 'src/app/services/user-info.service';
+import { environment } from 'src/environments/environment';
 import { EmitService } from '../emit.service';
 @Component({
     selector: 'app-product-information',
@@ -16,7 +19,10 @@ export class ProductInformationComponent implements OnInit {
         private es: PageEffectService,
         private infoCtrl: EmitService,
         private inspecting: inspectingService,
+        private request: RequestService,
+        private userInfo: UserInfoService,
     ) {}
+    imgOrigin = environment.usFileUrl;
     isDisabled: boolean;
     // 定义一个必填项的双向绑定的对象
     originObject: any = {};
@@ -55,7 +61,25 @@ export class ProductInformationComponent implements OnInit {
                 const newNormalObj = _.cloneDeep(this.normal);
                 Object.assign(newOriginObj, newNormalObj);
                 newOriginObj.factory_id = this.DETAILS.id;
-                // console.log(this.DETAILS.id);
+                newOriginObj.products.forEach(item => {
+                    delete item.hash_arr;
+                    delete item.inspect_product_video;
+                });
+                newOriginObj.products.forEach((item, index) => {
+                    if (!item.apply_inspection_no) {
+                        let onlyOne = window.sessionStorage.getItem(`${index}`);
+                        if (onlyOne == 'undefined') {
+                            onlyOne = null;
+                        }
+                        item.apply_inspection_no = onlyOne;
+                    }
+                });
+                // 编辑里面的新增
+                newOriginObj.simulation_products.forEach((item, index) => {
+                    if (!item.apply_inspection_no) {
+                        item.apply_inspection_no = null;
+                    }
+                });
                 this.saveInformation(newOriginObj);
                 console.log(newOriginObj);
             } else {
@@ -67,6 +91,21 @@ export class ProductInformationComponent implements OnInit {
                 if (window.sessionStorage.getItem('FACTORY_ID') != 'undefined') {
                     id = (window.sessionStorage.getItem('FACTORY_ID') as any) - 0;
                     newOriginObj.factory_id = id;
+                    newOriginObj.products.forEach((item, index) => {
+                        if (!item.apply_inspection_no) {
+                            let onlyOne = window.sessionStorage.getItem(`${index}`);
+                            if (onlyOne == 'undefined') {
+                                onlyOne = null;
+                            }
+                            item.apply_inspection_no = onlyOne;
+                        }
+                    });
+                    // 新增里面的新增
+                    newOriginObj.simulation_products.forEach((item, index) => {
+                        if (!item.apply_inspection_no) {
+                            item.apply_inspection_no = null;
+                        }
+                    });
                     this.saveInformation(newOriginObj);
                     console.log(newOriginObj);
                 } else {
@@ -115,8 +154,28 @@ export class ProductInformationComponent implements OnInit {
                 // 把传递进来的详情数据存一份
                 this.DETAILS = JSON.parse(details);
                 const Details = JSON.parse(details);
+                this.DETAILS.product.forEach((item, index, array) => {
+                    if (item.hash_arr && item.hash_arr.length != 0) {
+                        item.hash_arr.forEach((key, index1, array1) => {
+                            array1[index1] = this.imgOrigin + key.replace('storage/', '');
+                        });
+                    } else {
+                        item.hash_arr = [];
+                    }
+                });
+                // this.DETAILS.product.forEach((item, index, array) => {
+                //     if (item.hash_arr && item.hash_arr.length != 0) {
+                //         item.hash_arr.forEach((key, index1, array1) => {
+                //             array1[index1] = this.imgOrigin + key.replace('storage/', '');
+                //         });
+                //     } else {
+                //         item.hash_arr = [];
+                //     }
+                // });
+                console.log(this.DETAILS.product);
                 this.normal.products = Details.product;
                 this.normal.simulation_products = Details.simulation;
+
                 if (queryParam.flag === '2') {
                     // 编辑刚进来设置为已经保存
                     window.localStorage.setItem('flag', '已保存');
@@ -137,7 +196,9 @@ export class ProductInformationComponent implements OnInit {
     }
 
     saveInformation(params) {
+        const newOriginObj = _.cloneDeep(this.originObject);
         const newNormalObj = _.cloneDeep(this.normal);
+        Object.assign(newOriginObj, newNormalObj);
         if (newNormalObj.products.length == 0 && newNormalObj.simulation_products.length == 0) {
             return this.es.showToast({
                 message: '请先添加产品信息',
@@ -145,7 +206,7 @@ export class ProductInformationComponent implements OnInit {
                 duration: 1500,
             });
         }
-        this.toolsObj = newNormalObj;
+
         this.inspecting.saveProductInformation(params).subscribe(res => {
             console.log(res);
             if (res.status !== 1)
@@ -159,6 +220,14 @@ export class ProductInformationComponent implements OnInit {
                 duration: 1500,
                 color: 'success',
             });
+            this.normal.products.forEach((item, index) => {
+                item.apply_inspection_no = res.data[index].apply_inspection_no;
+            });
+            console.log(this.normal.products);
+            const newOriginObj = _.cloneDeep(this.originObject);
+            const newNormalObj = _.cloneDeep(this.normal);
+            Object.assign(newOriginObj, newNormalObj);
+            this.toolsObj = newNormalObj;
             window.localStorage.setItem('flag', '已保存');
         });
     }
@@ -173,8 +242,8 @@ export class ProductInformationComponent implements OnInit {
         const newOriginObj = _.cloneDeep(this.originObject);
         const newNormalObj = _.cloneDeep(this.normal);
         Object.assign(newOriginObj, newNormalObj);
-        // console.log(newOriginObj);
-        // console.log(this.toolsObj);
+        console.log(newOriginObj);
+        console.log(this.toolsObj);
 
         if (this.isDisabled) {
             return true;
@@ -226,17 +295,55 @@ export class ProductInformationComponent implements OnInit {
         }
     }
     // 点击添加商品的信息
-    addProduct() {
+    addProduct(i) {
         this.normal.products.push({
             name: '', //产品名称
             material: '', //主要材料
             craft: '', //主要工艺
             third_mc: '', //工艺或材料
         });
+        // 编辑状态下新增商品
+        if (this.flag == 2) {
+            this.DETAILS.product.push({
+                hash_arr: [],
+            });
+        }
     }
     // 删除产品的信息
-    deleteProduct(index: number) {
-        this.normal.products.splice(index, 1);
+    deleteProduct(index: number, no) {
+        console.log(no);
+        if (no == undefined) {
+            this.normal.products.splice(index, 1);
+        } else {
+            let params = new FormData();
+            params.append('apply_inspection_no', no);
+            this.request
+                .request({
+                    url: `${environment.apiUrl}/factory/del_factory_inspect_product`,
+                    data: params,
+                    headers: {
+                        Authorization: this.userInfo.info ? `Bearer ${this.userInfo.info.api_token}` : undefined,
+                    },
+                })
+                .then(res => {
+                    console.log(res);
+                    const data = JSON.parse(res.data);
+                    if (data.status != 1)
+                        return this.es.showToast({
+                            message: '删除失败',
+                            color: 'danger',
+                            duration: 1500,
+                        });
+                    this.es.showToast({
+                        message: '删除成功',
+                        color: 'success',
+                        duration: 1500,
+                    });
+                    this.normal.products.splice(index, 1);
+                    this.DETAILS.product[index].hash_arr = [];
+                    console.log(this.DETAILS, index);
+                });
+        }
     }
 
     // 添加拟合作产品
@@ -247,7 +354,32 @@ export class ProductInformationComponent implements OnInit {
         });
     }
     // 删除拟合作产品
-    deleteCooperationProduct(index: number) {
-        this.normal.simulation_products.splice(index, 1);
+    deleteCooperationProduct(index: number, no) {
+        let params = new FormData();
+        params.append('apply_inspection_no', no);
+        this.request
+            .request({
+                url: `${environment.apiUrl}/factory/del_factory_inspect_product`,
+                data: params,
+                headers: {
+                    Authorization: this.userInfo.info ? `Bearer ${this.userInfo.info.api_token}` : undefined,
+                },
+            })
+            .then(res => {
+                console.log(res);
+                const data = JSON.parse(res.data);
+                if (data.status != 1)
+                    return this.es.showToast({
+                        message: '删除失败',
+                        color: 'danger',
+                        duration: 1500,
+                    });
+                this.es.showToast({
+                    message: '删除成功',
+                    color: 'success',
+                    duration: 1500,
+                });
+                this.normal.simulation_products.splice(index, 1);
+            });
     }
 }

@@ -5,6 +5,7 @@ import _ from 'loadsh';
 import { inspectingService } from 'src/app/services/inspecting.service';
 import { EmitService } from '../emit.service';
 import { takeWhile } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 @Component({
     selector: 'app-factory-general-situation',
     templateUrl: './factory-general-situation.component.html',
@@ -17,6 +18,7 @@ export class FactoryGeneralSituationComponent implements OnInit {
         private inspecting: inspectingService,
         private infoCtrl: EmitService,
     ) {}
+    imgOrigin = environment.usFileUrl;
     isDisabled: boolean;
     // 定义一个必填项的双向绑定的对象
     originObject: any = {
@@ -43,6 +45,7 @@ export class FactoryGeneralSituationComponent implements OnInit {
         sales_market: '主要销售市场',
         pay_type: '工厂付款方式',
         third_party: '是否接受过第三方验厂',
+        pic: '工厂外观照片或工厂车间照片',
     };
     toolsObj: any = {};
     // 普通项的数据绑定对象
@@ -56,6 +59,13 @@ export class FactoryGeneralSituationComponent implements OnInit {
     notFilled: any[] = [];
     DETAILS: any = {};
     flag: any;
+    plantPic: any[] = [];
+    business_license_pic: any[] = [];
+    facadePic: any[] = [];
+    // 工厂外观视频
+    facade_video: any[] = [];
+    // 生产车间视频
+    plant_video: any[] = [];
     ngOnInit() {
         this.getInitQueryParams();
         this.infoCtrl.info$.pipe(takeWhile(() => !this.destroy)).subscribe(res => {
@@ -120,7 +130,51 @@ export class FactoryGeneralSituationComponent implements OnInit {
             if (details) {
                 // 把传递进来的详情数据存一份
                 this.DETAILS = JSON.parse(details);
+
+                if (this.DETAILS.rework_plant_pic && this.DETAILS.rework_plant_pic.length != 0) {
+                    this.DETAILS.rework_plant_pic.forEach(item => {
+                        this.plantPic.push(this.imgOrigin + item.replace('storage/', ''));
+                    });
+                } else {
+                    this.plantPic = [];
+                }
+
+                if (this.DETAILS.rework_business_license_pic && this.DETAILS.rework_business_license_pic.length != 0) {
+                    this.DETAILS.rework_business_license_pic.forEach(item => {
+                        this.business_license_pic.push(this.imgOrigin + item.replace('storage/', ''));
+                    });
+                } else {
+                    this.business_license_pic = [];
+                }
+
+                if (this.DETAILS.rework_facade_pic && this.DETAILS.rework_facade_pic.length != 0) {
+                    this.DETAILS.rework_facade_pic.forEach(item => {
+                        this.facadePic.push(this.imgOrigin + item.replace('storage/', ''));
+                    });
+                } else {
+                    this.facadePic = [];
+                }
+                console.log(this.DETAILS);
+                // 工厂外观视频
+                if (this.DETAILS.inspect_facade_video && this.DETAILS.inspect_facade_video.length != 0) {
+                    this.DETAILS.inspect_facade_video.forEach(item => {
+                        this.facade_video.push(item);
+                    });
+                } else {
+                    this.facade_video = [];
+                }
+                // 生产车间视频
+                // inspect_plant_video
+                if (this.DETAILS.inspect_plant_video && this.DETAILS.inspect_plant_video.length != 0) {
+                    this.DETAILS.inspect_plant_video.forEach(item => {
+                        this.plant_video.push(item);
+                    });
+                } else {
+                    this.plant_video = [];
+                }
+
                 const DETAILS = JSON.parse(details);
+
                 this.originObject.acreage = DETAILS.acreage;
                 this.originObject.people_num = DETAILS.people_num;
                 this.originObject.manning = DETAILS.manning;
@@ -153,7 +207,6 @@ export class FactoryGeneralSituationComponent implements OnInit {
             }
         });
     }
-
     // 点击保存
     saveInformation(params) {
         this.notFilled = [];
@@ -168,6 +221,12 @@ export class FactoryGeneralSituationComponent implements OnInit {
         if (this.originObject.third_party === 0 && this.notFilled.indexOf('third_party') != -1) {
             let index = this.notFilled.indexOf('third_party');
             this.notFilled.splice(index, 1);
+        }
+        if (
+            window.sessionStorage.getItem('facade_picFalg') != '1' ||
+            window.sessionStorage.getItem('plant_picFlag') != '1'
+        ) {
+            this.notFilled.push('pic');
         }
         if (this.notFilled.length) {
             // 不为0说明有必填项没有填
@@ -239,11 +298,12 @@ export class FactoryGeneralSituationComponent implements OnInit {
         window.localStorage.setItem('flag', '未保存');
         this.destroy = true;
     }
-
     confirm() {
         const newOriginObj = _.cloneDeep(this.originObject);
         const newNormalObj = _.cloneDeep(this.normal);
         Object.assign(newOriginObj, newNormalObj);
+        console.log(this.toolsObj);
+        console.log(newOriginObj);
         if (this.isDisabled) {
             return true;
         } else {
@@ -256,7 +316,7 @@ export class FactoryGeneralSituationComponent implements OnInit {
                 }
             } else if (window.localStorage.getItem('flag') === '已保存') {
                 for (let key in newOriginObj) {
-                    if (newOriginObj[key] != this.toolsObj[key]) {
+                    if (Boolean(newOriginObj[key]) != Boolean(this.toolsObj[key])) {
                         flag = false;
                     }
                 }
@@ -269,5 +329,8 @@ export class FactoryGeneralSituationComponent implements OnInit {
                 return false;
             }
         }
+    }
+    selectChanged() {
+        this.normal.third_name = null;
     }
 }

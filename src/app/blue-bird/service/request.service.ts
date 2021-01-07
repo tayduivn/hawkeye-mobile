@@ -20,6 +20,7 @@ export class RequestService {
             const xhr: XMLHttpRequest = new XMLHttpRequest();
             xhr.upload.onprogress = onProgress;
             // xhr.onloadend = () => {
+            // debugger;
             //     xhr.upload.onprogress = null; //释放内存
             //     console.log('------ 闭包关闭 释放性能 ------')
             // }
@@ -27,6 +28,7 @@ export class RequestService {
             Object.keys(headers).forEach(key => xhr.setRequestHeader(key, headers[key]));
             xhr.send(data);
             xhr.onload = e => {
+                // debugger;
                 // 将请求成功的 xhr 从列表中删除
                 if (requestList) {
                     const xhrIndex = requestList.findIndex(item => item === xhr);

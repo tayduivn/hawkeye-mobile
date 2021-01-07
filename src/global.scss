@@ -25,9 +25,8 @@
 @import '~@ionic/angular/css/text-transformation.css';
 @import '~@ionic/angular/css/flex-utils.css';
 
-
-html{
-    transition: -webkit-filter .6s ease-in-out;
+html {
+    transition: -webkit-filter 0.6s ease-in-out;
 }
 
 .global-back-text {
@@ -134,6 +133,7 @@ ion-toolbar {
     font-size: 14px;
     border-radius: 3px;
     padding: 0 3px;
+    height: 30px;
     p {
         line-height: 0;
     }
@@ -186,12 +186,12 @@ ion-toolbar {
     text-align: right !important;
 }
 
-.description-modal{
-  --width: 400px !important;
-  --height: 330px !important;
+.description-modal {
+    --width: 400px !important;
+    --height: 330px !important;
 }
 
-.w100{
+.w100 {
     width: 100% !important;
 }
 .tab-selected {

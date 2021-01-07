@@ -39,9 +39,10 @@ export const InspectField = {
     accessory_mark_pic: '配件唛头',
     accessory_num_pic: '配件数量',
     accessory_details_pic: '配件箱细节图',
-    accessory_shipping_mark_pic:'配件箱唛头',
-    accessory_size_pic_length:'配件箱长度',
-    accessory_size_pic_width:'配件箱宽度',
-    accessory_size_pic_height:'配件箱高度',
-    accessory_gross_weight_pic:'配件箱毛重'
+    accessory_shipping_mark_pic: '配件箱唛头',
+    accessory_size_pic_length: '配件箱长度',
+    accessory_size_pic_width: '配件箱宽度',
+    accessory_size_pic_height: '配件箱高度',
+    accessory_gross_weight_pic: '配件箱毛重',
+    inspect_product_video: '工厂外观照片',
 };

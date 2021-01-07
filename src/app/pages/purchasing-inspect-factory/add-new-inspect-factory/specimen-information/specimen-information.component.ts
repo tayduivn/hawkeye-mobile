@@ -4,6 +4,7 @@ import _ from 'loadsh';
 import { takeWhile } from 'rxjs/operators';
 import { inspectingService } from 'src/app/services/inspecting.service';
 import { PageEffectService } from 'src/app/services/page-effect.service';
+import { environment } from 'src/environments/environment';
 import { EmitService } from '../emit.service';
 @Component({
     selector: 'app-specimen-information',
@@ -17,6 +18,7 @@ export class SpecimenInformationComponent implements OnInit {
         private infoCtrl: EmitService,
         private inspecting: inspectingService,
     ) {}
+    imgOrigin = environment.usFileUrl;
     isDisabled: boolean;
     // 定义一个必填项的双向绑定的对象
     originObject: any = {};
@@ -31,6 +33,8 @@ export class SpecimenInformationComponent implements OnInit {
     };
     destroy = false;
     DETAILS: any = {};
+    sample_pic: any[] = [];
+    showroom_video: any[] = [];
     flag: any;
     ngOnInit() {
         this.getInitQueryParams();
@@ -87,6 +91,24 @@ export class SpecimenInformationComponent implements OnInit {
                 // 把传递进来的详情数据存一份
                 this.DETAILS = JSON.parse(details);
                 const DETAILS = JSON.parse(details);
+                // this.DETAILS.rework_sample_pic.forEach(item => {});
+                console.log(this.DETAILS);
+
+                if (this.DETAILS.rework_sample_pic && this.DETAILS.rework_sample_pic.length != 0) {
+                    this.DETAILS.rework_sample_pic.forEach(item => {
+                        this.sample_pic.push(this.imgOrigin + item.replace('storage/', ''));
+                    });
+                } else {
+                    this.sample_pic = [];
+                }
+                if (this.DETAILS.inspect_showroom_video && this.DETAILS.inspect_showroom_video.length != 0) {
+                    this.DETAILS.inspect_showroom_video.forEach(item => {
+                        this.showroom_video.push(item);
+                    });
+                } else {
+                    this.showroom_video = [];
+                }
+
                 this.normal.have_sample = DETAILS.sample.have_sample - 0;
                 this.normal.will_supply = DETAILS.sample.will_supply - 0;
                 this.normal.amount = DETAILS.sample.amount;

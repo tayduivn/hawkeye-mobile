@@ -53,6 +53,29 @@ export class inspectingService {
             params,
         });
     }
+    // 上传图片的接口
+    postPic(params): Observable<any> {
+        return this.http.post({
+            url: '/factory/add_factory_inspect_img',
+            params,
+        });
+    }
+
+    // 删除图片的接口
+    deletePic(params): Observable<any> {
+        return this.http.post({
+            url: '/factory/delete_factory_inspect_img',
+            params,
+        });
+    }
+
+    // 删除产品的接口
+    deleteProduct(params): Observable<any> {
+        return this.http.post({
+            url: '/factory/del_factory_inspect_product',
+            params,
+        });
+    }
 }
 export interface FactoryListQueryInfo {
     page?: number;
@@ -108,3 +131,9 @@ export interface saveSpecimenInformation {
     payment?: any;
     will_supply?: any;
 }
+// export interface PostPicture {
+//     factory_id: string;
+//     type: string;
+//     file: string;
+//     factory_inspect_no: string;
+// }

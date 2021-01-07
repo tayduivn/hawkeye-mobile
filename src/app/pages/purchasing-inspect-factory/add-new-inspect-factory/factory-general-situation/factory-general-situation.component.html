@@ -175,10 +175,11 @@
         <ion-col align-self-center [size]="6">
         </ion-col>
         <ion-col align-self-center [size]="3">
-          <select [(ngModel)]="originObject.third_party" class="select" [disabled]="isDisabled">
-            <option value=""></option>
-            <option [value]="0">否</option>
-            <option [value]="1">是</option>
+          <select [(ngModel)]="originObject.third_party" class="select" [disabled]="isDisabled"
+            (ngModelChange)="selectChanged()">
+            <option [value]=""></option>
+            <option [value]="'0'">否</option>
+            <option [value]="'1'">是</option>
           </select>
         </ion-col>
       </ion-row>
@@ -187,11 +188,21 @@
       <ion-row class="title">
         <ion-col align-self-center [size]="12">
           <ion-input type="text" class="ipt third" [(ngModel)]="normal.third_name" placeholder="请输入第三方的名称"
-            *ngIf="originObject.third_party==='1'" [disabled]="isDisabled">
+            *ngIf="originObject.third_party==1" [disabled]="isDisabled">
           </ion-input>
         </ion-col>
       </ion-row>
-
+      <ion-row class="title">
+        <ion-col align-self-center [size]="3">
+          营业执照照片(三证合一) :
+        </ion-col>
+        <ion-col align-self-center [size]="6">
+        </ion-col>
+        <ion-col align-self-center [size]="3">
+          <app-photo-mini [type]="'business_license_pic'" [photos]='business_license_pic'>
+          </app-photo-mini>
+        </ion-col>
+      </ion-row>
       <ion-row class="title border-row">
         <ion-col align-self-center [size]="3">
           工厂外观照片<span class="star">*</span> :
@@ -199,8 +210,9 @@
         <ion-col align-self-center [size]="6">
         </ion-col>
         <ion-col align-self-center [size]="3">
-          <app-photograph></app-photograph>
-          <app-videotape></app-videotape>
+          <app-photo-mini [type]="'facade_pic'" [photos]="facadePic">
+          </app-photo-mini>
+          <app-video-mini [type]="'inspect_facade_video'" [videos]="facade_video"></app-video-mini>
         </ion-col>
       </ion-row>
 
@@ -211,8 +223,9 @@
         <ion-col align-self-center [size]="6">
         </ion-col>
         <ion-col align-self-center [size]="3">
-          <app-photograph></app-photograph>
-          <app-videotape></app-videotape>
+          <app-photo-mini [type]="'plant_pic'" [photos]="plantPic">
+          </app-photo-mini>
+          <app-video-mini [type]="'inspect_plant_video'" [videos]="plant_video"></app-video-mini>
         </ion-col>
       </ion-row>
 

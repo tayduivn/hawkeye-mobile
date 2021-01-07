@@ -1,6 +1,8 @@
 import { ItemByItemDescComponent } from './item-by-item-desc/item-by-item-desc.component';
 import { VideotapeComponent } from './videotape/videotape.component';
+import { VideoMiniComponent } from './video-mini/video-mini.component';
 import { PhotographComponent } from './photograph/photograph.component';
+import { PhotoMiniComponent } from './photo-mini/photo-mini.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { NgModule } from '@angular/core';
@@ -34,7 +36,9 @@ import { PartComponent } from './part/part.component';
         VideoPlayerDirective,
         ProductSizeComponent,
         CustomOuterSizeComponent,
-        PartComponent
+        PartComponent,
+        PhotoMiniComponent,
+        VideoMiniComponent,
     ],
     imports: [
         CommonModule,
@@ -44,7 +48,7 @@ import { PartComponent } from './part/part.component';
         FormsModule,
         FlexLayoutModule,
         BlueBirdModule,
-        LazyLoadImageModule
+        LazyLoadImageModule,
     ],
     exports: [
         SKUInfoComponent,
@@ -54,18 +58,10 @@ import { PartComponent } from './part/part.component';
         ItemByItemDescComponent,
         ProductSizeComponent,
         CustomOuterSizeComponent,
-        PartComponent
+        PartComponent,
+        PhotoMiniComponent,
+        VideoMiniComponent,
     ],
-    providers: [
-        Camera,
-        MediaCapture,
-        Media,
-        VideoPlayer,
-        ImagePicker,
-        FileChooser,
-        Chooser,
-        VideoEditor,
-        FilePath,
-    ],
+    providers: [Camera, MediaCapture, Media, VideoPlayer, ImagePicker, FileChooser, Chooser, VideoEditor, FilePath],
 })
 export class WidgetModule {}

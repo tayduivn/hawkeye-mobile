@@ -18,27 +18,12 @@
             <span [style.color]="uQueue.status ? '#10dc60' : 'red'">{{ uQueue.status ? '上传中…' : '暂停中' }}</span>
         </div>
         <div>
-            <ion-button
-                [hidden]="true"
-                (click)="uQueue.suspend()"
-                id="suspend"
-                color="danger"
-                fill="outline"
-                [disabled]="isSuspend"
-                size="small"
-                class="f-r mr-10"
-            >
+            <ion-button [hidden]="true" (click)="uQueue.suspend()" id="suspend" color="danger" fill="outline"
+                [disabled]="isSuspend" size="small" class="f-r mr-10">
                 暂停
             </ion-button>
-            <ion-button
-                [hidden]="true"
-                (click)="uQueue.restart()"
-                id="restart"
-                size="small"
-                fill="outline"
-                [disabled]="!isSuspend"
-                class="f-r"
-            >
+            <ion-button [hidden]="true" (click)="uQueue.restart()" id="restart" size="small" fill="outline"
+                [disabled]="!isSuspend" class="f-r">
                 重新开始
             </ion-button>
         </div>
@@ -62,22 +47,14 @@
         </ion-item>
         <div *ngIf="uploadStatus == 'uploading'" class="content">
             <ion-item *ngFor="let item of queue; let index = index">
+
                 <ion-label class="name">{{ inspectFieldMap[item.payload.type] }}</ion-label>
-                <ion-progress-bar
-                    [color]="isSuspend ? 'danger' : item.percentage < 1 ? 'success' : 'primary'"
-                    class="progress"
-                    value="{{ item.percentage ? item.percentage / 100 : 0 }}"
-                ></ion-progress-bar>
+                <ion-progress-bar [color]="isSuspend ? 'danger' : item.percentage < 1 ? 'success' : 'primary'"
+                    class="progress" value="{{ item.percentage ? item.percentage / 100 : 0 }}"></ion-progress-bar>
                 <ion-label class="size-t">{{ (item.size / 1024 / 1024).toFixed(2) + 'MB' }}</ion-label>
                 <div class="w-10">
-                    <ion-button
-                        size="small"
-                        (click)="cancel()"
-                        color="danger"
-                        class="do"
-                        [hidden]="index !== 0 || !uQueue.status"
-                        >取消</ion-button
-                    >
+                    <ion-button size="small" (click)="cancel()" color="danger" class="do"
+                        [hidden]="index !== 0 || !uQueue.status">取消</ion-button>
                 </div>
             </ion-item>
         </div>
@@ -85,11 +62,8 @@
         <ng-container *ngIf="uploadStatus == 'uploaded'">
             <ion-item *ngFor="let item of alreadyUploadQueue">
                 <ion-label class="name">{{ inspectFieldMap[item.payload.type] }}</ion-label>
-                <ion-progress-bar
-                    color="success"
-                    class="progress"
-                    value="{{ item.percentage / 100 }}"
-                ></ion-progress-bar>
+                <ion-progress-bar color="success" class="progress" value="{{ item.percentage / 100 }}">
+                </ion-progress-bar>
                 <ion-label class="size-t">{{ (item.size / 1024 / 1024).toFixed(2) + 'MB' }}</ion-label>
             </ion-item>
         </ng-container>

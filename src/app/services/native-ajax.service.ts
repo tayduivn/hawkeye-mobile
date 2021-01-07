@@ -26,7 +26,7 @@ export class NativeAjaxService {
     }
 
     send(photo: any) {
-        debugger;
+        // debugger;
         this._xhr.open('POST', 'http://192.168.1.144/api/v1' + '/file/upload');
         this._xhr.setRequestHeader('Authorization', `Bearer ${this.user.info.api_token}`);
         // this._xhr.setRequestHeader('Access-Control-Expose-Headers',`Authorization`)

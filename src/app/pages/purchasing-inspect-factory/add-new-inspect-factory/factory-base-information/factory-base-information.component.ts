@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PageEffectService } from 'src/app/services/page-effect.service';
 import _ from 'loadsh';
 import { takeWhile } from 'rxjs/operators';
 import { inspectingService } from 'src/app/services/inspecting.service';
 import { EmitService } from '../emit.service';
+import { PhotoMiniComponent } from 'src/app/widget/photo-mini/photo-mini.component';
 @Component({
     selector: 'app-factory-base-information',
     templateUrl: './factory-base-information.component.html',
@@ -51,6 +52,9 @@ export class FactoryBaseInformationComponent implements OnInit {
     flag: any;
     factory_id: any;
     inspectObj: string;
+    factory_inspect_no: any;
+    // @ViewChild('child1')
+    // child1: PhotoMiniComponent;
     constructor(
         private route: Router,
         private es: PageEffectService,
@@ -96,11 +100,30 @@ export class FactoryBaseInformationComponent implements OnInit {
             console.log(queryParam); //flag等于0不做任何操作  等于1那么回填加禁用编辑  等于2那么回填可编辑
             const { details, flag, factory_id } = queryParam;
             this.factory_id = factory_id;
+            console.log(factory_id);
+
             this.flag = flag;
             if (details) {
                 const DETAILS = JSON.parse(details);
                 console.log(DETAILS);
+                window.sessionStorage.setItem('FACTORY_ID', DETAILS.id);
+                window.sessionStorage.setItem('inspect_no', DETAILS.factory_inspect_no);
                 //拿到地址的数组进行赋值
+                console.log(DETAILS.id);
+
+                // this.inspecting.getFactoryXQ({ factory_id: DETAILS.id }).subscribe(res => {
+                //     console.log(res);
+                //     this.originObject.addresses = res.address_list;
+                //     this.originObject.contacts = res.contacts;
+                //     this.originObject.position = res.position;
+                //     this.originObject.phone = res.phone;
+                //     this.originObject.legaler = res.legaler;
+                //     this.originObject.company_nature = res.company_nature;
+                //     this.originObject.product_type = res.product_type;
+                //     this.normal.create_time = res.create_time;
+                //     this.normal.registered_capital = res.registered_capital;
+                //     this.normal.annual_sales = res.annual_sales;
+                // });
                 this.originObject.addresses = DETAILS.address_list;
                 this.originObject.contacts = DETAILS.contacts;
                 this.originObject.position = DETAILS.position;
@@ -171,18 +194,15 @@ export class FactoryBaseInformationComponent implements OnInit {
                 color: 'danger',
             });
         } else {
-            console.log(params);
-
             const newOriginObj = _.cloneDeep(this.originObject);
             const newNormalObj = _.cloneDeep(this.normal);
             Object.assign(newOriginObj, newNormalObj);
             this.toolsObj = newOriginObj;
             this.inspecting.saveFactoryBaseInformation(params).subscribe(res => {
-                console.log(res);
-                console.log(params);
                 // 如果存在id那么说明是新增  把新增的工厂id存起来
                 if (res.data && res.data.factory_id) {
                     window.sessionStorage.setItem('FACTORY_ID', res.data.factory_id);
+                    window.sessionStorage.setItem('inspect_no', res.data.factory_inspect_no);
                 }
                 if (res.status !== 1)
                     return this.es.showToast({

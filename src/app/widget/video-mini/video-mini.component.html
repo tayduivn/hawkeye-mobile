@@ -1,0 +1,29 @@
+<ul class="video-list ">
+  <ng-container *ngIf="_up_data && _up_data.length">
+    <li *ngFor="let item of _up_data; let i = index" class="pos-r video ">
+      <!-- item是每一个数组里面的字符串 -->
+      <div class="video-name" fxLayout="row" fxLayoutAlign="start center" (click)="play(item)">
+        <ion-icon name="videocam"></ion-icon>
+        <span>{{
+          item &&
+          item.substr(item.lastIndexOf('/') + 1, 6) +
+          '…' +
+          item.substr(item.lastIndexOf('/') + 7, 4) +
+          '.mp4'
+          }}</span>
+      </div>
+      <div class="pos-a">
+        <ion-icon name="close" mode="ios" (click)="remove(i)"></ion-icon>
+      </div>
+    </li>
+  </ng-container>
+</ul>
+
+<div class="add-image-small" fxLayout="row" (click)="videotape()" fxLayoutAlign="start center">
+  <ion-icon name="cloud-upload" mode="ios"></ion-icon>
+  <p>上传视频</p>
+</div>
+
+
+<input type="file" multiple="multiple" (change)="testHandle($event)" [disabled]="!flagChoose"
+  (click)="testHandleClick()" />

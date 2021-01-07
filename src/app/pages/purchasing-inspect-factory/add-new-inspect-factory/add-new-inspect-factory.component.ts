@@ -4,6 +4,8 @@ import { inspectingService } from 'src/app/services/inspecting.service';
 import { TabStatusService } from '../tab-status.service';
 import { EmitService } from './emit.service';
 import _ from 'loadsh';
+import { PageEffectService } from 'src/app/services/page-effect.service';
+import { QueueComponent } from '../../implement-inspection/queue/queue.component';
 
 @Component({
     selector: 'app-add-new-inspect-factory',
@@ -17,7 +19,13 @@ export class AddNewInspectFactoryComponent implements OnInit {
     flag1: number;
     factoryDetails: any = {};
     factoryDetailsStr: string;
-    constructor(private activatedRoute: ActivatedRoute, private tab: TabStatusService, private infoCtrl: EmitService) {}
+    alreadyUpProgress: boolean;
+    constructor(
+        private activatedRoute: ActivatedRoute,
+        private tab: TabStatusService,
+        private infoCtrl: EmitService,
+        private es: PageEffectService,
+    ) {}
     ngOnInit() {
         this.getInitQueryParams();
         this.activatedRoute.url.subscribe(res => {
@@ -31,6 +39,12 @@ export class AddNewInspectFactoryComponent implements OnInit {
             // 如果res时true则允许切换
             this.flag = res;
         });
+    }
+    showModal() {
+        this.es.showModal({
+            component: QueueComponent,
+        });
+        this.alreadyUpProgress = true;
     }
     getInitQueryParams() {
         this.activatedRoute.queryParams.subscribe(queryParam => {
@@ -65,6 +79,7 @@ export class AddNewInspectFactoryComponent implements OnInit {
     ngOnDestroy() {
         window.sessionStorage.setItem('index', '0');
         window.sessionStorage.setItem('FACTORY_ID', undefined);
+        window.sessionStorage.setItem('inspect_no', undefined);
     }
     // 在这个页面可以获取到所有的信息  所有的信息获取到后路由跳转的时候传到子组件
     saveInformation() {
