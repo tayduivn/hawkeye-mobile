@@ -12,18 +12,19 @@
           '.mp4'
           }}</span>
       </div>
-      <div class="pos-a">
+      <div class="pos-a" *ngIf="flagIsStatus!='1'">
         <ion-icon name="close" mode="ios" (click)="remove(i)"></ion-icon>
       </div>
     </li>
   </ng-container>
 </ul>
 
-<div class="add-image-small" fxLayout="row" (click)="videotape()" fxLayoutAlign="start center">
+<div class=" add-image-small" fxLayout="row" (click)="videotape()" fxLayoutAlign="start center"
+  *ngIf="flagIsStatus!='1'">
   <ion-icon name="cloud-upload" mode="ios"></ion-icon>
   <p>上传视频</p>
 </div>
 
 
-<input type="file" multiple="multiple" (change)="testHandle($event)" [disabled]="!flagChoose"
-  (click)="testHandleClick()" />
+<input *ngIf="flagIsStatus!='1'" type="file" multiple="multiple" (change)="testHandle($event)"
+  [disabled]="!flagChoose" />

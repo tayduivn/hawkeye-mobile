@@ -76,6 +76,14 @@ export class inspectingService {
             params,
         });
     }
+
+    // 删除视频的接口
+    deleteVideo(params): Observable<any> {
+        return this.http.post({
+            url: '/factory/delete_factory_inspect_video',
+            params,
+        });
+    }
 }
 export interface FactoryListQueryInfo {
     page?: number;

@@ -156,9 +156,12 @@ export class FactoryGeneralSituationComponent implements OnInit {
                 }
                 console.log(this.DETAILS);
                 // 工厂外观视频
+                console.log(this.DETAILS.inspect_facade_video);
+
                 if (this.DETAILS.inspect_facade_video && this.DETAILS.inspect_facade_video.length != 0) {
                     this.DETAILS.inspect_facade_video.forEach(item => {
                         this.facade_video.push(item);
+                        // console.log(item);
                     });
                 } else {
                     this.facade_video = [];

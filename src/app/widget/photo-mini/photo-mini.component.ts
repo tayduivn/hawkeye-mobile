@@ -47,6 +47,7 @@ export class PhotoMiniComponent extends PhotographComponent {
     _photos: string[];
     metaPhotos: string[];
     flag: boolean;
+    flagIsStatus: any;
     @Input() set photos(input: string[]) {
         if (!!input) this._photos = input;
     }
@@ -55,6 +56,11 @@ export class PhotoMiniComponent extends PhotographComponent {
             console.log(1);
             this.factory_inspect_no = input;
             console.log(this.factory_inspect_no);
+        }
+    }
+    @Input() set flagStatus(input: any) {
+        if (!!input) {
+            this.flagIsStatus = input;
         }
     }
     @Input() factory_id: string = '';
@@ -70,56 +76,66 @@ export class PhotoMiniComponent extends PhotographComponent {
         saveToPhotoAlbum: true,
     };
     remove(i: number): void {
-        // 根据索引找到
-        // this._photos.splice(i, 1);
-        let params = {
-            apply_inspection_no: '',
-            type: this.type,
-            filename: 'storage' + this._photos[i].split('storage')[1],
-        };
-        if (this.type == 'product_pic') {
-            // 如果这个本地存储的suoyin有对应的值说明
-            console.log(this.factory_inspect_no);
-            if (this.factory_inspect_no == undefined) {
-                // 新增的产品，从本地读取apply_inspection_no 怎么判断是新增的产品  只要新增的产品才没有factory_inspect_no值
-                params.apply_inspection_no = window.sessionStorage.getItem(`${this.suoyin}`);
-            } else {
-                // console.log(this.apply_inspection_no);
-                params.apply_inspection_no = this.factory_inspect_no;
-            }
-        } else {
-            params.apply_inspection_no = window.sessionStorage.getItem('inspect_no');
-        }
-        console.log(params);
+        this.ec.showAlert({
+            message: '确定要删除吗？',
+            buttons: [
+                {
+                    text: '取消',
+                },
+                {
+                    text: '确定',
+                    handler: () => {
+                        let params = {
+                            apply_inspection_no: '',
+                            type: this.type,
+                            filename: 'storage' + this._photos[i].split('storage')[1],
+                        };
+                        if (this.type == 'product_pic') {
+                            // 如果这个本地存储的suoyin有对应的值说明
+                            console.log(this.factory_inspect_no);
+                            if (this.factory_inspect_no == undefined) {
+                                // 新增的产品，从本地读取apply_inspection_no 怎么判断是新增的产品  只要新增的产品才没有factory_inspect_no值
+                                params.apply_inspection_no = window.sessionStorage.getItem(`${this.suoyin}`);
+                            } else {
+                                params.apply_inspection_no = this.factory_inspect_no;
+                            }
+                        } else {
+                            params.apply_inspection_no = window.sessionStorage.getItem('inspect_no');
+                        }
+                        this.inspecting.deletePic(params).subscribe(res => {
+                            console.log(res);
+                            if (res.status != 1)
+                                return this.ec.showToast({
+                                    message: '删除图片失败',
+                                    duration: 1500,
+                                    color: 'danger',
+                                });
+                            this.ec.showToast({
+                                message: '删除图片成功',
+                                color: 'success',
+                                duration: 1500,
+                            });
+                            // 删除成功后删除渲染的图片
+                            this._photos.splice(i, 1);
 
-        this.inspecting.deletePic(params).subscribe(res => {
-            console.log(res);
-            if (res.status != 1)
-                return this.ec.showToast({
-                    message: '删除图片失败',
-                    duration: 1500,
-                    color: 'danger',
-                });
-            this.ec.showToast({
-                message: '删除图片成功',
-                color: 'success',
-                duration: 1500,
-            });
-            // 删除成功后删除渲染的图片
-            this._photos.splice(i, 1);
-
-            if (this.type == 'facade_pic') {
-                if (this._photos.length == 0) {
-                    window.sessionStorage.setItem('facade_picFalg', '');
-                }
-            } else if (this.type == 'plant_pic') {
-                if (this._photos.length == 0) {
-                    window.sessionStorage.setItem('plant_picFlag', '');
-                }
-            }
+                            if (this.type == 'facade_pic') {
+                                if (this._photos.length == 0) {
+                                    window.sessionStorage.setItem('facade_picFalg', '');
+                                }
+                            } else if (this.type == 'plant_pic') {
+                                if (this._photos.length == 0) {
+                                    window.sessionStorage.setItem('plant_picFlag', '');
+                                }
+                            }
+                        });
+                    },
+                },
+            ],
         });
     }
     ngOnInit() {
+        console.log(this.flagIsStatus);
+
         if (
             window.sessionStorage.getItem('FACTORY_ID') != 'undefined' &&
             window.sessionStorage.getItem('inspect_no') != 'undefined'

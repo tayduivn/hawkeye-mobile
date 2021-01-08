@@ -219,6 +219,7 @@ export class FactoryBaseInformationComponent implements OnInit {
             });
         }
     }
+
     onBlur(e) {
         if ((e.target.value as any) - 0 <= 0 && (e.target.value as any) != '') {
             this.es.showToast({
@@ -239,32 +240,38 @@ export class FactoryBaseInformationComponent implements OnInit {
         const newOriginObj = _.cloneDeep(this.originObject);
         const newNormalObj = _.cloneDeep(this.normal);
         Object.assign(newOriginObj, newNormalObj);
+        console.log(newOriginObj);
+        console.log(this.toolsObj);
+
         if (this.isDisabled) {
             return true;
         } else {
             let flag = true;
             // 没有保存但是存在东西
-            if (window.localStorage.getItem('flag') !== '已保存') {
+            if (window.localStorage.getItem('flag') != '已保存') {
                 for (let key in newOriginObj) {
                     if (typeof newOriginObj[key] == 'object') {
-                        newOriginObj[key].forEach(item => {
-                            for (let key in item) {
-                                if (item[key] !== '') {
-                                    flag = false;
+                        if (newOriginObj[key] != null) {
+                            newOriginObj[key].forEach(item => {
+                                for (let key in item) {
+                                    if (item[key] !== '') {
+                                        flag = false;
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        }
                     } else {
-                        if (newOriginObj[key].trim() !== '') {
+                        if (newOriginObj[key] != '') {
                             flag = false;
                         }
                     }
                 }
-            } else if (window.localStorage.getItem('flag') === '已保存') {
+            } else if (window.localStorage.getItem('flag') == '已保存') {
                 if (newOriginObj.addresses && newOriginObj.addresses.length != this.toolsObj.addresses.length) {
                     flag = false;
                 } else {
                     for (let key1 in newOriginObj) {
+                        // 如果是数组
                         if (typeof newOriginObj[key1] == 'object' && newOriginObj[key1] != null) {
                             newOriginObj[key1].forEach((item, index) => {
                                 for (let key in item) {
@@ -275,6 +282,10 @@ export class FactoryBaseInformationComponent implements OnInit {
                                     }
                                 }
                             });
+                        } else {
+                            if (newOriginObj[key1] != this.toolsObj[key1]) {
+                                flag = false;
+                            }
                         }
                     }
                 }

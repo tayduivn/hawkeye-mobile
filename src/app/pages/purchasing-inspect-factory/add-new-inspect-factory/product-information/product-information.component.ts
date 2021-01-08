@@ -163,15 +163,6 @@ export class ProductInformationComponent implements OnInit {
                         item.hash_arr = [];
                     }
                 });
-                // this.DETAILS.product.forEach((item, index, array) => {
-                //     if (item.hash_arr && item.hash_arr.length != 0) {
-                //         item.hash_arr.forEach((key, index1, array1) => {
-                //             array1[index1] = this.imgOrigin + key.replace('storage/', '');
-                //         });
-                //     } else {
-                //         item.hash_arr = [];
-                //     }
-                // });
                 console.log(this.DETAILS.product);
                 this.normal.products = Details.product;
                 this.normal.simulation_products = Details.simulation;
@@ -196,6 +187,8 @@ export class ProductInformationComponent implements OnInit {
     }
 
     saveInformation(params) {
+        console.log(params);
+
         const newOriginObj = _.cloneDeep(this.originObject);
         const newNormalObj = _.cloneDeep(this.normal);
         Object.assign(newOriginObj, newNormalObj);
@@ -206,7 +199,35 @@ export class ProductInformationComponent implements OnInit {
                 duration: 1500,
             });
         }
-
+        let flag = false;
+        // 如果产品名称是空的情况下
+        params.products.forEach(item => {
+            if (!Boolean(item.name)) {
+                this.es.showToast({
+                    message: '请输入产品名称',
+                    color: 'danger',
+                    duration: 1500,
+                });
+                flag = true;
+            }
+        });
+        if (flag) {
+            return;
+        }
+        // 如果拟产品名称是空的情况下
+        params.simulation_products.forEach(item => {
+            if (!Boolean(item.name)) {
+                this.es.showToast({
+                    message: '请输入拟产品名称',
+                    color: 'danger',
+                    duration: 1500,
+                });
+                flag = true;
+            }
+        });
+        if (flag) {
+            return;
+        }
         this.inspecting.saveProductInformation(params).subscribe(res => {
             console.log(res);
             if (res.status !== 1)
@@ -311,6 +332,8 @@ export class ProductInformationComponent implements OnInit {
     }
     // 删除产品的信息
     deleteProduct(index: number, no) {
+        console.log(this.DETAILS);
+
         console.log(no);
         if (no == undefined) {
             this.normal.products.splice(index, 1);
@@ -340,8 +363,11 @@ export class ProductInformationComponent implements OnInit {
                         duration: 1500,
                     });
                     this.normal.products.splice(index, 1);
-                    this.DETAILS.product[index].hash_arr = [];
-                    console.log(this.DETAILS, index);
+                    // this.DETAILS.product[index].hash_arr = [];
+                    // this.DETAILS.product[index].inspect_product_video = [];
+                    // delete this.DETAILS.product[index];
+                    this.DETAILS.product.splice(index, 1);
+                    console.log(this.DETAILS);
                 });
         }
     }

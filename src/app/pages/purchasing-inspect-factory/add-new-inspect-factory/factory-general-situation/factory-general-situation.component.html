@@ -199,7 +199,7 @@
         <ion-col align-self-center [size]="6">
         </ion-col>
         <ion-col align-self-center [size]="3">
-          <app-photo-mini [type]="'business_license_pic'" [photos]='business_license_pic'>
+          <app-photo-mini [type]="'business_license_pic'" [photos]='business_license_pic' [flagStatus]="flag">
           </app-photo-mini>
         </ion-col>
       </ion-row>
@@ -210,9 +210,9 @@
         <ion-col align-self-center [size]="6">
         </ion-col>
         <ion-col align-self-center [size]="3">
-          <app-photo-mini [type]="'facade_pic'" [photos]="facadePic">
+          <app-photo-mini [type]="'facade_pic'" [photos]="facadePic" [flagStatus]="flag">
           </app-photo-mini>
-          <app-video-mini [type]="'inspect_facade_video'" [videos]="facade_video"></app-video-mini>
+          <app-video-mini [type]="'inspect_facade_video'" [videos]="facade_video" [flagStatus]="flag"></app-video-mini>
         </ion-col>
       </ion-row>
 
@@ -223,9 +223,9 @@
         <ion-col align-self-center [size]="6">
         </ion-col>
         <ion-col align-self-center [size]="3">
-          <app-photo-mini [type]="'plant_pic'" [photos]="plantPic">
+          <app-photo-mini [type]="'plant_pic'" [photos]="plantPic" [flagStatus]="flag">
           </app-photo-mini>
-          <app-video-mini [type]="'inspect_plant_video'" [videos]="plant_video"></app-video-mini>
+          <app-video-mini [type]="'inspect_plant_video'" [videos]="plant_video" [flagStatus]="flag"></app-video-mini>
         </ion-col>
       </ion-row>
 
