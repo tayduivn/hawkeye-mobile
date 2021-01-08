@@ -30,15 +30,12 @@ export class AddNewInspectFactoryComponent implements OnInit {
         private es: PageEffectService,
         private router: Router,
     ) {}
-
     get flag() {
         return this._flag;
     }
-
     set flag(input: boolean) {
         this._flag = input;
     }
-
     ngOnInit() {
         this.getInitQueryParams();
         this.activatedRoute.url.subscribe(res => {

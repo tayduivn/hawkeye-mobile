@@ -333,43 +333,56 @@ export class ProductInformationComponent implements OnInit {
     // 删除产品的信息
     deleteProduct(index: number, no) {
         console.log(this.DETAILS);
-
         console.log(no);
-        if (no == undefined) {
-            this.normal.products.splice(index, 1);
-        } else {
-            let params = new FormData();
-            params.append('apply_inspection_no', no);
-            this.request
-                .request({
-                    url: `${environment.apiUrl}/factory/del_factory_inspect_product`,
-                    data: params,
-                    headers: {
-                        Authorization: this.userInfo.info ? `Bearer ${this.userInfo.info.api_token}` : undefined,
+        this.es.showAlert({
+            message: '确定删除产品?',
+            buttons: [
+                {
+                    text: '取消',
+                },
+                {
+                    text: '确定',
+                    handler: () => {
+                        if (no == undefined) {
+                            this.normal.products.splice(index, 1);
+                        } else {
+                            let params = new FormData();
+                            params.append('apply_inspection_no', no);
+                            this.request
+                                .request({
+                                    url: `${environment.apiUrl}/factory/del_factory_inspect_product`,
+                                    data: params,
+                                    headers: {
+                                        Authorization: this.userInfo.info
+                                            ? `Bearer ${this.userInfo.info.api_token}`
+                                            : undefined,
+                                    },
+                                })
+                                .then(res => {
+                                    console.log(res);
+                                    const data = JSON.parse(res.data);
+                                    if (data.status != 1)
+                                        return this.es.showToast({
+                                            message: '删除失败',
+                                            color: 'danger',
+                                            duration: 1500,
+                                        });
+                                    this.es.showToast({
+                                        message: '删除成功',
+                                        color: 'success',
+                                        duration: 1500,
+                                    });
+                                    // 把产品从页面删除
+                                    this.normal.products.splice(index, 1);
+                                    // 把产品从详情删除
+                                    this.DETAILS.product.splice(index, 1);
+                                    console.log(this.DETAILS);
+                                });
+                        }
                     },
-                })
-                .then(res => {
-                    console.log(res);
-                    const data = JSON.parse(res.data);
-                    if (data.status != 1)
-                        return this.es.showToast({
-                            message: '删除失败',
-                            color: 'danger',
-                            duration: 1500,
-                        });
-                    this.es.showToast({
-                        message: '删除成功',
-                        color: 'success',
-                        duration: 1500,
-                    });
-                    this.normal.products.splice(index, 1);
-                    // this.DETAILS.product[index].hash_arr = [];
-                    // this.DETAILS.product[index].inspect_product_video = [];
-                    // delete this.DETAILS.product[index];
-                    this.DETAILS.product.splice(index, 1);
-                    console.log(this.DETAILS);
-                });
-        }
+                },
+            ],
+        });
     }
 
     // 添加拟合作产品
@@ -381,31 +394,46 @@ export class ProductInformationComponent implements OnInit {
     }
     // 删除拟合作产品
     deleteCooperationProduct(index: number, no) {
-        let params = new FormData();
-        params.append('apply_inspection_no', no);
-        this.request
-            .request({
-                url: `${environment.apiUrl}/factory/del_factory_inspect_product`,
-                data: params,
-                headers: {
-                    Authorization: this.userInfo.info ? `Bearer ${this.userInfo.info.api_token}` : undefined,
+        this.es.showAlert({
+            message: '确定删除拟合作产品?',
+            buttons: [
+                {
+                    text: '取消',
                 },
-            })
-            .then(res => {
-                console.log(res);
-                const data = JSON.parse(res.data);
-                if (data.status != 1)
-                    return this.es.showToast({
-                        message: '删除失败',
-                        color: 'danger',
-                        duration: 1500,
-                    });
-                this.es.showToast({
-                    message: '删除成功',
-                    color: 'success',
-                    duration: 1500,
-                });
-                this.normal.simulation_products.splice(index, 1);
-            });
+                {
+                    text: '确定',
+                    handler: () => {
+                        let params = new FormData();
+                        params.append('apply_inspection_no', no);
+                        this.request
+                            .request({
+                                url: `${environment.apiUrl}/factory/del_factory_inspect_product`,
+                                data: params,
+                                headers: {
+                                    Authorization: this.userInfo.info
+                                        ? `Bearer ${this.userInfo.info.api_token}`
+                                        : undefined,
+                                },
+                            })
+                            .then(res => {
+                                console.log(res);
+                                const data = JSON.parse(res.data);
+                                if (data.status != 1)
+                                    return this.es.showToast({
+                                        message: '删除失败',
+                                        color: 'danger',
+                                        duration: 1500,
+                                    });
+                                this.es.showToast({
+                                    message: '删除成功',
+                                    color: 'success',
+                                    duration: 1500,
+                                });
+                                this.normal.simulation_products.splice(index, 1);
+                            });
+                    },
+                },
+            ],
+        });
     }
 }

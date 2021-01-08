@@ -53,10 +53,7 @@ export class FactoryBaseInformationComponent implements OnInit {
     factory_id: any;
     inspectObj: string;
     factory_inspect_no: any;
-    // 控制跳转
-    confirmTZ: any;
-    // @ViewChild('child1')
-    // child1: PhotoMiniComponent;
+
     constructor(
         private route: Router,
         private es: PageEffectService,
