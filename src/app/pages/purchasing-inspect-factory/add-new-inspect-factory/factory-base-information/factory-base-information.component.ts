@@ -53,6 +53,8 @@ export class FactoryBaseInformationComponent implements OnInit {
     factory_id: any;
     inspectObj: string;
     factory_inspect_no: any;
+    // 控制跳转
+    confirmTZ: any;
     // @ViewChild('child1')
     // child1: PhotoMiniComponent;
     constructor(
@@ -240,9 +242,6 @@ export class FactoryBaseInformationComponent implements OnInit {
         const newOriginObj = _.cloneDeep(this.originObject);
         const newNormalObj = _.cloneDeep(this.normal);
         Object.assign(newOriginObj, newNormalObj);
-        console.log(newOriginObj);
-        console.log(this.toolsObj);
-
         if (this.isDisabled) {
             return true;
         } else {
@@ -254,7 +253,7 @@ export class FactoryBaseInformationComponent implements OnInit {
                         if (newOriginObj[key] != null) {
                             newOriginObj[key].forEach(item => {
                                 for (let key in item) {
-                                    if (item[key] !== '') {
+                                    if (item[key] != '') {
                                         flag = false;
                                     }
                                 }
@@ -293,8 +292,10 @@ export class FactoryBaseInformationComponent implements OnInit {
                 flag = true;
             }
             if (flag) {
+                // 同意跳转
                 return true;
             } else {
+                // 不同意跳转
                 return false;
             }
         }

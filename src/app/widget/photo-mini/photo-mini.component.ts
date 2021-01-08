@@ -149,16 +149,12 @@ export class PhotoMiniComponent extends PhotographComponent {
                 console.log('照片不等于0');
 
                 window.sessionStorage.setItem('facade_picFalg', '1');
-            } else {
-                window.sessionStorage.setItem('facade_picFalg', '');
             }
         } else if (this.type == 'plant_pic') {
             if (this._photos.length != 0) {
                 console.log('照片不等于0');
 
                 window.sessionStorage.setItem('plant_picFlag', '1');
-            } else {
-                window.sessionStorage.setItem('plant_picFlag', '');
             }
         }
     }

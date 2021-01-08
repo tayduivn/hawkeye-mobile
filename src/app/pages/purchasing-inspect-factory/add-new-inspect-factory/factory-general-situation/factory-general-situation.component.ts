@@ -311,15 +311,15 @@ export class FactoryGeneralSituationComponent implements OnInit {
             return true;
         } else {
             let flag = true;
-            if (window.localStorage.getItem('flag') !== '已保存') {
+            if (window.localStorage.getItem('flag') != '已保存') {
                 for (let key in newOriginObj) {
                     if (newOriginObj[key] !== '') {
                         flag = false;
                     }
                 }
-            } else if (window.localStorage.getItem('flag') === '已保存') {
+            } else if (window.localStorage.getItem('flag') == '已保存') {
                 for (let key in newOriginObj) {
-                    if (Boolean(newOriginObj[key]) != Boolean(this.toolsObj[key])) {
+                    if (newOriginObj[key] != this.toolsObj[key]) {
                         flag = false;
                     }
                 }
