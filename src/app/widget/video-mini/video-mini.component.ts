@@ -75,7 +75,7 @@ export class VideoMiniComponent implements OnInit {
             factory_inspect_no: this.factory_inspect_no,
             factory_id: this.factory_id,
         };
-        console.log(params);
+        // console.log(params);
 
         this.uQueue.add(
             {
