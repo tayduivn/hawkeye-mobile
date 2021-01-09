@@ -74,7 +74,9 @@ export class FactoryBaseInformationComponent implements OnInit {
                 const newOriginObj = _.cloneDeep(this.originObject);
                 const newNormalObj = _.cloneDeep(this.normal);
                 Object.assign(newOriginObj, newNormalObj);
-                newOriginObj.factory_id = this.factory_id - 0;
+                newOriginObj.factory_id = (window.sessionStorage.getItem('FACTORY_ID') as any) - 0;
+                console.log(newOriginObj.factory_id);
+
                 newOriginObj.user_id = res.user_id - 0;
                 newOriginObj.name = res.name;
                 newOriginObj.add_time = res.add_time;
@@ -110,37 +112,45 @@ export class FactoryBaseInformationComponent implements OnInit {
                 //拿到地址的数组进行赋值
                 console.log(DETAILS.id);
 
-                // this.inspecting.getFactoryXQ({ factory_id: DETAILS.id }).subscribe(res => {
-                //     console.log(res);
-                //     this.originObject.addresses = res.address_list;
-                //     this.originObject.contacts = res.contacts;
-                //     this.originObject.position = res.position;
-                //     this.originObject.phone = res.phone;
-                //     this.originObject.legaler = res.legaler;
-                //     this.originObject.company_nature = res.company_nature;
-                //     this.originObject.product_type = res.product_type;
-                //     this.normal.create_time = res.create_time;
-                //     this.normal.registered_capital = res.registered_capital;
-                //     this.normal.annual_sales = res.annual_sales;
-                // });
-                this.originObject.addresses = DETAILS.address_list;
-                this.originObject.contacts = DETAILS.contacts;
-                this.originObject.position = DETAILS.position;
-                this.originObject.phone = DETAILS.phone;
-                this.originObject.legaler = DETAILS.legaler;
-                this.originObject.company_nature = DETAILS.company_nature;
-                this.originObject.product_type = DETAILS.product_type;
-                this.normal.create_time = DETAILS.create_time;
-                this.normal.registered_capital = DETAILS.registered_capital;
-                this.normal.annual_sales = DETAILS.annual_sales;
-                if (queryParam.flag === '2') {
-                    // 编辑刚进来设置为已经保存
-                    window.localStorage.setItem('flag', '已保存');
-                    const newOriginObj = _.cloneDeep(this.originObject);
-                    const newNormalObj = _.cloneDeep(this.normal);
-                    Object.assign(newOriginObj, newNormalObj);
-                    this.toolsObj = newOriginObj;
-                }
+                this.inspecting.getFactoryXQ({ factory_id: DETAILS.id }).subscribe(res => {
+                    console.log(res);
+                    this.originObject.addresses = res.data.address_list;
+                    this.originObject.contacts = res.data.contacts;
+                    this.originObject.position = res.data.position;
+                    this.originObject.phone = res.data.phone;
+                    this.originObject.legaler = res.data.legaler;
+                    this.originObject.company_nature = res.data.company_nature;
+                    this.originObject.product_type = res.data.product_type;
+                    this.normal.create_time = res.data.create_time;
+                    this.normal.registered_capital = res.data.registered_capital;
+                    this.normal.annual_sales = res.data.annual_sales;
+                    if (queryParam.flag === '2') {
+                        // 编辑刚进来设置为已经保存
+                        window.localStorage.setItem('flag', '已保存');
+                        const newOriginObj = _.cloneDeep(this.originObject);
+                        const newNormalObj = _.cloneDeep(this.normal);
+                        Object.assign(newOriginObj, newNormalObj);
+                        this.toolsObj = newOriginObj;
+                    }
+                });
+                // this.originObject.addresses = DETAILS.address_list;
+                // this.originObject.contacts = DETAILS.contacts;
+                // this.originObject.position = DETAILS.position;
+                // this.originObject.phone = DETAILS.phone;
+                // this.originObject.legaler = DETAILS.legaler;
+                // this.originObject.company_nature = DETAILS.company_nature;
+                // this.originObject.product_type = DETAILS.product_type;
+                // this.normal.create_time = DETAILS.create_time;
+                // this.normal.registered_capital = DETAILS.registered_capital;
+                // this.normal.annual_sales = DETAILS.annual_sales;
+                // if (queryParam.flag === '2') {
+                //     // 编辑刚进来设置为已经保存
+                //     window.localStorage.setItem('flag', '已保存');
+                //     const newOriginObj = _.cloneDeep(this.originObject);
+                //     const newNormalObj = _.cloneDeep(this.normal);
+                //     Object.assign(newOriginObj, newNormalObj);
+                //     this.toolsObj = newOriginObj;
+                // }
             }
             if (queryParam.flag === '0') {
                 this.isDisabled = false;

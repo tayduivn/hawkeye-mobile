@@ -134,6 +134,8 @@ export class PhotoMiniComponent extends PhotographComponent {
         });
     }
     ngOnInit() {
+        console.log(1);
+
         console.log(this.flagIsStatus);
 
         if (
@@ -143,19 +145,6 @@ export class PhotoMiniComponent extends PhotographComponent {
             this.flag = false;
         } else {
             this.flag = true;
-        }
-        if (this.type == 'facade_pic') {
-            if (this._photos.length != 0) {
-                console.log('照片不等于0');
-
-                window.sessionStorage.setItem('facade_picFalg', '1');
-            }
-        } else if (this.type == 'plant_pic') {
-            if (this._photos.length != 0) {
-                console.log('照片不等于0');
-
-                window.sessionStorage.setItem('plant_picFlag', '1');
-            }
         }
     }
     ngOnDestroy(): void {

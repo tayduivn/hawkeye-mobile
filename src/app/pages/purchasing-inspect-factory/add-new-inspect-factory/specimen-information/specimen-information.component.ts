@@ -93,36 +93,37 @@ export class SpecimenInformationComponent implements OnInit {
                 const DETAILS = JSON.parse(details);
                 // this.DETAILS.rework_sample_pic.forEach(item => {});
                 console.log(this.DETAILS);
+                this.inspecting.getFactoryXQ({ factory_id: this.DETAILS.id }).subscribe(res => {
+                    if (res.data.rework_sample_pic && res.data.rework_sample_pic.length != 0) {
+                        res.data.rework_sample_pic.forEach(item => {
+                            this.sample_pic.push(this.imgOrigin + item.replace('storage/', ''));
+                        });
+                    } else {
+                        this.sample_pic = [];
+                    }
+                    if (res.data.inspect_showroom_video && res.data.inspect_showroom_video.length != 0) {
+                        res.data.inspect_showroom_video.forEach(item => {
+                            this.showroom_video.push(item);
+                        });
+                    } else {
+                        this.showroom_video = [];
+                    }
 
-                if (this.DETAILS.rework_sample_pic && this.DETAILS.rework_sample_pic.length != 0) {
-                    this.DETAILS.rework_sample_pic.forEach(item => {
-                        this.sample_pic.push(this.imgOrigin + item.replace('storage/', ''));
-                    });
-                } else {
-                    this.sample_pic = [];
-                }
-                if (this.DETAILS.inspect_showroom_video && this.DETAILS.inspect_showroom_video.length != 0) {
-                    this.DETAILS.inspect_showroom_video.forEach(item => {
-                        this.showroom_video.push(item);
-                    });
-                } else {
-                    this.showroom_video = [];
-                }
-
-                this.normal.have_sample = DETAILS.sample.have_sample - 0;
-                this.normal.will_supply = DETAILS.sample.will_supply - 0;
-                this.normal.amount = DETAILS.sample.amount;
-                this.normal.readiness_time = DETAILS.sample.readiness_time;
-                this.normal.payment = DETAILS.sample.payment;
-                if (queryParam.flag === '2') {
-                    // 编辑刚进来设置为已经保存
-                    window.localStorage.setItem('flag', '已保存');
-                    const newOriginObj = _.cloneDeep(this.originObject);
-                    const newNormalObj = _.cloneDeep(this.normal);
-                    Object.assign(newOriginObj, newNormalObj);
-                    this.toolsObj = newOriginObj;
-                    console.log(this.toolsObj);
-                }
+                    this.normal.have_sample = res.data.sample.have_sample - 0;
+                    this.normal.will_supply = res.data.sample.will_supply - 0;
+                    this.normal.amount = res.data.sample.amount;
+                    this.normal.readiness_time = res.data.sample.readiness_time;
+                    this.normal.payment = res.data.sample.payment;
+                    if (queryParam.flag === '2') {
+                        // 编辑刚进来设置为已经保存
+                        window.localStorage.setItem('flag', '已保存');
+                        const newOriginObj = _.cloneDeep(this.originObject);
+                        const newNormalObj = _.cloneDeep(this.normal);
+                        Object.assign(newOriginObj, newNormalObj);
+                        this.toolsObj = newOriginObj;
+                        console.log(this.toolsObj);
+                    }
+                });
             }
             if (queryParam.flag === '0') {
                 this.isDisabled = false;

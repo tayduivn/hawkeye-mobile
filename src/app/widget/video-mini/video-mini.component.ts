@@ -257,16 +257,6 @@ export class VideoMiniComponent implements OnInit {
         return await this.file.readAsArrayBuffer(dirPath, fileName);
     }
     ngOnInit() {
-        if (this.type == 'inspect_facade_video') {
-            if (this._up_data.length != 0) {
-                window.sessionStorage.setItem('facade_picFalg', '1');
-            }
-        } else if (this.type == 'inspect_plant_video') {
-            if (this._up_data.length != 0) {
-                window.sessionStorage.setItem('plant_picFlag', '1');
-            }
-        }
-
         let that = this;
         console.log(this._up_data);
         this.uQueue.alreadyUploadPayload$

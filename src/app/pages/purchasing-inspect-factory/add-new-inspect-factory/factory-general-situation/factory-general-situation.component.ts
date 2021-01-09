@@ -130,76 +130,92 @@ export class FactoryGeneralSituationComponent implements OnInit {
             if (details) {
                 // 把传递进来的详情数据存一份
                 this.DETAILS = JSON.parse(details);
-
-                if (this.DETAILS.rework_plant_pic && this.DETAILS.rework_plant_pic.length != 0) {
-                    this.DETAILS.rework_plant_pic.forEach(item => {
-                        this.plantPic.push(this.imgOrigin + item.replace('storage/', ''));
-                    });
-                } else {
-                    this.plantPic = [];
-                }
-
-                if (this.DETAILS.rework_business_license_pic && this.DETAILS.rework_business_license_pic.length != 0) {
-                    this.DETAILS.rework_business_license_pic.forEach(item => {
-                        this.business_license_pic.push(this.imgOrigin + item.replace('storage/', ''));
-                    });
-                } else {
-                    this.business_license_pic = [];
-                }
-
-                if (this.DETAILS.rework_facade_pic && this.DETAILS.rework_facade_pic.length != 0) {
-                    this.DETAILS.rework_facade_pic.forEach(item => {
-                        this.facadePic.push(this.imgOrigin + item.replace('storage/', ''));
-                    });
-                } else {
-                    this.facadePic = [];
-                }
                 console.log(this.DETAILS);
-                // 工厂外观视频
-                console.log(this.DETAILS.inspect_facade_video);
-
-                if (this.DETAILS.inspect_facade_video && this.DETAILS.inspect_facade_video.length != 0) {
-                    this.DETAILS.inspect_facade_video.forEach(item => {
-                        this.facade_video.push(item);
-                        // console.log(item);
-                    });
-                } else {
+                this.inspecting.getFactoryXQ({ factory_id: this.DETAILS.id }).subscribe(res => {
+                    this.plantPic = [];
+                    this.business_license_pic = [];
+                    this.facadePic = [];
                     this.facade_video = [];
-                }
-                // 生产车间视频
-                // inspect_plant_video
-                if (this.DETAILS.inspect_plant_video && this.DETAILS.inspect_plant_video.length != 0) {
-                    this.DETAILS.inspect_plant_video.forEach(item => {
-                        this.plant_video.push(item);
-                    });
-                } else {
                     this.plant_video = [];
-                }
+                    if (res.data.rework_plant_pic && res.data.rework_plant_pic.length != 0) {
+                        window.sessionStorage.setItem('plant_picFlag', '1');
+                        res.data.rework_plant_pic.forEach(item => {
+                            this.plantPic.push(this.imgOrigin + item.replace('storage/', ''));
+                        });
+                    } else {
+                        this.plantPic = [];
+                    }
 
-                const DETAILS = JSON.parse(details);
+                    if (res.data.rework_business_license_pic && res.data.rework_business_license_pic.length != 0) {
+                        res.data.rework_business_license_pic.forEach(item => {
+                            this.business_license_pic.push(this.imgOrigin + item.replace('storage/', ''));
+                        });
+                    } else {
+                        this.business_license_pic = [];
+                    }
 
-                this.originObject.acreage = DETAILS.acreage;
-                this.originObject.people_num = DETAILS.people_num;
-                this.originObject.manning = DETAILS.manning;
-                this.originObject.department = DETAILS.department;
-                this.originObject.production_equipment = DETAILS.production_equipment;
-                this.originObject.production_capacity = DETAILS.production_capacity - 0;
-                this.originObject.production_cycle = DETAILS.production_cycle;
-                this.originObject.sales_market = DETAILS.sales_market;
-                this.originObject.pay_type = DETAILS.pay_type;
-                this.originObject.third_party = DETAILS.third_party - 0;
-                this.normal.quality = DETAILS.quality - 0;
-                this.normal.customer = DETAILS.customer;
-                this.normal.authentication = DETAILS.authentication;
-                this.normal.third_name = DETAILS.third_name;
-                if (queryParam.flag === '2') {
-                    // 编辑刚进来设置为已经保存
-                    window.localStorage.setItem('flag', '已保存');
-                    const newOriginObj = _.cloneDeep(this.originObject);
-                    const newNormalObj = _.cloneDeep(this.normal);
-                    Object.assign(newOriginObj, newNormalObj);
-                    this.toolsObj = newOriginObj;
-                }
+                    if (res.data.rework_facade_pic && res.data.rework_facade_pic.length != 0) {
+                        window.sessionStorage.setItem('facade_picFalg', '1');
+                        res.data.rework_facade_pic.forEach(item => {
+                            this.facadePic.push(this.imgOrigin + item.replace('storage/', ''));
+                        });
+                    } else {
+                        this.facadePic = [];
+                    }
+                    console.log(res.data);
+                    // 工厂外观视频
+                    console.log(res.data.inspect_facade_video);
+
+                    if (res.data.inspect_facade_video && res.data.inspect_facade_video.length != 0) {
+                        window.sessionStorage.setItem('facade_picFalg', '1');
+                        res.data.inspect_facade_video.forEach(item => {
+                            this.facade_video.push(item);
+                            // console.log(item);
+                        });
+                    } else {
+                        this.facade_video = [];
+                    }
+                    // 生产车间视频
+                    // inspect_plant_video
+                    if (res.data.inspect_plant_video && res.data.inspect_plant_video.length != 0) {
+                        window.sessionStorage.setItem('plant_picFlag', '1');
+
+                        res.data.inspect_plant_video.forEach(item => {
+                            this.plant_video.push(item);
+                        });
+                    } else {
+                        this.plant_video = [];
+                    }
+
+                    // const DETAILS = JSON.parse(details);
+
+                    this.originObject.acreage = res.data.acreage;
+                    this.originObject.people_num = res.data.people_num;
+                    this.originObject.manning = res.data.manning;
+                    this.originObject.department = res.data.department;
+                    this.originObject.production_equipment = res.data.production_equipment;
+                    this.originObject.production_capacity = res.data.production_capacity - 0;
+                    this.originObject.production_cycle = res.data.production_cycle;
+                    this.originObject.sales_market = res.data.sales_market;
+                    this.originObject.pay_type = res.data.pay_type;
+                    this.originObject.third_party = res.data.third_party - 0;
+                    this.normal.quality = res.data.quality - 0;
+                    this.normal.customer = res.data.customer;
+                    this.normal.authentication = res.data.authentication;
+                    this.normal.third_name = res.data.third_name;
+                    if (queryParam.flag === '2') {
+                        // 编辑刚进来设置为已经保存
+                        window.localStorage.setItem('flag', '已保存');
+                        const newOriginObj = _.cloneDeep(this.originObject);
+                        const newNormalObj = _.cloneDeep(this.normal);
+                        Object.assign(newOriginObj, newNormalObj);
+                        this.toolsObj = newOriginObj;
+                    }
+                    console.log(this.plant_video);
+                    console.log(this.facade_video);
+                    console.log(this.facadePic);
+                    console.log(this.plantPic);
+                });
             }
             if (queryParam.flag === '0') {
                 this.isDisabled = false;

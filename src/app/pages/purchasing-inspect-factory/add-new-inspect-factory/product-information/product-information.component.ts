@@ -48,7 +48,15 @@ export class ProductInformationComponent implements OnInit {
     destroy: boolean = false;
     dataList: any[] = [];
     flag: any;
-    DETAILS: any = {};
+    DETAILS: any = {
+        product: [
+            {
+                hash_arr: [],
+                inspect_product_video: [],
+            },
+        ],
+    };
+    // DETAILS2: any = {};
     ngOnInit() {
         window.localStorage.setItem('flag', '未保存');
         this.getInitQueryParams();
@@ -152,29 +160,35 @@ export class ProductInformationComponent implements OnInit {
             // 如果是详情页过来的就赋值
             if (details) {
                 // 把传递进来的详情数据存一份
-                this.DETAILS = JSON.parse(details);
-                const Details = JSON.parse(details);
-                this.DETAILS.product.forEach((item, index, array) => {
-                    if (item.hash_arr && item.hash_arr.length != 0) {
-                        item.hash_arr.forEach((key, index1, array1) => {
-                            array1[index1] = this.imgOrigin + key.replace('storage/', '');
-                        });
-                    } else {
-                        item.hash_arr = [];
+                const detail = JSON.parse(details);
+                // console.log(this.DETAILS);
+
+                this.inspecting.getFactoryXQ({ factory_id: detail.id }).subscribe(res => {
+                    this.DETAILS = res.data;
+                    res.data.product.forEach((item, index, array) => {
+                        if (item.hash_arr && item.hash_arr.length != 0) {
+                            item.hash_arr.forEach((key, index1, array1) => {
+                                array1[index1] = this.imgOrigin + key.replace('storage/', '');
+                            });
+                        } else {
+                            item.hash_arr = [];
+                        }
+                    });
+                    console.log(res.product);
+                    this.normal.products = res.data.product;
+                    this.normal.simulation_products = res.data.simulation;
+                    console.log(this.normal.products);
+                    console.log(this.normal.simulation_products);
+
+                    if (queryParam.flag === '2') {
+                        // 编辑刚进来设置为已经保存
+                        window.localStorage.setItem('flag', '已保存');
+                        const newOriginObj = _.cloneDeep(this.originObject);
+                        const newNormalObj = _.cloneDeep(this.normal);
+                        Object.assign(newOriginObj, newNormalObj);
+                        this.toolsObj = newOriginObj;
                     }
                 });
-                console.log(this.DETAILS.product);
-                this.normal.products = Details.product;
-                this.normal.simulation_products = Details.simulation;
-
-                if (queryParam.flag === '2') {
-                    // 编辑刚进来设置为已经保存
-                    window.localStorage.setItem('flag', '已保存');
-                    const newOriginObj = _.cloneDeep(this.originObject);
-                    const newNormalObj = _.cloneDeep(this.normal);
-                    Object.assign(newOriginObj, newNormalObj);
-                    this.toolsObj = newOriginObj;
-                }
             }
             if (queryParam.flag === '0') {
                 this.isDisabled = false;
@@ -324,11 +338,11 @@ export class ProductInformationComponent implements OnInit {
             third_mc: '', //工艺或材料
         });
         // 编辑状态下新增商品
-        if (this.flag == 2) {
-            this.DETAILS.product.push({
-                hash_arr: [],
-            });
-        }
+        // if (this.flag == 2) {
+        //     this.DETAILS.product.push({
+        //         hash_arr: [],
+        //     });
+        // }
     }
     // 删除产品的信息
     deleteProduct(index: number, no) {
@@ -373,7 +387,7 @@ export class ProductInformationComponent implements OnInit {
                                         duration: 1500,
                                     });
                                     // 把产品从页面删除
-                                    this.normal.products.splice(index, 1);
+                                    // this.normal.products.splice(index, 1);
                                     // 把产品从详情删除
                                     this.DETAILS.product.splice(index, 1);
                                     console.log(this.DETAILS);
