@@ -84,6 +84,14 @@ export class inspectingService {
             params,
         });
     }
+
+    // 提交评估信息的接口
+    postAccessInfo(params): Observable<any> {
+        return this.http.post({
+            url: '/factory/add-factory-inspect-evaluate',
+            params,
+        });
+    }
 }
 export interface FactoryListQueryInfo {
     page?: number;

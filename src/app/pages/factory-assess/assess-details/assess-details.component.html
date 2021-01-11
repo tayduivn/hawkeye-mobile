@@ -22,7 +22,7 @@
         </ion-row>
         <ion-row class="title">
           <ion-col align-self-center [size]="12">
-            <textarea rows="4" class="textArea"></textarea>
+            <textarea rows="4" class="textArea" [(ngModel)]="originObject.cooperative_will" ngDefaultControl></textarea>
           </ion-col>
         </ion-row>
 
@@ -33,13 +33,13 @@
         </ion-row>
         <ion-row class="title">
           <ion-col align-self-center [size]="12">
-            <textarea rows="4" class="textArea"></textarea>
+            <textarea rows="4" class="textArea" [(ngModel)]="originObject.prospect_judge" ngDefaultControl></textarea>
           </ion-col>
         </ion-row>
 
         <ion-row class="title">
           <ion-col align-self-center [size]="12">
-            <span class="factory-text">建议补充</span> :
+            <span class="factory-text" [(ngModel)]="normal.replenish" ngDefaultControl>建议补充</span> :
           </ion-col>
         </ion-row>
         <ion-row class="title">
