@@ -97,7 +97,7 @@ export class SpecimenInformationComponent implements OnInit {
                 .subscribe(res => {
                     if (res.data.rework_sample_pic && res.data.rework_sample_pic.length != 0) {
                         res.data.rework_sample_pic.forEach(item => {
-                            this.sample_pic.push(this.imgOrigin + item.replace('storage/', ''));
+                            this.sample_pic.push(this.imgOrigin);
                         });
                     } else {
                         this.sample_pic = [];
@@ -184,7 +184,7 @@ export class SpecimenInformationComponent implements OnInit {
                 this.inspecting.getFactoryXQ({ factory_id: this.DETAILS.id }).subscribe(res => {
                     if (res.data.rework_sample_pic && res.data.rework_sample_pic.length != 0) {
                         res.data.rework_sample_pic.forEach(item => {
-                            this.sample_pic.push(this.imgOrigin + item.replace('storage/', ''));
+                            this.sample_pic.push(this.imgOrigin + item);
                         });
                     } else {
                         this.sample_pic = [];
