@@ -72,7 +72,10 @@ export class FactoryGeneralSituationComponent implements OnInit {
     facade_video: any[] = [];
     // 生产车间视频
     plant_video: any[] = [];
-
+    ngAfterViewInit(): void {
+        //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
+        //Add 'implements AfterViewInit' to the class.
+    }
     ngOnInit() {
         const infoChange$: Observable<any> = this.userInfo.userInfo$;
         // pipe(takeWhile(() => !this.destroy))
@@ -153,7 +156,7 @@ export class FactoryGeneralSituationComponent implements OnInit {
                     if (res.data.rework_plant_pic && res.data.rework_plant_pic.length != 0) {
                         window.sessionStorage.setItem('plant_picFlag', '1');
                         res.data.rework_plant_pic.forEach(item => {
-                            this.plantPic.push(this.imgOrigin + item);
+                            this.plantPic.push(item);
                         });
                     } else {
                         this.plantPic = [];
@@ -161,7 +164,7 @@ export class FactoryGeneralSituationComponent implements OnInit {
 
                     if (res.data.rework_business_license_pic && res.data.rework_business_license_pic.length != 0) {
                         res.data.rework_business_license_pic.forEach(item => {
-                            this.business_license_pic.push(this.imgOrigin + item);
+                            this.business_license_pic.push(item);
                         });
                     } else {
                         this.business_license_pic = [];
@@ -170,7 +173,7 @@ export class FactoryGeneralSituationComponent implements OnInit {
                     if (res.data.rework_facade_pic && res.data.rework_facade_pic.length != 0) {
                         window.sessionStorage.setItem('facade_picFalg', '1');
                         res.data.rework_facade_pic.forEach(item => {
-                            this.facadePic.push(this.imgOrigin + item);
+                            this.facadePic.push(item);
                         });
                     } else {
                         this.facadePic = [];
@@ -296,7 +299,7 @@ export class FactoryGeneralSituationComponent implements OnInit {
                     if (res.data.rework_plant_pic && res.data.rework_plant_pic.length != 0) {
                         window.sessionStorage.setItem('plant_picFlag', '1');
                         res.data.rework_plant_pic.forEach(item => {
-                            this.plantPic.push(this.imgOrigin + item);
+                            this.plantPic.push(item);
                         });
                     } else {
                         this.plantPic = [];
@@ -304,7 +307,7 @@ export class FactoryGeneralSituationComponent implements OnInit {
 
                     if (res.data.rework_business_license_pic && res.data.rework_business_license_pic.length != 0) {
                         res.data.rework_business_license_pic.forEach(item => {
-                            this.business_license_pic.push(this.imgOrigin + item);
+                            this.business_license_pic.push(item);
                         });
                     } else {
                         this.business_license_pic = [];
@@ -313,7 +316,7 @@ export class FactoryGeneralSituationComponent implements OnInit {
                     if (res.data.rework_facade_pic && res.data.rework_facade_pic.length != 0) {
                         window.sessionStorage.setItem('facade_picFalg', '1');
                         res.data.rework_facade_pic.forEach(item => {
-                            this.facadePic.push(this.imgOrigin + item);
+                            this.facadePic.push(item);
                         });
                     } else {
                         this.facadePic = [];

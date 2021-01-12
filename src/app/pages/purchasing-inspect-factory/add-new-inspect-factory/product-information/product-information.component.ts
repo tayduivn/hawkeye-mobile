@@ -153,6 +153,7 @@ export class ProductInformationComponent implements OnInit {
                     console.log(res.data);
                     // if (res.data.product) {
                     // }
+                    // console.log();
 
                     if (res.data.product && res.data.product.length != 0) {
                         const newP = _.cloneDeep(res.data.product);
@@ -162,7 +163,8 @@ export class ProductInformationComponent implements OnInit {
                         res.data.product.forEach((item, index, array) => {
                             if (item.hash_arr && item.hash_arr.length != 0) {
                                 item.hash_arr.forEach((key, index1, array1) => {
-                                    array1[index1] = this.imgOrigin + key.replace('storage/', '');
+                                    array1[index1] = this.imgOrigin + key;
+                                    debugger;
                                 });
                             } else {
                                 item.hash_arr = [];
@@ -297,18 +299,22 @@ export class ProductInformationComponent implements OnInit {
                     // this.DETAILS = res.data;
                     const obj = _.cloneDeep(res.data);
                     this.DETAILS = obj;
+                    console.log(res.data);
+
                     res.data.product.forEach((item, index, array) => {
                         if (item.hash_arr && item.hash_arr.length != 0) {
                             item.hash_arr.forEach((key, index1, array1) => {
-                                array1[index1] = this.imgOrigin + key.replace('storage/', '');
+                                array1[index1] = this.imgOrigin + key;
                             });
                         } else {
                             item.hash_arr = [];
                         }
                     });
-                    console.log(res.product);
+                    console.log(res.data.product);
                     this.normal.products = res.data.product;
+                    this.DETAILS.products = res.data.product;
                     this.normal.simulation_products = res.data.simulation;
+                    this.DETAILS.products = res.data.simulation;
                     console.log(this.normal.products);
                     console.log(this.normal.simulation_products);
 
