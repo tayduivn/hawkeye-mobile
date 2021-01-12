@@ -4,7 +4,7 @@ import { Subject } from 'rxjs/internal/Subject';
 @Injectable({
     providedIn: 'root',
 })
-export class TabStatusService {
-    canClick$: Subject<{ flag: boolean; type: string }> = new Subject();
+export class IsSaveServiceService {
+    isSave$: Subject<string> = new Subject();
     constructor() {}
 }

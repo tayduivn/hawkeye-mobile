@@ -4,8 +4,11 @@ import { PageEffectService } from 'src/app/services/page-effect.service';
 import _ from 'loadsh';
 import { inspectingService } from 'src/app/services/inspecting.service';
 import { EmitService } from '../emit.service';
-import { takeWhile } from 'rxjs/operators';
+import { combineLatest, takeWhile } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { Observable } from 'rxjs';
+import { UserInfoService } from '../user-info.service';
+import { IsSaveServiceService } from '../../is-save-service.service';
 @Component({
     selector: 'app-factory-general-situation',
     templateUrl: './factory-general-situation.component.html',
@@ -17,9 +20,12 @@ export class FactoryGeneralSituationComponent implements OnInit {
         private es: PageEffectService,
         private inspecting: inspectingService,
         private infoCtrl: EmitService,
+        private userInfo: UserInfoService,
+        private isSave: IsSaveServiceService,
     ) {}
     imgOrigin = environment.usFileUrl;
     isDisabled: boolean;
+    flagIsDisabled: boolean;
     // 定义一个必填项的双向绑定的对象
     originObject: any = {
         acreage: '',
@@ -66,8 +72,159 @@ export class FactoryGeneralSituationComponent implements OnInit {
     facade_video: any[] = [];
     // 生产车间视频
     plant_video: any[] = [];
+
     ngOnInit() {
+        const infoChange$: Observable<any> = this.userInfo.userInfo$;
+        // pipe(takeWhile(() => !this.destroy))
+        infoChange$
+            .pipe(
+                combineLatest(this.isSave.isSave$),
+                takeWhile(() => !this.destroy),
+            )
+            .subscribe(res => {
+                // debugger;
+                console.log(res);
+                if (res[1] == '1') {
+                    if (this.flag == '2') {
+                        // 如果是编辑的话传递的工厂id应该就是点击编辑传递进来的详情的id
+                        const newOriginObj = _.cloneDeep(this.originObject);
+                        const newNormalObj = _.cloneDeep(this.normal);
+                        Object.assign(newOriginObj, newNormalObj);
+                        newOriginObj.factory_id = this.DETAILS.id;
+                        // console.log(this.DETAILS.id);
+                        this.saveInformation(newOriginObj);
+                        console.log(newOriginObj);
+                    } else {
+                        const newOriginObj = _.cloneDeep(this.originObject);
+                        const newNormalObj = _.cloneDeep(this.normal);
+                        Object.assign(newOriginObj, newNormalObj);
+                        // 如果不是编辑的话传递的id就应该是第一个新增页面保存的id
+                        let id;
+                        if (window.sessionStorage.getItem('FACTORY_ID') != 'undefined') {
+                            id = (window.sessionStorage.getItem('FACTORY_ID') as any) - 0;
+                            newOriginObj.factory_id = id;
+                            this.saveInformation(newOriginObj);
+                            console.log(newOriginObj);
+                        } else {
+                            this.originObject = {
+                                acreage: '',
+                                people_num: '',
+                                manning: '',
+                                department: '',
+                                production_equipment: '',
+                                production_capacity: '',
+                                production_cycle: '',
+                                sales_market: '',
+                                pay_type: '',
+                                third_party: '',
+                            };
+                            this.normal = {
+                                quality: '',
+                                customer: '',
+                                authentication: '',
+                                third_name: '',
+                            };
+                            this.toolsObj = {};
+                            return this.es.showToast({
+                                message: '请先添加工厂基本信息',
+                                color: 'danger',
+                                duration: 1500,
+                            });
+                        }
+                    }
+                }
+            });
+
         this.getInitQueryParams();
+
+        // 回填数据
+        if (this.flag == '0' && window.sessionStorage.getItem('FACTORY_ID') != 'undefined') {
+            console.log('新增的时候回显数据');
+            this.inspecting
+                .getFactoryXQ({ factory_id: (window.sessionStorage.getItem('FACTORY_ID') as any) - 0 })
+                .subscribe(res => {
+                    console.log(res);
+
+                    this.plantPic = [];
+                    this.business_license_pic = [];
+                    this.facadePic = [];
+                    this.facade_video = [];
+                    this.plant_video = [];
+                    if (res.data.rework_plant_pic && res.data.rework_plant_pic.length != 0) {
+                        window.sessionStorage.setItem('plant_picFlag', '1');
+                        res.data.rework_plant_pic.forEach(item => {
+                            this.plantPic.push(this.imgOrigin + item.replace('storage/', ''));
+                        });
+                    } else {
+                        this.plantPic = [];
+                    }
+
+                    if (res.data.rework_business_license_pic && res.data.rework_business_license_pic.length != 0) {
+                        res.data.rework_business_license_pic.forEach(item => {
+                            this.business_license_pic.push(this.imgOrigin + item.replace('storage/', ''));
+                        });
+                    } else {
+                        this.business_license_pic = [];
+                    }
+
+                    if (res.data.rework_facade_pic && res.data.rework_facade_pic.length != 0) {
+                        window.sessionStorage.setItem('facade_picFalg', '1');
+                        res.data.rework_facade_pic.forEach(item => {
+                            this.facadePic.push(this.imgOrigin + item.replace('storage/', ''));
+                        });
+                    } else {
+                        this.facadePic = [];
+                    }
+                    console.log(res.data);
+                    // 工厂外观视频
+                    console.log(res.data.inspect_facade_video);
+
+                    if (res.data.inspect_facade_video && res.data.inspect_facade_video.length != 0) {
+                        window.sessionStorage.setItem('facade_picFalg', '1');
+                        res.data.inspect_facade_video.forEach(item => {
+                            this.facade_video.push(item);
+                            // console.log(item);
+                        });
+                    } else {
+                        this.facade_video = [];
+                    }
+                    // 生产车间视频
+                    // inspect_plant_video
+                    if (res.data.inspect_plant_video && res.data.inspect_plant_video.length != 0) {
+                        window.sessionStorage.setItem('plant_picFlag', '1');
+
+                        res.data.inspect_plant_video.forEach(item => {
+                            this.plant_video.push(item);
+                        });
+                    } else {
+                        this.plant_video = [];
+                    }
+
+                    // const DETAILS = JSON.parse(details);
+
+                    this.originObject.acreage = res.data.acreage;
+                    this.originObject.people_num = res.data.people_num;
+                    this.originObject.manning = res.data.manning;
+                    this.originObject.department = res.data.department;
+                    this.originObject.production_equipment = res.data.production_equipment;
+                    this.originObject.production_capacity = res.data.production_capacity - 0;
+                    this.originObject.production_cycle = res.data.production_cycle;
+                    this.originObject.sales_market = res.data.sales_market;
+                    this.originObject.pay_type = res.data.pay_type;
+                    this.originObject.third_party = res.data.third_party - 0;
+                    this.normal.quality = res.data.quality - 0;
+                    this.normal.customer = res.data.customer;
+                    this.normal.authentication = res.data.authentication;
+                    this.normal.third_name = res.data.third_name;
+
+                    window.localStorage.setItem('flag', '已保存');
+                    const newOriginObj = _.cloneDeep(this.originObject);
+                    const newNormalObj = _.cloneDeep(this.normal);
+                    Object.assign(newOriginObj, newNormalObj);
+                    this.toolsObj = newOriginObj;
+                });
+        }
+
         this.infoCtrl.info$.pipe(takeWhile(() => !this.destroy)).subscribe(res => {
             // console.log(res); //这里可以拿到头部的信息  那么拿到后在这里面调用保存的方法
             if (this.flag == '2') {
@@ -124,7 +281,6 @@ export class FactoryGeneralSituationComponent implements OnInit {
             // console.log(queryParam); //flag等于0不做任何操作  等于1那么回填加禁用编辑  等于2那么回填可编辑
             const { details } = queryParam;
             // console.log(queryParam);
-
             this.flag = queryParam.flag;
             // console.log(details);
             if (details) {
@@ -208,6 +364,9 @@ export class FactoryGeneralSituationComponent implements OnInit {
                         window.localStorage.setItem('flag', '已保存');
                         const newOriginObj = _.cloneDeep(this.originObject);
                         const newNormalObj = _.cloneDeep(this.normal);
+                        console.log(newOriginObj);
+                        console.log(newNormalObj);
+
                         Object.assign(newOriginObj, newNormalObj);
                         this.toolsObj = newOriginObj;
                     }
@@ -218,6 +377,10 @@ export class FactoryGeneralSituationComponent implements OnInit {
                 });
             }
             if (queryParam.flag === '0') {
+                const newOriginObj = _.cloneDeep(this.originObject);
+                const newNormalObj = _.cloneDeep(this.normal);
+                Object.assign(newOriginObj, newNormalObj);
+                this.toolsObj = newOriginObj;
                 this.isDisabled = false;
             } else if (queryParam.flag === '1') {
                 this.isDisabled = true;

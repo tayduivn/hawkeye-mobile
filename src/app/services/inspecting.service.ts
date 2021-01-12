@@ -92,6 +92,15 @@ export class inspectingService {
             params,
         });
     }
+
+    // 工厂评估
+    // /factory/factory-inspect-evaluate
+    getAssessInfo(params): Observable<any> {
+        return this.http.get({
+            url: '/factory/factory-inspect-evaluate',
+            params,
+        });
+    }
 }
 export interface FactoryListQueryInfo {
     page?: number;

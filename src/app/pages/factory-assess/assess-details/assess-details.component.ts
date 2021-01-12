@@ -32,6 +32,7 @@ export class AssessDetailsComponent implements OnInit {
     };
     notFilled: any[] = [];
     factory_id: number;
+    flag: boolean = false;
     onSubmit() {
         this.notFilled = [];
 
@@ -58,6 +59,8 @@ export class AssessDetailsComponent implements OnInit {
             const newNormalObj = _.cloneDeep(this.normal);
             Object.assign(newOriginObj, newNormalObj);
             newOriginObj.factory_id = this.factory_id;
+            console.log(newOriginObj);
+
             this.showAlert(newOriginObj);
         }
     }
@@ -102,9 +105,20 @@ export class AssessDetailsComponent implements OnInit {
     }
     ngOnInit() {
         this.activatedRoute.queryParams.subscribe(queryParam => {
-            console.log(queryParam);
             this.factory_id = queryParam.id - 0;
+            console.log(queryParam);
             console.log(this.factory_id);
+            if (queryParam.item == '已评估') {
+                // 请求数据回显 且不可修改
+                this.inspecting.getAssessInfo({ factory_id: this.factory_id }).subscribe(res => {
+                    console.log(res);
+                    this.originObject.cooperative_will = res.data.cooperative_will;
+                    this.originObject.prospect_judge = res.data.prospect_judge;
+                    this.normal.replenish = res.data.replenish;
+                    this.flag = true;
+                });
+            } else {
+            }
         });
     }
 }

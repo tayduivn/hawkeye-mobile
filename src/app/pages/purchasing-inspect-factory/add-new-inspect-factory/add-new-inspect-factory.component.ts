@@ -8,6 +8,8 @@ import { PageEffectService } from 'src/app/services/page-effect.service';
 import { QueueComponent } from '../../implement-inspection/queue/queue.component';
 import { map, mergeAll, mergeMap, switchMap, switchMapTo } from 'rxjs/operators';
 import { from, Observable } from 'rxjs';
+import { IsSaveServiceService } from '../is-save-service.service';
+import { UserInfoService } from './user-info.service';
 
 @Component({
     selector: 'app-add-new-inspect-factory',
@@ -29,6 +31,8 @@ export class AddNewInspectFactoryComponent implements OnInit {
         private infoCtrl: EmitService,
         private es: PageEffectService,
         private router: Router,
+        private isSave: IsSaveServiceService,
+        private userInfo: UserInfoService,
     ) {}
     get flag() {
         return this._flag;
@@ -37,6 +41,7 @@ export class AddNewInspectFactoryComponent implements OnInit {
         this._flag = input;
     }
     ngOnInit() {
+        window.sessionStorage.setItem('back', 'undefined');
         this.getInitQueryParams();
         this.activatedRoute.url.subscribe(res => {
             this.activeIndex = window.sessionStorage.getItem('index')
@@ -48,7 +53,12 @@ export class AddNewInspectFactoryComponent implements OnInit {
         this.tab.canClick$.subscribe(res => {
             // 如果res时true则允许切换
             console.log('流');
-            this.flag = res;
+            console.log(res);
+            if (res.type == 'isSave') {
+                const index = window.sessionStorage.getItem('index');
+                this.isSave.isSave$.next(`${index}`);
+            }
+            this.flag = res.flag;
             if (this.flag) {
                 this.activeIndex = this.i;
                 window.sessionStorage.setItem('index', `${this.i}`);
@@ -70,6 +80,8 @@ export class AddNewInspectFactoryComponent implements OnInit {
                 this.factoryDetails = _.cloneDeep(JSON.parse(details));
                 this.factoryDetailsStr = details;
             } else {
+                window.sessionStorage.setItem('FACTORY_ID', 'undefined');
+                window.sessionStorage.setItem('FACTORY_ID', 'undefined');
                 //如果是新增页面进去的从本地存储获取考察人员的id和名字
                 const USER_INFO = window.sessionStorage.getItem('USER_INFO');
                 console.log(JSON.parse(USER_INFO));
@@ -84,6 +96,8 @@ export class AddNewInspectFactoryComponent implements OnInit {
         });
     }
     tabsItemClicked(i: number, url: string) {
+        const currentObj = _.cloneDeep(this.factoryDetails);
+        this.userInfo.userInfo$.next(currentObj);
         console.log('点击事件');
         this.i = i;
         this.router.navigate([url], {
@@ -99,5 +113,10 @@ export class AddNewInspectFactoryComponent implements OnInit {
     saveInformation() {
         const currentObj = _.cloneDeep(this.factoryDetails);
         this.infoCtrl.info$.next(currentObj);
+    }
+    // 返回外面的列表
+    backToMainList() {
+        console.log('返回事件触发了');
+        window.sessionStorage.setItem('back', 'isBACK');
     }
 }

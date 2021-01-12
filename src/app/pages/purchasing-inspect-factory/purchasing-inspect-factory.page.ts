@@ -26,9 +26,11 @@ export class PurchasingInspectFactoryPage implements OnInit {
     // 获取列表
     getList(params: FactoryListQueryInfo) {
         this.inspecting.getFactoryList(params).subscribe(res => {
+            console.log(res);
+
             if (res.status !== 1)
                 return this.es.showToast({
-                    message: '获取数据失败',
+                    message: res.message,
                     color: 'danger',
                     duration: 1500,
                 });
@@ -59,7 +61,15 @@ export class PurchasingInspectFactoryPage implements OnInit {
         );
     }
     // 跳转编辑页面，信息自动回填且可编辑
-    gotoCompile(id: number) {
+    gotoCompile(id: number, item: any) {
+        console.log(item);
+        if (item.hava_evaluate == '1') {
+            return this.es.showToast({
+                message: '工厂已评估，不可修改！',
+                color: 'danger',
+                duration: 1500,
+            });
+        }
         // 跳转编辑的时候携带一个特定的标志位  在另一个页面一加载的时候判断是否有这个标志位  有标志位那么就回填信息但是可以编辑
         this.getFactoryDetails(
             {

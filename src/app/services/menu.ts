@@ -71,6 +71,22 @@ const appPages: Array<menuItem> = [
         active: false,
     },
     {
+        title: '监装任务',
+        url: '/inspection-task',
+        type: 'link',
+        limit: 'inspection-task',
+        icon: 'list',
+        active: false,
+    },
+    {
+        title: '监装评价',
+        url: '/inspection-evaluate',
+        type: 'link',
+        limit: 'inspection-task',
+        icon: 'list',
+        active: false,
+    },
+    {
         title: '退出',
         type: 'btn',
         icon: 'exit',

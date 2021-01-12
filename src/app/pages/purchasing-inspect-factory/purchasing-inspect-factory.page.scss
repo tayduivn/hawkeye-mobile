@@ -77,4 +77,23 @@
         background-color: #ededed;
     }
 }
+.operation-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0 15px;
+}
+.operation-container-item {
+    cursor: pointer;
+    color: rgb(56, 128, 255);
+}
+.noHaveData {
+    font-size: 20px;
+    width: 100%;
+    text-align: center;
+    height: 30px;
+    line-height: 30px;
+    color: #ccc;
+    margin-top: 30px;
+}
 //ok

@@ -73,14 +73,14 @@
             <app-photo-mini [type]="'product_pic'" [apply_inspection]="item.apply_inspection_no"
               [photos]="DETAILS.product[i].hash_arr" *ngIf="flag==2||flag==1" [suoyin]="i" [flagStatus]="flag">
             </app-photo-mini>
-            <app-photo-mini [type]="'product_pic'" [apply_inspection]="item.apply_inspection_no" *ngIf="flag==0"
-              [suoyin]="i">
+            <app-photo-mini [photos]="DETAILS.product[i].hash_arr" [type]="'product_pic'"
+              [apply_inspection]="item.apply_inspection_no" *ngIf="flag==0" [suoyin]="i">
             </app-photo-mini>
             <app-video-mini [type]="'inspect_product_video'" [apply_inspection]="item.apply_inspection_no"
               [videos]="DETAILS.product[i].inspect_product_video" *ngIf="flag==2||flag==1" [flagStatus]="flag">
             </app-video-mini>
             <app-video-mini [type]="'inspect_product_video'" [apply_inspection]="item.apply_inspection_no"
-              *ngIf="flag==0">
+              *ngIf="flag==0" [videos]="DETAILS.product[i].inspect_product_video">
             </app-video-mini>
           </ion-col>
         </ion-row>
@@ -134,7 +134,7 @@
   </ion-card>
   <!-- 拟合作产品卡片视图区  end-->
   <!-- 当没有产品的时候显示这个卡片 -->
-  <ion-card mode="ios" *ngIf="flag!=0&&normal.products.length==0">
+  <ion-card mode="ios" *ngIf="normal.products.length==0">
     <ion-item class="card-header">
       <div class="add-wrap">
         <span class="red">暂无产品信息,点击新增 新增产品信息！！！</span>
@@ -144,7 +144,7 @@
   </ion-card>
 
 
-  <ion-card mode="ios" *ngIf="flag!=0&&normal.simulation_products.length==0">
+  <ion-card mode="ios" *ngIf="normal.simulation_products.length==0">
     <ion-item class="card-header">
       <div class="add-wrap">
         <span class="red">暂无拟合作产品信息,点击新增 新增拟合作产品信息！！！</span>

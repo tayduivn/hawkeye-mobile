@@ -2,10 +2,14 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PageEffectService } from 'src/app/services/page-effect.service';
 import _ from 'loadsh';
-import { takeWhile } from 'rxjs/operators';
+import { combineLatest, takeWhile } from 'rxjs/operators';
 import { inspectingService } from 'src/app/services/inspecting.service';
 import { EmitService } from '../emit.service';
 import { PhotoMiniComponent } from 'src/app/widget/photo-mini/photo-mini.component';
+import { IsSaveServiceService } from '../../is-save-service.service';
+import { from, Observable } from 'rxjs';
+// import { UserInfoService } from 'src/app/services/user-info.service';
+import { UserInfoService } from '../user-info.service';
 @Component({
     selector: 'app-factory-base-information',
     templateUrl: './factory-base-information.component.html',
@@ -60,15 +64,87 @@ export class FactoryBaseInformationComponent implements OnInit {
         private activatedRoute: ActivatedRoute,
         private infoCtrl: EmitService,
         private inspecting: inspectingService,
+        private isSave: IsSaveServiceService,
+        private userInfo: UserInfoService,
     ) {}
     ngOnInit() {
+        // 数据的回显
+
+        const infoChange$: Observable<any> = this.userInfo.userInfo$;
+        // pipe(takeWhile(() => !this.destroy))
+        infoChange$
+            .pipe(
+                combineLatest(this.isSave.isSave$),
+                takeWhile(() => !this.destroy),
+            )
+            .subscribe(res => {
+                // debugger;
+                console.log(res);
+                if (res[1] == '0') {
+                    this.inspectObj = res[0].name;
+                    console.log(this.inspectObj);
+                    // 此时是编辑的时候  编辑的时候需要传递的有工厂的id(只在这个页面是这个样子)
+                    if (this.flag == '2') {
+                        const newOriginObj = _.cloneDeep(this.originObject);
+                        const newNormalObj = _.cloneDeep(this.normal);
+                        Object.assign(newOriginObj, newNormalObj);
+                        newOriginObj.factory_id = (window.sessionStorage.getItem('FACTORY_ID') as any) - 0;
+                        console.log(newOriginObj.factory_id);
+                        newOriginObj.user_id = res[0].user_id - 0;
+                        newOriginObj.name = res[0].name;
+                        newOriginObj.add_time = res[0].add_time;
+                        this.saveInformation(newOriginObj);
+                    } else {
+                        // 此时不是编辑  不是编辑不传工厂id
+                        const newOriginObj = _.cloneDeep(this.originObject);
+                        const newNormalObj = _.cloneDeep(this.normal);
+                        Object.assign(newOriginObj, newNormalObj);
+                        window.sessionStorage.getItem('FACTORY_ID') == 'undefined'
+                            ? 0
+                            : (newOriginObj.factory_id = (window.sessionStorage.getItem('FACTORY_ID') as any) - 0);
+                        newOriginObj.user_id = res[0].user_id - 0;
+                        newOriginObj.name = res[0].name;
+                        newOriginObj.add_time = res[0].add_time;
+                        this.saveInformation(newOriginObj);
+                    }
+                }
+            });
         window.localStorage.setItem('flag', '未保存');
         this.getInitQueryParams();
+        console.log(this.flag);
+
+        if (this.flag == '0' && window.sessionStorage.getItem('FACTORY_ID') != 'undefined') {
+            console.log('新增的时候回显数据');
+            this.inspecting
+                .getFactoryXQ({ factory_id: (window.sessionStorage.getItem('FACTORY_ID') as any) - 0 })
+                .subscribe(res => {
+                    console.log(res);
+                    this.originObject.addresses = res.data.address_list;
+                    this.originObject.contacts = res.data.contacts;
+                    this.originObject.position = res.data.position;
+                    this.originObject.phone = res.data.phone;
+                    this.originObject.legaler = res.data.legaler;
+                    this.originObject.company_nature = res.data.company_nature;
+                    this.originObject.product_type = res.data.product_type;
+                    this.normal.create_time = res.data.create_time;
+                    this.normal.registered_capital = res.data.registered_capital;
+                    this.normal.annual_sales = res.data.annual_sales;
+                    // 回填后更新tools
+                    const newOriginObj = _.cloneDeep(this.originObject);
+                    const newNormalObj = _.cloneDeep(this.normal);
+                    Object.assign(newOriginObj, newNormalObj);
+                    this.toolsObj = newOriginObj;
+                    window.localStorage.setItem('flag', '已保存');
+                });
+        }
         this.infoCtrl.info$.pipe(takeWhile(() => !this.destroy)).subscribe(res => {
+            // debugger;
             console.log(res); //这里可以拿到头部的信息  那么拿到后在这里面调用保存的方法
             // user_id  user_name  add_time
             console.log(this.flag);
             this.inspectObj = res.name;
+            console.log(this.inspectObj);
+
             // 此时是编辑的时候  编辑的时候需要传递的有工厂的id(只在这个页面是这个样子)
             if (this.flag == '2') {
                 const newOriginObj = _.cloneDeep(this.originObject);
@@ -76,7 +152,6 @@ export class FactoryBaseInformationComponent implements OnInit {
                 Object.assign(newOriginObj, newNormalObj);
                 newOriginObj.factory_id = (window.sessionStorage.getItem('FACTORY_ID') as any) - 0;
                 console.log(newOriginObj.factory_id);
-
                 newOriginObj.user_id = res.user_id - 0;
                 newOriginObj.name = res.name;
                 newOriginObj.add_time = res.add_time;
@@ -249,6 +324,9 @@ export class FactoryBaseInformationComponent implements OnInit {
         const newOriginObj = _.cloneDeep(this.originObject);
         const newNormalObj = _.cloneDeep(this.normal);
         Object.assign(newOriginObj, newNormalObj);
+        console.log(newNormalObj);
+        console.log(this.toolsObj);
+
         if (this.isDisabled) {
             return true;
         } else {

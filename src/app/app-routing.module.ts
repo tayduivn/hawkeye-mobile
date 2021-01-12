@@ -65,6 +65,15 @@ const routes: Routes = [
             import('./pages/purchasing-inspect-factory/purchasing-inspect-factory.module').then(
                 m => m.PurchasingInspectFactoryPageModule,
             ),
+        canActivate: [LoginGuard],
+    },
+    {
+        path: '',
+        loadChildren: () =>
+            import('./pages/inspection-of-storage/inspection-of-storage.module').then(
+                m => m.InspectionOfStoragePageModule,
+            ),
+        canActivate: [LoginGuard],
     },
     {
         path: '',
@@ -73,13 +82,16 @@ const routes: Routes = [
     },
     {
         path: '',
-        loadChildren: () =>
-            import('./pages/factory-assess/factory-assess.module').then(m => m.FactoryAssessPageModule),
+        loadChildren: () => import('./pages/factory-assess/factory-assess.module').then(m => m.FactoryAssessPageModule),
     },
     {
         path: '**',
         redirectTo: 'welcome',
         pathMatch: 'full',
+    },
+    {
+        path: 'inspection-of-storage',
+        loadChildren: './pages/inspection-of-storage/inspection-of-storage.module#InspectionOfStoragePageModule',
     },
 ];
 

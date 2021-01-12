@@ -93,7 +93,7 @@ export class PhotoMiniComponent extends PhotographComponent {
                         if (this.type == 'product_pic') {
                             // 如果这个本地存储的suoyin有对应的值说明
                             console.log(this.factory_inspect_no);
-                            if (this.factory_inspect_no == undefined) {
+                            if (this.factory_inspect_no == undefined || this.factory_inspect_no == 'undefined') {
                                 // 新增的产品，从本地读取apply_inspection_no 怎么判断是新增的产品  只要新增的产品才没有factory_inspect_no值
                                 params.apply_inspection_no = window.sessionStorage.getItem(`${this.suoyin}`);
                             } else {
@@ -162,7 +162,7 @@ export class PhotoMiniComponent extends PhotographComponent {
         params.append('factory_id', window.sessionStorage.getItem('FACTORY_ID'));
         if (this.type == 'product_pic') {
             // 传递商品的时候  factory_inspect_no存在的话说明是已经存在的商品 直接拿到id提交即可  当没有的话是新增的产品 不传id
-            if (this.factory_inspect_no == undefined) {
+            if (this.factory_inspect_no == undefined || this.factory_inspect_no == 'undefined') {
                 // 啥也不做（不传）
                 console.log(1);
             } else {
@@ -217,7 +217,10 @@ export class PhotoMiniComponent extends PhotographComponent {
                         this._photos.push(environment.usFileUrl + data.data[0].path.replace('storage/', ''));
                         // 上传成功把拿到的pic的id存起来   这里拿到了唯一的标识
 
-                        if (data.data[0].apply_inspection_no != undefined) {
+                        if (
+                            data.data[0].apply_inspection_no != undefined ||
+                            data.data[0].apply_inspection_no != 'undefined'
+                        ) {
                             // 存在的时候说明是新增的第一次上传  就把新增的第一次上传获得的id存起来以供上传产品信息的时候使用
                             window.sessionStorage.setItem(`${this.suoyin}`, `${data.data[0].apply_inspection_no}`);
                         }
@@ -234,12 +237,21 @@ export class PhotoMiniComponent extends PhotographComponent {
             });
         }
 
-        const getImage$ = from(this.camera.getPicture(this.options)),
-            params = {};
+        const getImage$ = from(this.camera.getPicture(this.options));
         getImage$
             .pipe(
                 takeWhile(str => str && str.length),
                 tap(res => this.ec.showToast({ message: '拍摄成功', color: 'success' })),
+                mergeMap((filePath: string) => {
+                    return from(
+                        this.file //将文件地址读取为base64
+                            .readAsDataURL(
+                                filePath.substr(0, filePath.lastIndexOf('/') + 1),
+                                filePath.substr(filePath.lastIndexOf('/') + 1),
+                            ),
+                    );
+                }),
+                mergeMap(base64 => this.doWorkerGetBlob(base64)),
             )
             .subscribe((res: File) => {
                 // 这个地方拍摄成功(拍摄成功就要让标志位解开)
@@ -252,7 +264,7 @@ export class PhotoMiniComponent extends PhotographComponent {
                 params.append('factory_id', window.sessionStorage.getItem('FACTORY_ID'));
                 if (this.type == 'product_pic') {
                     // 传递商品的时候  factory_inspect_no存在的话说明是已经存在的商品 直接拿到id提交即可  当没有的话是新增的产品 不传id
-                    if (this.factory_inspect_no == undefined) {
+                    if (this.factory_inspect_no == undefined || this.factory_inspect_no == 'undefined') {
                         // 啥也不做（不传）
                         console.log(1);
                     } else {
@@ -264,6 +276,10 @@ export class PhotoMiniComponent extends PhotographComponent {
                 }
                 params.append('type', this.type);
                 params.append('file', res);
+                console.log(params.get('type'));
+                console.log(params.get('file'));
+                console.log(params.get('factory_inspect_no'));
+                console.log(params.get('factory_id'));
                 this.request
                     .request({
                         url: `${environment.apiUrl}/factory/add_factory_inspect_img`,
@@ -288,7 +304,10 @@ export class PhotoMiniComponent extends PhotographComponent {
                                 duration: 1500,
                             });
                             this._photos.push(environment.usFileUrl + data.data[0].path.replace('storage/', ''));
-                            if (data.data[0].apply_inspection_no != undefined) {
+                            if (
+                                data.data[0].apply_inspection_no != undefined ||
+                                data.data[0].apply_inspection_no != 'undefined'
+                            ) {
                                 // 存在的时候说明是新增的第一次上传  就把新增的第一次上传获得的id存起来以供上传产品信息的时候使用
                                 window.sessionStorage.setItem(`${this.suoyin}`, `${data.data[0].apply_inspection_no}`);
                             }

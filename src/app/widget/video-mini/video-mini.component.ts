@@ -31,7 +31,7 @@ export class VideoMiniComponent implements OnInit {
             console.log(1);
             this.factory_inspect_no = input;
             console.log(this.factory_inspect_no);
-            if (this.factory_inspect_no == undefined) {
+            if (this.factory_inspect_no == undefined || this.factory_inspect_no == 'undefined') {
                 this.flagChoose = false;
             } else {
                 this.flagChoose = true;
@@ -95,9 +95,11 @@ export class VideoMiniComponent implements OnInit {
     }
     // 拍摄视频
     videotape() {
+        console.log(this.flagChoose);
+
         if (!this.flagChoose) {
             return this.ec.showToast({
-                message: '请先保存工厂信息再上传视频！',
+                message: '请先保存产品信息再上传视频！',
                 color: 'danger',
                 duration: 1500,
             });
@@ -283,13 +285,17 @@ export class VideoMiniComponent implements OnInit {
             this.type == 'inspect_showroom_video'
         ) {
             console.log('工厂外观照片或生产车间照片或样品间图片');
-            this.factory_id = (window.sessionStorage.getItem('FACTORY_ID') as any) - 0;
+            this.factory_id = window.sessionStorage.getItem('FACTORY_ID');
             this.factory_inspect_no = window.sessionStorage.getItem('inspect_no');
-        } else {
-            this.factory_id = (window.sessionStorage.getItem('FACTORY_ID') as any) - 0;
+            console.log(this.factory_id);
             console.log(this.factory_inspect_no);
+        } else {
+            this.factory_id = window.sessionStorage.getItem('FACTORY_ID');
+            console.log(this.factory_inspect_no);
+            console.log(this.factory_id);
         }
-        if (this.factory_inspect_no == undefined) {
+
+        if (this.factory_inspect_no == 'undefined' || this.factory_inspect_no == undefined) {
             this.flagChoose = false;
         } else {
             this.flagChoose = true;

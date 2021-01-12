@@ -5,7 +5,6 @@
     </ion-buttons>
     <ion-title>评估详情</ion-title>
     <ion-buttons slot="end">
-      <ion-button>上传进度</ion-button>
       <ion-back-button text="返回" color="white" mode="md"></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
@@ -22,7 +21,8 @@
         </ion-row>
         <ion-row class="title">
           <ion-col align-self-center [size]="12">
-            <textarea rows="4" class="textArea" [(ngModel)]="originObject.cooperative_will" ngDefaultControl></textarea>
+            <textarea rows="4" class="textArea" [(ngModel)]="originObject.cooperative_will" ngDefaultControl
+              [disabled]="flag"></textarea>
           </ion-col>
         </ion-row>
 
@@ -33,23 +33,25 @@
         </ion-row>
         <ion-row class="title">
           <ion-col align-self-center [size]="12">
-            <textarea rows="4" class="textArea" [(ngModel)]="originObject.prospect_judge" ngDefaultControl></textarea>
+            <textarea rows="4" class="textArea" [(ngModel)]="originObject.prospect_judge" ngDefaultControl
+              [disabled]="flag"></textarea>
           </ion-col>
         </ion-row>
 
         <ion-row class="title">
           <ion-col align-self-center [size]="12">
-            <span class="factory-text" [(ngModel)]="normal.replenish" ngDefaultControl>建议补充</span> :
+            <span class="factory-text">建议补充</span> :
           </ion-col>
         </ion-row>
         <ion-row class="title">
           <ion-col align-self-center [size]="12">
-            <textarea rows="4" class="textArea"></textarea>
+            <textarea rows="4" class="textArea" [disabled]="flag" [(ngModel)]="normal.replenish"
+              ngDefaultControl></textarea>
           </ion-col>
         </ion-row>
       </ion-grid>
     </ion-card-content>
 
   </ion-card>
-  <ion-button class="nextStepBtn" size="small" (click)='onSubmit()'>提 交</ion-button>
+  <ion-button class="nextStepBtn" size="small" (click)='onSubmit()' [disabled]="flag">提 交</ion-button>
 </ion-content>

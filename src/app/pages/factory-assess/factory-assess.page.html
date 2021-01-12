@@ -4,7 +4,7 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>工厂考察</ion-title>
+    <ion-title>工厂评估</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -47,7 +47,7 @@
         <ion-col align-self-center [size]="2" class="multiple-item">
           <div>
             <ion-button fill="clear" size="medium" [color]="item.hava_evaluate=='1'?'success':'danger'" class="text-btn"
-              (click)="btnItemClicked('已评估')" *ngIf="item.hava_evaluate=='1'">已评估
+              (click)="btnItemClicked('已评估',item.id)" *ngIf="item.hava_evaluate=='1'">已评估
             </ion-button>
             <ion-button fill="clear" size="medium" [color]="item.hava_evaluate=='0'?'danger':'success'" class="text-btn"
               (click)="btnItemClicked('待评估',item.id)" *ngIf="item.hava_evaluate=='0'">待评估

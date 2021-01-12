@@ -17,14 +17,13 @@ export class FactoryAssessPage implements OnInit {
     ) {}
     btnItemClicked(item: any, id?: number) {
         console.log(id);
-        if (item === '待评估') {
-            // 跳转路由  传入当前的id等数据在另一边进行提交  注入路由服务
-            this.router.navigate(['/assess-details'], {
-                queryParams: {
-                    id: id,
-                },
-            });
-        }
+        // 跳转路由  传入当前的id等数据在另一边进行提交  注入路由服务
+        this.router.navigate(['/assess-details'], {
+            queryParams: {
+                id: id,
+                item: item,
+            },
+        });
     }
 
     queryInfo: any = {

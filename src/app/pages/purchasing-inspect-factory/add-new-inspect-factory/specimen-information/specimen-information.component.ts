@@ -1,11 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import _ from 'loadsh';
-import { takeWhile } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { combineLatest, takeWhile } from 'rxjs/operators';
 import { inspectingService } from 'src/app/services/inspecting.service';
 import { PageEffectService } from 'src/app/services/page-effect.service';
+import { UserInfoService } from '../user-info.service';
 import { environment } from 'src/environments/environment';
 import { EmitService } from '../emit.service';
+import { IsSaveServiceService } from '../../is-save-service.service';
+
 @Component({
     selector: 'app-specimen-information',
     templateUrl: './specimen-information.component.html',
@@ -17,6 +21,8 @@ export class SpecimenInformationComponent implements OnInit {
         private es: PageEffectService,
         private infoCtrl: EmitService,
         private inspecting: inspectingService,
+        private userInfo: UserInfoService,
+        private isSave: IsSaveServiceService,
     ) {}
     imgOrigin = environment.usFileUrl;
     isDisabled: boolean;
@@ -37,7 +43,89 @@ export class SpecimenInformationComponent implements OnInit {
     showroom_video: any[] = [];
     flag: any;
     ngOnInit() {
+        const infoChange$: Observable<any> = this.userInfo.userInfo$;
+        // pipe(takeWhile(() => !this.destroy))
+        infoChange$
+            .pipe(
+                combineLatest(this.isSave.isSave$),
+                takeWhile(() => !this.destroy),
+            )
+            .subscribe(res => {
+                // debugger;
+                console.log(res);
+                if (res[1] == '3') {
+                    // 此时是编辑的时候  编辑的时候需要传递的有工厂的id(只在这个页面是这个样子)
+                    //这里可以拿到头部的信息  那么拿到后在这里面调用保存的方法
+                    if (this.flag == '2') {
+                        // 如果是编辑的话传递的工厂id应该就是点击编辑传递进来的详情的id
+                        const newOriginObj = _.cloneDeep(this.originObject);
+                        const newNormalObj = _.cloneDeep(this.normal);
+                        Object.assign(newOriginObj, newNormalObj);
+                        newOriginObj.factory_id = this.DETAILS.id;
+                        this.saveInformation(newOriginObj);
+                        console.log(newOriginObj);
+                    } else {
+                        const newOriginObj = _.cloneDeep(this.originObject);
+                        const newNormalObj = _.cloneDeep(this.normal);
+                        Object.assign(newOriginObj, newNormalObj);
+                        // 如果不是编辑的话传递的id就应该是第一个新增页面保存的id
+                        let id;
+                        if (window.sessionStorage.getItem('FACTORY_ID') != 'undefined') {
+                            id = (window.sessionStorage.getItem('FACTORY_ID') as any) - 0;
+                            newOriginObj.factory_id = id;
+                            this.saveInformation(newOriginObj);
+                            console.log(newOriginObj);
+                        } else {
+                            this.initData();
+                            return this.es.showToast({
+                                message: '请先添加工厂基本信息',
+                                color: 'danger',
+                                duration: 1500,
+                            });
+                        }
+                    }
+                }
+            });
+
         this.getInitQueryParams();
+
+        // 回填数据
+        if (this.flag == '0' && window.sessionStorage.getItem('FACTORY_ID') != 'undefined') {
+            console.log('新增的时候回显数据');
+            this.inspecting
+                .getFactoryXQ({ factory_id: (window.sessionStorage.getItem('FACTORY_ID') as any) - 0 })
+                .subscribe(res => {
+                    if (res.data.rework_sample_pic && res.data.rework_sample_pic.length != 0) {
+                        res.data.rework_sample_pic.forEach(item => {
+                            this.sample_pic.push(this.imgOrigin + item.replace('storage/', ''));
+                        });
+                    } else {
+                        this.sample_pic = [];
+                    }
+                    if (res.data.inspect_showroom_video && res.data.inspect_showroom_video.length != 0) {
+                        res.data.inspect_showroom_video.forEach(item => {
+                            this.showroom_video.push(item);
+                        });
+                    } else {
+                        this.showroom_video = [];
+                    }
+
+                    this.normal.have_sample = res.data.sample.have_sample - 0;
+                    this.normal.will_supply = res.data.sample.will_supply - 0;
+                    this.normal.amount = res.data.sample.amount;
+                    this.normal.readiness_time = res.data.sample.readiness_time;
+                    this.normal.payment = res.data.sample.payment;
+
+                    // 编辑刚进来设置为已经保存
+                    window.localStorage.setItem('flag', '已保存');
+                    const newOriginObj = _.cloneDeep(this.originObject);
+                    const newNormalObj = _.cloneDeep(this.normal);
+                    Object.assign(newOriginObj, newNormalObj);
+                    this.toolsObj = newOriginObj;
+                    console.log(this.toolsObj);
+                });
+        }
+
         this.infoCtrl.info$.pipe(takeWhile(() => !this.destroy)).subscribe(res => {
             //这里可以拿到头部的信息  那么拿到后在这里面调用保存的方法
             if (this.flag == '2') {
@@ -126,6 +214,10 @@ export class SpecimenInformationComponent implements OnInit {
                 });
             }
             if (queryParam.flag === '0') {
+                const newOriginObj = _.cloneDeep(this.originObject);
+                const newNormalObj = _.cloneDeep(this.normal);
+                Object.assign(newOriginObj, newNormalObj);
+                this.toolsObj = newOriginObj;
                 this.isDisabled = false;
             } else if (queryParam.flag === '1') {
                 this.isDisabled = true;
