@@ -214,7 +214,7 @@ export class PhotoMiniComponent extends PhotographComponent {
                             color: 'success',
                             duration: 1500,
                         });
-                        this._photos.push(environment.usFileUrl + data.data[0].path);
+                        this._photos.push(data.data[0].path);
                         // 上传成功把拿到的pic的id存起来   这里拿到了唯一的标识
 
                         if (
@@ -304,7 +304,7 @@ export class PhotoMiniComponent extends PhotographComponent {
                                 color: 'success',
                                 duration: 1500,
                             });
-                            this._photos.push(environment.usFileUrl + data.data[0].path);
+                            this._photos.push(data.data[0].path);
                             if (
                                 data.data[0].apply_inspection_no != undefined ||
                                 data.data[0].apply_inspection_no != 'undefined'

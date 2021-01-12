@@ -4,10 +4,10 @@
 
 export const environment = {
     production: false,
-    apiUrl: 'http://192.168.3.18/api/v1',
-    fileUrlPath: 'http://keyi.xdrlgroup.com',
-    usFileUrl: 'http://192.168.3.18/',
-    origin: 'http://192.168.3.18',
+    // apiUrl: 'http://192.168.3.18/api/v1',
+    // fileUrlPath: 'http://keyi.xdrlgroup.com',
+    // usFileUrl: 'http://192.168.3.18/',
+    // origin: 'http://192.168.3.18',
     // apiUrl: 'http://192.168.1.103/api/v1',
     // fileUrlPath: 'http://keyi.xdrlgroup.com',
     // usFileUrl: 'http://192.168.1.103/',
@@ -18,10 +18,10 @@ export const environment = {
     // usFileUrl: 'http://121.196.179.68/',
     // origin:'http://121.196.179.68'
 
-    // apiUrl: 'http://121.196.179.68:8081/api/v1',
-    // fileUrlPath: 'http://keyi.xdrlgroup.com',
-    // usFileUrl: 'http://121.196.179.68:8081/',
-    // origin: 'http://121.196.179.68:8081',
+    apiUrl: 'http://121.196.179.68:8081/api/v1',
+    fileUrlPath: 'http://keyi.xdrlgroup.com',
+    usFileUrl: 'http://121.196.179.68:8081/',
+    origin: 'http://121.196.179.68:8081',
 };
 
 /*
