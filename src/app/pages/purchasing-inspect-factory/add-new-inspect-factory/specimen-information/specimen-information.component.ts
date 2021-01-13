@@ -45,6 +45,8 @@ export class SpecimenInformationComponent implements OnInit {
     showroom_video: any[] = [];
     flag: any;
     jinyong: boolean;
+    factory_id: any;
+    inspect_no: any;
     ngOnInit() {
         if (window.sessionStorage.getItem('FACTORY_ID') != 'undefined') {
             this.jinyong = false;
@@ -55,6 +57,8 @@ export class SpecimenInformationComponent implements OnInit {
             if (res != 'undefined') {
                 // 不等于undefined的时候说明有  有的话就不禁用
                 this.jinyong = false;
+                this.factory_id = res.factory_id;
+                this.inspect_no = res.inspect_no;
             } else {
                 this.jinyong = true;
             }

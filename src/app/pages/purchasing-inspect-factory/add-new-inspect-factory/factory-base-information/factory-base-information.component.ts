@@ -262,7 +262,10 @@ export class FactoryBaseInformationComponent implements OnInit {
                 if (res.data && res.data.factory_id) {
                     window.sessionStorage.setItem('FACTORY_ID', res.data.factory_id);
                     window.sessionStorage.setItem('inspect_no', res.data.factory_inspect_no);
-                    this.isDis.isDisabled$.next(res.data.factory_id);
+                    this.isDis.isDisabled$.next({
+                        factory_id: res.data.factory_id,
+                        inspect_no: res.data.factory_inspect_no,
+                    });
                 } else {
                     this.isDis.isDisabled$.next('undefined');
                 }

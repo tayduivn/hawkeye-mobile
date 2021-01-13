@@ -214,7 +214,7 @@
           <app-photo-mini [type]="'facade_pic'" [photos]="facadePic" [flagStatus]="flag" [jinyong]="jinyong">
           </app-photo-mini>
           <app-video-mini [type]="'inspect_facade_video'" [videos]="facade_video" [flagStatus]="flag"
-            [jinyong]="jinyong"></app-video-mini>
+            [jinyong]="jinyong" [factory_i]="factory_id" [inspect_no]="inspect_no"></app-video-mini>
         </ion-col>
       </ion-row>
 
@@ -227,7 +227,8 @@
         <ion-col align-self-center [size]="3">
           <app-photo-mini [type]="'plant_pic'" [photos]="plantPic" [flagStatus]="flag" [jinyong]="jinyong">
           </app-photo-mini>
-          <app-video-mini [type]="'inspect_plant_video'" [videos]="plant_video" [flagStatus]="flag" [jinyong]="jinyong">
+          <app-video-mini [type]="'inspect_plant_video'" [videos]="plant_video" [flagStatus]="flag" [jinyong]="jinyong"
+            [factory_i]="factory_id" [inspect_no]="inspect_no">
           </app-video-mini>
         </ion-col>
       </ion-row>

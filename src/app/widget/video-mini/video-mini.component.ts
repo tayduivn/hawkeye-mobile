@@ -58,6 +58,15 @@ export class VideoMiniComponent implements OnInit {
             this.flagIsStatus = input;
         }
     }
+
+    @Input() set factory_i(input: any) {
+        this.factory_id = input;
+        console.log(this.factory_id);
+    }
+    @Input() set inspect_no(input: any) {
+        this.factory_inspect_no = input;
+        console.log(this.factory_inspect_no);
+    }
     // 回流的数组
     _up_data: any[] = [];
     flagIsStatus: any;
