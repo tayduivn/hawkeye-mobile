@@ -55,7 +55,9 @@
           </div>
         </ion-col>
       </ion-row>
+      <div *ngIf="!factoryAccessList" class="noHaveData">暂无数据~</div>
     </ion-grid>
+
   </ion-card>
   <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
     <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="正在加载"> </ion-infinite-scroll-content>

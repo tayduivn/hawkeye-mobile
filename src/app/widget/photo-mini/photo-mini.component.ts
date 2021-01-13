@@ -46,22 +46,34 @@ export class PhotoMiniComponent extends PhotographComponent {
 
     _photos: string[];
     metaPhotos: string[];
-    flag: boolean;
+    flag: boolean = true;
     flagIsStatus: any;
     @Input() set photos(input: string[]) {
         if (!!input) this._photos = input;
     }
     @Input() set apply_inspection(input: string[]) {
         if (!!input) {
-            console.log(1);
+            console.log(input);
             this.factory_inspect_no = input;
-            console.log(this.factory_inspect_no);
+            if (this.factory_inspect_no == undefined || this.factory_inspect_no == 'undefined') {
+                console.log(true);
+
+                this.flag = true;
+            } else {
+                this.flag = false;
+            }
         }
     }
     @Input() set flagStatus(input: any) {
         if (!!input) {
             this.flagIsStatus = input;
         }
+    }
+    @Input() set jinyong(input: any) {
+        this.flag = input;
+        console.log(input);
+
+        console.log(this.flag);
     }
     @Input() factory_id: string = '';
     @Input() type: any;
@@ -92,7 +104,7 @@ export class PhotoMiniComponent extends PhotographComponent {
                         };
                         if (this.type == 'product_pic') {
                             // 如果这个本地存储的suoyin有对应的值说明
-                            console.log(this.factory_inspect_no);
+                            // console.log(this.factory_inspect_no);
                             if (this.factory_inspect_no == undefined || this.factory_inspect_no == 'undefined') {
                                 // 新增的产品，从本地读取apply_inspection_no 怎么判断是新增的产品  只要新增的产品才没有factory_inspect_no值
                                 params.apply_inspection_no = window.sessionStorage.getItem(`${this.suoyin}`);
@@ -103,7 +115,7 @@ export class PhotoMiniComponent extends PhotographComponent {
                             params.apply_inspection_no = window.sessionStorage.getItem('inspect_no');
                         }
                         this.inspecting.deletePic(params).subscribe(res => {
-                            console.log(res);
+                            // console.log(res);
                             if (res.status != 1)
                                 return this.ec.showToast({
                                     message: '删除图片失败',
@@ -133,18 +145,17 @@ export class PhotoMiniComponent extends PhotographComponent {
             ],
         });
     }
+
     ngOnInit() {
-        console.log(1);
-
-        console.log(this.flagIsStatus);
-
-        if (
-            window.sessionStorage.getItem('FACTORY_ID') != 'undefined' &&
-            window.sessionStorage.getItem('inspect_no') != 'undefined'
-        ) {
+        if (window.sessionStorage.getItem('FACTORY_ID') != 'undefined') {
             this.flag = false;
-        } else {
-            this.flag = true;
+        }
+        if (this.type == 'product_pic') {
+            if (this.factory_inspect_no == 'undefined' || this.factory_inspect_no == undefined) {
+                this.flag = true;
+            } else {
+                this.flag = false;
+            }
         }
     }
     ngOnDestroy(): void {
@@ -164,7 +175,7 @@ export class PhotoMiniComponent extends PhotographComponent {
             // 传递商品的时候  factory_inspect_no存在的话说明是已经存在的商品 直接拿到id提交即可  当没有的话是新增的产品 不传id
             if (this.factory_inspect_no == undefined || this.factory_inspect_no == 'undefined') {
                 // 啥也不做（不传）
-                console.log(1);
+                // console.log(1);
             } else {
                 // 第二至第n次上传传入当前请求回来的factory_inspect_no
                 params.append('factory_inspect_no', this.factory_inspect_no);
@@ -177,10 +188,10 @@ export class PhotoMiniComponent extends PhotographComponent {
         Array.prototype.map.call(e.target.files, (file: File) => {
             params.append('file', file);
             // 走接口
-            console.log('factory_id', params.get('factory_id'));
-            console.log('factory_inspect_no', params.get('factory_inspect_no'));
-            console.log('type', params.get('type'));
-            console.log('file', params.get('file'));
+            // console.log('factory_id', params.get('factory_id'));
+            // console.log('factory_inspect_no', params.get('factory_inspect_no'));
+            // console.log('type', params.get('type'));
+            // console.log('file', params.get('file'));
 
             this.request
                 .request({
@@ -191,7 +202,7 @@ export class PhotoMiniComponent extends PhotographComponent {
                     },
                 })
                 .then(res => {
-                    console.log(res);
+                    // console.log(res);
 
                     // console.log(JSON.parse(res.data));
                     const data = JSON.parse(res.data);
@@ -229,9 +240,17 @@ export class PhotoMiniComponent extends PhotographComponent {
         });
     }
     graph() {
-        if (this.flag) {
+        console.log(this.flag);
+
+        if (this.flag || this.flag == undefined) {
+            let str = '';
+            if (window.sessionStorage.getItem('index') == '1' || window.sessionStorage.getItem('index') == '3') {
+                str = '请先保存工厂基本信息再上传图片!';
+            } else if (window.sessionStorage.getItem('index') == '2') {
+                str = '请先保存产品信息再上传图片！';
+            }
             return this.ec.showToast({
-                message: '请先保存工厂基本信息再上传图片',
+                message: str,
                 color: 'danger',
                 duration: 1500,
             });
@@ -267,7 +286,7 @@ export class PhotoMiniComponent extends PhotographComponent {
                     // 传递商品的时候  factory_inspect_no存在的话说明是已经存在的商品 直接拿到id提交即可  当没有的话是新增的产品 不传id
                     if (this.factory_inspect_no == undefined || this.factory_inspect_no == 'undefined') {
                         // 啥也不做（不传）
-                        console.log(1);
+                        // console.log(1);
                     } else {
                         // 第二至第n次上传传入当前请求回来的factory_inspect_no
                         params.append('factory_inspect_no', this.factory_inspect_no);
@@ -277,10 +296,6 @@ export class PhotoMiniComponent extends PhotographComponent {
                 }
                 params.append('type', this.type);
                 params.append('file', res.data);
-                console.log(params.get('type'));
-                console.log(params.get('file'));
-                console.log(params.get('factory_inspect_no'));
-                console.log(params.get('factory_id'));
                 this.request
                     .request({
                         url: `${environment.apiUrl}/factory/add_factory_inspect_img`,

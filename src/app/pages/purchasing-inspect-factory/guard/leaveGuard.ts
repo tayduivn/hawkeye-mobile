@@ -23,7 +23,6 @@ export class LeaveGuard1 implements CanDeactivate<FactoryBaseInformationComponen
         const isback = window.sessionStorage.getItem('back');
         if (isback == 'isBACK') {
             console.log('点击返回切换');
-
             return new Promise(resolve => {
                 if (status) {
                     resolve(true);

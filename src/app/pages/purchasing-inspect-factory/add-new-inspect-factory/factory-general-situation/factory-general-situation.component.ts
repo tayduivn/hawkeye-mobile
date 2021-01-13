@@ -9,6 +9,7 @@ import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
 import { UserInfoService } from '../user-info.service';
 import { IsSaveServiceService } from '../../is-save-service.service';
+import { IsDisabledService } from '../factory-base-information/is-disabled.service';
 @Component({
     selector: 'app-factory-general-situation',
     templateUrl: './factory-general-situation.component.html',
@@ -22,6 +23,7 @@ export class FactoryGeneralSituationComponent implements OnInit {
         private infoCtrl: EmitService,
         private userInfo: UserInfoService,
         private isSave: IsSaveServiceService,
+        private isDisable: IsDisabledService,
     ) {}
     imgOrigin = environment.usFileUrl;
     isDisabled: boolean;
@@ -72,21 +74,30 @@ export class FactoryGeneralSituationComponent implements OnInit {
     facade_video: any[] = [];
     // 生产车间视频
     plant_video: any[] = [];
-    ngAfterViewInit(): void {
-        //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
-        //Add 'implements AfterViewInit' to the class.
-    }
+    jinyong: boolean;
     ngOnInit() {
+        if (window.sessionStorage.getItem('FACTORY_ID') != 'undefined') {
+            this.jinyong = false;
+        } else {
+            this.jinyong = true;
+        }
+        this.isDisable.isDisabled$.pipe(takeWhile(() => !this.destroy)).subscribe(res => {
+            if (res != 'undefined') {
+                // 不等于undefined的时候说明有  有的话就不禁用
+                this.jinyong = false;
+            } else {
+                this.jinyong = true;
+            }
+        });
+
+        console.log('组件初始化了');
         const infoChange$: Observable<any> = this.userInfo.userInfo$;
-        // pipe(takeWhile(() => !this.destroy))
         infoChange$
             .pipe(
                 combineLatest(this.isSave.isSave$),
                 takeWhile(() => !this.destroy),
             )
             .subscribe(res => {
-                // debugger;
-                console.log(res);
                 if (res[1] == '1') {
                     if (this.flag == '2') {
                         // 如果是编辑的话传递的工厂id应该就是点击编辑传递进来的详情的id
@@ -96,7 +107,7 @@ export class FactoryGeneralSituationComponent implements OnInit {
                         newOriginObj.factory_id = this.DETAILS.id;
                         // console.log(this.DETAILS.id);
                         this.saveInformation(newOriginObj);
-                        console.log(newOriginObj);
+                        // console.log(newOriginObj);
                     } else {
                         const newOriginObj = _.cloneDeep(this.originObject);
                         const newNormalObj = _.cloneDeep(this.normal);
@@ -107,7 +118,7 @@ export class FactoryGeneralSituationComponent implements OnInit {
                             id = (window.sessionStorage.getItem('FACTORY_ID') as any) - 0;
                             newOriginObj.factory_id = id;
                             this.saveInformation(newOriginObj);
-                            console.log(newOriginObj);
+                            // console.log(newOriginObj);
                         } else {
                             this.originObject = {
                                 acreage: '',
@@ -142,11 +153,11 @@ export class FactoryGeneralSituationComponent implements OnInit {
 
         // 回填数据
         if (this.flag == '0' && window.sessionStorage.getItem('FACTORY_ID') != 'undefined') {
-            console.log('新增的时候回显数据');
+            // console.log('新增的时候回显数据');
             this.inspecting
                 .getFactoryXQ({ factory_id: (window.sessionStorage.getItem('FACTORY_ID') as any) - 0 })
                 .subscribe(res => {
-                    console.log(res);
+                    // console.log(res);
 
                     this.plantPic = [];
                     this.business_license_pic = [];
@@ -178,9 +189,9 @@ export class FactoryGeneralSituationComponent implements OnInit {
                     } else {
                         this.facadePic = [];
                     }
-                    console.log(res.data);
+                    // console.log(res.data);
                     // 工厂外观视频
-                    console.log(res.data.inspect_facade_video);
+                    // console.log(res.data.inspect_facade_video);
 
                     if (res.data.inspect_facade_video && res.data.inspect_facade_video.length != 0) {
                         window.sessionStorage.setItem('facade_picFalg', '1');
@@ -238,7 +249,7 @@ export class FactoryGeneralSituationComponent implements OnInit {
                 newOriginObj.factory_id = this.DETAILS.id;
                 // console.log(this.DETAILS.id);
                 this.saveInformation(newOriginObj);
-                console.log(newOriginObj);
+                // console.log(newOriginObj);
             } else {
                 const newOriginObj = _.cloneDeep(this.originObject);
                 const newNormalObj = _.cloneDeep(this.normal);
@@ -249,7 +260,7 @@ export class FactoryGeneralSituationComponent implements OnInit {
                     id = (window.sessionStorage.getItem('FACTORY_ID') as any) - 0;
                     newOriginObj.factory_id = id;
                     this.saveInformation(newOriginObj);
-                    console.log(newOriginObj);
+                    // console.log(newOriginObj);
                 } else {
                     this.originObject = {
                         acreage: '',
@@ -289,7 +300,7 @@ export class FactoryGeneralSituationComponent implements OnInit {
             if (details) {
                 // 把传递进来的详情数据存一份
                 this.DETAILS = JSON.parse(details);
-                console.log(this.DETAILS);
+                // console.log(this.DETAILS);
                 this.inspecting.getFactoryXQ({ factory_id: this.DETAILS.id }).subscribe(res => {
                     this.plantPic = [];
                     this.business_license_pic = [];
@@ -321,9 +332,9 @@ export class FactoryGeneralSituationComponent implements OnInit {
                     } else {
                         this.facadePic = [];
                     }
-                    console.log(res.data);
+                    // console.log(res.data);
                     // 工厂外观视频
-                    console.log(res.data.inspect_facade_video);
+                    // console.log(res.data.inspect_facade_video);
 
                     if (res.data.inspect_facade_video && res.data.inspect_facade_video.length != 0) {
                         window.sessionStorage.setItem('facade_picFalg', '1');
@@ -367,16 +378,16 @@ export class FactoryGeneralSituationComponent implements OnInit {
                         window.localStorage.setItem('flag', '已保存');
                         const newOriginObj = _.cloneDeep(this.originObject);
                         const newNormalObj = _.cloneDeep(this.normal);
-                        console.log(newOriginObj);
-                        console.log(newNormalObj);
+                        // console.log(newOriginObj);
+                        // console.log(newNormalObj);
 
                         Object.assign(newOriginObj, newNormalObj);
                         this.toolsObj = newOriginObj;
                     }
-                    console.log(this.plant_video);
-                    console.log(this.facade_video);
-                    console.log(this.facadePic);
-                    console.log(this.plantPic);
+                    // console.log(this.plant_video);
+                    // console.log(this.facade_video);
+                    // console.log(this.facadePic);
+                    // console.log(this.plantPic);
                 });
             }
             if (queryParam.flag === '0') {
@@ -401,8 +412,8 @@ export class FactoryGeneralSituationComponent implements OnInit {
                 this.notFilled.push(key);
             }
         }
-        console.log(this.originObject.third_party);
-        console.log(this.notFilled);
+        // console.log(this.originObject.third_party);
+        // console.log(this.notFilled);
         if (this.originObject.third_party === 0 && this.notFilled.indexOf('third_party') != -1) {
             let index = this.notFilled.indexOf('third_party');
             this.notFilled.splice(index, 1);
@@ -436,7 +447,7 @@ export class FactoryGeneralSituationComponent implements OnInit {
             // 先合并传递的参数
 
             this.inspecting.saveGeneralInformation(params).subscribe(res => {
-                console.log(res);
+                // console.log(res);
                 if (res.status !== 1)
                     return this.es.showToast({
                         message: '保存失败',
@@ -454,7 +465,7 @@ export class FactoryGeneralSituationComponent implements OnInit {
     }
     // 输入域失去焦点的时候触发
     onBlur(e) {
-        console.log((e.target.value as any) - 0);
+        // console.log((e.target.value as any) - 0);
         if ((e.target.value as any) - 0 <= 0 && (e.target.value as any) != '') {
             this.es.showToast({
                 message: '请输入大于0的数',
@@ -487,8 +498,8 @@ export class FactoryGeneralSituationComponent implements OnInit {
         const newOriginObj = _.cloneDeep(this.originObject);
         const newNormalObj = _.cloneDeep(this.normal);
         Object.assign(newOriginObj, newNormalObj);
-        console.log(this.toolsObj);
-        console.log(newOriginObj);
+        // console.log(this.toolsObj);
+        // console.log(newOriginObj);
         if (this.isDisabled) {
             return true;
         } else {

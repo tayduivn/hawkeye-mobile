@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { FactoryListQueryInfo, inspectingService } from 'src/app/services/inspecting.service';
 import { PageEffectService } from 'src/app/services/page-effect.service';
 import _ from 'loadsh';
+import { FlahListService } from './add-new-inspect-factory/flah-list.service';
+import { takeWhile } from 'rxjs/operators';
 @Component({
     selector: 'app-purchasing-inspect-factory',
     templateUrl: './purchasing-inspect-factory.page.html',
@@ -18,11 +20,26 @@ export class PurchasingInspectFactoryPage implements OnInit {
         name: null,
     };
     factoryList: any[] = [];
-    constructor(private router: Router, private inspecting: inspectingService, private es: PageEffectService) {}
+    constructor(
+        private router: Router,
+        private inspecting: inspectingService,
+        private es: PageEffectService,
+        private flash: FlahListService,
+    ) {}
+    destroy: boolean = false;
+
     ngOnInit() {
         // 一开始就获取列表获取到的列表进行渲染
         this.getList(this.queryInfo);
+        this.flash.flash$.pipe(takeWhile(() => !this.destroy)).subscribe(res => {
+            if (res == 'flash') {
+                console.log('主页面刷新了');
+                this.getList(this.queryInfo);
+            }
+        });
     }
+
+    // dest:boolean=false
     // 获取列表
     getList(params: FactoryListQueryInfo) {
         this.inspecting.getFactoryList(params).subscribe(res => {
@@ -45,6 +62,7 @@ export class PurchasingInspectFactoryPage implements OnInit {
         //Called once, before the instance is destroyed.
         //Add 'implements OnDestroy' to the class.
         console.log('purchasing销毁');
+        this.destroy = true;
     }
     // 跳转新增页面，信息不回填
     toAddNew() {

@@ -50,6 +50,7 @@ export class FactoryAssessPage implements OnInit {
             const { data } = res;
             console.log(data.factory);
             this.factoryAccessList = data.factory;
+            console.log(this.factoryAccessList);
         });
     }
 

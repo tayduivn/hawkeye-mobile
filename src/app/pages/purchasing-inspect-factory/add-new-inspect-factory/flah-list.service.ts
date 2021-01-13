@@ -4,7 +4,7 @@ import { Subject } from 'rxjs/internal/Subject';
 @Injectable({
     providedIn: 'root',
 })
-export class IsDisabledService {
-    isDisabled$: Subject<any> = new Subject();
+export class FlahListService {
+    flash$: Subject<any> = new Subject();
     constructor() {}
 }

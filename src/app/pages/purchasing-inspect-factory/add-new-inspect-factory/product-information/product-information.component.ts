@@ -63,7 +63,7 @@ export class ProductInformationComponent implements OnInit {
     };
     // DETAILS2: any = {};
     ngOnInit() {
-        console.log(this.DETAILS);
+        // console.log(this.DETAILS);
 
         const infoChange$: Observable<any> = this.userinfo.userInfo$;
         // pipe(takeWhile(() => !this.destroy))
@@ -74,7 +74,7 @@ export class ProductInformationComponent implements OnInit {
             )
             .subscribe(res => {
                 // debugger;
-                console.log(res);
+                // console.log(res);
                 if (res[1] == '2') {
                     if (this.flag == '2') {
                         // 如果是编辑的话传递的工厂id应该就是点击编辑传递进来的详情的id
@@ -102,7 +102,7 @@ export class ProductInformationComponent implements OnInit {
                             }
                         });
                         this.saveInformation(newOriginObj);
-                        console.log(newOriginObj);
+                        // console.log(newOriginObj);
                     } else {
                         const newOriginObj = _.cloneDeep(this.originObject);
                         const newNormalObj = _.cloneDeep(this.normal);
@@ -128,7 +128,7 @@ export class ProductInformationComponent implements OnInit {
                                 }
                             });
                             this.saveInformation(newOriginObj);
-                            console.log(newOriginObj);
+                            // console.log(newOriginObj);
                         } else {
                             this.initData();
                             return this.es.showToast({
@@ -146,11 +146,11 @@ export class ProductInformationComponent implements OnInit {
 
         // 回填数据
         if (this.flag == '0' && window.sessionStorage.getItem('FACTORY_ID') != 'undefined') {
-            console.log('新增的时候回显数据');
+            // console.log('新增的时候回显数据');
             this.inspecting
                 .getFactoryXQ({ factory_id: (window.sessionStorage.getItem('FACTORY_ID') as any) - 0 })
                 .subscribe(res => {
-                    console.log(res.data);
+                    // console.log(res.data);
                     // if (res.data.product) {
                     // }
                     // console.log();
@@ -158,13 +158,13 @@ export class ProductInformationComponent implements OnInit {
                     if (res.data.product && res.data.product.length != 0) {
                         const newP = _.cloneDeep(res.data.product);
                         this.DETAILS.product = newP;
-                        console.log(this.DETAILS);
+                        // console.log(this.DETAILS);
 
                         res.data.product.forEach((item, index, array) => {
                             if (item.hash_arr && item.hash_arr.length != 0) {
                                 item.hash_arr.forEach((key, index1, array1) => {
                                     array1[index1] = this.imgOrigin + key;
-                                    debugger;
+                                    // debugger;
                                 });
                             } else {
                                 item.hash_arr = [];
@@ -173,15 +173,15 @@ export class ProductInformationComponent implements OnInit {
                         this.normal.products = res.data.product;
                     }
 
-                    console.log(this.DETAILS);
+                    // console.log(this.DETAILS);
 
-                    console.log(res.product);
+                    // console.log(res.product);
                     if (res.data.simulation && res.data.simulation.length != 0) {
                         this.normal.simulation_products = res.data.simulation;
                     }
 
-                    console.log(this.normal.products);
-                    console.log(this.normal.simulation_products);
+                    // console.log(this.normal.products);
+                    // console.log(this.normal.simulation_products);
 
                     // 编辑刚进来设置为已经保存
                     window.localStorage.setItem('flag', '已保存');
@@ -221,7 +221,7 @@ export class ProductInformationComponent implements OnInit {
                     }
                 });
                 this.saveInformation(newOriginObj);
-                console.log(newOriginObj);
+                // console.log(newOriginObj);
             } else {
                 const newOriginObj = _.cloneDeep(this.originObject);
                 const newNormalObj = _.cloneDeep(this.normal);
@@ -247,7 +247,7 @@ export class ProductInformationComponent implements OnInit {
                         }
                     });
                     this.saveInformation(newOriginObj);
-                    console.log(newOriginObj);
+                    // console.log(newOriginObj);
                 } else {
                     this.initData();
                     return this.es.showToast({
@@ -286,7 +286,7 @@ export class ProductInformationComponent implements OnInit {
         this.activatedRoute.queryParams.subscribe(queryParam => {
             // console.log(queryParam); //flag等于0不做任何操作  等于1那么回填加禁用编辑  等于2那么回填可编辑
             const { details } = queryParam;
-            console.log(queryParam);
+            // console.log(queryParam);
             this.flag = queryParam.flag;
             // console.log(details);
             // 如果是详情页过来的就赋值
@@ -299,7 +299,7 @@ export class ProductInformationComponent implements OnInit {
                     // this.DETAILS = res.data;
                     const obj = _.cloneDeep(res.data);
                     this.DETAILS = obj;
-                    console.log(res.data);
+                    // console.log(res.data);
 
                     res.data.product.forEach((item, index, array) => {
                         if (item.hash_arr && item.hash_arr.length != 0) {
@@ -310,13 +310,13 @@ export class ProductInformationComponent implements OnInit {
                             item.hash_arr = [];
                         }
                     });
-                    console.log(res.data.product);
+                    // console.log(res.data.product);
                     this.normal.products = res.data.product;
                     this.DETAILS.products = res.data.product;
                     this.normal.simulation_products = res.data.simulation;
                     this.DETAILS.products = res.data.simulation;
-                    console.log(this.normal.products);
-                    console.log(this.normal.simulation_products);
+                    // console.log(this.normal.products);
+                    // console.log(this.normal.simulation_products);
 
                     if (queryParam.flag === '2') {
                         // 编辑刚进来设置为已经保存
@@ -343,7 +343,7 @@ export class ProductInformationComponent implements OnInit {
     }
 
     saveInformation(params) {
-        console.log(params);
+        // console.log(params);
 
         const newOriginObj = _.cloneDeep(this.originObject);
         const newNormalObj = _.cloneDeep(this.normal);
@@ -397,10 +397,18 @@ export class ProductInformationComponent implements OnInit {
                 duration: 1500,
                 color: 'success',
             });
-            this.normal.products.forEach((item, index) => {
-                item.apply_inspection_no = res.data[index].apply_inspection_no;
-            });
-            console.log(this.normal.products);
+            if (this.normal.products && this.normal.products.length != 0) {
+                this.normal.products.forEach((item, index) => {
+                    item.apply_inspection_no = res.data.product_list[index].apply_inspection_no;
+                });
+            }
+            if (this.normal.simulation_products && this.normal.simulation_products.length != 0) {
+                this.normal.simulation_products.forEach((item, index) => {
+                    item.apply_inspection_no = res.data.simulation_list[index].apply_inspection_no;
+                });
+            }
+
+            // console.log(this.normal.products);
             const newOriginObj = _.cloneDeep(this.originObject);
             const newNormalObj = _.cloneDeep(this.normal);
             Object.assign(newOriginObj, newNormalObj);
@@ -419,8 +427,8 @@ export class ProductInformationComponent implements OnInit {
         const newOriginObj = _.cloneDeep(this.originObject);
         const newNormalObj = _.cloneDeep(this.normal);
         Object.assign(newOriginObj, newNormalObj);
-        console.log(newOriginObj);
-        console.log(this.toolsObj);
+        // console.log(newOriginObj);
+        // console.log(this.toolsObj);
 
         if (this.isDisabled) {
             return true;
@@ -486,12 +494,12 @@ export class ProductInformationComponent implements OnInit {
             inspect_product_video: [],
         });
         // }
-        console.log(this.normal.products);
+        // console.log(this.normal.products);
     }
     // 删除产品的信息
     deleteProduct(index: number, no) {
-        console.log(this.DETAILS);
-        console.log(no);
+        // console.log(this.DETAILS);
+        // console.log(no);
         this.es.showAlert({
             message: '确定删除产品?',
             buttons: [
@@ -517,7 +525,7 @@ export class ProductInformationComponent implements OnInit {
                                     },
                                 })
                                 .then(res => {
-                                    console.log(res);
+                                    // console.log(res);
                                     const data = JSON.parse(res.data);
                                     if (data.status != 1)
                                         return this.es.showToast({
@@ -534,7 +542,7 @@ export class ProductInformationComponent implements OnInit {
                                     this.normal.products.splice(index, 1);
                                     // 把产品从详情删除
                                     this.DETAILS.product.splice(index, 1);
-                                    console.log(this.DETAILS);
+                                    // console.log(this.DETAILS);
                                 });
                         }
                     },
@@ -577,7 +585,7 @@ export class ProductInformationComponent implements OnInit {
                                     },
                                 })
                                 .then(res => {
-                                    console.log(res);
+                                    // console.log(res);
                                     const data = JSON.parse(res.data);
                                     if (data.status != 1)
                                         return this.es.showToast({

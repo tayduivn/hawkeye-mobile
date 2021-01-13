@@ -9,6 +9,7 @@ import { UserInfoService } from '../user-info.service';
 import { environment } from 'src/environments/environment';
 import { EmitService } from '../emit.service';
 import { IsSaveServiceService } from '../../is-save-service.service';
+import { IsDisabledService } from '../factory-base-information/is-disabled.service';
 
 @Component({
     selector: 'app-specimen-information',
@@ -23,6 +24,7 @@ export class SpecimenInformationComponent implements OnInit {
         private inspecting: inspectingService,
         private userInfo: UserInfoService,
         private isSave: IsSaveServiceService,
+        private isDisable: IsDisabledService,
     ) {}
     imgOrigin = environment.usFileUrl;
     isDisabled: boolean;
@@ -42,7 +44,21 @@ export class SpecimenInformationComponent implements OnInit {
     sample_pic: any[] = [];
     showroom_video: any[] = [];
     flag: any;
+    jinyong: boolean;
     ngOnInit() {
+        if (window.sessionStorage.getItem('FACTORY_ID') != 'undefined') {
+            this.jinyong = false;
+        } else {
+            this.jinyong = true;
+        }
+        this.isDisable.isDisabled$.pipe(takeWhile(() => !this.destroy)).subscribe(res => {
+            if (res != 'undefined') {
+                // 不等于undefined的时候说明有  有的话就不禁用
+                this.jinyong = false;
+            } else {
+                this.jinyong = true;
+            }
+        });
         const infoChange$: Observable<any> = this.userInfo.userInfo$;
         // pipe(takeWhile(() => !this.destroy))
         infoChange$
@@ -52,7 +68,7 @@ export class SpecimenInformationComponent implements OnInit {
             )
             .subscribe(res => {
                 // debugger;
-                console.log(res);
+                // console.log(res);
                 if (res[1] == '3') {
                     // 此时是编辑的时候  编辑的时候需要传递的有工厂的id(只在这个页面是这个样子)
                     //这里可以拿到头部的信息  那么拿到后在这里面调用保存的方法
@@ -63,7 +79,7 @@ export class SpecimenInformationComponent implements OnInit {
                         Object.assign(newOriginObj, newNormalObj);
                         newOriginObj.factory_id = this.DETAILS.id;
                         this.saveInformation(newOriginObj);
-                        console.log(newOriginObj);
+                        // console.log(newOriginObj);
                     } else {
                         const newOriginObj = _.cloneDeep(this.originObject);
                         const newNormalObj = _.cloneDeep(this.normal);
@@ -74,7 +90,7 @@ export class SpecimenInformationComponent implements OnInit {
                             id = (window.sessionStorage.getItem('FACTORY_ID') as any) - 0;
                             newOriginObj.factory_id = id;
                             this.saveInformation(newOriginObj);
-                            console.log(newOriginObj);
+                            // console.log(newOriginObj);
                         } else {
                             this.initData();
                             return this.es.showToast({
@@ -91,13 +107,13 @@ export class SpecimenInformationComponent implements OnInit {
 
         // 回填数据
         if (this.flag == '0' && window.sessionStorage.getItem('FACTORY_ID') != 'undefined') {
-            console.log('新增的时候回显数据');
+            // console.log('新增的时候回显数据');
             this.inspecting
                 .getFactoryXQ({ factory_id: (window.sessionStorage.getItem('FACTORY_ID') as any) - 0 })
                 .subscribe(res => {
                     if (res.data.rework_sample_pic && res.data.rework_sample_pic.length != 0) {
                         res.data.rework_sample_pic.forEach(item => {
-                            this.sample_pic.push(this.imgOrigin + item.replace('storage/', ''));
+                            this.sample_pic.push(item);
                         });
                     } else {
                         this.sample_pic = [];
@@ -122,7 +138,7 @@ export class SpecimenInformationComponent implements OnInit {
                     const newNormalObj = _.cloneDeep(this.normal);
                     Object.assign(newOriginObj, newNormalObj);
                     this.toolsObj = newOriginObj;
-                    console.log(this.toolsObj);
+                    // console.log(this.toolsObj);
                 });
         }
 
@@ -135,7 +151,7 @@ export class SpecimenInformationComponent implements OnInit {
                 Object.assign(newOriginObj, newNormalObj);
                 newOriginObj.factory_id = this.DETAILS.id;
                 this.saveInformation(newOriginObj);
-                console.log(newOriginObj);
+                // console.log(newOriginObj);
             } else {
                 const newOriginObj = _.cloneDeep(this.originObject);
                 const newNormalObj = _.cloneDeep(this.normal);
@@ -146,7 +162,7 @@ export class SpecimenInformationComponent implements OnInit {
                     id = (window.sessionStorage.getItem('FACTORY_ID') as any) - 0;
                     newOriginObj.factory_id = id;
                     this.saveInformation(newOriginObj);
-                    console.log(newOriginObj);
+                    // console.log(newOriginObj);
                 } else {
                     this.initData();
                     return this.es.showToast({
@@ -180,11 +196,11 @@ export class SpecimenInformationComponent implements OnInit {
                 this.DETAILS = JSON.parse(details);
                 const DETAILS = JSON.parse(details);
                 // this.DETAILS.rework_sample_pic.forEach(item => {});
-                console.log(this.DETAILS);
+                // console.log(this.DETAILS);
                 this.inspecting.getFactoryXQ({ factory_id: this.DETAILS.id }).subscribe(res => {
                     if (res.data.rework_sample_pic && res.data.rework_sample_pic.length != 0) {
                         res.data.rework_sample_pic.forEach(item => {
-                            this.sample_pic.push(this.imgOrigin + item.replace('storage/', ''));
+                            this.sample_pic.push(item);
                         });
                     } else {
                         this.sample_pic = [];
@@ -209,7 +225,7 @@ export class SpecimenInformationComponent implements OnInit {
                         const newNormalObj = _.cloneDeep(this.normal);
                         Object.assign(newOriginObj, newNormalObj);
                         this.toolsObj = newOriginObj;
-                        console.log(this.toolsObj);
+                        // console.log(this.toolsObj);
                     }
                 });
             }
@@ -227,7 +243,7 @@ export class SpecimenInformationComponent implements OnInit {
         });
     }
     saveInformation(params) {
-        console.log(params.have_sample);
+        // console.log(params.have_sample);
         if (params.have_sample == '0' || params.will_supply == '0') {
             params.amount = null;
             params.payment = null;
@@ -264,8 +280,8 @@ export class SpecimenInformationComponent implements OnInit {
         const newOriginObj = _.cloneDeep(this.originObject);
         const newNormalObj = _.cloneDeep(this.normal);
         Object.assign(newOriginObj, newNormalObj);
-        console.log(newNormalObj);
-        console.log(this.toolsObj);
+        // console.log(newNormalObj);
+        // console.log(this.toolsObj);
 
         if (this.isDisabled) {
             return true;
@@ -305,8 +321,8 @@ export class SpecimenInformationComponent implements OnInit {
             this.normal.payment = null;
             this.normal.will_supply = null;
         }
-        console.log(this.normal);
-        console.log(this.toolsObj);
+        // console.log(this.normal);
+        // console.log(this.toolsObj);
     }
     selectChange2() {
         if (this.normal.will_supply == '' || this.normal.will_supply == '0' || this.normal.will_supply == null) {
@@ -314,6 +330,6 @@ export class SpecimenInformationComponent implements OnInit {
             this.normal.readiness_time = null;
             this.normal.payment = null;
         }
-        console.log(this.normal);
+        // console.log(this.normal);
     }
 }

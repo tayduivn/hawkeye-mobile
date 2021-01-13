@@ -28,13 +28,17 @@ export class VideoMiniComponent implements OnInit {
     @Input() type: string;
     @Input() set apply_inspection(input: string[]) {
         if (!!input) {
-            console.log(1);
+            console.log(input);
+
+            // console.log(1);
             this.factory_inspect_no = input;
-            console.log(this.factory_inspect_no);
-            if (this.factory_inspect_no == undefined || this.factory_inspect_no == 'undefined') {
-                this.flagChoose = false;
-            } else {
-                this.flagChoose = true;
+            // console.log(this.factory_inspect_no);
+            if (this.type == 'inspect_product_video') {
+                if (this.factory_inspect_no == undefined || this.factory_inspect_no == 'undefined') {
+                    this.flagChoose = true;
+                } else {
+                    this.flagChoose = false;
+                }
             }
         }
     }
@@ -42,6 +46,12 @@ export class VideoMiniComponent implements OnInit {
         if (!!input) {
             this._up_data = input;
         }
+    }
+    @Input() set jinyong(input: any) {
+        this.flagChoose = input;
+        console.log(input);
+
+        console.log(this.flagChoose);
     }
     @Input() set flagStatus(input: any) {
         if (!!input) {
@@ -53,7 +63,7 @@ export class VideoMiniComponent implements OnInit {
     flagIsStatus: any;
     factory_id: any;
     factory_inspect_no: any;
-    flagChoose: boolean = true;
+    flagChoose: boolean;
     // 点击播放的play按钮
     play(p: string) {
         this.ec.showModal({
@@ -95,11 +105,17 @@ export class VideoMiniComponent implements OnInit {
     }
     // 拍摄视频
     videotape() {
-        console.log(this.flagChoose);
+        // console.log(this.flagChoose);
 
-        if (!this.flagChoose) {
+        if (this.flagChoose || this.flagChoose == undefined) {
+            let str = '';
+            if (window.sessionStorage.getItem('index') == '1' || window.sessionStorage.getItem('index') == '3') {
+                str = '请先保存工厂基本信息再上传视频！';
+            } else if (window.sessionStorage.getItem('index') == '2') {
+                str = '请先保存产品信息再上传视频！';
+            }
             return this.ec.showToast({
-                message: '请先保存产品信息再上传视频！',
+                message: str,
                 color: 'danger',
                 duration: 1500,
             });
@@ -145,7 +161,7 @@ export class VideoMiniComponent implements OnInit {
                             filename: this._up_data[i],
                         };
                         this.inspecting.deleteVideo(params).subscribe(res => {
-                            console.log(res);
+                            // console.log(res);
                             if (res.status != 1) {
                                 return this.ec.showToast({
                                     message: '删除视频失败',
@@ -260,7 +276,7 @@ export class VideoMiniComponent implements OnInit {
     }
     ngOnInit() {
         let that = this;
-        console.log(this._up_data);
+        // console.log(this._up_data);
         this.uQueue.alreadyUploadPayload$
             .asObservable()
             .pipe(
@@ -273,9 +289,9 @@ export class VideoMiniComponent implements OnInit {
                 ),
             )
             .subscribe(res => {
-                console.log('----------- 视频路径回流 ----------');
-                console.log((res as any).path);
-                console.log(that._up_data);
+                // console.log('----------- 视频路径回流 ----------');
+                // console.log((res as any).path);
+                // console.log(that._up_data);
                 that._up_data.push((res as any).path);
             });
 
@@ -284,21 +300,17 @@ export class VideoMiniComponent implements OnInit {
             this.type == 'inspect_plant_video' ||
             this.type == 'inspect_showroom_video'
         ) {
-            console.log('工厂外观照片或生产车间照片或样品间图片');
+            // console.log('工厂外观照片或生产车间照片或样品间图片');
             this.factory_id = window.sessionStorage.getItem('FACTORY_ID');
             this.factory_inspect_no = window.sessionStorage.getItem('inspect_no');
-            console.log(this.factory_id);
-            console.log(this.factory_inspect_no);
         } else {
             this.factory_id = window.sessionStorage.getItem('FACTORY_ID');
-            console.log(this.factory_inspect_no);
-            console.log(this.factory_id);
         }
 
-        if (this.factory_inspect_no == 'undefined' || this.factory_inspect_no == undefined) {
-            this.flagChoose = false;
-        } else {
-            this.flagChoose = true;
-        }
+        // if (this.factory_inspect_no == 'undefined' || this.factory_inspect_no == undefined) {
+        //     this.flagChoose = false;
+        // } else {
+        //     this.flagChoose = true;
+        // }
     }
 }

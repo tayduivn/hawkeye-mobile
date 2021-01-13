@@ -18,6 +18,7 @@
 <div class="add-image-small add-image-file ml-5" fxLayout="row" fxLayoutAlign="start center" *ngIf="flagIsStatus!='1'">
   <ion-icon name=" folder">
   </ion-icon>
-  <input type="file" multiple="multiple" [disabled]="flag" accept="image/*" (change)="doCheckImg($event)" />
+  <input type="file" multiple="multiple" [disabled]="flag||flag==undefined" accept="image/*"
+    (change)="doCheckImg($event)" />
   <p>选择</p>
 </div>

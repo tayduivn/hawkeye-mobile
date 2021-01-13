@@ -27,4 +27,4 @@
 
 
 <input *ngIf="flagIsStatus!='1'" type="file" multiple="multiple" (change)="testHandle($event)"
-  [disabled]="!flagChoose" />
+  [disabled]="flagChoose||flagChoose==undefined" />

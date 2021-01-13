@@ -10,6 +10,8 @@ import { map, mergeAll, mergeMap, switchMap, switchMapTo } from 'rxjs/operators'
 import { from, Observable } from 'rxjs';
 import { IsSaveServiceService } from '../is-save-service.service';
 import { UserInfoService } from './user-info.service';
+import { FlahListService } from './flah-list.service';
+import { IsDisabledService } from './factory-base-information/is-disabled.service';
 
 @Component({
     selector: 'app-add-new-inspect-factory',
@@ -25,6 +27,7 @@ export class AddNewInspectFactoryComponent implements OnInit {
     factoryDetailsStr: string;
     alreadyUpProgress: boolean;
     i: number;
+    url: string;
     constructor(
         private activatedRoute: ActivatedRoute,
         private tab: TabStatusService,
@@ -33,6 +36,8 @@ export class AddNewInspectFactoryComponent implements OnInit {
         private router: Router,
         private isSave: IsSaveServiceService,
         private userInfo: UserInfoService,
+        private flash: FlahListService,
+        private isDisabled: IsDisabledService,
     ) {}
     get flag() {
         return this._flag;
@@ -81,7 +86,7 @@ export class AddNewInspectFactoryComponent implements OnInit {
                 this.factoryDetailsStr = details;
             } else {
                 window.sessionStorage.setItem('FACTORY_ID', 'undefined');
-                window.sessionStorage.setItem('FACTORY_ID', 'undefined');
+                window.sessionStorage.setItem('inspect_no', 'undefined');
                 //如果是新增页面进去的从本地存储获取考察人员的id和名字
                 const USER_INFO = window.sessionStorage.getItem('USER_INFO');
                 console.log(JSON.parse(USER_INFO));
@@ -100,7 +105,8 @@ export class AddNewInspectFactoryComponent implements OnInit {
         this.userInfo.userInfo$.next(currentObj);
         console.log('点击事件');
         this.i = i;
-        this.router.navigate([url], {
+        this.url = url;
+        this.router.navigate([this.url], {
             queryParams: { flag: this.flag1, details: this.factoryDetailsStr },
         });
     }
@@ -118,5 +124,6 @@ export class AddNewInspectFactoryComponent implements OnInit {
     backToMainList() {
         console.log('返回事件触发了');
         window.sessionStorage.setItem('back', 'isBACK');
+        this.flash.flash$.next('flash');
     }
 }

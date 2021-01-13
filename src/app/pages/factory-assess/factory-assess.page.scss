@@ -52,10 +52,19 @@
     border: 1px solid #ededed;
     border-top: none;
 }
-.done-assess{
-  color: rgb(91, 246, 106);
+.done-assess {
+    color: rgb(91, 246, 106);
 }
-.not-assess{
-  color: #C00000;
+.not-assess {
+    color: #c00000;
+}
+.noHaveData {
+    font-size: 20px;
+    width: 100%;
+    text-align: center;
+    height: 30px;
+    line-height: 30px;
+    color: #ccc;
+    margin-top: 30px;
 }
 //ok
