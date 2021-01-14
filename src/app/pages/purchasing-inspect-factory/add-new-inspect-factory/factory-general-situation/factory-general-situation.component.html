@@ -9,9 +9,9 @@
         <ion-col align-self-center [size]="3">
           工厂面积(m²)<span class="star">*</span> :
         </ion-col>
-        <ion-col align-self-center [size]="6">
+        <ion-col align-self-center [size]="2">
         </ion-col>
-        <ion-col align-self-center [size]="3">
+        <ion-col align-self-center [size]="7">
           <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"
             [(ngModel)]="originObject.acreage" (ionBlur)="onBlur($event)" type="number"></ion-input>
         </ion-col>
@@ -21,9 +21,9 @@
         <ion-col align-self-center [size]="3">
           工厂人数<span class="star">*</span> :
         </ion-col>
-        <ion-col align-self-center [size]="6">
+        <ion-col align-self-center [size]="2">
         </ion-col>
-        <ion-col align-self-center [size]="3">
+        <ion-col align-self-center [size]="7">
           <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"
             [(ngModel)]="originObject.people_num" (ionBlur)="onBlur1($event)" type="number"></ion-input>
         </ion-col>
@@ -57,9 +57,9 @@
         <ion-col align-self-center [size]="3">
           生产设备<span class="star">*</span> :
         </ion-col>
-        <ion-col align-self-center [size]="6">
+        <ion-col align-self-center [size]="2">
         </ion-col>
-        <ion-col align-self-center [size]="3">
+        <ion-col align-self-center [size]="7">
           <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"
             [(ngModel)]="originObject.production_equipment"></ion-input>
         </ion-col>
@@ -69,17 +69,11 @@
         <ion-col align-self-center [size]="3">
           生产能力<span class="star">*</span> :
         </ion-col>
-        <ion-col align-self-center [size]="6">
+        <ion-col align-self-center [size]="2">
         </ion-col>
-        <ion-col align-self-center [size]="3">
+        <ion-col align-self-center [size]="7">
           <!-- 下拉框 -->
           <!-- 这里是下拉选择器 -->
-          <!-- <ion-select class="select" placeholder="请选择" okText="确认" cancelText="取消" [disabled]="isDisabled"
-            [(ngModel)]="originObject.production_capacity">
-            <ion-select-option [value]="1">好</ion-select-option>
-            <ion-select-option [value]="2">一般</ion-select-option>
-            <ion-select-option [value]="3">差</ion-select-option>
-          </ion-select> -->
           <select [(ngModel)]="originObject.production_capacity" class="select" [disabled]="isDisabled">
             <option value=""></option>
             <option [value]="1">好</option>
@@ -93,9 +87,9 @@
         <ion-col align-self-center [size]="3">
           研发&质检能力 :
         </ion-col>
-        <ion-col align-self-center [size]="6">
+        <ion-col align-self-center [size]="2">
         </ion-col>
-        <ion-col align-self-center [size]="3">
+        <ion-col align-self-center [size]="7">
           <!-- 下拉框 -->
           <select [(ngModel)]="normal.quality" class="select" [disabled]="isDisabled">
             <option value=""></option>
@@ -110,9 +104,9 @@
         <ion-col align-self-center [size]="3">
           生产周期<span class="star">*</span> :
         </ion-col>
-        <ion-col align-self-center [size]="6">
+        <ion-col align-self-center [size]="2">
         </ion-col>
-        <ion-col align-self-center [size]="3">
+        <ion-col align-self-center [size]="7">
           <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"
             [(ngModel)]="originObject.production_cycle">
           </ion-input>
@@ -123,9 +117,9 @@
         <ion-col align-self-center [size]="3">
           主要销售市场<span class="star">*</span> :
         </ion-col>
-        <ion-col align-self-center [size]="6">
+        <ion-col align-self-center [size]="2">
         </ion-col>
-        <ion-col align-self-center [size]="3">
+        <ion-col align-self-center [size]="7">
           <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"
             [(ngModel)]="originObject.sales_market"></ion-input>
         </ion-col>
@@ -135,9 +129,9 @@
         <ion-col align-self-center [size]="3">
           主要客户 :
         </ion-col>
-        <ion-col align-self-center [size]="6">
+        <ion-col align-self-center [size]="2">
         </ion-col>
-        <ion-col align-self-center [size]="3">
+        <ion-col align-self-center [size]="7">
           <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled" [(ngModel)]="normal.customer">
           </ion-input>
         </ion-col>
@@ -147,9 +141,9 @@
         <ion-col align-self-center [size]="3">
           产品相关认证 :
         </ion-col>
-        <ion-col align-self-center [size]="6">
+        <ion-col align-self-center [size]="2">
         </ion-col>
-        <ion-col align-self-center [size]="3">
+        <ion-col align-self-center [size]="7">
           <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"
             [(ngModel)]="normal.authentication">
           </ion-input>
@@ -160,9 +154,9 @@
         <ion-col align-self-center [size]="3">
           工厂付款方式<span class="star">*</span> :
         </ion-col>
-        <ion-col align-self-center [size]="6">
+        <ion-col align-self-center [size]="2">
         </ion-col>
-        <ion-col align-self-center [size]="3">
+        <ion-col align-self-center [size]="7">
           <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"
             [(ngModel)]="originObject.pay_type"></ion-input>
         </ion-col>
@@ -172,9 +166,9 @@
         <ion-col align-self-center [size]="3" class="noWrap">
           工厂是否接受过第三方验厂<span class="star">*</span> :
         </ion-col>
-        <ion-col align-self-center [size]="6">
+        <ion-col align-self-center [size]="2">
         </ion-col>
-        <ion-col align-self-center [size]="3">
+        <ion-col align-self-center [size]="7">
           <select [(ngModel)]="originObject.third_party" class="select" [disabled]="isDisabled"
             (ngModelChange)="selectChanged()">
             <option [value]=""></option>
@@ -196,11 +190,10 @@
         <ion-col align-self-center [size]="3">
           营业执照照片(三证合一) :
         </ion-col>
-        <ion-col align-self-center [size]="6">
+        <ion-col align-self-center [size]="2">
         </ion-col>
-        <ion-col align-self-center [size]="3">
-          <app-photo-mini [type]="'business_license_pic'" [photos]='business_license_pic' [flagStatus]="flag"
-            [jinyong]="jinyong">
+        <ion-col align-self-center [size]="7">
+          <app-photo-mini [type]="'business_license_pic'" [photos]='business_license_pic' [flagStatus]="flag">
           </app-photo-mini>
         </ion-col>
       </ion-row>
@@ -208,13 +201,12 @@
         <ion-col align-self-center [size]="3">
           工厂外观照片<span class="star">*</span> :
         </ion-col>
-        <ion-col align-self-center [size]="6">
+        <ion-col align-self-center [size]="2">
         </ion-col>
-        <ion-col align-self-center [size]="3">
-          <app-photo-mini [type]="'facade_pic'" [photos]="facadePic" [flagStatus]="flag" [jinyong]="jinyong">
+        <ion-col align-self-center [size]="7">
+          <app-photo-mini [type]="'facade_pic'" [photos]="facadePic" [flagStatus]="flag">
           </app-photo-mini>
-          <app-video-mini [type]="'inspect_facade_video'" [videos]="facade_video" [flagStatus]="flag"
-            [jinyong]="jinyong" [factory_i]="factory_id" [inspect_no]="inspect_no"></app-video-mini>
+          <app-video-mini [type]="'inspect_facade_video'" [videos]="facade_video" [flagStatus]="flag"></app-video-mini>
         </ion-col>
       </ion-row>
 
@@ -222,13 +214,12 @@
         <ion-col align-self-center [size]="3" class="noWrap">
           生产车间照片(设备，生产线等)<span class="star">*</span> :
         </ion-col>
-        <ion-col align-self-center [size]="6">
+        <ion-col align-self-center [size]="2">
         </ion-col>
-        <ion-col align-self-center [size]="3">
-          <app-photo-mini [type]="'plant_pic'" [photos]="plantPic" [flagStatus]="flag" [jinyong]="jinyong">
+        <ion-col align-self-center [size]="7">
+          <app-photo-mini [type]="'plant_pic'" [photos]="plantPic" [flagStatus]="flag">
           </app-photo-mini>
-          <app-video-mini [type]="'inspect_plant_video'" [videos]="plant_video" [flagStatus]="flag" [jinyong]="jinyong"
-            [factory_i]="factory_id" [inspect_no]="inspect_no">
+          <app-video-mini [type]="'inspect_plant_video'" [videos]="plant_video" [flagStatus]="flag">
           </app-video-mini>
         </ion-col>
       </ion-row>

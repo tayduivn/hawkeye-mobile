@@ -48,21 +48,21 @@ export class SpecimenInformationComponent implements OnInit {
     factory_id: any;
     inspect_no: any;
     ngOnInit() {
-        if (window.sessionStorage.getItem('FACTORY_ID') != 'undefined') {
-            this.jinyong = false;
-        } else {
-            this.jinyong = true;
-        }
-        this.isDisable.isDisabled$.pipe(takeWhile(() => !this.destroy)).subscribe(res => {
-            if (res != 'undefined') {
-                // 不等于undefined的时候说明有  有的话就不禁用
-                this.jinyong = false;
-                this.factory_id = res.factory_id;
-                this.inspect_no = res.inspect_no;
-            } else {
-                this.jinyong = true;
-            }
-        });
+        // if (window.sessionStorage.getItem('FACTORY_ID') != 'undefined') {
+        //     this.jinyong = false;
+        // } else {
+        //     this.jinyong = true;
+        // }
+        // this.isDisable.isDisabled$.pipe(takeWhile(() => !this.destroy)).subscribe(res => {
+        //     if (res != 'undefined') {
+        //         // 不等于undefined的时候说明有  有的话就不禁用
+        //         this.jinyong = false;
+        //         this.factory_id = res.factory_id;
+        //         this.inspect_no = res.inspect_no;
+        //     } else {
+        //         this.jinyong = true;
+        //     }
+        // });
         const infoChange$: Observable<any> = this.userInfo.userInfo$;
         // pipe(takeWhile(() => !this.destroy))
         infoChange$
@@ -261,12 +261,12 @@ export class SpecimenInformationComponent implements OnInit {
         // 保存的时候发送请求
         // 先合并传递的参数
         this.inspecting.saveSpecimenInformation(params).subscribe(res => {
-            if (res.status !== 1)
-                return this.es.showToast({
-                    message: '保存失败',
-                    duration: 1500,
-                    color: 'danger',
-                });
+            // if (res.status !== 1)
+            //     return this.es.showToast({
+            //         message: '保存失败',
+            //         duration: 1500,
+            //         color: 'danger',
+            //     });
             this.es.showToast({
                 message: '保存成功',
                 duration: 1500,

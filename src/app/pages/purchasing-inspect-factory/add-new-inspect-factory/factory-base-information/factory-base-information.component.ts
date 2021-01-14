@@ -72,17 +72,14 @@ export class FactoryBaseInformationComponent implements OnInit {
     ) {}
     ngOnInit() {
         // 数据的回显
-
         const infoChange$: Observable<any> = this.userInfo.userInfo$;
-        // pipe(takeWhile(() => !this.destroy))
         infoChange$
             .pipe(
                 combineLatest(this.isSave.isSave$),
                 takeWhile(() => !this.destroy),
             )
             .subscribe(res => {
-                // debugger;
-                // console.log(res);
+                console.log(res);
                 if (res[1] == '0') {
                     this.inspectObj = res[0].name;
                     // console.log(this.inspectObj);
@@ -92,12 +89,12 @@ export class FactoryBaseInformationComponent implements OnInit {
                         const newNormalObj = _.cloneDeep(this.normal);
                         Object.assign(newOriginObj, newNormalObj);
                         newOriginObj.factory_id = (window.sessionStorage.getItem('FACTORY_ID') as any) - 0;
-                        // console.log(newOriginObj.factory_id);
                         newOriginObj.user_id = res[0].user_id - 0;
                         newOriginObj.name = res[0].name;
                         newOriginObj.add_time = res[0].add_time;
                         this.saveInformation(newOriginObj);
                     } else {
+                        console.log('保存事件再次被触发了');
                         // 此时不是编辑  不是编辑不传工厂id
                         const newOriginObj = _.cloneDeep(this.originObject);
                         const newNormalObj = _.cloneDeep(this.normal);
@@ -114,10 +111,9 @@ export class FactoryBaseInformationComponent implements OnInit {
             });
         window.localStorage.setItem('flag', '未保存');
         this.getInitQueryParams();
-        // console.log(this.flag);
 
         if (this.flag == '0' && window.sessionStorage.getItem('FACTORY_ID') != 'undefined') {
-            // console.log('新增的时候回显数据');
+            console.log('新增的时候回显数据');
             this.inspecting
                 .getFactoryXQ({ factory_id: (window.sessionStorage.getItem('FACTORY_ID') as any) - 0 })
                 .subscribe(res => {
@@ -142,8 +138,6 @@ export class FactoryBaseInformationComponent implements OnInit {
         }
         this.infoCtrl.info$.pipe(takeWhile(() => !this.destroy)).subscribe(res => {
             this.inspectObj = res.name;
-            // console.log(this.inspectObj);
-
             // 此时是编辑的时候  编辑的时候需要传递的有工厂的id(只在这个页面是这个样子)
             if (this.flag == '2') {
                 const newOriginObj = _.cloneDeep(this.originObject);
@@ -227,7 +221,7 @@ export class FactoryBaseInformationComponent implements OnInit {
             if (this.originObject[key] instanceof Array) {
                 this.originObject[key].forEach((item, index) => {
                     if (item.address == '') {
-                        str1 += `工厂地址(${index + 1}) `;
+                        str1 += `工厂地址(${index + 1})`;
                     }
                 });
             } else {
@@ -238,10 +232,6 @@ export class FactoryBaseInformationComponent implements OnInit {
         }
 
         if (this.notFilled.length || str1 != '') {
-            // console.log(this.notFilled);
-
-            // 不为0说明有必填项没有填
-            // 先拼接字符串
             let str = str1;
             this.notFilled.forEach(item => {
                 str += this.obj[item] + ' ';
@@ -262,19 +252,8 @@ export class FactoryBaseInformationComponent implements OnInit {
                 if (res.data && res.data.factory_id) {
                     window.sessionStorage.setItem('FACTORY_ID', res.data.factory_id);
                     window.sessionStorage.setItem('inspect_no', res.data.factory_inspect_no);
-                    this.isDis.isDisabled$.next({
-                        factory_id: res.data.factory_id,
-                        inspect_no: res.data.factory_inspect_no,
-                    });
-                } else {
-                    this.isDis.isDisabled$.next('undefined');
                 }
-                if (res.status !== 1)
-                    return this.es.showToast({
-                        message: '保存失败',
-                        color: 'danger',
-                        duration: 1500,
-                    });
+
                 this.es.showToast({
                     message: '保存成功',
                     color: 'success',
@@ -286,13 +265,16 @@ export class FactoryBaseInformationComponent implements OnInit {
     }
 
     onBlur(e) {
-        if ((e.target.value as any) - 0 <= 0 && (e.target.value as any) != '') {
-            this.es.showToast({
-                message: '请输入大于0的数',
-                color: 'danger',
-                duration: 1500,
-            });
-            e.target.value = '';
+        if (isNaN(e.target.value)) {
+        } else {
+            if ((e.target.value as any) - 0 < 0 && (e.target.value as any) != '') {
+                this.es.showToast({
+                    message: '请输入大于等于0的数',
+                    color: 'danger',
+                    duration: 1500,
+                });
+                e.target.value = '';
+            }
         }
     }
     destroy: boolean = false;
@@ -305,9 +287,6 @@ export class FactoryBaseInformationComponent implements OnInit {
         const newOriginObj = _.cloneDeep(this.originObject);
         const newNormalObj = _.cloneDeep(this.normal);
         Object.assign(newOriginObj, newNormalObj);
-        // console.log(newNormalObj);
-        // console.log(this.toolsObj);
-
         if (this.isDisabled) {
             return true;
         } else {

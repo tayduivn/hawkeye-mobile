@@ -57,9 +57,10 @@ export class AddNewInspectFactoryComponent implements OnInit {
         //在这里进行订阅流（服务）那边发送服务  这边订阅服务;
         this.tab.canClick$.subscribe(res => {
             // 如果res时true则允许切换
-            console.log('流');
-            console.log(res);
             if (res.type == 'isSave') {
+                const currentObj = _.cloneDeep(this.factoryDetails);
+                this.userInfo.userInfo$.next(currentObj);
+                console.log('save触发');
                 const index = window.sessionStorage.getItem('index');
                 this.isSave.isSave$.next(`${index}`);
             }
@@ -93,17 +94,14 @@ export class AddNewInspectFactoryComponent implements OnInit {
                 this.factoryDetails.user_name = JSON.parse(USER_INFO).name;
                 this.factoryDetails.user_id = JSON.parse(USER_INFO).id;
             }
-
             this.flag1 = flag - 0;
             console.log(this.flag1);
-
             // 这里面的flag的值代表的是是从哪里进来的  应该调用哪一个接口  从详情和编辑过来的  就获取数据  然后定义一个变量保存起来传递给几个子组件，子组件回填  如果是新增进来的  那么就什么也不传
         });
     }
     tabsItemClicked(i: number, url: string) {
-        const currentObj = _.cloneDeep(this.factoryDetails);
-        this.userInfo.userInfo$.next(currentObj);
         console.log('点击事件');
+
         this.i = i;
         this.url = url;
         this.router.navigate([this.url], {
@@ -124,6 +122,6 @@ export class AddNewInspectFactoryComponent implements OnInit {
     backToMainList() {
         console.log('返回事件触发了');
         window.sessionStorage.setItem('back', 'isBACK');
-        this.flash.flash$.next('flash');
+        // this.flash.flash$.next('flash');
     }
 }

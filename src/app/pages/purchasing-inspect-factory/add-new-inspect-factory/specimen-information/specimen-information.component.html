@@ -12,9 +12,9 @@
         <ion-col align-self-center [size]="3">
           是否谈到样品? :
         </ion-col>
-        <ion-col align-self-center [size]="6">
+        <ion-col align-self-center [size]="2">
         </ion-col>
-        <ion-col align-self-center [size]="3">
+        <ion-col align-self-center [size]="7">
           <!-- 下拉输入位置 -->
           <!-- 这里是下拉选择器   存在联动的效果-->
           <select [(ngModel)]="normal.have_sample" class="select" [disabled]="isDisabled"
@@ -30,9 +30,9 @@
         <ion-col align-self-center [size]="3">
           是否愿意提供样品? :
         </ion-col>
-        <ion-col align-self-center [size]="6">
+        <ion-col align-self-center [size]="2">
         </ion-col>
-        <ion-col align-self-center [size]="3" class="dateCol">
+        <ion-col align-self-center [size]="7" class="dateCol">
           <!-- 这里是下拉选择器   存在联动的效果-->
           <select [(ngModel)]="normal.will_supply" class="select" [disabled]="isDisabled"
             (ngModelChange)="selectChange2()">
@@ -48,9 +48,9 @@
         <ion-col align-self-center [size]="3">
           样品费情况 :
         </ion-col>
-        <ion-col align-self-center [size]="6">
+        <ion-col align-self-center [size]="2">
         </ion-col>
-        <ion-col align-self-center [size]="3">
+        <ion-col align-self-center [size]="7">
           <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled" [(ngModel)]="normal.amount">
           </ion-input>
         </ion-col>
@@ -61,9 +61,9 @@
         <ion-col align-self-center [size]="3">
           样品准备时间 :
         </ion-col>
-        <ion-col align-self-center [size]="6">
+        <ion-col align-self-center [size]="2">
         </ion-col>
-        <ion-col align-self-center [size]="3">
+        <ion-col align-self-center [size]="7">
           <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"
             [(ngModel)]="normal.readiness_time">
           </ion-input>
@@ -75,9 +75,9 @@
         <ion-col align-self-center [size]="3">
           付款情况 :
         </ion-col>
-        <ion-col align-self-center [size]="6">
+        <ion-col align-self-center [size]="2">
         </ion-col>
-        <ion-col align-self-center [size]="3">
+        <ion-col align-self-center [size]="7">
           <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled" [(ngModel)]="normal.payment">
           </ion-input>
         </ion-col>
@@ -88,13 +88,12 @@
         <ion-col align-self-center [size]="3">
           样品间环境照片 :
         </ion-col>
-        <ion-col align-self-center [size]="4">
+        <ion-col align-self-center [size]="2">
         </ion-col>
-        <ion-col align-self-center [size]="5">
-          <app-photo-mini [type]="'sample_pic'" [photos]="sample_pic" [flagStatus]="flag" [jinyong]="jinyong">
+        <ion-col align-self-center [size]="7">
+          <app-photo-mini [type]="'sample_pic'" [photos]="sample_pic" [flagStatus]="flag">
           </app-photo-mini>
-          <app-video-mini [type]="'inspect_showroom_video'" [videos]="showroom_video" [flagStatus]="flag"
-            [jinyong]="jinyong" [factory_i]="factory_id" [inspect_no]="inspect_no">
+          <app-video-mini [type]="'inspect_showroom_video'" [videos]="showroom_video" [flagStatus]="flag">
           </app-video-mini>
         </ion-col>
       </ion-row>

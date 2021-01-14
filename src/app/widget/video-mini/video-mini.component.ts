@@ -33,12 +33,11 @@ export class VideoMiniComponent implements OnInit {
             // console.log(1);
             this.factory_inspect_no = input;
             // console.log(this.factory_inspect_no);
-            if (this.type == 'inspect_product_video') {
-                if (this.factory_inspect_no == undefined || this.factory_inspect_no == 'undefined') {
-                    this.flagChoose = true;
-                } else {
-                    this.flagChoose = false;
-                }
+
+            if (this.factory_inspect_no == undefined || this.factory_inspect_no == 'undefined') {
+                this.flagChoose = false;
+            } else {
+                this.flagChoose = true;
             }
         }
     }
@@ -47,26 +46,26 @@ export class VideoMiniComponent implements OnInit {
             this._up_data = input;
         }
     }
-    @Input() set jinyong(input: any) {
-        this.flagChoose = input;
-        console.log(input);
+    // @Input() set jinyong(input: any) {
+    //     this.flagChoose = input;
+    //     console.log(input);
 
-        console.log(this.flagChoose);
-    }
+    //     console.log(this.flagChoose);
+    // }
     @Input() set flagStatus(input: any) {
         if (!!input) {
             this.flagIsStatus = input;
         }
     }
 
-    @Input() set factory_i(input: any) {
-        this.factory_id = input;
-        console.log(this.factory_id);
-    }
-    @Input() set inspect_no(input: any) {
-        this.factory_inspect_no = input;
-        console.log(this.factory_inspect_no);
-    }
+    // @Input() set factory_i(input: any) {
+    //     this.factory_id = input;
+    //     console.log(this.factory_id);
+    // }
+    // @Input() set inspect_no(input: any) {
+    //     this.factory_inspect_no = input;
+    //     console.log(this.factory_inspect_no);
+    // }
     // 回流的数组
     _up_data: any[] = [];
     flagIsStatus: any;
@@ -116,7 +115,7 @@ export class VideoMiniComponent implements OnInit {
     videotape() {
         // console.log(this.flagChoose);
 
-        if (this.flagChoose || this.flagChoose == undefined) {
+        if (!this.flagChoose) {
             let str = '';
             if (window.sessionStorage.getItem('index') == '1' || window.sessionStorage.getItem('index') == '3') {
                 str = '请先保存工厂基本信息再上传视频！';
@@ -316,10 +315,11 @@ export class VideoMiniComponent implements OnInit {
             this.factory_id = window.sessionStorage.getItem('FACTORY_ID');
         }
 
-        // if (this.factory_inspect_no == 'undefined' || this.factory_inspect_no == undefined) {
-        //     this.flagChoose = false;
-        // } else {
-        //     this.flagChoose = true;
-        // }
+        if (this.factory_inspect_no == 'undefined' || this.factory_inspect_no == undefined) {
+            this.flagChoose = false;
+        } else {
+            this.flagChoose = true;
+        }
+        console.log(this.flagChoose);
     }
 }

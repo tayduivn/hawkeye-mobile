@@ -22,7 +22,6 @@ export class LeaveGuard1 implements CanDeactivate<FactoryBaseInformationComponen
         const status = component.confirm();
         const isback = window.sessionStorage.getItem('back');
         if (isback == 'isBACK') {
-            console.log('点击返回切换');
             return new Promise(resolve => {
                 if (status) {
                     resolve(true);
@@ -85,9 +84,9 @@ export class LeaveGuard1 implements CanDeactivate<FactoryBaseInformationComponen
                             {
                                 text: '保存',
                                 handler: () => {
-                                    resolve(true);
+                                    resolve(false);
                                     this.tab.canClick$.next({
-                                        flag: true,
+                                        flag: false,
                                         type: 'isSave',
                                     });
                                 },
@@ -176,9 +175,9 @@ export class LeaveGuard2 implements CanDeactivate<FactoryGeneralSituationCompone
                             {
                                 text: '保存',
                                 handler: () => {
-                                    resolve(true);
+                                    resolve(false);
                                     this.tab.canClick$.next({
-                                        flag: true,
+                                        flag: false,
                                         type: 'isSave',
                                     });
                                 },
@@ -267,9 +266,9 @@ export class LeaveGuard3 implements CanDeactivate<ProductInformationComponent> {
                             {
                                 text: '保存',
                                 handler: () => {
-                                    resolve(true);
+                                    resolve(false);
                                     this.tab.canClick$.next({
-                                        flag: true,
+                                        flag: false,
                                         type: 'isSave',
                                     });
                                 },
@@ -358,9 +357,9 @@ export class LeaveGuard4 implements CanDeactivate<SpecimenInformationComponent> 
                             {
                                 text: '保存',
                                 handler: () => {
-                                    resolve(true);
+                                    resolve(false);
                                     this.tab.canClick$.next({
-                                        flag: true,
+                                        flag: false,
                                         type: 'isSave',
                                     });
                                 },

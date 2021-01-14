@@ -31,12 +31,12 @@ export class PurchasingInspectFactoryPage implements OnInit {
     ngOnInit() {
         // 一开始就获取列表获取到的列表进行渲染
         this.getList(this.queryInfo);
-        this.flash.flash$.pipe(takeWhile(() => !this.destroy)).subscribe(res => {
-            if (res == 'flash') {
-                console.log('主页面刷新了');
-                this.getList(this.queryInfo);
-            }
-        });
+        // this.flash.flash$.subscribe(res => {
+        //     if (res == 'flash') {
+        //         console.log('主页面刷新了');
+        //         this.getList(this.queryInfo);
+        //     }
+        // });
     }
 
     // dest:boolean=false

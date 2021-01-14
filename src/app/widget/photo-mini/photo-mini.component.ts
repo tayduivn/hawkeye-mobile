@@ -69,12 +69,7 @@ export class PhotoMiniComponent extends PhotographComponent {
             this.flagIsStatus = input;
         }
     }
-    @Input() set jinyong(input: any) {
-        this.flag = input;
-        console.log(input);
 
-        console.log(this.flag);
-    }
     @Input() factory_id: string = '';
     @Input() type: any;
     factory_inspect_no: any;

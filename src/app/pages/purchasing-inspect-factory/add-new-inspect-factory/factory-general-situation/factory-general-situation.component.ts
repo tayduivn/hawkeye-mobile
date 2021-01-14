@@ -78,21 +78,21 @@ export class FactoryGeneralSituationComponent implements OnInit {
     factory_id: any;
     inspect_no: any;
     ngOnInit() {
-        if (window.sessionStorage.getItem('FACTORY_ID') != 'undefined') {
-            this.jinyong = false;
-        } else {
-            this.jinyong = true;
-        }
-        this.isDisable.isDisabled$.pipe(takeWhile(() => !this.destroy)).subscribe(res => {
-            if (res != 'undefined') {
-                // 不等于undefined的时候说明有  有的话就不禁用
-                this.jinyong = false;
-                this.factory_id = res.factory_id;
-                this.inspect_no = res.inspect_no;
-            } else {
-                this.jinyong = true;
-            }
-        });
+        // if (window.sessionStorage.getItem('FACTORY_ID') != 'undefined') {
+        //     this.jinyong = false;
+        // } else {
+        //     this.jinyong = true;
+        // }
+        // this.isDisable.isDisabled$.pipe(takeWhile(() => !this.destroy)).subscribe(res => {
+        //     if (res != 'undefined') {
+        //         // 不等于undefined的时候说明有  有的话就不禁用
+        //         this.jinyong = false;
+        //         this.factory_id = res.factory_id;
+        //         this.inspect_no = res.inspect_no;
+        //     } else {
+        //         this.jinyong = true;
+        //     }
+        // });
 
         console.log('组件初始化了');
         const infoChange$: Observable<any> = this.userInfo.userInfo$;
@@ -109,9 +109,7 @@ export class FactoryGeneralSituationComponent implements OnInit {
                         const newNormalObj = _.cloneDeep(this.normal);
                         Object.assign(newOriginObj, newNormalObj);
                         newOriginObj.factory_id = this.DETAILS.id;
-                        // console.log(this.DETAILS.id);
                         this.saveInformation(newOriginObj);
-                        // console.log(newOriginObj);
                     } else {
                         const newOriginObj = _.cloneDeep(this.originObject);
                         const newNormalObj = _.cloneDeep(this.normal);
@@ -122,7 +120,6 @@ export class FactoryGeneralSituationComponent implements OnInit {
                             id = (window.sessionStorage.getItem('FACTORY_ID') as any) - 0;
                             newOriginObj.factory_id = id;
                             this.saveInformation(newOriginObj);
-                            // console.log(newOriginObj);
                         } else {
                             this.originObject = {
                                 acreage: '',
@@ -452,12 +449,7 @@ export class FactoryGeneralSituationComponent implements OnInit {
 
             this.inspecting.saveGeneralInformation(params).subscribe(res => {
                 // console.log(res);
-                if (res.status !== 1)
-                    return this.es.showToast({
-                        message: '保存失败',
-                        duration: 1500,
-                        color: 'danger',
-                    });
+
                 this.es.showToast({
                     message: '保存成功',
                     duration: 1500,
