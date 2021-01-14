@@ -47,65 +47,54 @@ export class SpecimenInformationComponent implements OnInit {
     jinyong: boolean;
     factory_id: any;
     inspect_no: any;
+    obs$: any;
     ngOnInit() {
-        // if (window.sessionStorage.getItem('FACTORY_ID') != 'undefined') {
-        //     this.jinyong = false;
-        // } else {
-        //     this.jinyong = true;
-        // }
-        // this.isDisable.isDisabled$.pipe(takeWhile(() => !this.destroy)).subscribe(res => {
-        //     if (res != 'undefined') {
-        //         // 不等于undefined的时候说明有  有的话就不禁用
-        //         this.jinyong = false;
-        //         this.factory_id = res.factory_id;
-        //         this.inspect_no = res.inspect_no;
-        //     } else {
-        //         this.jinyong = true;
-        //     }
-        // });
-        const infoChange$: Observable<any> = this.userInfo.userInfo$;
-        // pipe(takeWhile(() => !this.destroy))
-        infoChange$
-            .pipe(
-                combineLatest(this.isSave.isSave$),
-                takeWhile(() => !this.destroy),
-            )
-            .subscribe(res => {
-                // debugger;
-                // console.log(res);
-                if (res[1] == '3') {
-                    // 此时是编辑的时候  编辑的时候需要传递的有工厂的id(只在这个页面是这个样子)
-                    //这里可以拿到头部的信息  那么拿到后在这里面调用保存的方法
-                    if (this.flag == '2') {
-                        // 如果是编辑的话传递的工厂id应该就是点击编辑传递进来的详情的id
-                        const newOriginObj = _.cloneDeep(this.originObject);
-                        const newNormalObj = _.cloneDeep(this.normal);
-                        Object.assign(newOriginObj, newNormalObj);
-                        newOriginObj.factory_id = this.DETAILS.id;
+        this.obs$ = this.isSave.isSave$.subscribe(res => {
+            if (res.index == '3') {
+                // 此时是编辑的时候  编辑的时候需要传递的有工厂的id(只在这个页面是这个样子)
+                //这里可以拿到头部的信息  那么拿到后在这里面调用保存的方法
+                if (this.flag == '2') {
+                    // 如果是编辑的话传递的工厂id应该就是点击编辑传递进来的详情的id
+                    const newOriginObj = _.cloneDeep(this.originObject);
+                    const newNormalObj = _.cloneDeep(this.normal);
+                    Object.assign(newOriginObj, newNormalObj);
+                    newOriginObj.factory_id = this.DETAILS.id;
+                    this.saveInformation(newOriginObj);
+                    // console.log(newOriginObj);
+                } else {
+                    const newOriginObj = _.cloneDeep(this.originObject);
+                    const newNormalObj = _.cloneDeep(this.normal);
+                    Object.assign(newOriginObj, newNormalObj);
+                    // 如果不是编辑的话传递的id就应该是第一个新增页面保存的id
+                    let id;
+                    if (window.sessionStorage.getItem('FACTORY_ID') != 'undefined') {
+                        id = (window.sessionStorage.getItem('FACTORY_ID') as any) - 0;
+                        newOriginObj.factory_id = id;
                         this.saveInformation(newOriginObj);
                         // console.log(newOriginObj);
                     } else {
-                        const newOriginObj = _.cloneDeep(this.originObject);
-                        const newNormalObj = _.cloneDeep(this.normal);
-                        Object.assign(newOriginObj, newNormalObj);
-                        // 如果不是编辑的话传递的id就应该是第一个新增页面保存的id
-                        let id;
-                        if (window.sessionStorage.getItem('FACTORY_ID') != 'undefined') {
-                            id = (window.sessionStorage.getItem('FACTORY_ID') as any) - 0;
-                            newOriginObj.factory_id = id;
-                            this.saveInformation(newOriginObj);
-                            // console.log(newOriginObj);
-                        } else {
-                            this.initData();
-                            return this.es.showToast({
-                                message: '请先添加工厂基本信息',
-                                color: 'danger',
-                                duration: 1500,
-                            });
-                        }
+                        this.initData();
+                        return this.es.showToast({
+                            message: '请先添加工厂基本信息',
+                            color: 'danger',
+                            duration: 1500,
+                        });
                     }
                 }
-            });
+            }
+        });
+
+        // const infoChange$: Observable<any> = this.userInfo.userInfo$;
+        // // pipe(takeWhile(() => !this.destroy))
+        // infoChange$
+        //     .pipe(
+        //         combineLatest(this.isSave.isSave$),
+        //         takeWhile(() => !this.destroy),
+        //     )
+        //     .subscribe(res => {
+        //         // debugger;
+        //         // console.log(res);
+        //     });
 
         this.getInitQueryParams();
 
@@ -261,12 +250,12 @@ export class SpecimenInformationComponent implements OnInit {
         // 保存的时候发送请求
         // 先合并传递的参数
         this.inspecting.saveSpecimenInformation(params).subscribe(res => {
-            // if (res.status !== 1)
-            //     return this.es.showToast({
-            //         message: '保存失败',
-            //         duration: 1500,
-            //         color: 'danger',
-            //     });
+            if (res.status !== 1)
+                return this.es.showToast({
+                    message: '保存失败',
+                    duration: 1500,
+                    color: 'danger',
+                });
             this.es.showToast({
                 message: '保存成功',
                 duration: 1500,
@@ -278,6 +267,7 @@ export class SpecimenInformationComponent implements OnInit {
     ngOnDestroy(): void {
         window.localStorage.setItem('flag', '未保存');
         this.destroy = true;
+        this.obs$.unsubscribe();
     }
 
     confirm() {

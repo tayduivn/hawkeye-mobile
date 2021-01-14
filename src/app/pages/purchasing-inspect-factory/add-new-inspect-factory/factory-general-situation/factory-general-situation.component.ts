@@ -77,6 +77,7 @@ export class FactoryGeneralSituationComponent implements OnInit {
     jinyong: boolean;
     factory_id: any;
     inspect_no: any;
+    obs$: any;
     ngOnInit() {
         // if (window.sessionStorage.getItem('FACTORY_ID') != 'undefined') {
         //     this.jinyong = false;
@@ -93,62 +94,54 @@ export class FactoryGeneralSituationComponent implements OnInit {
         //         this.jinyong = true;
         //     }
         // });
-
-        console.log('组件初始化了');
-        const infoChange$: Observable<any> = this.userInfo.userInfo$;
-        infoChange$
-            .pipe(
-                combineLatest(this.isSave.isSave$),
-                takeWhile(() => !this.destroy),
-            )
-            .subscribe(res => {
-                if (res[1] == '1') {
-                    if (this.flag == '2') {
-                        // 如果是编辑的话传递的工厂id应该就是点击编辑传递进来的详情的id
-                        const newOriginObj = _.cloneDeep(this.originObject);
-                        const newNormalObj = _.cloneDeep(this.normal);
-                        Object.assign(newOriginObj, newNormalObj);
-                        newOriginObj.factory_id = this.DETAILS.id;
+        this.obs$ = this.isSave.isSave$.subscribe(res => {
+            if (res.index == '1') {
+                if (this.flag == '2') {
+                    // 如果是编辑的话传递的工厂id应该就是点击编辑传递进来的详情的id
+                    const newOriginObj = _.cloneDeep(this.originObject);
+                    const newNormalObj = _.cloneDeep(this.normal);
+                    Object.assign(newOriginObj, newNormalObj);
+                    newOriginObj.factory_id = this.DETAILS.id;
+                    this.saveInformation(newOriginObj);
+                } else {
+                    const newOriginObj = _.cloneDeep(this.originObject);
+                    const newNormalObj = _.cloneDeep(this.normal);
+                    Object.assign(newOriginObj, newNormalObj);
+                    // 如果不是编辑的话传递的id就应该是第一个新增页面保存的id
+                    let id;
+                    if (window.sessionStorage.getItem('FACTORY_ID') != 'undefined') {
+                        id = (window.sessionStorage.getItem('FACTORY_ID') as any) - 0;
+                        newOriginObj.factory_id = id;
                         this.saveInformation(newOriginObj);
                     } else {
-                        const newOriginObj = _.cloneDeep(this.originObject);
-                        const newNormalObj = _.cloneDeep(this.normal);
-                        Object.assign(newOriginObj, newNormalObj);
-                        // 如果不是编辑的话传递的id就应该是第一个新增页面保存的id
-                        let id;
-                        if (window.sessionStorage.getItem('FACTORY_ID') != 'undefined') {
-                            id = (window.sessionStorage.getItem('FACTORY_ID') as any) - 0;
-                            newOriginObj.factory_id = id;
-                            this.saveInformation(newOriginObj);
-                        } else {
-                            this.originObject = {
-                                acreage: '',
-                                people_num: '',
-                                manning: '',
-                                department: '',
-                                production_equipment: '',
-                                production_capacity: '',
-                                production_cycle: '',
-                                sales_market: '',
-                                pay_type: '',
-                                third_party: '',
-                            };
-                            this.normal = {
-                                quality: '',
-                                customer: '',
-                                authentication: '',
-                                third_name: '',
-                            };
-                            this.toolsObj = {};
-                            return this.es.showToast({
-                                message: '请先添加工厂基本信息',
-                                color: 'danger',
-                                duration: 1500,
-                            });
-                        }
+                        this.originObject = {
+                            acreage: '',
+                            people_num: '',
+                            manning: '',
+                            department: '',
+                            production_equipment: '',
+                            production_capacity: '',
+                            production_cycle: '',
+                            sales_market: '',
+                            pay_type: '',
+                            third_party: '',
+                        };
+                        this.normal = {
+                            quality: '',
+                            customer: '',
+                            authentication: '',
+                            third_name: '',
+                        };
+                        this.toolsObj = {};
+                        return this.es.showToast({
+                            message: '请先添加工厂基本信息',
+                            color: 'danger',
+                            duration: 1500,
+                        });
                     }
                 }
-            });
+            }
+        });
 
         this.getInitQueryParams();
 
@@ -358,8 +351,6 @@ export class FactoryGeneralSituationComponent implements OnInit {
                         this.plant_video = [];
                     }
 
-                    // const DETAILS = JSON.parse(details);
-
                     this.originObject.acreage = res.data.acreage;
                     this.originObject.people_num = res.data.people_num;
                     this.originObject.manning = res.data.manning;
@@ -379,16 +370,9 @@ export class FactoryGeneralSituationComponent implements OnInit {
                         window.localStorage.setItem('flag', '已保存');
                         const newOriginObj = _.cloneDeep(this.originObject);
                         const newNormalObj = _.cloneDeep(this.normal);
-                        // console.log(newOriginObj);
-                        // console.log(newNormalObj);
-
                         Object.assign(newOriginObj, newNormalObj);
                         this.toolsObj = newOriginObj;
                     }
-                    // console.log(this.plant_video);
-                    // console.log(this.facade_video);
-                    // console.log(this.facadePic);
-                    // console.log(this.plantPic);
                 });
             }
             if (queryParam.flag === '0') {
@@ -448,8 +432,13 @@ export class FactoryGeneralSituationComponent implements OnInit {
             // 先合并传递的参数
 
             this.inspecting.saveGeneralInformation(params).subscribe(res => {
-                // console.log(res);
-
+                if (res.status != 1) {
+                    return this.es.showToast({
+                        message: '保存失败',
+                        color: 'danger',
+                        duration: 1500,
+                    });
+                }
                 this.es.showToast({
                     message: '保存成功',
                     duration: 1500,
@@ -489,6 +478,7 @@ export class FactoryGeneralSituationComponent implements OnInit {
     ngOnDestroy(): void {
         window.localStorage.setItem('flag', '未保存');
         this.destroy = true;
+        this.obs$.unsubscribe();
     }
     confirm() {
         const newOriginObj = _.cloneDeep(this.originObject);

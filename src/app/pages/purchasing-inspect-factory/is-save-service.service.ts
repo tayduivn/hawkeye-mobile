@@ -5,6 +5,6 @@ import { Subject } from 'rxjs/internal/Subject';
     providedIn: 'root',
 })
 export class IsSaveServiceService {
-    isSave$: Subject<string> = new Subject();
+    isSave$: Subject<any> = new Subject();
     constructor() {}
 }

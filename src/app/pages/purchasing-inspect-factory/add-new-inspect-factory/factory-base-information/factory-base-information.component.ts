@@ -70,45 +70,77 @@ export class FactoryBaseInformationComponent implements OnInit {
         private userInfo: UserInfoService,
         private isDis: IsDisabledService,
     ) {}
+    obs$: any;
     ngOnInit() {
-        // 数据的回显
-        const infoChange$: Observable<any> = this.userInfo.userInfo$;
-        infoChange$
-            .pipe(
-                combineLatest(this.isSave.isSave$),
-                takeWhile(() => !this.destroy),
-            )
-            .subscribe(res => {
-                console.log(res);
-                if (res[1] == '0') {
-                    this.inspectObj = res[0].name;
-                    // console.log(this.inspectObj);
-                    // 此时是编辑的时候  编辑的时候需要传递的有工厂的id(只在这个页面是这个样子)
-                    if (this.flag == '2') {
-                        const newOriginObj = _.cloneDeep(this.originObject);
-                        const newNormalObj = _.cloneDeep(this.normal);
-                        Object.assign(newOriginObj, newNormalObj);
-                        newOriginObj.factory_id = (window.sessionStorage.getItem('FACTORY_ID') as any) - 0;
-                        newOriginObj.user_id = res[0].user_id - 0;
-                        newOriginObj.name = res[0].name;
-                        newOriginObj.add_time = res[0].add_time;
-                        this.saveInformation(newOriginObj);
-                    } else {
-                        console.log('保存事件再次被触发了');
-                        // 此时不是编辑  不是编辑不传工厂id
-                        const newOriginObj = _.cloneDeep(this.originObject);
-                        const newNormalObj = _.cloneDeep(this.normal);
-                        Object.assign(newOriginObj, newNormalObj);
-                        window.sessionStorage.getItem('FACTORY_ID') == 'undefined'
-                            ? 0
-                            : (newOriginObj.factory_id = (window.sessionStorage.getItem('FACTORY_ID') as any) - 0);
-                        newOriginObj.user_id = res[0].user_id - 0;
-                        newOriginObj.name = res[0].name;
-                        newOriginObj.add_time = res[0].add_time;
-                        this.saveInformation(newOriginObj);
-                    }
+        this.obs$ = this.isSave.isSave$.subscribe(res => {
+            console.log(res);
+            if (res.index == '0') {
+                this.inspectObj = res.currentObj.name;
+                console.log(this.flag);
+
+                if (this.flag == '2') {
+                    const newOriginObj = _.cloneDeep(this.originObject);
+                    const newNormalObj = _.cloneDeep(this.normal);
+                    Object.assign(newOriginObj, newNormalObj);
+                    newOriginObj.factory_id = (window.sessionStorage.getItem('FACTORY_ID') as any) - 0;
+                    newOriginObj.user_id = res.currentObj.user_id - 0;
+                    newOriginObj.name = res.currentObj.name;
+                    newOriginObj.add_time = res.currentObj.add_time;
+                    this.saveInformation(newOriginObj);
+                } else {
+                    console.log('保存事件再次被触发了');
+                    // 此时不是编辑  不是编辑不传工厂id
+                    const newOriginObj = _.cloneDeep(this.originObject);
+                    const newNormalObj = _.cloneDeep(this.normal);
+                    Object.assign(newOriginObj, newNormalObj);
+                    window.sessionStorage.getItem('FACTORY_ID') == 'undefined'
+                        ? 0
+                        : (newOriginObj.factory_id = (window.sessionStorage.getItem('FACTORY_ID') as any) - 0);
+                    newOriginObj.user_id = res.currentObj.user_id - 0;
+                    newOriginObj.name = res.currentObj.name;
+                    newOriginObj.add_time = res.currentObj.add_time;
+                    this.saveInformation(newOriginObj);
                 }
-            });
+            }
+        });
+        // 数据的回显
+        // const infoChange$: Observable<any> = this.userInfo.userInfo$;
+        // infoChange$
+        //     .pipe(
+        //         combineLatest(this.isSave.isSave$),
+        //         takeWhile(() => !this.destroy),
+        //     )
+        //     .subscribe(res => {
+        //         console.log(res);
+        //         if (res[1] == '0') {
+        //             this.inspectObj = res[0].name;
+        //             // console.log(this.inspectObj);
+        //             // 此时是编辑的时候  编辑的时候需要传递的有工厂的id(只在这个页面是这个样子)
+        //             if (this.flag == '2') {
+        //                 const newOriginObj = _.cloneDeep(this.originObject);
+        //                 const newNormalObj = _.cloneDeep(this.normal);
+        //                 Object.assign(newOriginObj, newNormalObj);
+        //                 newOriginObj.factory_id = (window.sessionStorage.getItem('FACTORY_ID') as any) - 0;
+        //                 newOriginObj.user_id = res[0].user_id - 0;
+        //                 newOriginObj.name = res[0].name;
+        //                 newOriginObj.add_time = res[0].add_time;
+        //                 this.saveInformation(newOriginObj);
+        //             } else {
+        //                 console.log('保存事件再次被触发了');
+        //                 // 此时不是编辑  不是编辑不传工厂id
+        //                 const newOriginObj = _.cloneDeep(this.originObject);
+        //                 const newNormalObj = _.cloneDeep(this.normal);
+        //                 Object.assign(newOriginObj, newNormalObj);
+        //                 window.sessionStorage.getItem('FACTORY_ID') == 'undefined'
+        //                     ? 0
+        //                     : (newOriginObj.factory_id = (window.sessionStorage.getItem('FACTORY_ID') as any) - 0);
+        //                 newOriginObj.user_id = res[0].user_id - 0;
+        //                 newOriginObj.name = res[0].name;
+        //                 newOriginObj.add_time = res[0].add_time;
+        //                 this.saveInformation(newOriginObj);
+        //             }
+        //         }
+        //     });
         window.localStorage.setItem('flag', '未保存');
         this.getInitQueryParams();
 
@@ -253,7 +285,14 @@ export class FactoryBaseInformationComponent implements OnInit {
                     window.sessionStorage.setItem('FACTORY_ID', res.data.factory_id);
                     window.sessionStorage.setItem('inspect_no', res.data.factory_inspect_no);
                 }
-
+                console.log(res);
+                if (res.status != 1) {
+                    return this.es.showToast({
+                        message: '保存失败',
+                        color: 'danger',
+                        duration: 1500,
+                    });
+                }
                 this.es.showToast({
                     message: '保存成功',
                     color: 'success',
@@ -281,6 +320,8 @@ export class FactoryBaseInformationComponent implements OnInit {
     ngOnDestroy(): void {
         window.localStorage.setItem('flag', '未保存');
         this.destroy = true;
+        this.obs$.unsubscribe();
+        // this.isSave.isSave$.unsubscribe();
     }
 
     confirm() {

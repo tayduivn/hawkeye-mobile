@@ -61,31 +61,46 @@ export class ProductInformationComponent implements OnInit {
             },
         ],
     };
-    // DETAILS2: any = {};
+    obs$: any;
     ngOnInit() {
-        // console.log(this.DETAILS);
-
-        const infoChange$: Observable<any> = this.userinfo.userInfo$;
-        // pipe(takeWhile(() => !this.destroy))
-        infoChange$
-            .pipe(
-                combineLatest(this.isSave.isSave$),
-                takeWhile(() => !this.destroy),
-            )
-            .subscribe(res => {
-                // debugger;
-                // console.log(res);
-                if (res[1] == '2') {
-                    if (this.flag == '2') {
-                        // 如果是编辑的话传递的工厂id应该就是点击编辑传递进来的详情的id
-                        const newOriginObj = _.cloneDeep(this.originObject);
-                        const newNormalObj = _.cloneDeep(this.normal);
-                        Object.assign(newOriginObj, newNormalObj);
-                        newOriginObj.factory_id = this.DETAILS.id;
-                        newOriginObj.products.forEach(item => {
-                            delete item.hash_arr;
-                            delete item.inspect_product_video;
-                        });
+        this.obs$ = this.isSave.isSave$.subscribe(res => {
+            if (res.index == '2') {
+                if (this.flag == '2') {
+                    // 如果是编辑的话传递的工厂id应该就是点击编辑传递进来的详情的id
+                    const newOriginObj = _.cloneDeep(this.originObject);
+                    const newNormalObj = _.cloneDeep(this.normal);
+                    Object.assign(newOriginObj, newNormalObj);
+                    newOriginObj.factory_id = this.DETAILS.id;
+                    newOriginObj.products.forEach(item => {
+                        delete item.hash_arr;
+                        delete item.inspect_product_video;
+                    });
+                    newOriginObj.products.forEach((item, index) => {
+                        if (!item.apply_inspection_no) {
+                            let onlyOne = window.sessionStorage.getItem(`${index}`);
+                            if (onlyOne == 'undefined') {
+                                onlyOne = null;
+                            }
+                            item.apply_inspection_no = onlyOne;
+                        }
+                    });
+                    // 编辑里面的新增
+                    newOriginObj.simulation_products.forEach((item, index) => {
+                        if (!item.apply_inspection_no) {
+                            item.apply_inspection_no = null;
+                        }
+                    });
+                    this.saveInformation(newOriginObj);
+                    // console.log(newOriginObj);
+                } else {
+                    const newOriginObj = _.cloneDeep(this.originObject);
+                    const newNormalObj = _.cloneDeep(this.normal);
+                    Object.assign(newOriginObj, newNormalObj);
+                    // 如果不是编辑的话传递的id就应该是第一个新增页面保存的id
+                    let id;
+                    if (window.sessionStorage.getItem('FACTORY_ID') != 'undefined') {
+                        id = (window.sessionStorage.getItem('FACTORY_ID') as any) - 0;
+                        newOriginObj.factory_id = id;
                         newOriginObj.products.forEach((item, index) => {
                             if (!item.apply_inspection_no) {
                                 let onlyOne = window.sessionStorage.getItem(`${index}`);
@@ -95,7 +110,7 @@ export class ProductInformationComponent implements OnInit {
                                 item.apply_inspection_no = onlyOne;
                             }
                         });
-                        // 编辑里面的新增
+                        // 新增里面的新增
                         newOriginObj.simulation_products.forEach((item, index) => {
                             if (!item.apply_inspection_no) {
                                 item.apply_inspection_no = null;
@@ -104,42 +119,25 @@ export class ProductInformationComponent implements OnInit {
                         this.saveInformation(newOriginObj);
                         // console.log(newOriginObj);
                     } else {
-                        const newOriginObj = _.cloneDeep(this.originObject);
-                        const newNormalObj = _.cloneDeep(this.normal);
-                        Object.assign(newOriginObj, newNormalObj);
-                        // 如果不是编辑的话传递的id就应该是第一个新增页面保存的id
-                        let id;
-                        if (window.sessionStorage.getItem('FACTORY_ID') != 'undefined') {
-                            id = (window.sessionStorage.getItem('FACTORY_ID') as any) - 0;
-                            newOriginObj.factory_id = id;
-                            newOriginObj.products.forEach((item, index) => {
-                                if (!item.apply_inspection_no) {
-                                    let onlyOne = window.sessionStorage.getItem(`${index}`);
-                                    if (onlyOne == 'undefined') {
-                                        onlyOne = null;
-                                    }
-                                    item.apply_inspection_no = onlyOne;
-                                }
-                            });
-                            // 新增里面的新增
-                            newOriginObj.simulation_products.forEach((item, index) => {
-                                if (!item.apply_inspection_no) {
-                                    item.apply_inspection_no = null;
-                                }
-                            });
-                            this.saveInformation(newOriginObj);
-                            // console.log(newOriginObj);
-                        } else {
-                            this.initData();
-                            return this.es.showToast({
-                                message: '请先添加工厂基本信息',
-                                color: 'danger',
-                                duration: 1500,
-                            });
-                        }
+                        this.initData();
+                        return this.es.showToast({
+                            message: '请先添加工厂基本信息',
+                            color: 'danger',
+                            duration: 1500,
+                        });
                     }
                 }
-            });
+            }
+        });
+
+        // const infoChange$: Observable<any> = this.userinfo.userInfo$;
+        // // pipe(takeWhile(() => !this.destroy))
+        // infoChange$
+        //     .pipe(
+        //         combineLatest(this.isSave.isSave$),
+        //         takeWhile(() => !this.destroy),
+        //     )
+        //     .subscribe(res => {});
 
         window.localStorage.setItem('flag', '未保存');
         this.getInitQueryParams();
@@ -420,6 +418,7 @@ export class ProductInformationComponent implements OnInit {
     ngOnDestroy(): void {
         window.localStorage.setItem('flag', '未保存');
         this.destroy = true;
+        this.obs$.unsubscribe();
     }
 
     confirm() {

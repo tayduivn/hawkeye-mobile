@@ -45,6 +45,7 @@ export class AddNewInspectFactoryComponent implements OnInit {
     set flag(input: boolean) {
         this._flag = input;
     }
+    obs: any;
     ngOnInit() {
         window.sessionStorage.setItem('back', 'undefined');
         this.getInitQueryParams();
@@ -55,14 +56,18 @@ export class AddNewInspectFactoryComponent implements OnInit {
         });
         window.sessionStorage.setItem('index', '0');
         //在这里进行订阅流（服务）那边发送服务  这边订阅服务;
-        this.tab.canClick$.subscribe(res => {
+        this.obs = this.tab.canClick$.subscribe(res => {
+            console.log('流');
+
             // 如果res时true则允许切换
             if (res.type == 'isSave') {
                 const currentObj = _.cloneDeep(this.factoryDetails);
-                this.userInfo.userInfo$.next(currentObj);
                 console.log('save触发');
                 const index = window.sessionStorage.getItem('index');
-                this.isSave.isSave$.next(`${index}`);
+                this.isSave.isSave$.next({
+                    index: `${index}`,
+                    currentObj: currentObj,
+                });
             }
             this.flag = res.flag;
             if (this.flag) {
@@ -71,6 +76,7 @@ export class AddNewInspectFactoryComponent implements OnInit {
             }
         });
     }
+
     showModal() {
         this.es.showModal({
             component: QueueComponent,
@@ -112,6 +118,8 @@ export class AddNewInspectFactoryComponent implements OnInit {
         window.sessionStorage.setItem('index', '0');
         window.sessionStorage.setItem('FACTORY_ID', undefined);
         window.sessionStorage.setItem('inspect_no', undefined);
+        // this.tab.canClick$.unsubscribe();
+        this.obs.unsubscribe();
     }
     // 在这个页面可以获取到所有的信息  所有的信息获取到后路由跳转的时候传到子组件
     saveInformation() {

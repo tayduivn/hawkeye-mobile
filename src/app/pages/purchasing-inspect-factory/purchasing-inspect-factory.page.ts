@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FactoryListQueryInfo, inspectingService } from 'src/app/services/inspecting.service';
 import { PageEffectService } from 'src/app/services/page-effect.service';
 import _ from 'loadsh';
@@ -22,6 +22,7 @@ export class PurchasingInspectFactoryPage implements OnInit {
     factoryList: any[] = [];
     constructor(
         private router: Router,
+        private acRoute: ActivatedRoute,
         private inspecting: inspectingService,
         private es: PageEffectService,
         private flash: FlahListService,
@@ -30,13 +31,20 @@ export class PurchasingInspectFactoryPage implements OnInit {
 
     ngOnInit() {
         // 一开始就获取列表获取到的列表进行渲染
-        this.getList(this.queryInfo);
+        // this.getList(this.queryInfo);
         // this.flash.flash$.subscribe(res => {
         //     if (res == 'flash') {
         //         console.log('主页面刷新了');
         //         this.getList(this.queryInfo);
         //     }
         // });
+
+        this.acRoute.url.subscribe(res => {
+            if (res[0].path === 'purchasing-factory') {
+                this.getList(this.queryInfo);
+            }
+            console.error(res);
+        });
     }
 
     // dest:boolean=false
