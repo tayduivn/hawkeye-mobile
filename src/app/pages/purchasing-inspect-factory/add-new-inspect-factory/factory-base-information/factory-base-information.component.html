@@ -9,9 +9,9 @@
         <ion-col align-self-center [size]="3">
           工厂地址 ({{i+1}})<span class="star">*</span> :
         </ion-col>
-        <ion-col align-self-center [size]="flag==1?4:3">
+        <ion-col align-self-center [size]="flag==1?2:1">
         </ion-col>
-        <ion-col align-self-center [size]="5" class="factoryAddress">
+        <ion-col align-self-center [size]="7" class="factoryAddress">
           <ion-input type="text" class="ipt" [(ngModel)]="item.address" [disabled]="isDisabled">
           </ion-input>
           <ion-button fill="clear" size="small" class="addFactoryAddress" (click)="addAddressClicked()"
@@ -24,9 +24,9 @@
         <ion-col align-self-center [size]="3">
           工厂联系人<span class="star">*</span> :
         </ion-col>
-        <ion-col align-self-center [size]="flag==1?4:3">
+        <ion-col align-self-center [size]="flag==1?2:1">
         </ion-col>
-        <ion-col align-self-center [size]="5">
+        <ion-col align-self-center [size]="7">
           <ion-input type="text" class="ipt" clearInput="true" [(ngModel)]="originObject.contacts"
             [disabled]="isDisabled"></ion-input>
         </ion-col>
@@ -36,9 +36,9 @@
         <ion-col align-self-center [size]="3">
           联系人职位<span class="star">*</span> :
         </ion-col>
-        <ion-col align-self-center [size]="flag==1?4:3">
+        <ion-col align-self-center [size]="flag==1?2:1">
         </ion-col>
-        <ion-col align-self-center [size]="5">
+        <ion-col align-self-center [size]="7">
           <ion-input type="text" class="ipt" clearInput="true" [(ngModel)]="originObject.position"
             [disabled]="isDisabled"></ion-input>
         </ion-col>
@@ -48,9 +48,9 @@
         <ion-col align-self-center [size]="3">
           联系方式<span class="star">*</span> :
         </ion-col>
-        <ion-col align-self-center [size]="flag==1?4:3">
+        <ion-col align-self-center [size]="flag==1?2:1">
         </ion-col>
-        <ion-col align-self-center [size]="5">
+        <ion-col align-self-center [size]="7">
           <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled" [(ngModel)]="originObject.phone">
           </ion-input>
         </ion-col>
@@ -60,9 +60,9 @@
         <ion-col align-self-center [size]="3">
           法人代表<span class="star">*</span> :
         </ion-col>
-        <ion-col align-self-center [size]="flag==1?4:3">
+        <ion-col align-self-center [size]="flag==1?2:1">
         </ion-col>
-        <ion-col align-self-center [size]="5">
+        <ion-col align-self-center [size]="7">
           <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"
             [(ngModel)]="originObject.legaler"></ion-input>
         </ion-col>
@@ -72,9 +72,9 @@
         <ion-col align-self-center [size]="3">
           成立日期 :
         </ion-col>
-        <ion-col align-self-center [size]="flag==1?4:3">
+        <ion-col align-self-center [size]="flag==1?2:1">
         </ion-col>
-        <ion-col align-self-center [size]="5" class="dateCol">
+        <ion-col align-self-center [size]="7" class="dateCol">
           <ion-datetime class="Formatdate" displayFormat="YYYY-MM-DD" doneText="完成" cancelText="取消" max="2050-12-30"
             placeholder="请输入日期" [disabled]="isDisabled" [(ngModel)]="normal.create_time">
           </ion-datetime>
@@ -86,9 +86,9 @@
         <ion-col align-self-center [size]="3">
           注册资本(万) :
         </ion-col>
-        <ion-col align-self-center [size]="flag==1?4:3">
+        <ion-col align-self-center [size]="flag==1?2:1">
         </ion-col>
-        <ion-col align-self-center [size]="5">
+        <ion-col align-self-center [size]="7">
           <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"
             [(ngModel)]="normal.registered_capital" (ionBlur)="onBlur($event)" type="number"></ion-input>
         </ion-col>
@@ -98,9 +98,9 @@
         <ion-col align-self-center [size]="3">
           年销售额(万) :
         </ion-col>
-        <ion-col align-self-center [size]="flag==1?4:3">
+        <ion-col align-self-center [size]="flag==1?2:1">
         </ion-col>
-        <ion-col align-self-center [size]="5">
+        <ion-col align-self-center [size]="7">
           <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled" [(ngModel)]="normal.annual_sales"
             (ionBlur)="onBlur($event)"></ion-input>
         </ion-col>
@@ -110,9 +110,9 @@
         <ion-col align-self-center [size]="3">
           企业性质<span class="star">*</span> :
         </ion-col>
-        <ion-col align-self-center [size]="flag==1?4:3">
+        <ion-col align-self-center [size]="flag==1?2:1">
         </ion-col>
-        <ion-col align-self-center [size]="5">
+        <ion-col align-self-center [size]="7">
           <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"
             [(ngModel)]="originObject.company_nature"></ion-input>
         </ion-col>
@@ -122,16 +122,13 @@
         <ion-col align-self-center [size]="3">
           生产产品类型<span class="star">*</span> :
         </ion-col>
-        <ion-col align-self-center [size]="flag==1?4:3">
+        <ion-col align-self-center [size]="flag==1?2:1">
         </ion-col>
-        <ion-col align-self-center [size]="5">
+        <ion-col align-self-center [size]="7">
           <ion-input type="text" class="ipt" clearInput="true" [disabled]="isDisabled"
             [(ngModel)]="originObject.product_type"></ion-input>
         </ion-col>
       </ion-row>
-
-
-
     </ion-grid>
   </ion-card-content>
 </ion-card>

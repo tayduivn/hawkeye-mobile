@@ -395,12 +395,14 @@ export class ProductInformationComponent implements OnInit {
                 duration: 1500,
                 color: 'success',
             });
-            if (this.normal.products && this.normal.products.length != 0) {
+            if (res.data.product_list && res.data.product_list.length != 0) {
                 this.normal.products.forEach((item, index) => {
                     item.apply_inspection_no = res.data.product_list[index].apply_inspection_no;
                 });
             }
-            if (this.normal.simulation_products && this.normal.simulation_products.length != 0) {
+            console.log(res.data);
+
+            if (res.data.simulation_list && res.data.simulation_list.length != 0) {
                 this.normal.simulation_products.forEach((item, index) => {
                     item.apply_inspection_no = res.data.simulation_list[index].apply_inspection_no;
                 });
@@ -426,8 +428,8 @@ export class ProductInformationComponent implements OnInit {
         const newOriginObj = _.cloneDeep(this.originObject);
         const newNormalObj = _.cloneDeep(this.normal);
         Object.assign(newOriginObj, newNormalObj);
-        // console.log(newOriginObj);
-        // console.log(this.toolsObj);
+        console.log(newOriginObj);
+        console.log(this.toolsObj);
 
         if (this.isDisabled) {
             return true;
