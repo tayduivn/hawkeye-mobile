@@ -52,7 +52,8 @@
             <!-- <ion-button fill="clear" size="medium" class="text-btn" (click)="gotoDetails(item.id)">详情</ion-button> -->
             <!-- <ion-button fill="clear" size="medium" class="text-btn" (click)="gotoCompile(item.id)">编辑</ion-button> -->
             <p class="operation-container-item" (click)="gotoDetails(item.id)">详情</p>
-            <p class="operation-container-item" (click)="gotoCompile(item.id,item)">编辑</p>
+            <p class="operation-container-item" (click)="gotoCompile(item.id,item)"
+              [class]="item.hava_evaluate=='0'?'operation-container-item':'orangeColor'">编辑</p>
           </div>
         </ion-col>
       </ion-row>

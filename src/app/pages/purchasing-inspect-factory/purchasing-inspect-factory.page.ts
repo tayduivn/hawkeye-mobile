@@ -20,6 +20,8 @@ export class PurchasingInspectFactoryPage implements OnInit {
         name: null,
     };
     factoryList: any[] = [];
+    // 区分是否已评估的标识
+    // color: any;
     constructor(
         private router: Router,
         private acRoute: ActivatedRoute,
@@ -43,7 +45,6 @@ export class PurchasingInspectFactoryPage implements OnInit {
             if (res[0].path === 'purchasing-factory') {
                 this.getList(this.queryInfo);
             }
-            console.error(res);
         });
     }
 
@@ -62,6 +63,7 @@ export class PurchasingInspectFactoryPage implements OnInit {
             // 解构出数据
             const { data } = res;
             console.log(data);
+
             // 工厂列表
             this.factoryList = data.factory;
         });
