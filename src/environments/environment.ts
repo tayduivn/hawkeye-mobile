@@ -12,7 +12,7 @@ export const environment = {
     // fileUrlPath: 'http://keyi.xdrlgroup.com',
     // usFileUrl: 'http://192.168.1.103/',
     // origin:'http://192.168.1.103'
-
+    // s
     // apiUrl: 'http://121.196.179.68/api/v1',
     // fileUrlPath: 'http://keyi.xdrlgroup.com',
     // usFileUrl: 'http://121.196.179.68/',
