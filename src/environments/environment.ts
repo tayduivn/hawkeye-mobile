@@ -3,6 +3,7 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
+    // new
     production: false,
     // apiUrl: 'http://192.168.3.18/api/v1',
     // fileUrlPath: 'http://keyi.xdrlgroup.com',
