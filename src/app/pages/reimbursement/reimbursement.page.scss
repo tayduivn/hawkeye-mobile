@@ -1,0 +1,74 @@
+.date-btn {
+    width: 200px;
+    position: relative;
+}
+.Formatdate {
+    width: 200px;
+    border: 1px solid rgb(230, 227, 227);
+}
+.icon-ziyuan {
+    font-size: 30px;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.search-btn-container {
+    margin-top: 30px;
+    display: flex;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ccc;
+}
+.line {
+    height: 5px;
+    width: 50px;
+    background-color: rgb(3, 169, 244);
+    margin-top: 17px;
+}
+.search {
+    margin-left: 30px;
+}
+.add {
+    margin-left: 100px;
+}
+.header-row {
+    .title-first-item {
+        background-color: #ededed;
+        text-align: center;
+        font-weight: bold;
+    }
+}
+.row-body {
+    border: 1px solid #ccc;
+    border-top: none;
+    .title-first-item {
+        padding: 0;
+        text-align: center;
+        height: 35px;
+        border-right: 1px solid #ccc;
+        line-height: 35px;
+    }
+    &:last-child {
+        border-right: none;
+    }
+}
+.operation-container {
+    height: 35px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0 15px;
+}
+.operation-container-item {
+    cursor: pointer;
+    color: rgb(56, 128, 255);
+}
+.doing {
+    color: gold;
+}
+.nopass {
+    color: red;
+}
+.pass {
+    color: green;
+}

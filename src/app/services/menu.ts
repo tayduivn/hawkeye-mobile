@@ -87,6 +87,14 @@ const appPages: Array<menuItem> = [
     //     active: false,
     // },
     {
+        title: '出差报销',
+        url: '/errand-reimbursement',
+        type: 'link',
+        limit: 'errand-reimbursement',
+        icon: 'list',
+        active: false,
+    },
+    {
         title: '退出',
         type: 'btn',
         icon: 'exit',

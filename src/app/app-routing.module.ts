@@ -85,6 +85,10 @@ const routes: Routes = [
         loadChildren: () => import('./pages/factory-assess/factory-assess.module').then(m => m.FactoryAssessPageModule),
     },
     {
+        path: '',
+        loadChildren: () => import('./pages/reimbursement/reimbursement.module').then(m => m.ReimbursementPageModule),
+    },
+    {
         path: '**',
         redirectTo: 'welcome',
         pathMatch: 'full',

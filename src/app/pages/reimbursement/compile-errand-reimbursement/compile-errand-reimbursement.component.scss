@@ -1,0 +1,65 @@
+.select {
+    width: 100%;
+    border: 1px solid rgb(230, 227, 227);
+    // color: #ccc;
+}
+.date-btn {
+    width: 170px;
+    position: relative;
+}
+.Formatdate {
+    width: 100%;
+    border: 1px solid rgb(230, 227, 227);
+}
+.icon-ziyuan {
+    font-size: 30px;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.line {
+    height: 5px;
+    width: 50px;
+    background-color: rgb(3, 169, 244);
+    margin-top: 17px;
+}
+.dateCol {
+    display: flex;
+}
+.nextStepBtn {
+    width: 100%;
+}
+.ipt {
+    height: 25px;
+    border: 1px solid rgb(230, 227, 227);
+}
+.date-box {
+    width: 100%;
+}
+.card-header-item {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.all_money {
+    height: 40px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.label {
+    font-size: 20px;
+    font-weight: bold;
+    color: #000000;
+}
+.money {
+    font-size: 20px;
+    color: red;
+    font-weight: bold;
+}
+.star {
+    color: #c00000;
+}

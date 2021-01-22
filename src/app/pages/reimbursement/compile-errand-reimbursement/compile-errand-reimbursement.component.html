@@ -1,0 +1,698 @@
+<ion-header mode="ios">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>报销单填写</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="showModal()" size="small">上传进度</ion-button>
+      <ion-back-button text="返回" color="white" mode="md"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- 基本信息卡片视图区 start -->
+  <ion-card mode="ios">
+    <ion-item class="card-header">
+      <ion-card-title color="primary" class="card-title">基本信息</ion-card-title>
+    </ion-item>
+    <ion-card-content>
+      <ion-grid>
+        <ion-row class="title">
+          <ion-col align-self-center [size]="3">
+            报销人 :
+          </ion-col>
+          <ion-col align-self-center [size]="2">
+          </ion-col>
+          <ion-col align-self-center [size]="7">
+            测试者
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col align-self-center [size]="3">
+            出差日期 <span class="star">*</span> :
+          </ion-col>
+          <ion-col align-self-center [size]="2">
+          </ion-col>
+          <ion-col align-self-center [size]="7" class="dateCol">
+            <!-- 开始日期-->
+            <div class="date-btn">
+              <ion-datetime class="Formatdate" displayFormat="YYYY-MM-DD" doneText="完成" cancelText="取消" max="2050-12-30"
+                placeholder="请输入开始日期">
+                <!-- [disabled]="isDisabled" [(ngModel)]="normal.create_time"-->
+              </ion-datetime>
+              <div class="iconfont icon-ziyuan"></div>
+            </div>
+
+            <!-- 链接线 -->
+            <div class="line"></div>
+            <!-- 结束日期 -->
+            <div class="date-btn">
+              <ion-datetime class="Formatdate" displayFormat="YYYY-MM-DD" doneText="完成" cancelText="取消" max="2050-12-30"
+                placeholder="请输入结束日期">
+                <!-- [disabled]="isDisabled" [(ngModel)]="normal.create_time"-->
+              </ion-datetime>
+              <div class="iconfont icon-ziyuan"></div>
+            </div>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="title">
+          <ion-col align-self-center [size]="3">
+            出差事由 <span class="star">*</span> :
+          </ion-col>
+          <ion-col align-self-center [size]="2">
+          </ion-col>
+          <ion-col align-self-center [size]="7">
+            <!-- 下拉选择器 -->
+            <select class="select">
+              <option value=""></option>
+              <option [value]="1">验货</option>
+              <option [value]="2">监装</option>
+            </select>
+          </ion-col>
+        </ion-row>
+
+
+        <ion-row class="title">
+          <ion-col align-self-center [size]="3">
+            流水号及工厂名 <span class="star">*</span> :
+          </ion-col>
+          <ion-col align-self-center [size]="2">
+          </ion-col>
+          <ion-col align-self-center [size]="7">
+            <!-- 下拉选择器 这里可选择多个-->
+            <select class="select">
+              <option value=""></option>
+              <option [value]="1">xxxxxxxxxxxx</option>
+              <option [value]="2">aaaaaaaaaaa</option>
+            </select>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="title">
+          <ion-col align-self-center [size]="3">
+            差旅费类型 <span class="star">*</span> :
+          </ion-col>
+          <ion-col align-self-center [size]="2">
+          </ion-col>
+          <ion-col align-self-center [size]="7">
+            <!-- 下拉选择器 联动选择-->
+            <select class="select" (ngModelChange)="selectChange($event)" [(ngModel)]="currentObj.key">
+              <option value=""></option>
+              <option [value]="1">普通</option>
+              <option [value]="2">自驾</option>
+            </select>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- 以下内容条件渲染 -->
+  <div class="normal" *ngIf="isShow">
+    <!-- 交通费 -->
+    <ion-card mode="ios">
+      <ion-item class="card-header">
+        <div class="card-header-item">
+          <ion-card-title color="primary" class="card-title">交通费(1)</ion-card-title>
+          <ion-button class="ml-20 add" size="small" (click)="toAdd()">增加+</ion-button>
+        </div>
+
+      </ion-item>
+      <ion-card-content>
+        <ion-grid>
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              交通工具 :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <select class="select">
+                <option value=""></option>
+                <option [value]="1">飞机</option>
+                <option [value]="2">高铁</option>
+                <option [value]="3">动车</option>
+                <option [value]="4">大巴</option>
+              </select>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col align-self-center [size]="3">
+              出发地点 :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <ion-input type="text" class="ipt" clearInput="true"></ion-input>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              出发时间 ：
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <div class="date-box">
+                <ion-datetime class="Formatdate" displayFormat="YYYY-MM-DD" doneText="完成" cancelText="取消"
+                  max="2050-12-30" placeholder="请输入出发日期">
+                </ion-datetime>
+                <div class="iconfont icon-ziyuan"></div>
+              </div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              到达时间 ：
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <div class="date-box">
+                <ion-datetime class="Formatdate" displayFormat="YYYY-MM-DD" doneText="完成" cancelText="取消"
+                  max="2050-12-30" placeholder="请输入到达时间">
+                </ion-datetime>
+                <div class="iconfont icon-ziyuan"></div>
+              </div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              单据张数 :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <ion-input type="text" class="ipt" clearInput="true" type="number"></ion-input>
+            </ion-col>
+          </ion-row>
+
+
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              金额(元) :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <ion-input type="text" class="ipt" clearInput="true" type="number"></ion-input>
+            </ion-col>
+          </ion-row>
+
+
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              单据照片 :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              此处是上传照片的组件
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- 住宿费 -->
+    <ion-card mode="ios">
+      <ion-item class="card-header">
+        <div class="card-header-item">
+          <ion-card-title color="primary" class="card-title">住宿费</ion-card-title>
+        </div>
+      </ion-item>
+      <ion-card-content>
+        <ion-grid>
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              单据张数 :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <ion-input type="text" class="ipt" clearInput="true" type="number"></ion-input>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              发票抬头 :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <!-- 下拉选择器 -->
+              <select class="select">
+                <option value=""></option>
+                <option [value]="1">公司名</option>
+              </select>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              金额(元) :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <ion-input type="text" class="ipt" clearInput="true" type="number"></ion-input>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              单据照片 :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              此处是上传照片的组件
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- 市内车费 -->
+    <ion-card mode="ios">
+      <ion-item class="card-header">
+        <div class="card-header-item">
+          <ion-card-title color="primary" class="card-title">市内车费</ion-card-title>
+        </div>
+      </ion-item>
+      <ion-card-content>
+        <ion-grid>
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              单据张数 :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <ion-input type="text" class="ipt" clearInput="true" type="number"></ion-input>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              类型选择 :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <!-- 下拉选择器 -->
+              <select class="select">
+                <option value=""></option>
+                <option [value]="1">公交费</option>
+                <option [value]="2">打车费</option>
+                <option [value]="3">其他</option>
+              </select>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              金额(元) :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <ion-input type="text" class="ipt" clearInput="true" type="number"></ion-input>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              单据照片 :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              此处是上传照片的组件
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- 出差补贴车费 -->
+    <ion-card mode="ios">
+      <ion-item class="card-header">
+        <div class="card-header-item">
+          <ion-card-title color="primary" class="card-title">出差补贴</ion-card-title>
+        </div>
+      </ion-item>
+      <ion-card-content>
+        <ion-grid>
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              天数 :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <ion-input type="text" class="ipt" clearInput="true" type="number"></ion-input>
+            </ion-col>
+          </ion-row>
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              金额(元) :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <ion-input type="text" class="ipt" clearInput="true" type="number"></ion-input>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+
+
+
+    <!-- 出差补贴车费 -->
+    <ion-card mode="ios">
+      <div class="all_money">
+        <div class="label">报销总额</div>
+        <p class="money">460.00 元</p>
+      </div>
+    </ion-card>
+  </div>
+
+  <div class="self-driving" *ngIf="!isShow">
+    <!-- 油费 -->
+    <ion-card mode="ios">
+      <ion-item class="card-header">
+        <div class="card-header-item">
+          <ion-card-title color="primary" class="card-title">油费(1)</ion-card-title>
+          <ion-button class="ml-20 add" size="small" (click)="toAdd()">增加+</ion-button>
+        </div>
+
+      </ion-item>
+      <ion-card-content>
+        <ion-grid>
+          <ion-row>
+            <ion-col align-self-center [size]="3">
+              出发地点 :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <ion-input type="text" class="ipt" clearInput="true"></ion-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col align-self-center [size]="3">
+              到达地点 :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <ion-input type="text" class="ipt" clearInput="true"></ion-input>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              出发时间 ：
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <div class="date-box">
+                <ion-datetime class="Formatdate" displayFormat="YYYY-MM-DD" doneText="完成" cancelText="取消"
+                  max="2050-12-30" placeholder="请输入出发日期">
+                </ion-datetime>
+                <div class="iconfont icon-ziyuan"></div>
+              </div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              到达时间 ：
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <div class="date-box">
+                <ion-datetime class="Formatdate" displayFormat="YYYY-MM-DD" doneText="完成" cancelText="取消"
+                  max="2050-12-30" placeholder="请输入到达时间">
+                </ion-datetime>
+                <div class="iconfont icon-ziyuan"></div>
+              </div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              公里数(理论) :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <ion-input type="text" class="ipt" clearInput="true" type="number"></ion-input>
+            </ion-col>
+          </ion-row>
+
+
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              公里数(实际) :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <ion-input type="text" class="ipt" clearInput="true" type="number"></ion-input>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              金额(元) :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <ion-input type="text" class="ipt" clearInput="true" type="number"></ion-input>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              导航截图 :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              此处是上传照片的组件
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- 过路费 -->
+    <ion-card mode="ios">
+      <ion-item class="card-header">
+        <div class="card-header-item">
+          <ion-card-title color="primary" class="card-title">过路费</ion-card-title>
+        </div>
+      </ion-item>
+      <ion-card-content>
+        <ion-grid>
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              单据张数 :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <ion-input type="text" class="ipt" clearInput="true" type="number"></ion-input>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              金额(元) :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <ion-input type="text" class="ipt" clearInput="true" type="number"></ion-input>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              单据照片 :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              此处是上传照片的组件
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- 停车费-->
+    <ion-card mode="ios">
+      <ion-item class="card-header">
+        <div class="card-header-item">
+          <ion-card-title color="primary" class="card-title">停车费</ion-card-title>
+        </div>
+      </ion-item>
+      <ion-card-content>
+        <ion-grid>
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              单据张数 :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <ion-input type="text" class="ipt" clearInput="true" type="number"></ion-input>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              金额(元) :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <ion-input type="text" class="ipt" clearInput="true" type="number"></ion-input>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              单据照片 :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              此处是上传照片的组件
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- 住宿费 -->
+    <ion-card mode="ios">
+      <ion-item class="card-header">
+        <div class="card-header-item">
+          <ion-card-title color="primary" class="card-title">住宿费</ion-card-title>
+        </div>
+      </ion-item>
+      <ion-card-content>
+        <ion-grid>
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              单据张数 :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <ion-input type="text" class="ipt" clearInput="true" type="number"></ion-input>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              发票抬头 :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <!-- 下拉选择器 -->
+              <select class="select">
+                <option value=""></option>
+                <option [value]="1">公司名</option>
+              </select>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              金额(元) :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <ion-input type="text" class="ipt" clearInput="true" type="number"></ion-input>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              单据照片 :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              此处是上传照片的组件
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- 出差补贴 -->
+    <ion-card mode="ios">
+      <ion-item class="card-header">
+        <div class="card-header-item">
+          <ion-card-title color="primary" class="card-title">出差补贴</ion-card-title>
+        </div>
+      </ion-item>
+      <ion-card-content>
+        <ion-grid>
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              天数 :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <ion-input type="text" class="ipt" clearInput="true" type="number"></ion-input>
+            </ion-col>
+          </ion-row>
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              金额(元) :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <ion-input type="text" class="ipt" clearInput="true" type="number"></ion-input>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- 总额 -->
+    <ion-card mode="ios">
+      <div class="all_money">
+        <div class="label">报销总额</div>
+        <p class="money">460.00 元</p>
+      </div>
+    </ion-card>
+  </div>
+  <ion-button class="nextStepBtn" size="small" (click)="saveInformation()">
+    保存
+  </ion-button>
+</ion-content>

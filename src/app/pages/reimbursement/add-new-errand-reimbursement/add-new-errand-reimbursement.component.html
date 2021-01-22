@@ -1,0 +1,138 @@
+<ion-header mode="ios">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>报销单填写</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="showModal()" size="small">上传进度</ion-button>
+      <ion-back-button text="返回" color="white" mode="md" (click)="backClicked()"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- 基本信息卡片视图区 start -->
+  <ion-card mode="ios">
+    <ion-item class="card-header">
+      <ion-card-title color="primary" class="card-title">基本信息</ion-card-title>
+    </ion-item>
+    <ion-card-content>
+      <ion-grid>
+        <ion-row class="title">
+          <ion-col align-self-center [size]="3">
+            报销人 :
+          </ion-col>
+          <ion-col align-self-center [size]="2">
+          </ion-col>
+          <ion-col align-self-center [size]="7">
+            {{baseInformation.reimbursement_name}}
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col align-self-center [size]="3">
+            出差日期 <span class="star">*</span> :
+          </ion-col>
+          <ion-col align-self-center [size]="2">
+          </ion-col>
+          <ion-col align-self-center [size]="7" class="dateCol">
+            <!-- 开始日期-->
+            <div class="date-btn">
+              <ion-datetime class="Formatdate" displayFormat="YYYY-MM-DD" doneText="完成" cancelText="取消" max="2050-12-30"
+                placeholder="请输入开始日期" [(ngModel)]="baseInformation.travel_start_time" (ionChange)="startTimeChanged()">
+                <!-- [disabled]="isDisabled" [(ngModel)]="normal.create_time"-->
+              </ion-datetime>
+              <div class="iconfont icon-ziyuan"></div>
+            </div>
+
+            <!-- 链接线 -->
+            <div class="line"></div>
+            <!-- 结束日期 -->
+            <div class="date-btn">
+              <ion-datetime class="Formatdate" displayFormat="YYYY-MM-DD" doneText="完成" cancelText="取消" max="2050-12-30"
+                placeholder="请输入结束日期" [(ngModel)]="baseInformation.travel_end_time" (ionChange)="endTimeChanged()">
+                <!-- [disabled]="isDisabled" [(ngModel)]="normal.create_time"-->
+              </ion-datetime>
+              <div class="iconfont icon-ziyuan"></div>
+            </div>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="title">
+          <ion-col align-self-center [size]="3">
+            出差事由 <span class="star">*</span> :
+          </ion-col>
+          <ion-col align-self-center [size]="2">
+          </ion-col>
+          <ion-col align-self-center [size]="7">
+            <!-- 下拉选择器 -->
+            <select class="select" [(ngModel)]="baseInformation.travel_reason">
+              <option value=""></option>
+              <option [value]="1">验货</option>
+              <option [value]="2">监装</option>
+            </select>
+          </ion-col>
+        </ion-row>
+
+
+        <ion-row class="title">
+          <ion-col align-self-center [size]="3">
+            流水号及工厂名 <span class="star">*</span> :
+          </ion-col>
+          <ion-col align-self-center [size]="2">
+          </ion-col>
+          <ion-col align-self-center [size]="7">
+            <!-- 下拉选择器 这里可选择多个-->
+            <select class="select" [(ngModel)]="factory_name_and_serial"
+              (ngModelChange)="factory_name_and_serialSelectChange($event)">
+              <option value=""></option>
+              <option [value]="'xxxxxxxxxxxx'">xxxxxxxxxxxx</option>
+              <option [value]="'aaaaaaaaaaa'">aaaaaaaaaaa</option>
+              <option [value]="'bbbbbbbbbbbb'">bbbbbbbbbbbb</option>
+              <option [value]="'cccccccccccccccccccccc'">cccccccccccccccccccccc</option>
+              <option [value]="'ddddddddddddddddd'">ddddddddddddddddd</option>
+              <option [value]="'eeeeee'">eeeeee</option>
+              <option [value]="'ffffffff'">ffffffff</option>
+              <option [value]="'gggggggggg'">gggggggggg</option>
+              <option [value]="'hhhhhhhhhh'">hhhhhhhhhh</option>
+              <option [value]="'2222222'">2222222</option>
+            </select>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="title" *ngIf="baseInformation.factory_name_and_serial.length" class="skuAndFactoryNameBOX">
+          <div *ngFor="let item of baseInformation.factory_name_and_serial; let i=index" class="skuAndFactoryName">
+            <div class="cha" (click)="removeClicked(i)">x</div>
+            {{item}}
+          </div>
+        </ion-row>
+
+        <ion-row class="title">
+          <ion-col align-self-center [size]="3">
+            差旅费类型 <span class="star">*</span> :
+          </ion-col>
+          <ion-col align-self-center [size]="2">
+          </ion-col>
+          <ion-col align-self-center [size]="7">
+            <!-- 下拉选择器 联动选择-->
+            <select class="select" (ngModelChange)="selectChange($event)" [(ngModel)]="baseInformation.travel_type"
+              [disabled]="disable">
+              <option [value]="1">普通</option>
+              <option [value]="2">自驾</option>
+            </select>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+
+
+  <!-- 下面放路由插座 -->
+
+  <router-outlet></router-outlet>
+
+  <ion-button class="nextStepBtn" size="small" (click)="saveInformation()">
+    提交
+  </ion-button>
+</ion-content>
