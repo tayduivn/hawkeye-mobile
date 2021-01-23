@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import _ from 'loadsh';
+import { QueueComponent } from 'src/app/pages/implement-inspection/queue/queue.component';
 import { PageEffectService } from 'src/app/services/page-effect.service';
 import { DisabledService } from '../disabled.service';
 import { SaveService } from '../save.service';
@@ -33,7 +35,6 @@ export class SelfDriveComponent implements OnInit {
         travel_subsidy_cost: '', //出差金额
     };
     isSaveFlag: boolean = false;
-    obs$: any;
 
     // 基本信息的对象
     baseInformation: any = {
@@ -43,101 +44,33 @@ export class SelfDriveComponent implements OnInit {
         travel_start_time: '开始时间', //开始时间
         travel_end_time: '结束时间', //结束时间
     };
-    tools: any = {};
-    notFilledToolsArray: any[] = [];
+
     toolsObject: any = {};
-    constructor(private disabled: DisabledService, private es: PageEffectService, private save: SaveService) {}
-    ngOnDestroy(): void {
-        this.obs$.unsubscribe();
-    }
-    saveInformation(params: any): void {
-        // 调用接口保存
-        console.log(params);
-        // debugger;
-        // 保存成功的情况下
-        this.isSaveFlag = true;
-        // 保存成功的情况下拿到一个工具对象来做对比
-        this.toolsObject = _.cloneDeep(this.currentBigObject);
-        // 禁用父组件的东西 true代表禁用
-        this.disabled.disabled$.next(true);
-    }
-    ngOnInit() {
-        this.obs$ = this.save.save$.subscribe(res => {
-            // 开始保存
-            // res就是拿到的父组件的基本信息
-            console.log(res);
-            const newObj = _.cloneDeep(this.currentBigObject);
-            Object.assign(newObj, res);
-            this.saveInformation(newObj);
+    constructor(private es: PageEffectService, private router: Router) {}
+    alreadyUpProgress: boolean;
+
+    showModal() {
+        this.es.showModal({
+            component: QueueComponent,
         });
+        this.alreadyUpProgress = true;
     }
-    // 离开路由的时候触发
-    confirm(): boolean {
-        let flag = true;
-        // 如果是未保存的    里面只要有东西那么就提示
-        const newObj = _.cloneDeep(this.currentBigObject);
-        const tools = _.cloneDeep(this.toolsObject);
-        console.log(newObj);
-        if (!this.isSaveFlag) {
-            for (let key in newObj) {
-                // 如果正在遍历的是数组;
-                if (newObj[key] instanceof Array) {
-                    newObj[key].forEach(item => {
-                        // 数组里面可能是普通的字符 也可能是对象
-                        if (item instanceof Object) {
-                            for (let key1 in item) {
-                                if (item[key1] != '') {
-                                    flag = false;
-                                }
-                            }
-                        } else {
-                            if (item != '') {
-                                flag = false;
-                            }
-                        }
-                    });
-                } else {
-                    // 如果遍历的不是数组  而是普通字符
-                    if (newObj[key] != '') {
-                        flag = false;
-                    }
-                }
-            }
-        } else {
-            if (newObj.fuel_charge_list.length != tools.fuel_charge_list.length) {
-                flag = false;
-            } else {
-                // 如果已经保存的情况下  就对比 保存时候的对象  和现在的对象是否有不一样的地方  如果有不一样的地方  那么就直接判断false
-                for (let key in newObj) {
-                    // 如果是数组的情况下
-                    if (newObj[key] instanceof Array) {
-                        newObj[key].forEach((item, index) => {
-                            if (item instanceof Object) {
-                                for (let key1 in item) {
-                                    if (item[key1] != tools[key][index][key1]) {
-                                        flag = false;
-                                    }
-                                }
-                            } else {
-                                if (item != tools[key][index]) {
-                                    flag = false;
-                                }
-                            }
-                        });
-                    } else {
-                        if (newObj[key] != tools[key]) {
-                            flag = false;
-                        }
-                    }
-                }
-            }
+    ngOnDestroy(): void {}
+    saveInformation() {
+        const $thinkTime = this.thinkTime();
+        if ($thinkTime) {
+            return this.es.showToast({
+                message: '出发时间不能晚于到达时间!',
+                color: 'danger',
+                duration: 1500,
+            });
         }
-        if (!flag) {
-            return false;
-        } else {
-            return true;
-        }
+        // 调用接口保存
+        this.toolsObject = _.cloneDeep(this.currentBigObject);
+        console.log(this.toolsObject);
     }
+    ngOnInit() {}
+
     addItem(): void {
         this.currentBigObject.fuel_charge_list.push({
             departure_place: '', //'出发地点
@@ -150,4 +83,45 @@ export class SelfDriveComponent implements OnInit {
         });
     }
     deleteProduct(index: number) {}
+    notAccord: any[] = [];
+    thinkTime(): boolean {
+        this.notAccord = [];
+        this.currentBigObject.fuel_charge_list.forEach((item, index) => {
+            if (+new Date(item.departure_time) > +new Date(item.arrival_time)) {
+                // 这里是不符合规定的时间
+                this.notAccord.push(index);
+            }
+        });
+
+        let flag = this.currentBigObject.fuel_charge_list.some(item => {
+            if (+new Date(item.departure_time) > +new Date(item.arrival_time)) {
+                return true;
+            } else {
+                return false;
+            }
+        });
+        return flag;
+    }
+    handleTime(time: string): string {
+        const date = new Date(time);
+        const y = date.getFullYear();
+        const m = date.getMonth() + 1;
+        const d = date.getDate();
+        return `${y}-${m}-${d}`;
+    }
+    startTimeChanged(index: number) {
+        this.currentBigObject.traffic_expense_list[index].departure_time = this.handleTime(
+            this.currentBigObject.traffic_expense_list[index].departure_time,
+        );
+    }
+    endTimeChanged(index: number) {
+        this.currentBigObject.traffic_expense_list[index].arrival_time = this.handleTime(
+            this.currentBigObject.traffic_expense_list[index].arrival_time,
+        );
+    }
+
+    backToMainList(): void {
+        // 返回主要列表;
+        this.router.navigate(['/errand-reimbursement']);
+    }
 }

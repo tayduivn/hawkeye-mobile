@@ -25,6 +25,7 @@ import { BlueBirdModule } from '../blue-bird/blue-bird.module';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { CustomOuterSizeComponent } from './custom-outer-size/custom-outer-size.component';
 import { PartComponent } from './part/part.component';
+import { PhotoEvectionComponent } from './photo-evection/photo-evection.component';
 
 @NgModule({
     declarations: [
@@ -39,6 +40,7 @@ import { PartComponent } from './part/part.component';
         PartComponent,
         PhotoMiniComponent,
         VideoMiniComponent,
+        PhotoEvectionComponent,
     ],
     imports: [
         CommonModule,
@@ -60,6 +62,7 @@ import { PartComponent } from './part/part.component';
         CustomOuterSizeComponent,
         PartComponent,
         PhotoMiniComponent,
+        PhotoEvectionComponent,
         VideoMiniComponent,
     ],
     providers: [Camera, MediaCapture, Media, VideoPlayer, ImagePicker, FileChooser, Chooser, VideoEditor, FilePath],

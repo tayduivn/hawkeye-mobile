@@ -9,8 +9,7 @@ import { NormalComponent } from 'src/app/pages/reimbursement/add-new-errand-reim
 import { SelfDriveComponent } from 'src/app/pages/reimbursement/add-new-errand-reimbursement/self-drive/self-drive.component';
 import { IonicModule } from '@ionic/angular';
 import { ReimbursementPage } from './reimbursement.page';
-import { LeaveGuard, LeaveGuard1 } from './leaveGuard/guard';
-
+import { WidgetModule } from 'src/app/widget/widget.module';
 const routes: Routes = [
     {
         path: 'errand-reimbursement',
@@ -19,18 +18,14 @@ const routes: Routes = [
     {
         path: 'add-new-errand-reimbursement',
         component: AddNewErrandReimbursementComponent,
-        children: [
-            {
-                path: 'normal',
-                component: NormalComponent,
-                canDeactivate: [LeaveGuard],
-            },
-            {
-                path: 'self-drive',
-                component: SelfDriveComponent,
-                canDeactivate: [LeaveGuard1],
-            },
-        ],
+    },
+    {
+        path: 'normal',
+        component: NormalComponent,
+    },
+    {
+        path: 'self-drive',
+        component: SelfDriveComponent,
     },
     {
         path: 'errand-reimbursement-details',
@@ -43,7 +38,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-    imports: [CommonModule, FormsModule, IonicModule, RouterModule.forChild(routes)],
+    imports: [CommonModule, FormsModule, IonicModule, RouterModule.forChild(routes), WidgetModule],
     declarations: [
         ReimbursementPage,
         AddNewErrandReimbursementComponent,
@@ -52,6 +47,5 @@ const routes: Routes = [
         NormalComponent,
         SelfDriveComponent,
     ],
-    providers: [LeaveGuard, LeaveGuard1],
 })
 export class ReimbursementPageModule {}

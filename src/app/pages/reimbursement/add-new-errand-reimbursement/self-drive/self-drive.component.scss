@@ -90,3 +90,24 @@
     color: white;
     cursor: pointer;
 }
+
+.back {
+    cursor: pointer;
+    margin-right: 5px;
+    display: flex;
+    span {
+        margin-right: 10px;
+
+        color: white;
+    }
+    .icon-zuo {
+        margin-top: -1px;
+        font-size: 25px;
+        color: white;
+        margin-left: 10px;
+    }
+}
+.danger1 {
+    width: 100%;
+    border: 1px solid red;
+}

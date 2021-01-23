@@ -116,8 +116,7 @@
           </ion-col>
           <ion-col align-self-center [size]="7">
             <!-- 下拉选择器 联动选择-->
-            <select class="select" (ngModelChange)="selectChange($event)" [(ngModel)]="baseInformation.travel_type"
-              [disabled]="disable">
+            <select class="select" [(ngModel)]="baseInformation.travel_type" [disabled]="disable">
               <option [value]="1">普通</option>
               <option [value]="2">自驾</option>
             </select>
@@ -130,9 +129,9 @@
 
   <!-- 下面放路由插座 -->
 
-  <router-outlet></router-outlet>
+  <!-- <router-outlet></router-outlet> -->
 
   <ion-button class="nextStepBtn" size="small" (click)="saveInformation()">
-    提交
+    下一步
   </ion-button>
 </ion-content>

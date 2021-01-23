@@ -24,4 +24,5 @@ export class CompileErrandReimbursementComponent implements OnInit {
     selectChange(event): void {}
     toAdd(): void {}
     saveInformation(): void {}
+    getDetails(): void {}
 }

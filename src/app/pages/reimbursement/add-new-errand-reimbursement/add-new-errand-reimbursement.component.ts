@@ -20,7 +20,6 @@ export class AddNewErrandReimbursementComponent implements OnInit {
         private tabSave: TabSaveService,
     ) {}
     alreadyUpProgress: boolean;
-
     // 工厂流水号下拉选择器的双向绑定对象
     factory_name_and_serial = '';
     // 基本信息的对象
@@ -48,39 +47,38 @@ export class AddNewErrandReimbursementComponent implements OnInit {
     };
     tools: any = {};
     ngOnInit() {
-        this.obs1$ = this.tabSave.tabSave$.subscribe(res => {
-            console.log(res);
-            if (res.save) {
-                const $thinkTime = this.thinkTime();
-                if ($thinkTime) {
-                    return this.es.showToast({
-                        message: '出差开始时间不能大于结束时间!',
-                        color: 'danger',
-                        duration: 1500,
-                    });
-                }
-                const newObj = _.cloneDeep(this.baseInformation);
-                this.save.save$.next(newObj);
-            }
-            if (!res.toggle) {
-                if (this.isShow == '1') {
-                    this.baseInformation.travel_type = '2';
-                } else {
-                    this.baseInformation.travel_type = '1';
-                }
-            }
-        });
-        window.sessionStorage.setItem('reimbursementBACK', 'undefined');
-        this.obs$ = this.disabled.disabled$.subscribe(res => {
-            console.log(res);
-            this.disable = res;
-        });
+        // this.obs1$ = this.tabSave.tabSave$.subscribe(res => {
+        //     console.log(res);
+        //     if (res.save) {
+        //         const $thinkTime = this.thinkTime();
+        //         if ($thinkTime) {
+        //             return this.es.showToast({
+        //                 message: '出差开始时间不能大于结束时间!',
+        //                 color: 'danger',
+        //                 duration: 1500,
+        //             });
+        //         }
+        //         const newObj = _.cloneDeep(this.baseInformation);
+        //         this.save.save$.next(newObj);
+        //     }
+        //     if (!res.toggle) {
+        //         if (this.isShow == '1') {
+        //             this.baseInformation.travel_type = '2';
+        //         } else {
+        //             this.baseInformation.travel_type = '1';
+        //         }
+        //     }
+        // });
+        // window.sessionStorage.setItem('reimbursementBACK', 'undefined');
+        // this.obs$ = this.disabled.disabled$.subscribe(res => {
+        //     console.log(res);
+        //     this.disable = res;
+        // });
         this.getUserInfo();
     }
     // 获取本地存储的信息
     getUserInfo(): void {
         const userInfo = window.sessionStorage.getItem('USER_INFO');
-
         const json = _.cloneDeep(JSON.parse(userInfo));
         console.log(json);
         this.baseInformation.reimbursement_name = json.name;
@@ -96,9 +94,6 @@ export class AddNewErrandReimbursementComponent implements OnInit {
     thinkTime(): boolean {
         if (this.baseInformation.travel_start_time != '' && this.baseInformation.travel_end_time != '') {
             if (+new Date(this.baseInformation.travel_start_time) > +new Date(this.baseInformation.travel_end_time)) {
-                this.tabSave.tabSave$.next({
-                    toggle: false,
-                });
                 return true;
             } else {
                 return false;
@@ -112,7 +107,7 @@ export class AddNewErrandReimbursementComponent implements OnInit {
         const $thinkTime = this.thinkTime();
         if ($thinkTime) {
             return this.es.showToast({
-                message: '出差开始时间不能大于结束时间!',
+                message: '出差开始时间不能晚于结束时间!',
                 color: 'danger',
                 duration: 1500,
             });
@@ -147,9 +142,12 @@ export class AddNewErrandReimbursementComponent implements OnInit {
         }
 
         if (this.notFilledToolsArray.length == 0) {
-            // 没有必填项每填
+            // 没有必填项没填就调用接口保存基本信息，然后跳转到相应的页面
             const newObj = _.cloneDeep(this.baseInformation);
-            this.save.save$.next(newObj);
+            console.log(newObj);
+
+            //   保存成功就跳转到相应的页面
+            newObj.travel_type == '1' ? this.router.navigate(['/normal']) : this.router.navigate(['/self-drive']);
         } else {
             let str = '';
             // 弹出必填项没填
@@ -167,14 +165,7 @@ export class AddNewErrandReimbursementComponent implements OnInit {
         // 保存的时候首先要判断保存的是哪一个   是自驾的还是普通的 根据字段来进行判断
         // 点击保存把保存置为以保存
     }
-    // 新增交通费
-    toAdd(): void {}
-    selectChange(event: any) {
-        this.isShow = event;
-        event == '1'
-            ? this.router.navigate(['/add-new-errand-reimbursement/normal'])
-            : this.router.navigate(['/add-new-errand-reimbursement/self-drive']);
-    }
+
     factory_name_and_serialSelectChange(event) {
         event == '' ? 0 : this.baseInformation.factory_name_and_serial.push(event);
         this.baseInformation.factory_name_and_serial = [...new Set(this.baseInformation.factory_name_and_serial)];
@@ -186,10 +177,7 @@ export class AddNewErrandReimbursementComponent implements OnInit {
     clear() {
         this.factory_name_and_serial = '';
     }
-    ngOnDestroy(): void {
-        this.obs$.unsubscribe();
-        this.obs1$.unsubscribe();
-    }
+    ngOnDestroy(): void {}
     // 点击移除
     removeClicked(index: number) {
         // 唤起弹出层
@@ -209,16 +197,11 @@ export class AddNewErrandReimbursementComponent implements OnInit {
         });
     }
 
-    backClicked(): void {
-        // 点击了返回的时候
-        window.sessionStorage.setItem('reimbursementBACK', 'BACK');
-    }
+    backClicked(): void {}
 
     // 处理时间的函数
     handleTime(time: string): string {
         const date = new Date(time);
-        console.log(date);
-
         const y = date.getFullYear();
         const m = date.getMonth() + 1;
         const d = date.getDate();
@@ -226,10 +209,8 @@ export class AddNewErrandReimbursementComponent implements OnInit {
     }
     startTimeChanged() {
         this.baseInformation.travel_start_time = this.handleTime(this.baseInformation.travel_start_time);
-        console.log(this.baseInformation.travel_start_time);
     }
     endTimeChanged() {
         this.baseInformation.travel_end_time = this.handleTime(this.baseInformation.travel_end_time);
-        console.log(this.baseInformation.travel_end_time);
     }
 }

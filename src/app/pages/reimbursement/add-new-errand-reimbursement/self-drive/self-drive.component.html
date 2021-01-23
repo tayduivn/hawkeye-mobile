@@ -1,323 +1,353 @@
-<div class="self-driving">
-  <!-- 油费 -->
-  <ion-card mode="ios" *ngFor="let item of currentBigObject.fuel_charge_list;let i =index">
-    <ion-item class="card-header">
-      <div class="card-header-item">
-        <ion-card-title color="primary" class="card-title">油费({{i+1}})</ion-card-title>
-        <div class="btns-container">
-          <ion-button class="ml-20 add" size="small" (click)="addItem()"
-            *ngIf="i==currentBigObject.fuel_charge_list.length-1">
-            增加+
-          </ion-button>
-          <ion-button class="ml-20" size="small" color="danger" *ngIf="currentBigObject.fuel_charge_list.length!=1"
-            (click)="deleteProduct(i)">删除
-          </ion-button>
+<ion-header mode="ios">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>差旅费(自驾)</ion-title>
+    <ion-buttons slot="end">
+      <ion-button size="small">上传进度</ion-button>
+      <!-- <ion-back-button text="返回" color="white" mode="md"></ion-back-button> -->
+      <div class="back" (click)="backToMainList()">
+        <div class="iconfont icon-zuo"></div>
+        <span>返回</span>
+      </div>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="self-driving">
+    <!-- 油费 -->
+    <ion-card mode="ios" *ngFor="let item of currentBigObject.fuel_charge_list;let i =index">
+      <ion-item class="card-header">
+        <div class="card-header-item">
+          <ion-card-title color="primary" class="card-title">油费({{i+1}})</ion-card-title>
+          <div class="btns-container">
+            <ion-button class="ml-20 add" size="small" (click)="addItem()"
+              *ngIf="i==currentBigObject.fuel_charge_list.length-1">
+              增加+
+            </ion-button>
+            <ion-button class="ml-20" size="small" color="danger" *ngIf="currentBigObject.fuel_charge_list.length!=1"
+              (click)="deleteProduct(i)">删除
+            </ion-button>
+          </div>
         </div>
+
+      </ion-item>
+      <ion-card-content>
+        <ion-grid>
+          <ion-row>
+            <ion-col align-self-center [size]="3">
+              出发地点 :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <ion-input type="text" class="ipt" clearInput="true" [(ngModel)]="item.departure_place"></ion-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col align-self-center [size]="3">
+              到达地点 :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <ion-input type="text" class="ipt" clearInput="true" [(ngModel)]="item.arrival_place"></ion-input>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              出发时间 ：
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <div class="date-box">
+                <ion-datetime
+                  [class]="notAccord.includes(i)?'danger1 ng-untouched ng-pristine ng-valid ion-untouched ion-pristine ion-valid ios datetime-placeholder hydrated':'Formatdate ng-untouched ng-pristine ng-valid ion-untouched ion-pristine ion-valid ios datetime-placeholder hydrated'"
+                  displayFormat="YYYY-MM-DD" doneText="完成" cancelText="取消" max="2050-12-30" placeholder="请输入出发日期"
+                  [(ngModel)]="item.departure_time">
+                </ion-datetime>
+                <div class="iconfont icon-ziyuan"></div>
+              </div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              到达时间 ：
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <div class="date-box">
+                <ion-datetime
+                  [class]="notAccord.includes(i)?'danger1 ng-untouched ng-pristine ng-valid ion-untouched ion-pristine ion-valid ios datetime-placeholder hydrated':'Formatdate ng-untouched ng-pristine ng-valid ion-untouched ion-pristine ion-valid ios datetime-placeholder hydrated'"
+                  displayFormat="YYYY-MM-DD" doneText="完成" cancelText="取消" max="2050-12-30" placeholder="请输入到达时间"
+                  [(ngModel)]="item.arrival_time">
+                </ion-datetime>
+                <div class="iconfont icon-ziyuan"></div>
+              </div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              公里数(理论) :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <ion-input type="text" class="ipt" clearInput="true" type="number" [(ngModel)]="item.theory_miles">
+              </ion-input>
+            </ion-col>
+          </ion-row>
+
+
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              公里数(实际) :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <ion-input type="text" class="ipt" clearInput="true" type="number" [(ngModel)]="item.actual_miles">
+              </ion-input>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              金额(元) :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <ion-input type="text" class="ipt" clearInput="true" type="number" [(ngModel)]="item.cost"></ion-input>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              导航截图 :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <app-photo-evection></app-photo-evection>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- 过路费 -->
+    <ion-card mode="ios">
+      <ion-item class="card-header">
+        <div class="card-header-item">
+          <ion-card-title color="primary" class="card-title">过路费</ion-card-title>
+        </div>
+      </ion-item>
+      <ion-card-content>
+        <ion-grid>
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              单据张数 :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <ion-input type="text" class="ipt" clearInput="true" type="number"
+                [(ngModel)]="currentBigObject.road_toll_bill_num">
+              </ion-input>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              金额(元) :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <ion-input type="text" class="ipt" clearInput="true" type="number"
+                [(ngModel)]="currentBigObject.road_toll_cost"></ion-input>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              单据照片 :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <app-photo-evection></app-photo-evection>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- 停车费-->
+    <ion-card mode="ios">
+      <ion-item class="card-header">
+        <div class="card-header-item">
+          <ion-card-title color="primary" class="card-title">停车费</ion-card-title>
+        </div>
+      </ion-item>
+      <ion-card-content>
+        <ion-grid>
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              单据张数 :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <ion-input type="text" class="ipt" clearInput="true" type="number"
+                [(ngModel)]="currentBigObject.parking_bill_num"></ion-input>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              金额(元) :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <ion-input type="text" class="ipt" clearInput="true" type="number"
+                [(ngModel)]="currentBigObject.parking_cost"></ion-input>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              单据照片 :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <app-photo-evection></app-photo-evection>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- 住宿费 -->
+    <ion-card mode="ios">
+      <ion-item class="card-header">
+        <div class="card-header-item">
+          <ion-card-title color="primary" class="card-title">住宿费</ion-card-title>
+        </div>
+      </ion-item>
+      <ion-card-content>
+        <ion-grid>
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              单据张数 :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <ion-input type="text" class="ipt" clearInput="true" type="number"
+                [(ngModel)]="currentBigObject.stay_bill_num"></ion-input>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              发票抬头 :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <!-- 下拉选择器 -->
+              <select class="select" [(ngModel)]="currentBigObject.stay_invoice_title">
+                <option value=""></option>
+                <option [value]="1">公司名</option>
+              </select>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              金额(元) :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <ion-input type="text" class="ipt" clearInput="true" type="number"
+                [(ngModel)]="currentBigObject.stay_cost">
+              </ion-input>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              单据照片 :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <app-photo-evection></app-photo-evection>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- 出差补贴 -->
+    <ion-card mode="ios">
+      <ion-item class="card-header">
+        <div class="card-header-item">
+          <ion-card-title color="primary" class="card-title">出差补贴</ion-card-title>
+        </div>
+      </ion-item>
+      <ion-card-content>
+        <ion-grid>
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              天数 :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <ion-input type="text" class="ipt" clearInput="true" type="number"
+                [(ngModel)]="currentBigObject.travel_day_num"></ion-input>
+            </ion-col>
+          </ion-row>
+          <ion-row class="title">
+            <ion-col align-self-center [size]="3">
+              金额(元) :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <ion-input type="text" class="ipt" clearInput="true" type="number"
+                [(ngModel)]="currentBigObject.travel_subsidy_cost"></ion-input>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- 总额 -->
+    <ion-card mode="ios">
+      <div class="all_money">
+        <div class="label">报销总额</div>
+        <p class="money">460.00 元</p>
       </div>
-
-    </ion-item>
-    <ion-card-content>
-      <ion-grid>
-        <ion-row>
-          <ion-col align-self-center [size]="3">
-            出发地点 :
-          </ion-col>
-          <ion-col align-self-center [size]="2">
-          </ion-col>
-          <ion-col align-self-center [size]="7">
-            <ion-input type="text" class="ipt" clearInput="true" [(ngModel)]="item.departure_place"></ion-input>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col align-self-center [size]="3">
-            到达地点 :
-          </ion-col>
-          <ion-col align-self-center [size]="2">
-          </ion-col>
-          <ion-col align-self-center [size]="7">
-            <ion-input type="text" class="ipt" clearInput="true" [(ngModel)]="item.arrival_place"></ion-input>
-          </ion-col>
-        </ion-row>
-
-        <ion-row class="title">
-          <ion-col align-self-center [size]="3">
-            出发时间 ：
-          </ion-col>
-          <ion-col align-self-center [size]="2">
-          </ion-col>
-          <ion-col align-self-center [size]="7">
-            <div class="date-box">
-              <ion-datetime class="Formatdate" displayFormat="YYYY-MM-DD" doneText="完成" cancelText="取消" max="2050-12-30"
-                placeholder="请输入出发日期" [(ngModel)]="item.departure_time">
-              </ion-datetime>
-              <div class="iconfont icon-ziyuan"></div>
-            </div>
-          </ion-col>
-        </ion-row>
-
-        <ion-row class="title">
-          <ion-col align-self-center [size]="3">
-            到达时间 ：
-          </ion-col>
-          <ion-col align-self-center [size]="2">
-          </ion-col>
-          <ion-col align-self-center [size]="7">
-            <div class="date-box">
-              <ion-datetime class="Formatdate" displayFormat="YYYY-MM-DD" doneText="完成" cancelText="取消" max="2050-12-30"
-                placeholder="请输入到达时间" [(ngModel)]="item.arrival_time">
-              </ion-datetime>
-              <div class="iconfont icon-ziyuan"></div>
-            </div>
-          </ion-col>
-        </ion-row>
-
-        <ion-row class="title">
-          <ion-col align-self-center [size]="3">
-            公里数(理论) :
-          </ion-col>
-          <ion-col align-self-center [size]="2">
-          </ion-col>
-          <ion-col align-self-center [size]="7">
-            <ion-input type="text" class="ipt" clearInput="true" type="number" [(ngModel)]="item.theory_miles">
-            </ion-input>
-          </ion-col>
-        </ion-row>
+    </ion-card>
 
 
-        <ion-row class="title">
-          <ion-col align-self-center [size]="3">
-            公里数(实际) :
-          </ion-col>
-          <ion-col align-self-center [size]="2">
-          </ion-col>
-          <ion-col align-self-center [size]="7">
-            <ion-input type="text" class="ipt" clearInput="true" type="number" [(ngModel)]="item.actual_miles">
-            </ion-input>
-          </ion-col>
-        </ion-row>
 
-        <ion-row class="title">
-          <ion-col align-self-center [size]="3">
-            金额(元) :
-          </ion-col>
-          <ion-col align-self-center [size]="2">
-          </ion-col>
-          <ion-col align-self-center [size]="7">
-            <ion-input type="text" class="ipt" clearInput="true" type="number" [(ngModel)]="item.cost"></ion-input>
-          </ion-col>
-        </ion-row>
-
-        <ion-row class="title">
-          <ion-col align-self-center [size]="3">
-            导航截图 :
-          </ion-col>
-          <ion-col align-self-center [size]="2">
-          </ion-col>
-          <ion-col align-self-center [size]="7">
-            此处是上传照片的组件
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-card-content>
-  </ion-card>
-
-  <!-- 过路费 -->
-  <ion-card mode="ios">
-    <ion-item class="card-header">
-      <div class="card-header-item">
-        <ion-card-title color="primary" class="card-title">过路费</ion-card-title>
-      </div>
-    </ion-item>
-    <ion-card-content>
-      <ion-grid>
-        <ion-row class="title">
-          <ion-col align-self-center [size]="3">
-            单据张数 :
-          </ion-col>
-          <ion-col align-self-center [size]="2">
-          </ion-col>
-          <ion-col align-self-center [size]="7">
-            <ion-input type="text" class="ipt" clearInput="true" type="number"
-              [(ngModel)]="currentBigObject.road_toll_bill_num">
-            </ion-input>
-          </ion-col>
-        </ion-row>
-
-        <ion-row class="title">
-          <ion-col align-self-center [size]="3">
-            金额(元) :
-          </ion-col>
-          <ion-col align-self-center [size]="2">
-          </ion-col>
-          <ion-col align-self-center [size]="7">
-            <ion-input type="text" class="ipt" clearInput="true" type="number"
-              [(ngModel)]="currentBigObject.road_toll_cost"></ion-input>
-          </ion-col>
-        </ion-row>
-
-        <ion-row class="title">
-          <ion-col align-self-center [size]="3">
-            单据照片 :
-          </ion-col>
-          <ion-col align-self-center [size]="2">
-          </ion-col>
-          <ion-col align-self-center [size]="7">
-            此处是上传照片的组件
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-card-content>
-  </ion-card>
-
-  <!-- 停车费-->
-  <ion-card mode="ios">
-    <ion-item class="card-header">
-      <div class="card-header-item">
-        <ion-card-title color="primary" class="card-title">停车费</ion-card-title>
-      </div>
-    </ion-item>
-    <ion-card-content>
-      <ion-grid>
-        <ion-row class="title">
-          <ion-col align-self-center [size]="3">
-            单据张数 :
-          </ion-col>
-          <ion-col align-self-center [size]="2">
-          </ion-col>
-          <ion-col align-self-center [size]="7">
-            <ion-input type="text" class="ipt" clearInput="true" type="number"
-              [(ngModel)]="currentBigObject.parking_bill_num"></ion-input>
-          </ion-col>
-        </ion-row>
-
-        <ion-row class="title">
-          <ion-col align-self-center [size]="3">
-            金额(元) :
-          </ion-col>
-          <ion-col align-self-center [size]="2">
-          </ion-col>
-          <ion-col align-self-center [size]="7">
-            <ion-input type="text" class="ipt" clearInput="true" type="number"
-              [(ngModel)]="currentBigObject.parking_cost"></ion-input>
-          </ion-col>
-        </ion-row>
-
-        <ion-row class="title">
-          <ion-col align-self-center [size]="3">
-            单据照片 :
-          </ion-col>
-          <ion-col align-self-center [size]="2">
-          </ion-col>
-          <ion-col align-self-center [size]="7">
-            此处是上传照片的组件
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-card-content>
-  </ion-card>
-
-  <!-- 住宿费 -->
-  <ion-card mode="ios">
-    <ion-item class="card-header">
-      <div class="card-header-item">
-        <ion-card-title color="primary" class="card-title">住宿费</ion-card-title>
-      </div>
-    </ion-item>
-    <ion-card-content>
-      <ion-grid>
-        <ion-row class="title">
-          <ion-col align-self-center [size]="3">
-            单据张数 :
-          </ion-col>
-          <ion-col align-self-center [size]="2">
-          </ion-col>
-          <ion-col align-self-center [size]="7">
-            <ion-input type="text" class="ipt" clearInput="true" type="number"
-              [(ngModel)]="currentBigObject.stay_bill_num"></ion-input>
-          </ion-col>
-        </ion-row>
-
-        <ion-row class="title">
-          <ion-col align-self-center [size]="3">
-            发票抬头 :
-          </ion-col>
-          <ion-col align-self-center [size]="2">
-          </ion-col>
-          <ion-col align-self-center [size]="7">
-            <!-- 下拉选择器 -->
-            <select class="select" [(ngModel)]="currentBigObject.stay_invoice_title">
-              <option value=""></option>
-              <option [value]="1">公司名</option>
-            </select>
-          </ion-col>
-        </ion-row>
-
-        <ion-row class="title">
-          <ion-col align-self-center [size]="3">
-            金额(元) :
-          </ion-col>
-          <ion-col align-self-center [size]="2">
-          </ion-col>
-          <ion-col align-self-center [size]="7">
-            <ion-input type="text" class="ipt" clearInput="true" type="number" [(ngModel)]="currentBigObject.stay_cost">
-            </ion-input>
-          </ion-col>
-        </ion-row>
-
-        <ion-row class="title">
-          <ion-col align-self-center [size]="3">
-            单据照片 :
-          </ion-col>
-          <ion-col align-self-center [size]="2">
-          </ion-col>
-          <ion-col align-self-center [size]="7">
-            此处是上传照片的组件
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-card-content>
-  </ion-card>
-
-  <!-- 出差补贴 -->
-  <ion-card mode="ios">
-    <ion-item class="card-header">
-      <div class="card-header-item">
-        <ion-card-title color="primary" class="card-title">出差补贴</ion-card-title>
-      </div>
-    </ion-item>
-    <ion-card-content>
-      <ion-grid>
-        <ion-row class="title">
-          <ion-col align-self-center [size]="3">
-            天数 :
-          </ion-col>
-          <ion-col align-self-center [size]="2">
-          </ion-col>
-          <ion-col align-self-center [size]="7">
-            <ion-input type="text" class="ipt" clearInput="true" type="number"
-              [(ngModel)]="currentBigObject.travel_day_num"></ion-input>
-          </ion-col>
-        </ion-row>
-        <ion-row class="title">
-          <ion-col align-self-center [size]="3">
-            金额(元) :
-          </ion-col>
-          <ion-col align-self-center [size]="2">
-          </ion-col>
-          <ion-col align-self-center [size]="7">
-            <ion-input type="text" class="ipt" clearInput="true" type="number"
-              [(ngModel)]="currentBigObject.travel_subsidy_cost"></ion-input>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-card-content>
-  </ion-card>
-
-  <!-- 总额 -->
-  <ion-card mode="ios">
-    <div class="all_money">
-      <div class="label">报销总额</div>
-      <p class="money">460.00 元</p>
-    </div>
-  </ion-card>
-</div>
+    <ion-button class="nextStepBtn" size="small" (click)="saveInformation()">
+      提交
+    </ion-button>
+  </div>
+</ion-content>

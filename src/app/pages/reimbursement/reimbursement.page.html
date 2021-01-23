@@ -18,7 +18,7 @@
         <!-- 开始日期-->
         <div class="date-btn">
           <ion-datetime class="Formatdate" displayFormat="YYYY-MM-DD" doneText="完成" cancelText="取消" max="2050-12-30"
-            placeholder="请输入开始日期">
+            placeholder="请输入开始日期" (ionChange)="startTimeChanged()" [(ngModel)]="params.travel_start_time">
             <!-- [disabled]="isDisabled" [(ngModel)]="normal.create_time"-->
           </ion-datetime>
           <div class="iconfont icon-ziyuan"></div>
@@ -29,7 +29,7 @@
         <!-- 结束日期 -->
         <div class="date-btn">
           <ion-datetime class="Formatdate" displayFormat="YYYY-MM-DD" doneText="完成" cancelText="取消" max="2050-12-30"
-            placeholder="请输入结束日期">
+            placeholder="请输入结束日期" (ionChange)="endTimeChanged()" [(ngModel)]="params.travel_end_time">
             <!-- [disabled]="isDisabled" [(ngModel)]="normal.create_time"-->
           </ion-datetime>
           <div class="iconfont icon-ziyuan"></div>
@@ -37,9 +37,12 @@
 
 
         <!-- 查询按钮 -->
+        <div class="btns">
+          <ion-button class="ml-20 search" size="small" (click)="toSearch()">查询</ion-button>
+          <!-- <ion-button class="ml-20 reset" size="small" (click)="reset()">重置</ion-button> -->
+          <ion-button class="ml-20 add" size="small" (click)="toAdd()">新增</ion-button>
+        </div>
 
-        <ion-button class="ml-20 search" size="small" (click)="toSearch()">查询</ion-button>
-        <ion-button class="ml-20 add" size="small" (click)="toAdd()">新增</ion-button>
       </div>
     </ion-card-header>
     <!-- 内容的表格区域 -->
@@ -64,18 +67,24 @@
       </ion-row>
       <!-- 表体区域 -->
 
-      <ion-row class="row-body">
+      <ion-row class="row-body" *ngFor="let item of list">
         <ion-col align-self-center [size]="2" class="title-first-item">
-          测试者
+          {{item.reimbursement_name?item.reimbursement_name:'暂无'}}
         </ion-col>
         <ion-col align-self-center [size]="2" class="title-first-item">
-          428.00
+          {{item.travel_sum_cost?item.travel_sum_cost:'暂无'}}
         </ion-col>
         <ion-col align-self-center [size]="4" class="title-first-item">
-          08.01
+          {{item.travel_date?item.travel_date:'暂无'}}
         </ion-col>
-        <ion-col align-self-center [size]="2" class="title-first-item doing">
-          审批中
+        <ion-col align-self-center [size]="2" class="title-first-item doing" *ngIf="item.approval_status=='审批中'">
+          {{item.approval_status}}
+        </ion-col>
+        <ion-col align-self-center [size]="2" class="title-first-item pass" *ngIf="item.approval_status=='通过'">
+          {{item.approval_status}}
+        </ion-col>
+        <ion-col align-self-center [size]="2" class="title-first-item nopass" *ngIf="item.approval_status=='未通过'">
+          {{item.approval_status}}
         </ion-col>
         <ion-col align-self-center [size]="2" class="title-first-item">
           <div class="operation-container">
@@ -84,46 +93,8 @@
           </div>
         </ion-col>
       </ion-row>
-      <ion-row class="row-body">
-        <ion-col align-self-center [size]="2" class="title-first-item">
-          测试者
-        </ion-col>
-        <ion-col align-self-center [size]="2" class="title-first-item">
-          428.00
-        </ion-col>
-        <ion-col align-self-center [size]="4" class="title-first-item">
-          08.01
-        </ion-col>
-        <ion-col align-self-center [size]="2" class="title-first-item pass">
-          通过
-        </ion-col>
-        <ion-col align-self-center [size]="2" class="title-first-item">
-          <div class="operation-container">
-            <p class="operation-container-item" (click)="gotoDetails()">详情</p>
-            <p class="operation-container-item" (click)="gotoCompile()">编辑</p>
-          </div>
-        </ion-col>
-      </ion-row>
-      <ion-row class="row-body">
-        <ion-col align-self-center [size]="2" class="title-first-item">
-          测试者
-        </ion-col>
-        <ion-col align-self-center [size]="2" class="title-first-item">
-          428.00
-        </ion-col>
-        <ion-col align-self-center [size]="4" class="title-first-item">
-          07.25-07.27
-        </ion-col>
-        <ion-col align-self-center [size]="2" class="title-first-item nopass">
-          不通过
-        </ion-col>
-        <ion-col align-self-center [size]="2" class="title-first-item">
-          <div class="operation-container">
-            <p class="operation-container-item" (click)="gotoDetails()">详情</p>
-            <p class="operation-container-item" (click)="gotoCompile()">编辑</p>
-          </div>
-        </ion-col>
-      </ion-row>
+
+
       <!-- <div *ngIf="!factoryList" class="noHaveData">暂无数据~</div> -->
     </ion-grid>
 
