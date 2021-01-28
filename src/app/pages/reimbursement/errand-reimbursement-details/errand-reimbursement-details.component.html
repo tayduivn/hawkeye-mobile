@@ -26,7 +26,7 @@
           <ion-col align-self-center [size]="2">
           </ion-col>
           <ion-col align-self-center [size]="7">
-            测试者
+            {{originObj.reimbursement_name}}
           </ion-col>
         </ion-row>
 
@@ -39,14 +39,14 @@
           <ion-col align-self-center [size]="7" class="dateCol">
             <!-- 开始日期-->
             <div class="date-btn">
-              <span>2020-10-10</span>
+              <span>{{originObj.travel_start_time}}</span>
             </div>
 
             <!-- 链接线 -->
             <div class="line"></div>
             <!-- 结束日期 -->
             <div class="date-btn">
-              <span>2020-10-10</span>
+              <span>{{originObj.travel_end_time}}</span>
             </div>
           </ion-col>
         </ion-row>
@@ -58,7 +58,7 @@
           <ion-col align-self-center [size]="2">
           </ion-col>
           <ion-col align-self-center [size]="7">
-            <span>验货</span>
+            <span>{{originObj.travel_reason=='1'?'验货':'监装'}}</span>
           </ion-col>
         </ion-row>
 
@@ -70,7 +70,11 @@
           <ion-col align-self-center [size]="2">
           </ion-col>
           <ion-col align-self-center [size]="7">
-            <span>xxxxxxxx</span>
+            <!-- <div *ngIf="originObj.factory_name_and_serial.length!=0"> -->
+            <div *ngFor="let item of originObj.factory_name_and_serial">{{item}}</div>
+            <!-- </div> -->
+
+            <!-- <span *ngIf="originObj.factory_name_and_serial.length!==0">暂无</span> -->
           </ion-col>
         </ion-row>
 
@@ -81,7 +85,7 @@
           <ion-col align-self-center [size]="2">
           </ion-col>
           <ion-col align-self-center [size]="7">
-            <span>自费</span>
+            <span>{{originObj.travel_type=='1'?'普通':'自驾'}}</span>
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -89,12 +93,12 @@
   </ion-card>
 
   <!-- 以下内容条件渲染 -->
-  <div class="normal" *ngIf="isShow">
+  <div class="normal" *ngIf="originObj.travel_type=='1'">
     <!-- 交通费 -->
-    <ion-card mode="ios">
+    <ion-card mode="ios" *ngFor="let item of originObj.traffic_expense_list;let i=index">
       <ion-item class="card-header">
         <div class="card-header-item">
-          <ion-card-title color="primary" class="card-title">交通费(1)</ion-card-title>
+          <ion-card-title color="primary" class="card-title">交通费({{i+1}})</ion-card-title>
         </div>
 
       </ion-item>
@@ -107,7 +111,15 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <span>飞机</span>
+              <div *ngIf="item.vehicle">
+                <span *ngIf="item.vehicle=='1'">飞机</span>
+                <span *ngIf="item.vehicle=='2'">高铁</span>
+                <span *ngIf="item.vehicle=='3'">动车</span>
+                <span *ngIf="item.vehicle=='4'">大巴</span>
+              </div>
+              <div *ngIf="!item.vehicle">
+                <span>暂无</span>
+              </div>
             </ion-col>
           </ion-row>
 
@@ -118,7 +130,8 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <span>宁波</span>
+              <span *ngIf="item.departure_place">{{item.departure_place}}</span>
+              <span *ngIf="!item.departure_place">暂无</span>
             </ion-col>
           </ion-row>
 
@@ -130,7 +143,7 @@
             </ion-col>
             <ion-col align-self-center [size]="7">
               <div class="date-box">
-                <span>2020-10-10</span>
+                <span>{{item.departure_time?item.departure_time:'暂无'}}</span>
               </div>
             </ion-col>
           </ion-row>
@@ -142,7 +155,7 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <span>2020-10-10</span>
+              <span>{{item.arrival_time?item.arrival_time:'暂无'}}</span>
             </ion-col>
           </ion-row>
 
@@ -153,7 +166,7 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <span>1</span>
+              <span>{{item.bill_num?item.bill_num:'暂无'}}</span>
             </ion-col>
           </ion-row>
 
@@ -165,7 +178,7 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <span>100</span>
+              <span>{{item.cost?item.cost:'暂无'}}</span>
             </ion-col>
           </ion-row>
 
@@ -177,7 +190,7 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              此处是上传照片的组件
+              <app-photo-evection [photo]="item.hash_arr" [isDisabled]="true"></app-photo-evection>
             </ion-col>
           </ion-row>
         </ion-grid>
@@ -200,7 +213,7 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <span>2</span>
+              <span>{{originObj.stay_bill_num?originObj.stay_bill_num:'暂无'}}</span>
             </ion-col>
           </ion-row>
 
@@ -211,7 +224,8 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <span>成都初五科技有限公司</span>
+              <!-- <span>stay_invoice_title</span> -->
+              <span>{{originObj.stay_invoice_title?originObj.stay_invoice_title:'暂无'}}</span>
             </ion-col>
           </ion-row>
 
@@ -222,7 +236,8 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <span>200</span>
+              <!-- <span>stay_cost</span> -->
+              <span>{{originObj.stay_cost?originObj.stay_cost:'暂无'}}</span>
             </ion-col>
           </ion-row>
 
@@ -233,7 +248,7 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              此处是上传照片的组件
+              <app-photo-evection [photo]="originObj.stay_bill_pic" [isDisabled]="true"></app-photo-evection>
             </ion-col>
           </ion-row>
         </ion-grid>
@@ -256,7 +271,7 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <span>2</span>
+              <span>{{originObj.city_bill_num?originObj.city_bill_num:'暂无'}}</span>
             </ion-col>
           </ion-row>
 
@@ -267,7 +282,14 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <span>打车费</span>
+              <div *ngIf="originObj.city_cost_type">
+                <span *ngIf="originObj.city_cost_type=='1'">公交费</span>
+                <span *ngIf="originObj.city_cost_type=='2'">打车费</span>
+                <span *ngIf="originObj.city_cost_type=='3'">其他</span>
+              </div>
+              <div *ngIf="!originObj.city_cost_type">
+                <span>暂无</span>
+              </div>
             </ion-col>
           </ion-row>
 
@@ -278,7 +300,7 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <span>100</span>
+              <span>{{originObj.city_cost?originObj.city_cost:'暂无'}}</span>
             </ion-col>
           </ion-row>
 
@@ -289,7 +311,7 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              此处是上传照片的组件
+              <app-photo-evection [photo]="originObj.city_bill_pic" [isDisabled]="true"></app-photo-evection>
             </ion-col>
           </ion-row>
         </ion-grid>
@@ -312,7 +334,7 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <span>1</span>
+              <span>{{originObj.travel_day_num?originObj.travel_day_num:'暂无'}}</span>
             </ion-col>
           </ion-row>
           <ion-row class="title">
@@ -322,7 +344,7 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <span>2</span>
+              <span>{{originObj.travel_subsidy_cost?originObj.travel_subsidy_cost:'暂无'}}</span>
             </ion-col>
           </ion-row>
         </ion-grid>
@@ -335,17 +357,17 @@
     <ion-card mode="ios">
       <div class="all_money">
         <div class="label">报销总额</div>
-        <p class="money">460.00 元</p>
+        <p class="money">{{originObj.travel_sum_cost?originObj.travel_sum_cost+'.00 元':'暂无'}}</p>
       </div>
     </ion-card>
   </div>
 
-  <div class="self-driving" *ngIf="!isShow">
+  <div class="self-driving" *ngIf="originObj.travel_type=='2'">
     <!-- 油费 -->
-    <ion-card mode="ios">
+    <ion-card mode="ios" *ngFor="let item of originObj.fuel_charge_list;let i=index">
       <ion-item class="card-header">
         <div class="card-header-item">
-          <ion-card-title color="primary" class="card-title">油费(1)</ion-card-title>
+          <ion-card-title color="primary" class="card-title">油费({{i+1}})</ion-card-title>
         </div>
 
       </ion-item>
@@ -358,7 +380,7 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <span>宁波</span>
+              <span>{{item.departure_place?item.departure_place:'暂无'}}</span>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -368,7 +390,7 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <span>仙居</span>
+              <span>{{item.arrival_place?item.arrival_place:'暂无'}}</span>
             </ion-col>
           </ion-row>
 
@@ -379,7 +401,7 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <span>2020-10-10</span>
+              <span>{{item.departure_time?item.departure_time:'暂无'}}</span>
             </ion-col>
           </ion-row>
 
@@ -390,7 +412,7 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <span>2020-10-10</span>
+              <span>{{item.arrival_time?item.arrival_time:'暂无'}}</span>
             </ion-col>
           </ion-row>
 
@@ -401,7 +423,7 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <span>2</span>
+              <span>{{item.theory_miles?item.theory_miles:'暂无'}}</span>
             </ion-col>
           </ion-row>
 
@@ -413,7 +435,7 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <span>2</span>
+              <span>{{item.actual_miles?item.actual_miles:'暂无'}}</span>
             </ion-col>
           </ion-row>
 
@@ -424,7 +446,7 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <span>2</span>
+              <span>{{item.cost?item.cost:'暂无'}}</span>
             </ion-col>
           </ion-row>
 
@@ -435,7 +457,7 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              此处是上传照片的组件
+              <app-photo-evection [photo]="item.hash_arr" [isDisabled]="true"></app-photo-evection>
             </ion-col>
           </ion-row>
         </ion-grid>
@@ -458,7 +480,7 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <span>2</span>
+              <span>{{originObj.road_toll_bill_num?originObj.road_toll_bill_num:'暂无'}}</span>
             </ion-col>
           </ion-row>
 
@@ -469,7 +491,7 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <span>2</span>
+              <span>{{originObj.road_toll_cost?originObj.road_toll_cost:'暂无'}}</span>
             </ion-col>
           </ion-row>
 
@@ -480,7 +502,7 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              此处是上传照片的组件
+              <app-photo-evection [photo]="originObj.road_toll_bill_pic" [isDisabled]="true"></app-photo-evection>
             </ion-col>
           </ion-row>
         </ion-grid>
@@ -503,7 +525,7 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <span>2</span>
+              <span>{{originObj.parking_bill_num?originObj.parking_bill_num:'暂无'}}</span>
             </ion-col>
           </ion-row>
 
@@ -514,7 +536,7 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <span>2</span>
+              <span>{{originObj.parking_cost?originObj.parking_cost:'暂无'}}</span>
             </ion-col>
           </ion-row>
 
@@ -525,7 +547,7 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              此处是上传照片的组件
+              <app-photo-evection [photo]="originObj.packing_bill_pic" [isDisabled]="true"></app-photo-evection>
             </ion-col>
           </ion-row>
         </ion-grid>
@@ -548,7 +570,7 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <span>2</span>
+              <span>{{originObj.stay_bill_num?originObj.stay_bill_num:'暂无'}}</span>
             </ion-col>
           </ion-row>
 
@@ -559,7 +581,7 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <span>成都初五科技有限公司</span>
+              <span>{{originObj.stay_invoice_title?originObj.stay_invoice_title:'暂无'}}</span>
             </ion-col>
           </ion-row>
 
@@ -570,7 +592,7 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <span>2</span>
+              <span>{{originObj.stay_cost?originObj.stay_cost:'暂无'}}</span>
             </ion-col>
           </ion-row>
 
@@ -581,7 +603,7 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              此处是上传照片的组件
+              <app-photo-evection [photo]="originObj.stay_bill_pic" [isDisabled]="true"></app-photo-evection>
             </ion-col>
           </ion-row>
         </ion-grid>
@@ -604,7 +626,7 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <span>2</span>
+              <span>{{originObj.travel_day_num?originObj.travel_day_num:'暂无'}}</span>
             </ion-col>
           </ion-row>
           <ion-row class="title">
@@ -614,7 +636,7 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <span>200</span>
+              <span>{{originObj.travel_subsidy_cost?originObj.travel_subsidy_cost:'暂无'}}</span>
             </ion-col>
           </ion-row>
         </ion-grid>
@@ -625,7 +647,7 @@
     <ion-card mode="ios">
       <div class="all_money">
         <div class="label">报销总额</div>
-        <p class="money">460.00 元</p>
+        <p class="money">{{originObj.travel_sum_cost?originObj.travel_sum_cost+'.00 元':'暂无'}}</p>
       </div>
     </ion-card>
   </div>

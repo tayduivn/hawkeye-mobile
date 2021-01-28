@@ -26,7 +26,7 @@
           <ion-col align-self-center [size]="2">
           </ion-col>
           <ion-col align-self-center [size]="7">
-            {{baseInformation.reimbursement_name}}
+            {{reimbursement_name}}
           </ion-col>
         </ion-row>
 
@@ -52,7 +52,7 @@
             <div class="date-btn">
               <ion-datetime class="Formatdate" displayFormat="YYYY-MM-DD" doneText="完成" cancelText="取消" max="2050-12-30"
                 placeholder="请输入结束日期" [(ngModel)]="baseInformation.travel_end_time" (ionChange)="endTimeChanged()">
-                <!-- [disabled]="isDisabled" [(ngModel)]="normal.create_time"-->
+
               </ion-datetime>
               <div class="iconfont icon-ziyuan"></div>
             </div>
@@ -67,10 +67,9 @@
           </ion-col>
           <ion-col align-self-center [size]="7">
             <!-- 下拉选择器 -->
-            <select class="select" [(ngModel)]="baseInformation.travel_reason">
+            <select class="select" [(ngModel)]="baseInformation.travel_reason" (ngModelChange)="reasonChanged()">
               <option value=""></option>
-              <option [value]="1">验货</option>
-              <option [value]="2">监装</option>
+              <option [value]="reasonIndex[i]" *ngFor="let item of reason;let i =index">{{item}}</option>
             </select>
           </ion-col>
         </ion-row>
@@ -87,16 +86,9 @@
             <select class="select" [(ngModel)]="factory_name_and_serial"
               (ngModelChange)="factory_name_and_serialSelectChange($event)">
               <option value=""></option>
-              <option [value]="'xxxxxxxxxxxx'">xxxxxxxxxxxx</option>
-              <option [value]="'aaaaaaaaaaa'">aaaaaaaaaaa</option>
-              <option [value]="'bbbbbbbbbbbb'">bbbbbbbbbbbb</option>
-              <option [value]="'cccccccccccccccccccccc'">cccccccccccccccccccccc</option>
-              <option [value]="'ddddddddddddddddd'">ddddddddddddddddd</option>
-              <option [value]="'eeeeee'">eeeeee</option>
-              <option [value]="'ffffffff'">ffffffff</option>
-              <option [value]="'gggggggggg'">gggggggggg</option>
-              <option [value]="'hhhhhhhhhh'">hhhhhhhhhh</option>
-              <option [value]="'2222222'">2222222</option>
+              <option [value]="item.factory_name" *ngFor="let item of FactoryAndSerialNumber">{{item.factory_name}}
+              </option>
+
             </select>
           </ion-col>
         </ion-row>

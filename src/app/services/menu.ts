@@ -91,7 +91,7 @@ const appPages: Array<menuItem> = [
         url: '/errand-reimbursement',
         type: 'link',
         limit: 'errand-reimbursement',
-        icon: 'list',
+        icon: 'logo-yen',
         active: false,
     },
     {

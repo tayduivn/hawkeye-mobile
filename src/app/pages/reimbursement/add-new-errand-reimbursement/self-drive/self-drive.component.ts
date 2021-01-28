@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import _ from 'loadsh';
 import { QueueComponent } from 'src/app/pages/implement-inspection/queue/queue.component';
 import { PageEffectService } from 'src/app/services/page-effect.service';
+import { TravelReimbursementService } from 'src/app/services/travel-reimbursement.service';
+import { SaveOnlyOneService } from 'src/app/widget/photo-evection/save-only-one.service';
 import { DisabledService } from '../disabled.service';
 import { SaveService } from '../save.service';
 @Component({
@@ -44,9 +46,17 @@ export class SelfDriveComponent implements OnInit {
         travel_start_time: '开始时间', //开始时间
         travel_end_time: '结束时间', //结束时间
     };
-
+    total: any = '0.00';
     toolsObject: any = {};
-    constructor(private es: PageEffectService, private router: Router) {}
+    disabled: boolean = false;
+    constructor(
+        private es: PageEffectService,
+        private router: Router,
+        private activatedRoute: ActivatedRoute,
+        private travel: TravelReimbursementService,
+        private acRoute: ActivatedRoute,
+        private onlyOne: SaveOnlyOneService,
+    ) {}
     alreadyUpProgress: boolean;
 
     showModal() {
@@ -55,7 +65,9 @@ export class SelfDriveComponent implements OnInit {
         });
         this.alreadyUpProgress = true;
     }
-    ngOnDestroy(): void {}
+    ngOnDestroy(): void {
+        this.obs$.unsubscribe();
+    }
     saveInformation() {
         const $thinkTime = this.thinkTime();
         if ($thinkTime) {
@@ -66,11 +78,89 @@ export class SelfDriveComponent implements OnInit {
             });
         }
         // 调用接口保存
-        this.toolsObject = _.cloneDeep(this.currentBigObject);
-        console.log(this.toolsObject);
-    }
-    ngOnInit() {}
 
+        this.es.showAlert({
+            message: '确认提交信息?',
+            buttons: [
+                {
+                    text: '取消',
+                },
+                {
+                    text: '确定',
+                    handler: () => {
+                        this.toolsObject = _.cloneDeep(this.currentBigObject);
+                        this.toolsObject.travel_sum_cost = this.total - 0;
+                        console.log(this.toolsObject);
+                        this.toolsObject.fuel_charge_list.forEach(item => {
+                            if (item.trans_expenses_no) {
+                            } else {
+                                item.trans_expenses_no = null;
+                            }
+                        });
+                        this.travel.add_travel_reimbursement(this.toolsObject).subscribe(res => {
+                            console.log(res);
+                            if (res.status != 1)
+                                return this.es.showToast({
+                                    message: res.message,
+                                    color: 'danger',
+                                    duration: 1500,
+                                });
+                            this.es.showToast({
+                                message: res.message,
+                                color: 'success',
+                                duration: 1500,
+                            });
+                            this.disabled = true;
+                            setTimeout(() => {
+                                this.router.navigate(['/errand-reimbursement']);
+                            }, 1500);
+                        });
+                    },
+                },
+            ],
+        });
+    }
+    obs$: any;
+    stay_invoice_title_params: any[] = [];
+    ngOnInit() {
+        this.obs$ = this.onlyOne.onlyOneNumber$.subscribe(res => {
+            console.log(res);
+            this.currentBigObject.fuel_charge_list[res.index].trans_expenses_no =
+                res.trans_expenses_no.trans_expenses_no;
+        });
+        this.acRoute.url.subscribe(res => {
+            if (res[0].path == 'self-drive') {
+                console.log('self-drive');
+
+                this.getInitQueryParams();
+                this.travel.getPrepositionData().subscribe(res => {
+                    // res.vehicle_params;
+                    console.log(res);
+
+                    this.stay_invoice_title_params = res.stay_invoice_title_params;
+                });
+            }
+        });
+    }
+    getInitQueryParams() {
+        this.activatedRoute.queryParams.subscribe(queryParam => {
+            this.currentBigObject.travel_reimbursement_no = queryParam.travel_reimbursement_no;
+            this.currentBigObject.travel_id = queryParam.travel_id;
+            this.currentBigObject.travel_type = '2';
+        });
+    }
+    moneyChanged(): void {
+        let total: number = 0;
+        console.log(11);
+        this.currentBigObject.fuel_charge_list.forEach(item => {
+            total += item.cost - 0;
+        });
+        total += this.currentBigObject.road_toll_cost - 0;
+        total += this.currentBigObject.parking_cost - 0;
+        total += this.currentBigObject.stay_cost - 0;
+        total += this.currentBigObject.travel_subsidy_cost - 0;
+        this.total = total.toFixed(2);
+    }
     addItem(): void {
         this.currentBigObject.fuel_charge_list.push({
             departure_place: '', //'出发地点
@@ -82,7 +172,69 @@ export class SelfDriveComponent implements OnInit {
             cost: '', //金额
         });
     }
-    deleteProduct(index: number) {}
+    deleteProduct(index: number, trans_expenses_no: any) {
+        if (trans_expenses_no) {
+            // 如果存在那么就调用接口删除
+            // 删除卡片项
+            this.es.showAlert({
+                message: '确认删除?',
+                buttons: [
+                    {
+                        text: '取消',
+                    },
+                    {
+                        text: '确认',
+                        handler: () => {
+                            // 执行删除操作删除视图层
+                            this.currentBigObject.fuel_charge_list.splice(index, 1);
+                            // 调用接口删除数据库
+                            this.travel
+                                .deleteOilOrTrafficCost({
+                                    trans_expenses_no: trans_expenses_no,
+                                })
+                                .subscribe(res => {
+                                    console.log(res);
+                                    if (res.status != 1)
+                                        return this.es.showToast({
+                                            message: res.message,
+                                            color: 'danger',
+                                            duration: 1500,
+                                        });
+                                    this.es.showToast({
+                                        message: res.message,
+                                        color: 'success',
+                                        duration: 1500,
+                                    });
+                                    this.moneyChanged();
+                                });
+                        },
+                    },
+                ],
+            });
+        } else {
+            this.es.showAlert({
+                message: '确认删除?',
+                buttons: [
+                    {
+                        text: '取消',
+                    },
+                    {
+                        text: '确认',
+                        handler: () => {
+                            // 执行删除操作删除视图层
+                            this.currentBigObject.fuel_charge_list.splice(index, 1);
+                            this.es.showToast({
+                                message: '删除成功',
+                                color: 'success',
+                                duration: 1500,
+                            });
+                            this.moneyChanged();
+                        },
+                    },
+                ],
+            });
+        }
+    }
     notAccord: any[] = [];
     thinkTime(): boolean {
         this.notAccord = [];
@@ -105,18 +257,20 @@ export class SelfDriveComponent implements OnInit {
     handleTime(time: string): string {
         const date = new Date(time);
         const y = date.getFullYear();
-        const m = date.getMonth() + 1;
-        const d = date.getDate();
+        let m: any = date.getMonth() + 1;
+        m = m < 10 ? '0' + m : m;
+        let d: any = date.getDate();
+        d = d < 10 ? '0' + d : d;
         return `${y}-${m}-${d}`;
     }
     startTimeChanged(index: number) {
-        this.currentBigObject.traffic_expense_list[index].departure_time = this.handleTime(
-            this.currentBigObject.traffic_expense_list[index].departure_time,
+        this.currentBigObject.fuel_charge_list[index].departure_time = this.handleTime(
+            this.currentBigObject.fuel_charge_list[index].departure_time,
         );
     }
     endTimeChanged(index: number) {
-        this.currentBigObject.traffic_expense_list[index].arrival_time = this.handleTime(
-            this.currentBigObject.traffic_expense_list[index].arrival_time,
+        this.currentBigObject.fuel_charge_list[index].arrival_time = this.handleTime(
+            this.currentBigObject.fuel_charge_list[index].arrival_time,
         );
     }
 

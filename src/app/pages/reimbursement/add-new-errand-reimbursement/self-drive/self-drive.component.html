@@ -28,7 +28,7 @@
               增加+
             </ion-button>
             <ion-button class="ml-20" size="small" color="danger" *ngIf="currentBigObject.fuel_charge_list.length!=1"
-              (click)="deleteProduct(i)">删除
+              (click)="deleteProduct(i,item.trans_expenses_no)">删除
             </ion-button>
           </div>
         </div>
@@ -67,13 +67,18 @@
               <div class="date-box">
                 <ion-datetime
                   [class]="notAccord.includes(i)?'danger1 ng-untouched ng-pristine ng-valid ion-untouched ion-pristine ion-valid ios datetime-placeholder hydrated':'Formatdate ng-untouched ng-pristine ng-valid ion-untouched ion-pristine ion-valid ios datetime-placeholder hydrated'"
-                  displayFormat="YYYY-MM-DD" doneText="完成" cancelText="取消" max="2050-12-30" placeholder="请输入出发日期"
+                  displayFormat="YYYY-MM-DD HH:mm" doneText="完成" cancelText="取消" max="2050" placeholder="请输入出发日期"
                   [(ngModel)]="item.departure_time">
                 </ion-datetime>
                 <div class="iconfont icon-ziyuan"></div>
               </div>
             </ion-col>
           </ion-row>
+
+          <!-- <ion-item>
+            <ion-label>D MMM YYYY H:mm</ion-label>
+            <ion-datetime displayFormat="D MMM YYYY H:mm" min="1997" max="2010" value="2005-06-17T11:06Z"></ion-datetime>
+          </ion-item> -->
 
           <ion-row class="title">
             <ion-col align-self-center [size]="3">
@@ -85,7 +90,7 @@
               <div class="date-box">
                 <ion-datetime
                   [class]="notAccord.includes(i)?'danger1 ng-untouched ng-pristine ng-valid ion-untouched ion-pristine ion-valid ios datetime-placeholder hydrated':'Formatdate ng-untouched ng-pristine ng-valid ion-untouched ion-pristine ion-valid ios datetime-placeholder hydrated'"
-                  displayFormat="YYYY-MM-DD" doneText="完成" cancelText="取消" max="2050-12-30" placeholder="请输入到达时间"
+                  displayFormat="YYYY-MM-DD HH:mm" doneText="完成" cancelText="取消" max="2050" placeholder="请输入到达时间"
                   [(ngModel)]="item.arrival_time">
                 </ion-datetime>
                 <div class="iconfont icon-ziyuan"></div>
@@ -125,7 +130,8 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <ion-input type="text" class="ipt" clearInput="true" type="number" [(ngModel)]="item.cost"></ion-input>
+              <ion-input type="text" class="ipt" clearInput="true" type="number" [(ngModel)]="item.cost"
+                (ionChange)="moneyChanged()"></ion-input>
             </ion-col>
           </ion-row>
 
@@ -136,7 +142,10 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <app-photo-evection></app-photo-evection>
+              <app-photo-evection [travel_id]="currentBigObject.travel_id"
+                [travel_reimbursement_no]="currentBigObject.travel_reimbursement_no" [type1]="'fuel_charge_pic'"
+                [index]="i" [onlyOneNo]="item.trans_expenses_no">
+              </app-photo-evection>
             </ion-col>
           </ion-row>
         </ion-grid>
@@ -173,7 +182,7 @@
             </ion-col>
             <ion-col align-self-center [size]="7">
               <ion-input type="text" class="ipt" clearInput="true" type="number"
-                [(ngModel)]="currentBigObject.road_toll_cost"></ion-input>
+                [(ngModel)]="currentBigObject.road_toll_cost" (ionChange)="moneyChanged()"></ion-input>
             </ion-col>
           </ion-row>
 
@@ -184,7 +193,9 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <app-photo-evection></app-photo-evection>
+              <app-photo-evection [travel_id]="currentBigObject.travel_id"
+                [travel_reimbursement_no]="currentBigObject.travel_reimbursement_no" [type1]="'road_toll_bill_pic'">
+              </app-photo-evection>
             </ion-col>
           </ion-row>
         </ion-grid>
@@ -220,7 +231,7 @@
             </ion-col>
             <ion-col align-self-center [size]="7">
               <ion-input type="text" class="ipt" clearInput="true" type="number"
-                [(ngModel)]="currentBigObject.parking_cost"></ion-input>
+                [(ngModel)]="currentBigObject.parking_cost" (ionChange)="moneyChanged()"></ion-input>
             </ion-col>
           </ion-row>
 
@@ -231,7 +242,9 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <app-photo-evection></app-photo-evection>
+              <app-photo-evection [travel_id]="currentBigObject.travel_id"
+                [travel_reimbursement_no]="currentBigObject.travel_reimbursement_no" [type1]="'packing_bill_pic'">
+              </app-photo-evection>
             </ion-col>
           </ion-row>
         </ion-grid>
@@ -269,7 +282,7 @@
               <!-- 下拉选择器 -->
               <select class="select" [(ngModel)]="currentBigObject.stay_invoice_title">
                 <option value=""></option>
-                <option [value]="1">公司名</option>
+                <option [value]="item" *ngFor="let item of stay_invoice_title_params">{{item}}</option>
               </select>
             </ion-col>
           </ion-row>
@@ -282,7 +295,7 @@
             </ion-col>
             <ion-col align-self-center [size]="7">
               <ion-input type="text" class="ipt" clearInput="true" type="number"
-                [(ngModel)]="currentBigObject.stay_cost">
+                [(ngModel)]="currentBigObject.stay_cost" (ionChange)="moneyChanged()">
               </ion-input>
             </ion-col>
           </ion-row>
@@ -294,7 +307,9 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <app-photo-evection></app-photo-evection>
+              <app-photo-evection [travel_id]="currentBigObject.travel_id"
+                [travel_reimbursement_no]="currentBigObject.travel_reimbursement_no" [type1]="'stay_bill_pic'">
+              </app-photo-evection>
             </ion-col>
           </ion-row>
         </ion-grid>
@@ -329,7 +344,7 @@
             </ion-col>
             <ion-col align-self-center [size]="7">
               <ion-input type="text" class="ipt" clearInput="true" type="number"
-                [(ngModel)]="currentBigObject.travel_subsidy_cost"></ion-input>
+                [(ngModel)]="currentBigObject.travel_subsidy_cost" (ionChange)="moneyChanged()"></ion-input>
             </ion-col>
           </ion-row>
         </ion-grid>
@@ -340,13 +355,11 @@
     <ion-card mode="ios">
       <div class="all_money">
         <div class="label">报销总额</div>
-        <p class="money">460.00 元</p>
+        <p class="money">{{total}}</p>
       </div>
     </ion-card>
 
-
-
-    <ion-button class="nextStepBtn" size="small" (click)="saveInformation()">
+    <ion-button class="nextStepBtn" size="small" (click)="saveInformation()" [disabled]="disabled">
       提交
     </ion-button>
   </div>

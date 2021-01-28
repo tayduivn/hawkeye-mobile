@@ -26,7 +26,7 @@
           <ion-col align-self-center [size]="2">
           </ion-col>
           <ion-col align-self-center [size]="7">
-            测试者
+            {{originObj.reimbursement_name}}
           </ion-col>
         </ion-row>
 
@@ -40,7 +40,7 @@
             <!-- 开始日期-->
             <div class="date-btn">
               <ion-datetime class="Formatdate" displayFormat="YYYY-MM-DD" doneText="完成" cancelText="取消" max="2050-12-30"
-                placeholder="请输入开始日期">
+                placeholder="请输入开始日期" [(ngModel)]="originObj.travel_start_time" (ionChange)="startTimeChanged()">
                 <!-- [disabled]="isDisabled" [(ngModel)]="normal.create_time"-->
               </ion-datetime>
               <div class="iconfont icon-ziyuan"></div>
@@ -51,7 +51,7 @@
             <!-- 结束日期 -->
             <div class="date-btn">
               <ion-datetime class="Formatdate" displayFormat="YYYY-MM-DD" doneText="完成" cancelText="取消" max="2050-12-30"
-                placeholder="请输入结束日期">
+                placeholder="请输入结束日期" [(ngModel)]="originObj.travel_end_time" (ionChange)="endTimeChanged()">
                 <!-- [disabled]="isDisabled" [(ngModel)]="normal.create_time"-->
               </ion-datetime>
               <div class="iconfont icon-ziyuan"></div>
@@ -67,10 +67,9 @@
           </ion-col>
           <ion-col align-self-center [size]="7">
             <!-- 下拉选择器 -->
-            <select class="select">
+            <select class="select" [(ngModel)]="originObj.travel_reason" (ngModelChange)="reasonChanged()">
               <option value=""></option>
-              <option [value]="1">验货</option>
-              <option [value]="2">监装</option>
+              <option [value]="reasonIndex[i]" *ngFor="let item of reason;let i=index">{{item}}</option>
             </select>
           </ion-col>
         </ion-row>
@@ -84,12 +83,20 @@
           </ion-col>
           <ion-col align-self-center [size]="7">
             <!-- 下拉选择器 这里可选择多个-->
-            <select class="select">
+            <select class="select" [(ngModel)]="factory_name_and_serial"
+              (ngModelChange)="factory_name_and_serialSelectChange($event)">
               <option value=""></option>
-              <option [value]="1">xxxxxxxxxxxx</option>
-              <option [value]="2">aaaaaaaaaaa</option>
+              <option [value]="item.factory_name" *ngFor="let item of factoryArray">{{item.factory_name}}</option>
             </select>
           </ion-col>
+        </ion-row>
+        <!-- {{originObj.factory_name_and_serial|json}} -->
+
+        <ion-row class="title" *ngIf="originObj.factory_name_and_serial.length" class="skuAndFactoryNameBOX">
+          <div *ngFor="let item of originObj.factory_name_and_serial; let i=index" class="skuAndFactoryName">
+            <div class="cha" (click)="removeClicked(i)">x</div>
+            {{item}}
+          </div>
         </ion-row>
 
         <ion-row class="title">
@@ -100,7 +107,7 @@
           </ion-col>
           <ion-col align-self-center [size]="7">
             <!-- 下拉选择器 联动选择-->
-            <select class="select" (ngModelChange)="selectChange($event)" [(ngModel)]="currentObj.key">
+            <select class="select" [(ngModel)]="originObj.travel_type" [disabled]="true">
               <option value=""></option>
               <option [value]="1">普通</option>
               <option [value]="2">自驾</option>
@@ -112,13 +119,20 @@
   </ion-card>
 
   <!-- 以下内容条件渲染 -->
-  <div class="normal" *ngIf="isShow">
+  <div class="normal" *ngIf="originObj.travel_type=='1'">
     <!-- 交通费 -->
-    <ion-card mode="ios">
+    <ion-card mode="ios" *ngFor="let item of originObj.traffic_expense_list;let i=index">
       <ion-item class="card-header">
         <div class="card-header-item">
-          <ion-card-title color="primary" class="card-title">交通费(1)</ion-card-title>
-          <ion-button class="ml-20 add" size="small" (click)="toAdd()">增加+</ion-button>
+          <ion-card-title color="primary" class="card-title">交通费({{i+1}})</ion-card-title>
+          <div class="btns-container">
+            <ion-button class="ml-20 add" size="small" (click)="toAdd()"
+              *ngIf="i==originObj.traffic_expense_list.length-1">
+              增加+
+            </ion-button>
+            <ion-button class="ml-20" size="small" color="danger" (click)="deleteProduct(i,item.trans_expenses_no)">删除
+            </ion-button>
+          </div>
         </div>
 
       </ion-item>
@@ -131,12 +145,10 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <select class="select">
+              <select class="select" [(ngModel)]="item.vehicle">
                 <option value=""></option>
-                <option [value]="1">飞机</option>
-                <option [value]="2">高铁</option>
-                <option [value]="3">动车</option>
-                <option [value]="4">大巴</option>
+                <option [value]="vehicleIndex[i]" *ngFor="let item of vehicleArray;let i=index">{{item}}</option>
+
               </select>
             </ion-col>
           </ion-row>
@@ -148,7 +160,18 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <ion-input type="text" class="ipt" clearInput="true"></ion-input>
+              <ion-input type="text" class="ipt" clearInput="true" [(ngModel)]="item.departure_place"></ion-input>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col align-self-center [size]="3">
+              到达地点 :
+            </ion-col>
+            <ion-col align-self-center [size]="2">
+            </ion-col>
+            <ion-col align-self-center [size]="7">
+              <ion-input type="text" class="ipt" clearInput="true" [(ngModel)]="item.arrival_place"></ion-input>
             </ion-col>
           </ion-row>
 
@@ -160,8 +183,10 @@
             </ion-col>
             <ion-col align-self-center [size]="7">
               <div class="date-box">
-                <ion-datetime class="Formatdate" displayFormat="YYYY-MM-DD" doneText="完成" cancelText="取消"
-                  max="2050-12-30" placeholder="请输入出发日期">
+                <ion-datetime
+                  [class]="notAccord.includes(i)?'danger1 ng-untouched ng-pristine ng-valid ion-untouched ion-pristine ion-valid ios datetime-placeholder hydrated':'Formatdate ng-untouched ng-pristine ng-valid ion-untouched ion-pristine ion-valid ios datetime-placeholder hydrated'"
+                  displayFormat="YYYY-MM-DD" doneText="完成" cancelText="取消" max="2050-12-30" placeholder="请输入出发日期"
+                  [(ngModel)]="item.departure_time" (ionChange)="startTimeChanged1(i)">
                 </ion-datetime>
                 <div class="iconfont icon-ziyuan"></div>
               </div>
@@ -176,8 +201,10 @@
             </ion-col>
             <ion-col align-self-center [size]="7">
               <div class="date-box">
-                <ion-datetime class="Formatdate" displayFormat="YYYY-MM-DD" doneText="完成" cancelText="取消"
-                  max="2050-12-30" placeholder="请输入到达时间">
+                <ion-datetime
+                  [class]="notAccord.includes(i)?'danger1 ng-untouched ng-pristine ng-valid ion-untouched ion-pristine ion-valid ios datetime-placeholder hydrated':'Formatdate ng-untouched ng-pristine ng-valid ion-untouched ion-pristine ion-valid ios datetime-placeholder hydrated'"
+                  displayFormat="YYYY-MM-DD" doneText="完成" cancelText="取消" max="2050-12-30" placeholder="请输入到达时间"
+                  [(ngModel)]="item.arrival_time" (ionChange)="endTimeChanged1(i)">
                 </ion-datetime>
                 <div class="iconfont icon-ziyuan"></div>
               </div>
@@ -191,7 +218,8 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <ion-input type="text" class="ipt" clearInput="true" type="number"></ion-input>
+              <ion-input type="text" class="ipt" clearInput="true" type="number" [(ngModel)]="item.bill_num">
+              </ion-input>
             </ion-col>
           </ion-row>
 
@@ -203,7 +231,8 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <ion-input type="text" class="ipt" clearInput="true" type="number"></ion-input>
+              <ion-input type="text" class="ipt" clearInput="true" type="number" [(ngModel)]="item.cost"
+                (ionChange)="moneyChanged()"></ion-input>
             </ion-col>
           </ion-row>
 
@@ -215,13 +244,24 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              此处是上传照片的组件
+              <app-photo-evection [photo]="item.hash_arr" [travel_id]="originObj.id"
+                [travel_reimbursement_no]="originObj.travel_reimbursement_no" [type1]="'traffic_expense_pic'"
+                [onlyOneNo]="item.trans_expenses_no" [index]="i">
+              </app-photo-evection>
             </ion-col>
           </ion-row>
         </ion-grid>
       </ion-card-content>
     </ion-card>
-
+    <!-- 当交通费没有了 -->
+    <ion-card mode="ios" *ngIf="originObj.traffic_expense_list.length==0&&originObj.travel_type=='1'">
+      <div class="content-box">
+        <div class="noContent">当前没有交通费信息，点击添加进行添加</div>
+        <div>
+          <ion-button class="ml-20 add" size="small" (click)="toAdd()"> 增加+</ion-button>
+        </div>
+      </div>
+    </ion-card>
     <!-- 住宿费 -->
     <ion-card mode="ios">
       <ion-item class="card-header">
@@ -238,7 +278,8 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <ion-input type="text" class="ipt" clearInput="true" type="number"></ion-input>
+              <ion-input type="text" class="ipt" clearInput="true" type="number" [(ngModel)]="originObj.stay_bill_num">
+              </ion-input>
             </ion-col>
           </ion-row>
 
@@ -250,9 +291,9 @@
             </ion-col>
             <ion-col align-self-center [size]="7">
               <!-- 下拉选择器 -->
-              <select class="select">
+              <select class="select" [(ngModel)]="originObj.stay_invoice_title">
                 <option value=""></option>
-                <option [value]="1">公司名</option>
+                <option [value]="item" *ngFor="let item of stay_invoice_title_params;let i=index">{{item}}</option>
               </select>
             </ion-col>
           </ion-row>
@@ -264,7 +305,9 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <ion-input type="text" class="ipt" clearInput="true" type="number"></ion-input>
+              <ion-input type="text" class="ipt" clearInput="true" type="number" [(ngModel)]="originObj.stay_cost"
+                (ionChange)="moneyChanged()">
+              </ion-input>
             </ion-col>
           </ion-row>
 
@@ -275,7 +318,10 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              此处是上传照片的组件
+              <app-photo-evection [travel_id]="originObj.id"
+                [travel_reimbursement_no]="originObj.travel_reimbursement_no" [type1]="'stay_bill_pic'"
+                [photo]="originObj.stay_bill_pic">
+              </app-photo-evection>
             </ion-col>
           </ion-row>
         </ion-grid>
@@ -298,7 +344,8 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <ion-input type="text" class="ipt" clearInput="true" type="number"></ion-input>
+              <ion-input type="text" class="ipt" clearInput="true" type="number" [(ngModel)]="originObj.city_bill_num">
+              </ion-input>
             </ion-col>
           </ion-row>
 
@@ -310,11 +357,10 @@
             </ion-col>
             <ion-col align-self-center [size]="7">
               <!-- 下拉选择器 -->
-              <select class="select">
+              <select class="select" [(ngModel)]="originObj.city_cost_type">
                 <option value=""></option>
-                <option [value]="1">公交费</option>
-                <option [value]="2">打车费</option>
-                <option [value]="3">其他</option>
+                <option [value]="city_cost_type_paramsIndex[i]"
+                  *ngFor="let item of city_cost_type_paramsArray;let i=index">{{item}}</option>
               </select>
             </ion-col>
           </ion-row>
@@ -326,7 +372,9 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <ion-input type="text" class="ipt" clearInput="true" type="number"></ion-input>
+              <ion-input type="text" class="ipt" clearInput="true" type="number" [(ngModel)]="originObj.city_cost"
+                (ionChange)="moneyChanged()">
+              </ion-input>
             </ion-col>
           </ion-row>
 
@@ -337,7 +385,10 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              此处是上传照片的组件
+              <app-photo-evection [travel_id]="originObj.id"
+                [travel_reimbursement_no]="originObj.travel_reimbursement_no" [type1]="'city_bill_pic'"
+                [photo]="originObj.city_bill_pic">
+              </app-photo-evection>
             </ion-col>
           </ion-row>
         </ion-grid>
@@ -360,7 +411,8 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <ion-input type="text" class="ipt" clearInput="true" type="number"></ion-input>
+              <ion-input type="text" class="ipt" clearInput="true" type="number" [(ngModel)]="originObj.travel_day_num">
+              </ion-input>
             </ion-col>
           </ion-row>
           <ion-row class="title">
@@ -370,7 +422,8 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <ion-input type="text" class="ipt" clearInput="true" type="number"></ion-input>
+              <ion-input type="text" class="ipt" clearInput="true" type="number"
+                [(ngModel)]="originObj.travel_subsidy_cost" (ionChange)="moneyChanged()"></ion-input>
             </ion-col>
           </ion-row>
         </ion-grid>
@@ -383,18 +436,25 @@
     <ion-card mode="ios">
       <div class="all_money">
         <div class="label">报销总额</div>
-        <p class="money">460.00 元</p>
+        <p class="money">{{originObj.travel_sum_cost?originObj.travel_sum_cost:0}}元</p>
       </div>
     </ion-card>
   </div>
 
-  <div class="self-driving" *ngIf="!isShow">
+  <div class="self-driving" *ngIf="originObj.travel_type=='2'">
     <!-- 油费 -->
-    <ion-card mode="ios">
+    <ion-card mode="ios" *ngFor="let item of originObj.fuel_charge_list;let i=index">
       <ion-item class="card-header">
         <div class="card-header-item">
-          <ion-card-title color="primary" class="card-title">油费(1)</ion-card-title>
-          <ion-button class="ml-20 add" size="small" (click)="toAdd()">增加+</ion-button>
+          <ion-card-title color="primary" class="card-title">油费({{i+1}})</ion-card-title>
+          <div class="btns-container">
+            <ion-button class="ml-20 add" size="small" (click)="toAdd1()"
+              *ngIf="i==originObj.fuel_charge_list.length-1">
+              增加+
+            </ion-button>
+            <ion-button class="ml-20" size="small" color="danger" (click)="deleteProduct1(i,item.trans_expenses_no)">删除
+            </ion-button>
+          </div>
         </div>
 
       </ion-item>
@@ -407,9 +467,10 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <ion-input type="text" class="ipt" clearInput="true"></ion-input>
+              <ion-input type="text" class="ipt" clearInput="true" [(ngModel)]="item.departure_place"></ion-input>
             </ion-col>
           </ion-row>
+
           <ion-row>
             <ion-col align-self-center [size]="3">
               到达地点 :
@@ -417,7 +478,7 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <ion-input type="text" class="ipt" clearInput="true"></ion-input>
+              <ion-input type="text" class="ipt" clearInput="true" [(ngModel)]="item.arrival_place"></ion-input>
             </ion-col>
           </ion-row>
 
@@ -429,8 +490,10 @@
             </ion-col>
             <ion-col align-self-center [size]="7">
               <div class="date-box">
-                <ion-datetime class="Formatdate" displayFormat="YYYY-MM-DD" doneText="完成" cancelText="取消"
-                  max="2050-12-30" placeholder="请输入出发日期">
+                <ion-datetime
+                  [class]="notAccord.includes(i)?'danger1 ng-untouched ng-pristine ng-valid ion-untouched ion-pristine ion-valid ios datetime-placeholder hydrated':'Formatdate ng-untouched ng-pristine ng-valid ion-untouched ion-pristine ion-valid ios datetime-placeholder hydrated'"
+                  displayFormat="YYYY-MM-DD" doneText="完成" cancelText="取消" max="2050-12-30" placeholder="请输入出发日期"
+                  [(ngModel)]="item.departure_time" (ionChange)="startTimeChanged2(i)">
                 </ion-datetime>
                 <div class="iconfont icon-ziyuan"></div>
               </div>
@@ -445,8 +508,10 @@
             </ion-col>
             <ion-col align-self-center [size]="7">
               <div class="date-box">
-                <ion-datetime class="Formatdate" displayFormat="YYYY-MM-DD" doneText="完成" cancelText="取消"
-                  max="2050-12-30" placeholder="请输入到达时间">
+                <ion-datetime
+                  [class]="notAccord.includes(i)?'danger1 ng-untouched ng-pristine ng-valid ion-untouched ion-pristine ion-valid ios datetime-placeholder hydrated':'Formatdate ng-untouched ng-pristine ng-valid ion-untouched ion-pristine ion-valid ios datetime-placeholder hydrated'"
+                  displayFormat="YYYY-MM-DD" doneText="完成" cancelText="取消" max="2050-12-30" placeholder="请输入到达时间"
+                  [(ngModel)]="item.arrival_time" (ionChange)="endTimeChanged2(i)">
                 </ion-datetime>
                 <div class="iconfont icon-ziyuan"></div>
               </div>
@@ -460,7 +525,8 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <ion-input type="text" class="ipt" clearInput="true" type="number"></ion-input>
+              <ion-input type="text" class="ipt" clearInput="true" type="number" [(ngModel)]="item.theory_miles">
+              </ion-input>
             </ion-col>
           </ion-row>
 
@@ -472,7 +538,8 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <ion-input type="text" class="ipt" clearInput="true" type="number"></ion-input>
+              <ion-input type="text" class="ipt" clearInput="true" type="number" [(ngModel)]="item.actual_miles">
+              </ion-input>
             </ion-col>
           </ion-row>
 
@@ -483,7 +550,8 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <ion-input type="text" class="ipt" clearInput="true" type="number"></ion-input>
+              <ion-input type="text" class="ipt" clearInput="true" type="number" [(ngModel)]="item.cost"
+                (ionChange)="moneyChanged()"></ion-input>
             </ion-col>
           </ion-row>
 
@@ -494,13 +562,24 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              此处是上传照片的组件
+              <app-photo-evection [travel_id]="originObj.id"
+                [travel_reimbursement_no]="originObj.travel_reimbursement_no" [type1]="'fuel_charge_pic'"
+                [photo]="item.hash_arr" [onlyOneNo]="item.trans_expenses_no" [index]="i">
+              </app-photo-evection>
             </ion-col>
           </ion-row>
         </ion-grid>
       </ion-card-content>
     </ion-card>
-
+    <!-- 当交通费没有了 -->
+    <ion-card mode="ios" *ngIf="originObj.fuel_charge_list.length==0&&originObj.travel_type=='2'">
+      <div class="content-box">
+        <div class="noContent">当前没有油费信息，点击添加进行添加</div>
+        <div>
+          <ion-button class="ml-20 add" size="small" (click)="toAdd1()"> 增加+</ion-button>
+        </div>
+      </div>
+    </ion-card>
     <!-- 过路费 -->
     <ion-card mode="ios">
       <ion-item class="card-header">
@@ -517,7 +596,8 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <ion-input type="text" class="ipt" clearInput="true" type="number"></ion-input>
+              <ion-input type="text" class="ipt" clearInput="true" type="number"
+                [(ngModel)]="originObj.road_toll_bill_num"></ion-input>
             </ion-col>
           </ion-row>
 
@@ -528,7 +608,9 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <ion-input type="text" class="ipt" clearInput="true" type="number"></ion-input>
+              <ion-input type="text" class="ipt" clearInput="true" type="number" [(ngModel)]="originObj.road_toll_cost"
+                (ionChange)="moneyChanged()">
+              </ion-input>
             </ion-col>
           </ion-row>
 
@@ -539,7 +621,10 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              此处是上传照片的组件
+              <app-photo-evection [travel_id]="originObj.id"
+                [travel_reimbursement_no]="originObj.travel_reimbursement_no" [type1]="'road_toll_bill_pic'"
+                [photo]="originObj.road_toll_bill_pic">
+              </app-photo-evection>
             </ion-col>
           </ion-row>
         </ion-grid>
@@ -562,7 +647,8 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <ion-input type="text" class="ipt" clearInput="true" type="number"></ion-input>
+              <ion-input type="text" class="ipt" clearInput="true" type="number"
+                [(ngModel)]="originObj.parking_bill_num"></ion-input>
             </ion-col>
           </ion-row>
 
@@ -573,7 +659,9 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <ion-input type="text" class="ipt" clearInput="true" type="number"></ion-input>
+              <ion-input type="text" class="ipt" clearInput="true" type="number" [(ngModel)]="originObj.parking_cost"
+                (ionChange)="moneyChanged()">
+              </ion-input>
             </ion-col>
           </ion-row>
 
@@ -584,7 +672,10 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              此处是上传照片的组件
+              <app-photo-evection [travel_id]="originObj.id"
+                [travel_reimbursement_no]="originObj.travel_reimbursement_no" [type1]="'packing_bill_pic'"
+                [photo]="originObj.packing_bill_pic">
+              </app-photo-evection>
             </ion-col>
           </ion-row>
         </ion-grid>
@@ -607,7 +698,8 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <ion-input type="text" class="ipt" clearInput="true" type="number"></ion-input>
+              <ion-input type="text" class="ipt" clearInput="true" type="number" [(ngModel)]="originObj.stay_bill_num">
+              </ion-input>
             </ion-col>
           </ion-row>
 
@@ -619,9 +711,9 @@
             </ion-col>
             <ion-col align-self-center [size]="7">
               <!-- 下拉选择器 -->
-              <select class="select">
+              <select class="select" [(ngModel)]="originObj.stay_invoice_title">
                 <option value=""></option>
-                <option [value]="1">公司名</option>
+                <option [value]="item" *ngFor="let item of stay_invoice_title_params;let i=index">{{item}}</option>
               </select>
             </ion-col>
           </ion-row>
@@ -633,7 +725,9 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <ion-input type="text" class="ipt" clearInput="true" type="number"></ion-input>
+              <ion-input type="text" class="ipt" clearInput="true" type="number" [(ngModel)]="originObj.stay_cost"
+                (ionChange)="moneyChanged()">
+              </ion-input>
             </ion-col>
           </ion-row>
 
@@ -644,7 +738,10 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              此处是上传照片的组件
+              <app-photo-evection [travel_id]="originObj.id"
+                [travel_reimbursement_no]="originObj.travel_reimbursement_no" [type1]="'stay_bill_pic'"
+                [photo]="originObj.stay_bill_pic">
+              </app-photo-evection>
             </ion-col>
           </ion-row>
         </ion-grid>
@@ -667,7 +764,8 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <ion-input type="text" class="ipt" clearInput="true" type="number"></ion-input>
+              <ion-input type="text" class="ipt" clearInput="true" type="number" [(ngModel)]="originObj.travel_day_num">
+              </ion-input>
             </ion-col>
           </ion-row>
           <ion-row class="title">
@@ -677,7 +775,8 @@
             <ion-col align-self-center [size]="2">
             </ion-col>
             <ion-col align-self-center [size]="7">
-              <ion-input type="text" class="ipt" clearInput="true" type="number"></ion-input>
+              <ion-input type="text" class="ipt" clearInput="true" type="number"
+                [(ngModel)]="originObj.travel_subsidy_cost" (ionChange)="moneyChanged()"></ion-input>
             </ion-col>
           </ion-row>
         </ion-grid>
@@ -688,11 +787,11 @@
     <ion-card mode="ios">
       <div class="all_money">
         <div class="label">报销总额</div>
-        <p class="money">460.00 元</p>
+        <p class="money">{{originObj.travel_sum_cost?originObj.travel_sum_cost:0}}元</p>
       </div>
     </ion-card>
   </div>
-  <ion-button class="nextStepBtn" size="small" (click)="saveInformation()">
-    保存
+  <ion-button class="nextStepBtn" size="small" (click)="saveInformation()" [disabled]="disabled">
+    提交
   </ion-button>
 </ion-content>

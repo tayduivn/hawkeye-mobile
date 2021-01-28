@@ -3,21 +3,22 @@
     <img imgGallery alt="" [defaultImage]="'../assets/img/image-loading.jpg'" *ngIf="item && item.length < 10000"
       [lazyLoad]="environment.usFileUrl +item" offset="10" />
     <img [src]="environment.usFileUrl + item" *ngIf="item && item.length > 10000" alt="" />
-    <div class="pos-a">
+    <div class="pos-a" *ngIf="!flag">
       <ion-icon name="close" mode="ios" *ngIf="_photos[i].length < 1000" (click)="remove(i)">
       </ion-icon>
     </div>
   </li>
 </ul>
 
-<div class="add-image-small" fxLayout="row" (click)="graph()" fxLayoutAlign="start center">
+<div class="add-image-small" fxLayout="row" (click)="graph()" fxLayoutAlign="start center" *ngIf="!flag">
   <ion-icon name="camera" mode="ios"></ion-icon>
   <p>拍照</p>
 </div>
 
-<div class="add-image-small add-image-file ml-5" fxLayout="row" fxLayoutAlign="start center">
+<div class="add-image-small add-image-file ml-5" fxLayout="row" fxLayoutAlign="start center" *ngIf="!flag">
   <ion-icon name=" folder">
   </ion-icon>
   <input type="file" multiple="multiple" accept="image/*" (change)="doCheckImg($event)" />
   <p>选择</p>
 </div>
+<div *ngIf="_photos.length==0&&flag">暂无图片</div>

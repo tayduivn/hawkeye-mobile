@@ -63,3 +63,45 @@
 .star {
     color: #c00000;
 }
+.skuAndFactoryNameBOX {
+    padding: 10px 0;
+    border-bottom: 1px solid #ccc;
+}
+.skuAndFactoryName {
+    position: relative;
+    padding: 5px 10px 5px 10px;
+    border: 1px solid #ededed;
+    margin-right: 10px;
+    margin-bottom: 5px;
+    border-radius: 3px;
+}
+.cha {
+    position: absolute;
+    right: -8px;
+    top: -5px;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background-color: #000000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 3px;
+    color: white;
+    cursor: pointer;
+}
+.danger1 {
+    width: 100%;
+    border: 1px solid red;
+}
+.noContent {
+    text-align: center;
+    padding: 10px 20px;
+    font-size: 20px;
+    color: #ccc;
+}
+.content-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
