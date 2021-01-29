@@ -47,9 +47,59 @@ export class ErrandReimbursementDetailsComponent implements OnInit {
                 const { data } = res;
                 console.log(data);
                 this.originObj = data;
+                this.originObj.travel_start_time = this.handleTime(this.originObj.travel_start_time);
+                this.originObj.travel_end_time = this.handleTime(this.originObj.travel_end_time);
+                if (this.originObj.travel_type == '1') {
+                    //普通
+                    this.originObj.traffic_expense_list.forEach(item => {
+                        if (item.departure_time) {
+                            item.departure_time = this.handleTime1(item.departure_time);
+                        }
+                        console.log(item.arrival_time);
+
+                        if (item.arrival_time) {
+                            item.arrival_time = this.handleTime1(item.arrival_time);
+                        }
+                    });
+                }
+
+                if (this.originObj.travel_type == '2') {
+                    //自驾
+                    this.originObj.fuel_charge_list.forEach(item => {
+                        if (item.departure_time) {
+                            item.departure_time = this.handleTime1(item.departure_time);
+                        }
+                        if (item.arrival_time) {
+                            item.arrival_time = this.handleTime1(item.arrival_time);
+                        }
+                    });
+                }
             });
     }
-
+    // 处理成年月日
+    handleTime(time: string): string {
+        const date = new Date(time);
+        const y = date.getFullYear();
+        let m: any = date.getMonth() + 1;
+        m = m < 10 ? '0' + m : m;
+        let d: any = date.getDate();
+        d = d < 10 ? '0' + d : d;
+        return `${y}-${m}-${d}`;
+    }
+    // 处理成年月日时分
+    handleTime1(time: string): string {
+        const date = new Date(time);
+        const y = date.getFullYear();
+        let m: any = date.getMonth() + 1;
+        m = m < 10 ? '0' + m : m;
+        let d: any = date.getDate();
+        d = d < 10 ? '0' + d : d;
+        let h: any = date.getHours();
+        h = h < 10 ? '0' + h : h;
+        let mm: any = date.getMinutes();
+        mm = mm < 10 ? '0' + mm : mm;
+        return `${y}-${m}-${d} ${h}:${mm}`;
+    }
     isShow: boolean = true;
     // 显示上传进度
     showModal() {

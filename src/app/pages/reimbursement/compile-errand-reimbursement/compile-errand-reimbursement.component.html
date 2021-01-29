@@ -185,8 +185,8 @@
               <div class="date-box">
                 <ion-datetime
                   [class]="notAccord.includes(i)?'danger1 ng-untouched ng-pristine ng-valid ion-untouched ion-pristine ion-valid ios datetime-placeholder hydrated':'Formatdate ng-untouched ng-pristine ng-valid ion-untouched ion-pristine ion-valid ios datetime-placeholder hydrated'"
-                  displayFormat="YYYY-MM-DD" doneText="完成" cancelText="取消" max="2050-12-30" placeholder="请输入出发日期"
-                  [(ngModel)]="item.departure_time" (ionChange)="startTimeChanged1(i)">
+                  displayFormat="YYYY-MM-DD HH:mm" doneText="完成" cancelText="取消" max="2050" placeholder="请输入出发日期"
+                  [(ngModel)]="item.departure_time">
                 </ion-datetime>
                 <div class="iconfont icon-ziyuan"></div>
               </div>
@@ -203,8 +203,8 @@
               <div class="date-box">
                 <ion-datetime
                   [class]="notAccord.includes(i)?'danger1 ng-untouched ng-pristine ng-valid ion-untouched ion-pristine ion-valid ios datetime-placeholder hydrated':'Formatdate ng-untouched ng-pristine ng-valid ion-untouched ion-pristine ion-valid ios datetime-placeholder hydrated'"
-                  displayFormat="YYYY-MM-DD" doneText="完成" cancelText="取消" max="2050-12-30" placeholder="请输入到达时间"
-                  [(ngModel)]="item.arrival_time" (ionChange)="endTimeChanged1(i)">
+                  displayFormat="YYYY-MM-DD HH:mm" doneText="完成" cancelText="取消" max="2050" placeholder="请输入到达时间"
+                  [(ngModel)]="item.arrival_time">
                 </ion-datetime>
                 <div class="iconfont icon-ziyuan"></div>
               </div>
@@ -492,8 +492,8 @@
               <div class="date-box">
                 <ion-datetime
                   [class]="notAccord.includes(i)?'danger1 ng-untouched ng-pristine ng-valid ion-untouched ion-pristine ion-valid ios datetime-placeholder hydrated':'Formatdate ng-untouched ng-pristine ng-valid ion-untouched ion-pristine ion-valid ios datetime-placeholder hydrated'"
-                  displayFormat="YYYY-MM-DD" doneText="完成" cancelText="取消" max="2050-12-30" placeholder="请输入出发日期"
-                  [(ngModel)]="item.departure_time" (ionChange)="startTimeChanged2(i)">
+                  displayFormat="YYYY-MM-DD HH:mm" doneText="完成" cancelText="取消" max="2050" placeholder="请输入出发日期"
+                  [(ngModel)]="item.departure_time">
                 </ion-datetime>
                 <div class="iconfont icon-ziyuan"></div>
               </div>
@@ -510,8 +510,8 @@
               <div class="date-box">
                 <ion-datetime
                   [class]="notAccord.includes(i)?'danger1 ng-untouched ng-pristine ng-valid ion-untouched ion-pristine ion-valid ios datetime-placeholder hydrated':'Formatdate ng-untouched ng-pristine ng-valid ion-untouched ion-pristine ion-valid ios datetime-placeholder hydrated'"
-                  displayFormat="YYYY-MM-DD" doneText="完成" cancelText="取消" max="2050-12-30" placeholder="请输入到达时间"
-                  [(ngModel)]="item.arrival_time" (ionChange)="endTimeChanged2(i)">
+                  displayFormat="YYYY-MM-DD HH:mm" doneText="完成" cancelText="取消" max="2050" placeholder="请输入到达时间"
+                  [(ngModel)]="item.arrival_time">
                 </ion-datetime>
                 <div class="iconfont icon-ziyuan"></div>
               </div>

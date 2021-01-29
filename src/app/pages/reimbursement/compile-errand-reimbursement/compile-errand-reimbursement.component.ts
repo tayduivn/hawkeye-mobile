@@ -317,26 +317,7 @@ export class CompileErrandReimbursementComponent implements OnInit {
     endTimeChanged() {
         this.originObj.travel_end_time = this.handleTime(this.originObj.travel_end_time);
     }
-    startTimeChanged1(index: number) {
-        this.originObj.traffic_expense_list[index].departure_time = this.handleTime(
-            this.originObj.traffic_expense_list[index].departure_time,
-        );
-    }
-    endTimeChanged1(index: number) {
-        this.originObj.traffic_expense_list[index].arrival_time = this.handleTime(
-            this.originObj.traffic_expense_list[index].arrival_time,
-        );
-    }
-    startTimeChanged2(index: number) {
-        this.originObj.fuel_charge_list[index].departure_time = this.handleTime(
-            this.originObj.fuel_charge_list[index].departure_time,
-        );
-    }
-    endTimeChanged2(index: number) {
-        this.originObj.fuel_charge_list[index].arrival_time = this.handleTime(
-            this.originObj.fuel_charge_list[index].arrival_time,
-        );
-    }
+
     notAccord: any[] = [];
     thinkTime(): boolean {
         this.notAccord = [];
